@@ -29,7 +29,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -71,6 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -83,16 +85,19 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\Student\Documents\Visual Studio 2015\Projects\C++Team001\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>Precompile.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeaderFile>Precompile.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>dinput8.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -146,6 +151,79 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Bullet.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Collision.cpp" />
+    <ClCompile Include="src\DebugProc.cpp" />
+    <ClCompile Include="src\DirectInput.cpp" />
+    <ClCompile Include="src\effect.cpp" />
+    <ClCompile Include="src\Fade.cpp" />
+    <ClCompile Include="src\Floor.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\input.cpp" />
+    <ClCompile Include="src\inputcontroller.cpp" />
+    <ClCompile Include="src\InputJoypad.cpp" />
+    <ClCompile Include="src\InputKeyBoard.cpp" />
+    <ClCompile Include="src\Life.cpp" />
+    <ClCompile Include="src\Light.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\Motion.cpp" />
+    <ClCompile Include="src\Object.cpp" />
+    <ClCompile Include="src\Object2D.cpp" />
+    <ClCompile Include="src\Object3D.cpp" />
+    <ClCompile Include="src\ObjectX.cpp" />
+    <ClCompile Include="src\Particle.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Precompile.cpp" />
+    <ClCompile Include="src\renderer.cpp" />
+    <ClCompile Include="src\Result.cpp" />
+    <ClCompile Include="src\Shadow.cpp" />
+    <ClCompile Include="src\sound.cpp" />
+    <ClCompile Include="src\Time.cpp" />
+    <ClCompile Include="src\Title.cpp" />
+    <ClCompile Include="src\UI.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Bullet.h" />
+    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Collision.h" />
+    <ClInclude Include="src\Command.h" />
+    <ClInclude Include="src\DebugProc.h" />
+    <ClInclude Include="src\DirectInput.h" />
+    <ClInclude Include="src\Easing.h" />
+    <ClInclude Include="src\effect.h" />
+    <ClInclude Include="src\Fade.h" />
+    <ClInclude Include="src\Floor.h" />
+    <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\input.h" />
+    <ClInclude Include="src\inputcontroller.h" />
+    <ClInclude Include="src\InputJoyPad.h" />
+    <ClInclude Include="src\InputKeyBoard.h" />
+    <ClInclude Include="src\inputkeydata.h" />
+    <ClInclude Include="src\Life.h" />
+    <ClInclude Include="src\Light.h" />
+    <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\Motion.h" />
+    <ClInclude Include="src\Object.h" />
+    <ClInclude Include="src\Object2D.h" />
+    <ClInclude Include="src\Object3D.h" />
+    <ClInclude Include="src\ObjectX.h" />
+    <ClInclude Include="src\Particle.h" />
+    <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Precompile.h" />
+    <ClInclude Include="src\renderer.h" />
+    <ClInclude Include="src\Result.h" />
+    <ClInclude Include="src\Shadow.h" />
+    <ClInclude Include="src\sound.h" />
+    <ClInclude Include="src\Time.h" />
+    <ClInclude Include="src\Title.h" />
+    <ClInclude Include="src\UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
