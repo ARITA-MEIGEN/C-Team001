@@ -32,7 +32,6 @@ int g_nCountFPS = 0;
 
 #endif // _DEBUGgf
 
-CApplication*pApplication;
 //=============================================================================
 // メイン関数
 //=============================================================================
@@ -40,6 +39,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpC
 {
 	//メモリリークのチェック
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+	CApplication* pApplication;
 
 	//動的確保
 	pApplication = CApplication::getInstance();

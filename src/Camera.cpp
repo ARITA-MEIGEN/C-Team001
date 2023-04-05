@@ -116,7 +116,7 @@ void  CCamera::Set(void)
 //===========================
 void CCamera::RadianPosR(void)
 {
-	CInput* pKeyboard = CApplication::getInstance()->GetInput();
+	CInput* pKeyboard = CInput::GetKey();
 
 	//注視点の旋回
 	if (pKeyboard->Press(DIK_J) == true)
@@ -147,7 +147,7 @@ void CCamera::RadianPosR(void)
 //===========================
 void CCamera::RadianPosV(void)
 {
-	CInput* pKeyboard = CApplication::getInstance()->GetInput();
+	CInput* pKeyboard = CInput::GetKey();
 
 	//視点の旋回
 	if (pKeyboard->Press(DIK_Q) == true)
@@ -215,7 +215,7 @@ void CCamera::NormalizeRadian(void)
 //===========================
 void CCamera:: ControlPos(void)
 {
-	CInput* pKeyboard = CApplication::getInstance()->GetInput();
+	CInput* pKeyboard = CInput::GetKey();
 
 	//カメラの位置の操作
 	if (pKeyboard->Press(DIK_W) == true)

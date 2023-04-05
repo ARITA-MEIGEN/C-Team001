@@ -65,7 +65,7 @@ HRESULT CResult::Init()
 
 	m_pBg->BindTexture(tex[CApplication::getInstance()->GetWinner()]);
 
-	PlaySound(SOUND_LABEL_BGM_RESULT);
+	CSound::GetInstance()->Play(CSound::LABEL_BGM_RESULT);
 
 	return S_OK;
 }
@@ -75,8 +75,7 @@ HRESULT CResult::Init()
 //====================================
 void CResult::Uninit()
 {
-	StopSound();
-
+	CSound::GetInstance()->Stop();
 }
 
 //====================================
@@ -84,14 +83,14 @@ void CResult::Uninit()
 //====================================
 void CResult::Update()
 {
-	CInput* pInput = CApplication::getInstance()->GetInput();
+	CInput* pInput = CInput::GetKey();
 
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
 		if ((pInput->Trigger(KEY_ALL)) == true)		//ENTERキー
 		{//エンターでランキングに
 		 //モード設定
-			PlaySound(SOUND_LABEL_SE_START);
+			CSound::GetInstance()->Play(CSound::LABEL_SE_START);
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
 		}
 	}

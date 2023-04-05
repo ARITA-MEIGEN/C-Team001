@@ -15,11 +15,9 @@
 #define END_TIMER	(120)	//プレイヤーが死んでから終わるまでの時間
 #define END_SCORE	(2)		//ゲーム終了するためのスコア
 
-
-
 //前方宣言
 class CPlayer;
-class CLife;				//体力ゲージ
+class CLife;	// 体力ゲージ
 class CCamera;
 class CLight;
 class CFloor;
@@ -45,7 +43,6 @@ public:
 		ROUND_MAX
 	};
 
-
 	CGame();
 	~CGame();
 
@@ -68,7 +65,6 @@ public:
 	static bool GetDebugCamera() { return bDebugCamera; };
 	static CPlayer*GetPlayer(int number) { return m_pPlayer[number]; };
 	static CTimer*GetTimer() { return m_pTimer; };
-	
 
 private:
 	static	CPlayer*m_pPlayer[MAX_PLAYER];

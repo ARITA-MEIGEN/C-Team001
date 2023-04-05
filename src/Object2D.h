@@ -9,8 +9,9 @@
 #define _OBJECT2D_H_
 
 //インクルード
-#include"main.h"
-#include"Object.h"
+#include "Main.h"
+#include "Object.h"
+#include <string>
 
 // 頂点フォーマット
 const DWORD FVF_VERTEX_2D = (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1);
@@ -36,7 +37,7 @@ class CObject2D : public CObject
 {
 public:
 	//メンバ関数
-	explicit CObject2D(int nPriority=3);
+	explicit CObject2D(int nPriority = 3);
 	~CObject2D()override;
 	HRESULT Init()override;
 	void Uninit()override;
@@ -65,18 +66,18 @@ public:
 
 private:
 	//メンバ変数
-	LPDIRECT3DTEXTURE9 m_pTexture;		//ポリゴンのテクスチャ
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	//ポリゴンの頂点バッファ
-	float m_fLength;					//対角線の長さ
-	float m_fAngle;						//対角線の角度
-	float m_Rot;						//回転
-	D3DXVECTOR3 m_Pos;					//位置
-	D3DXVECTOR2 m_Siz;					//大きさ
-	D3DXCOLOR m_Col;					//色
-	D3DXVECTOR2 m_UV[2];				//テクスチャ座標
-	float m_nRControl;					//座標の右側の制御
-	float m_nLControl;					//座標の←側の制御
-
+	LPDIRECT3DTEXTURE9 m_pTexture;		// ポリゴンのテクスチャ
+	std::string m_textureKey;			// テクスチャにアクセスするキー
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// ポリゴンの頂点バッファ
+	float m_fLength;					// 対角線の長さ
+	float m_fAngle;						// 対角線の角度
+	float m_Rot;						// 回転
+	D3DXVECTOR3 m_Pos;					// 位置
+	D3DXVECTOR2 m_Siz;					// 大きさ
+	D3DXCOLOR m_Col;					// 色
+	D3DXVECTOR2 m_UV[2];				// テクスチャ座標
+	float m_nRControl;					// 座標の右側の制御
+	float m_nLControl;					// 座標の←側の制御
 };
 #endif // !_OBJECT_H_
 

@@ -15,7 +15,8 @@
 
 //静的メンバ変数
 LPD3DXFONT CDebugProc::m_pFont = nullptr;
-char CDebugProc::m_aStr[1024] = {};
+std::string CDebugProc::m_aStr = {};
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -59,42 +60,16 @@ void CDebugProc::Uninit()
 //=============================================================================
 void CDebugProc::Print(const char * pFormat, ...)
 {
+	// 変数
+	char aStrCpy[0xfff] = {};
+
+	// リストの作成
 	va_list args;
 	va_start(args, pFormat);
-	char aStr[128] = {};
-	for (const char* p = pFormat; *p != '\0'; ++p)
-	{
-		if (*p == '%')
-		{
-			switch (*++p)
-			{
-			case 'd':
-				sprintf(&aStr[0], "%d ", va_arg(args, int));
-				break;
-			case 'f':
-				sprintf(&aStr[0], "%f ", va_arg(args, double));
-				break;
-			case 'c':
-				sprintf(&aStr[0], "%c ", va_arg(args, char));
-				break;
-			case 's':
-				sprintf(&aStr[0], "%s ", va_arg(args, const char*));
-				break;
-			default:
-				assert(!"不正な変換指定");
-				break;
-			}
-			strcat(m_aStr, aStr);
-		}
-		else
-		{
-			sprintf(&aStr[0],"%c", *p);
-			strcat(m_aStr, aStr);
-		}
-	}
-	strcat(m_aStr,"\n");
-
+	vsprintf(&aStrCpy[0], pFormat, args);
 	va_end(args);
+
+	m_aStr += aStrCpy;
 }
 
 //=============================================================================
@@ -109,10 +84,10 @@ void CDebugProc::Draw()
 	D3DXCOLOR col = {1.0f,0.0f,0.0f,1.0f};
 
 	// テキスト描画
-	m_pFont->DrawText(NULL, m_aStr, -1, &rect, DT_LEFT, col);
+	m_pFont->DrawText(NULL, m_aStr.c_str(), -1, &rect, DT_LEFT, col);
 
 	//テキストリセット
-	m_aStr[0] = {};
+	m_aStr.clear();
 #endif // _DEBUG
 
 }

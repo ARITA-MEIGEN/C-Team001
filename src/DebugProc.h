@@ -9,9 +9,8 @@
 #define _DEBUGPROC_H_
 
 //インクルード
-#include"main.h"
-
-#define MAX_DBTEXT	(1024)
+#include "main.h"
+#include <string>
 
 //*****************************************************************************
 //前方宣言
@@ -29,8 +28,7 @@ public:
 	static void Draw();
 private:
 	static LPD3DXFONT m_pFont;
-	static char m_aStr[MAX_DBTEXT];	//配列サイズ超えないように気を付けて　std::string使ってもいい
-
+	static std::string m_aStr;	//配列サイズ超えないように気を付けて　std::string使ってもいい
 };
 
 #endif

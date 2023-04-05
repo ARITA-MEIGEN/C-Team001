@@ -62,7 +62,7 @@ private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	//ポリゴンの頂点バッファ
 	float m_fLength;					//対角線の長さ
 	float m_fAngle;						//対角線の角度
-	D3DXVECTOR3 m_Rot;						//回転
+	D3DXVECTOR3 m_Rot;					//回転
 	D3DXMATRIX m_mtxWorldPolygon;
 	D3DXVECTOR3 m_Pos;					//位置
 	D3DXVECTOR3 m_Siz;					//大きさ

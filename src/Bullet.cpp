@@ -33,7 +33,6 @@ HRESULT CBullet::Init()
 	m_Collision = CCollision::Create(m_pos, CCollision::COLLI_DAMAGE);
 	m_Collision->SetPos(m_pos);
 	m_Collision->SetSiz(D3DXVECTOR3(50.0f,50.0f,10.0f));
-	PlaySound(SOUND_LABEL_SE_FIRE);
 	
 	return S_OK;
 }
@@ -171,7 +170,7 @@ void CBullet::Hit()
 				pPlayer->Hit(DAMAGE, CCollision::EDAMAGE_POINT::DP_HIGH, 30,false);
 				pPlayer->SetDamage(true);
 				pPlayer->TransDamageMotion();
-				PlaySound(SOUND_LABEL_SE_SPECIAL);
+				CSound::GetInstance()->Play(CSound::LABEL_SE_SPECIAL);
 			}
 			Uninit();
 			return;

@@ -14,6 +14,7 @@
 //マクロ定義
 #define NUM_BUFF		(24)		//1つの判定につき必要なバッファの数
 #define NUM_LINE		(16)		//1つのボックスを形成するのに必要な数
+
 //===========================
 //コンストラクタ
 //===========================
@@ -52,23 +53,23 @@ HRESULT CCollision::Init(void)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(m_width.x / 2, m_width.y / 2, m_width.z / 2);
-	pVtx[1].pos = D3DXVECTOR3(-m_width.x / 2, m_width.y / 2, m_width.z / 2);
-	pVtx[2].pos = D3DXVECTOR3(-m_width.x / 2, m_width.y / 2, m_width.z / 2);
-	pVtx[3].pos = D3DXVECTOR3(m_width.x / 2, m_width.y / 2, -m_width.z / 2);
-	pVtx[4].pos = D3DXVECTOR3(m_width.x / 2, m_width.y / 2, -m_width.z / 2);
-	pVtx[5].pos = D3DXVECTOR3(-m_width.x / 2, m_width.y / 2, -m_width.z / 2);
-	pVtx[6].pos = D3DXVECTOR3(-m_width.x / 2, m_width.y / 2, -m_width.z / 2);
-	pVtx[7].pos = D3DXVECTOR3(m_width.x / 2, m_width.y / 2, m_width.z / 2);
+	pVtx[0].pos = D3DXVECTOR3(m_width.x * 0.5f, m_width.y * 0.5f, m_width.z * 0.5f);
+	pVtx[1].pos = D3DXVECTOR3(-m_width.x * 0.5f, m_width.y * 0.5f, m_width.z * 0.5f);
+	pVtx[2].pos = D3DXVECTOR3(-m_width.x * 0.5f, m_width.y * 0.5f, m_width.z * 0.5f);
+	pVtx[3].pos = D3DXVECTOR3(m_width.x * 0.5f, m_width.y * 0.5f, -m_width.z * 0.5f);
+	pVtx[4].pos = D3DXVECTOR3(m_width.x * 0.5f, m_width.y * 0.5f, -m_width.z * 0.5f);
+	pVtx[5].pos = D3DXVECTOR3(-m_width.x * 0.5f, m_width.y * 0.5f, -m_width.z * 0.5f);
+	pVtx[6].pos = D3DXVECTOR3(-m_width.x * 0.5f, m_width.y * 0.5f, -m_width.z * 0.5f);
+	pVtx[7].pos = D3DXVECTOR3(m_width.x * 0.5f, m_width.y * 0.5f, m_width.z * 0.5f);
 
-	pVtx[8].pos = D3DXVECTOR3(m_width.x / 2, -m_width.y / 2, m_width.z / 2);
-	pVtx[9].pos = D3DXVECTOR3(-m_width.x / 2, -m_width.y / 2, m_width.z / 2);
-	pVtx[10].pos = D3DXVECTOR3(-m_width.x / 2, -m_width.y / 2, m_width.z / 2);
-	pVtx[11].pos = D3DXVECTOR3(m_width.x / 2, -m_width.y / 2, -m_width.z / 2);
-	pVtx[12].pos = D3DXVECTOR3(m_width.x / 2, -m_width.y / 2, -m_width.z / 2);
-	pVtx[13].pos = D3DXVECTOR3(-m_width.x / 2, -m_width.y / 2, -m_width.z / 2);
-	pVtx[14].pos = D3DXVECTOR3(-m_width.x / 2, -m_width.y / 2, -m_width.z / 2);
-	pVtx[15].pos = D3DXVECTOR3(m_width.x / 2, -m_width.y / 2, m_width.z / 2);
+	pVtx[8].pos = D3DXVECTOR3(m_width.x * 0.5f, -m_width.y * 0.5f, m_width.z * 0.5f);
+	pVtx[9].pos = D3DXVECTOR3(-m_width.x * 0.5f, -m_width.y * 0.5f, m_width.z * 0.5f);
+	pVtx[10].pos = D3DXVECTOR3(-m_width.x * 0.5f, -m_width.y * 0.5f, m_width.z * 0.5f);
+	pVtx[11].pos = D3DXVECTOR3(m_width.x * 0.5f, -m_width.y * 0.5f, -m_width.z * 0.5f);
+	pVtx[12].pos = D3DXVECTOR3(m_width.x * 0.5f, -m_width.y * 0.5f, -m_width.z * 0.5f);
+	pVtx[13].pos = D3DXVECTOR3(-m_width.x * 0.5f, -m_width.y * 0.5f, -m_width.z * 0.5f);
+	pVtx[14].pos = D3DXVECTOR3(-m_width.x * 0.5f, -m_width.y * 0.5f, -m_width.z * 0.5f);
+	pVtx[15].pos = D3DXVECTOR3(m_width.x * 0.5f, -m_width.y * 0.5f, m_width.z * 0.5f);
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
@@ -152,32 +153,32 @@ void CCollision::Update(void)
 		//頂点バッファをロックし、頂点情報へのポインタを取得
 		m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 		//頂点座標の設定
-		pVtx[0].pos = D3DXVECTOR3(m_width.x / 2, m_width.y / 2, m_width.z / 2);
-		pVtx[1].pos = D3DXVECTOR3(-m_width.x / 2, m_width.y / 2, m_width.z / 2);
-		pVtx[2].pos = D3DXVECTOR3(m_width.x / 2, m_width.y / 2, -m_width.z / 2);
-		pVtx[3].pos = D3DXVECTOR3(-m_width.x / 2, m_width.y / 2, -m_width.z / 2);
-		pVtx[4].pos = D3DXVECTOR3(-m_width.x / 2, m_width.y / 2, m_width.z / 2);
-		pVtx[5].pos = D3DXVECTOR3(-m_width.x / 2, m_width.y / 2, -m_width.z / 2);
-		pVtx[6].pos = D3DXVECTOR3(m_width.x / 2, m_width.y / 2, m_width.z / 2);
-		pVtx[7].pos = D3DXVECTOR3(m_width.x / 2, m_width.y / 2, -m_width.z / 2);
+		pVtx[0].pos = D3DXVECTOR3(m_width.x * 0.5f, m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[1].pos = D3DXVECTOR3(-m_width.x * 0.5f, m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[2].pos = D3DXVECTOR3(m_width.x * 0.5f, m_width.y * 0.5f, -m_width.z * 0.5f);
+		pVtx[3].pos = D3DXVECTOR3(-m_width.x * 0.5f, m_width.y * 0.5f, -m_width.z * 0.5f);
+		pVtx[4].pos = D3DXVECTOR3(-m_width.x * 0.5f, m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[5].pos = D3DXVECTOR3(-m_width.x * 0.5f, m_width.y * 0.5f, -m_width.z * 0.5f);
+		pVtx[6].pos = D3DXVECTOR3(m_width.x * 0.5f, m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[7].pos = D3DXVECTOR3(m_width.x * 0.5f, m_width.y * 0.5f, -m_width.z * 0.5f);
 
-		pVtx[8].pos = D3DXVECTOR3(m_width.x / 2, -m_width.y / 2, m_width.z / 2);
-		pVtx[9].pos = D3DXVECTOR3(-m_width.x / 2, -m_width.y / 2, m_width.z / 2);
-		pVtx[10].pos = D3DXVECTOR3(m_width.x / 2, -m_width.y / 2, -m_width.z / 2);
-		pVtx[11].pos = D3DXVECTOR3(-m_width.x / 2, -m_width.y / 2, -m_width.z / 2);
-		pVtx[12].pos = D3DXVECTOR3(-m_width.x / 2, -m_width.y / 2, m_width.z / 2);
-		pVtx[13].pos = D3DXVECTOR3(-m_width.x / 2, -m_width.y / 2, -m_width.z / 2);
-		pVtx[14].pos = D3DXVECTOR3(m_width.x / 2, -m_width.y / 2, m_width.z / 2);
-		pVtx[15].pos = D3DXVECTOR3(m_width.x / 2, -m_width.y / 2, -m_width.z / 2);
+		pVtx[8].pos = D3DXVECTOR3(m_width.x * 0.5f, -m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[9].pos = D3DXVECTOR3(-m_width.x * 0.5f, -m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[10].pos = D3DXVECTOR3(m_width.x * 0.5f, -m_width.y * 0.5f, -m_width.z * 0.5f);
+		pVtx[11].pos = D3DXVECTOR3(-m_width.x * 0.5f, -m_width.y * 0.5f, -m_width.z * 0.5f);
+		pVtx[12].pos = D3DXVECTOR3(-m_width.x * 0.5f, -m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[13].pos = D3DXVECTOR3(-m_width.x * 0.5f, -m_width.y * 0.5f, -m_width.z * 0.5f);
+		pVtx[14].pos = D3DXVECTOR3(m_width.x * 0.5f, -m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[15].pos = D3DXVECTOR3(m_width.x * 0.5f, -m_width.y * 0.5f, -m_width.z * 0.5f);
 
-		pVtx[16].pos = D3DXVECTOR3(m_width.x / 2, m_width.y / 2, m_width.z / 2);
-		pVtx[17].pos = D3DXVECTOR3(m_width.x / 2, -m_width.y / 2, m_width.z / 2);
-		pVtx[18].pos = D3DXVECTOR3(m_width.x / 2, m_width.y / 2, -m_width.z / 2);
-		pVtx[19].pos = D3DXVECTOR3(m_width.x / 2, -m_width.y / 2, -m_width.z / 2);
-		pVtx[20].pos = D3DXVECTOR3(-m_width.x / 2, m_width.y / 2, m_width.z / 2);
-		pVtx[21].pos = D3DXVECTOR3(-m_width.x / 2, -m_width.y / 2, m_width.z / 2);
-		pVtx[22].pos = D3DXVECTOR3(-m_width.x / 2, m_width.y / 2, -m_width.z / 2);
-		pVtx[23].pos = D3DXVECTOR3(-m_width.x / 2, -m_width.y / 2, -m_width.z / 2);
+		pVtx[16].pos = D3DXVECTOR3(m_width.x * 0.5f, m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[17].pos = D3DXVECTOR3(m_width.x * 0.5f, -m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[18].pos = D3DXVECTOR3(m_width.x * 0.5f, m_width.y * 0.5f, -m_width.z * 0.5f);
+		pVtx[19].pos = D3DXVECTOR3(m_width.x * 0.5f, -m_width.y * 0.5f, -m_width.z * 0.5f);
+		pVtx[20].pos = D3DXVECTOR3(-m_width.x * 0.5f, m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[21].pos = D3DXVECTOR3(-m_width.x * 0.5f, -m_width.y * 0.5f, m_width.z * 0.5f);
+		pVtx[22].pos = D3DXVECTOR3(-m_width.x * 0.5f, m_width.y * 0.5f, -m_width.z * 0.5f);
+		pVtx[23].pos = D3DXVECTOR3(-m_width.x * 0.5f, -m_width.y * 0.5f, -m_width.z * 0.5f);
 
 		//頂点バッファをアンロック
 		m_pVtxBuff->Unlock();

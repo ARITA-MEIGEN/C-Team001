@@ -54,7 +54,7 @@ HRESULT  CObject2D::Init()
 		nullptr);
 
 	//対角線の長さを算出する
-	m_fLength = sqrtf((m_Siz.y*m_Siz.y) + (m_Siz.x*m_Siz.x)) / 2.0f;
+	m_fLength = sqrtf((m_Siz.y*m_Siz.y) + (m_Siz.x*m_Siz.x)) * 0.5f;
 
 	//対角線の角度を算出する
 	m_fAngle = atan2f(m_Siz.x, m_Siz.y);//敵の弾として使う場合は()の中を敵とプレイヤーの間の距離にする
@@ -132,20 +132,20 @@ void  CObject2D::Update()
  	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点情報を設定
-	pVtx[0].pos.x = m_Pos.x + sinf(m_Rot - D3DX_PI + m_fAngle)*m_fLength-m_nLControl;
-	pVtx[0].pos.y = m_Pos.y + cosf(m_Rot - D3DX_PI + m_fAngle)*m_fLength;
+	pVtx[0].pos.x = m_Pos.x + sinf(m_Rot - D3DX_PI + m_fAngle) * m_fLength - m_nLControl;
+	pVtx[0].pos.y = m_Pos.y + cosf(m_Rot - D3DX_PI + m_fAngle) * m_fLength;
 	pVtx[0].pos.z = 0.0f;
 
-	pVtx[1].pos.x = m_Pos.x + sinf(m_Rot + D3DX_PI - m_fAngle)*m_fLength+m_nRControl;
-	pVtx[1].pos.y = m_Pos.y + cosf(m_Rot + D3DX_PI - m_fAngle)*m_fLength;
+	pVtx[1].pos.x = m_Pos.x + sinf(m_Rot + D3DX_PI - m_fAngle) * m_fLength + m_nRControl;
+	pVtx[1].pos.y = m_Pos.y + cosf(m_Rot + D3DX_PI - m_fAngle) * m_fLength;
 	pVtx[1].pos.z = 0.0f;
 
-	pVtx[2].pos.x = m_Pos.x + sinf(m_Rot - m_fAngle)*m_fLength - m_nLControl;
-	pVtx[2].pos.y = m_Pos.y + cosf(m_Rot - m_fAngle)*m_fLength;
+	pVtx[2].pos.x = m_Pos.x + sinf(m_Rot - m_fAngle) * m_fLength - m_nLControl;
+	pVtx[2].pos.y = m_Pos.y + cosf(m_Rot - m_fAngle) * m_fLength;
 	pVtx[2].pos.z = 0.0f;
 
-	pVtx[3].pos.x = m_Pos.x + sinf(m_Rot + m_fAngle)*m_fLength + m_nRControl;
-	pVtx[3].pos.y = m_Pos.y + cosf(m_Rot + m_fAngle)*m_fLength;
+	pVtx[3].pos.x = m_Pos.x + sinf(m_Rot + m_fAngle) * m_fLength + m_nRControl;
+	pVtx[3].pos.y = m_Pos.y + cosf(m_Rot + m_fAngle) * m_fLength;
 	pVtx[3].pos.z = 0.0f;
 
 	// rhwの設定
@@ -183,7 +183,7 @@ void  CObject2D::Draw()
 	//テクスチャの設定
 	pDevice->SetTexture(0, m_pTexture);
 
-	//ポリゴンの描画       
+	//ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	//ポリゴンの形
 		0,										//頂点の開始場所
 		2);										//プリミティブの数
@@ -213,10 +213,10 @@ void CObject2D::BindTexture(LPDIRECT3DTEXTURE9 tex)
 bool CObject2D::Hit(D3DXVECTOR3 pos, D3DXVECTOR3 TargetPos, D3DXVECTOR2 Siz, D3DXVECTOR2 TargetSiz)
 {
 	//当たり判定の式
-	if (pos.x - Siz.x / 2 <= TargetPos.x + TargetSiz.x/2
-		&& pos.x + Siz.x / 2 >= TargetPos.x - TargetSiz.x / 2
-		&& pos.y - Siz.y / 2 <= TargetPos.y + TargetSiz.y / 2
-		&& pos.y + Siz.y / 2 >= TargetPos.y - TargetSiz.y / 2)
+	if (pos.x - Siz.x * 0.5f <= TargetPos.x + TargetSiz.x * 0.5f
+		&& pos.x + Siz.x * 0.5f >= TargetPos.x - TargetSiz.x * 0.5f
+		&& pos.y - Siz.y * 0.5f <= TargetPos.y + TargetSiz.y * 0.5f
+		&& pos.y + Siz.y * 0.5f >= TargetPos.y - TargetSiz.y * 0.5f)
 	{
 		return true;
 	}
@@ -281,7 +281,7 @@ void CObject2D::SetSiz(D3DXVECTOR2 Siz)
 {
 	m_Siz = Siz;
 
-	m_fLength = sqrtf((m_Siz.y*m_Siz.y) + (m_Siz.x*m_Siz.x)) / 2.0f;
+	m_fLength = sqrtf((m_Siz.y*m_Siz.y) + (m_Siz.x*m_Siz.x)) * 0.5f;
 
 	//対角線の角度を算出する
 	m_fAngle = atan2f(m_Siz.x, m_Siz.y);

@@ -159,12 +159,14 @@
     <ClCompile Include="src\DirectInput.cpp" />
     <ClCompile Include="src\effect.cpp" />
     <ClCompile Include="src\Fade.cpp" />
+    <ClCompile Include="src\File.cpp" />
     <ClCompile Include="src\Floor.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\inputcontroller.cpp" />
     <ClCompile Include="src\InputJoypad.cpp" />
     <ClCompile Include="src\InputKeyBoard.cpp" />
+    <ClCompile Include="src\Letter.cpp" />
     <ClCompile Include="src\Life.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -182,6 +184,7 @@
     <ClCompile Include="src\Result.cpp" />
     <ClCompile Include="src\Shadow.cpp" />
     <ClCompile Include="src\sound.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\Title.cpp" />
     <ClCompile Include="src\UI.cpp" />
@@ -197,6 +200,7 @@
     <ClInclude Include="src\Easing.h" />
     <ClInclude Include="src\effect.h" />
     <ClInclude Include="src\Fade.h" />
+    <ClInclude Include="src\File.h" />
     <ClInclude Include="src\Floor.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\input.h" />
@@ -204,6 +208,7 @@
     <ClInclude Include="src\InputJoyPad.h" />
     <ClInclude Include="src\InputKeyBoard.h" />
     <ClInclude Include="src\inputkeydata.h" />
+    <ClInclude Include="src\Letter.h" />
     <ClInclude Include="src\Life.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\main.h" />
@@ -221,6 +226,7 @@
     <ClInclude Include="src\Result.h" />
     <ClInclude Include="src\Shadow.h" />
     <ClInclude Include="src\sound.h" />
+    <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Time.h" />
     <ClInclude Include="src\Title.h" />
     <ClInclude Include="src\UI.h" />

@@ -7,16 +7,17 @@
 
 // インクルード
 #include "Application.h"
-#include"renderer.h"
-#include"main.h"
-#include"input.h"
-#include"DebugProc.h"
-#include"Object.h"
-#include"Fade.h"
-#include"sound.h"
-#include"Title.h"
-#include"Game.h"
-#include"Result.h"
+#include "renderer.h"
+#include "main.h"
+#include "input.h"
+#include "DebugProc.h"
+#include "Object.h"
+#include "Fade.h"
+#include "sound.h"
+#include "Title.h"
+#include "Game.h"
+#include "Result.h"
+#include "Texture.h"
 
 //====================================
 //静的メンバ変数
@@ -39,32 +40,32 @@ HRESULT CApplication::Init(HWND hWnd, bool bWindow, HINSTANCE hInstance)
 	//-------------------------------
 	//キーボードとジョイパッドの生成
 	//-------------------------------
-	m_pInput = CInput::Create();
-
-	//入力処理の初期化
-	if (FAILED(m_pInput->Init(hInstance, hWnd)))
+	CInput::Create();
+	if (FAILED(CInput::GetKey()->Init(hInstance, hWnd)))
 	{
-		return-1;
+		return E_FAIL;
 	}
 
-	//----------------------------
 	//サウンド初期化
-	//----------------------------
-	InitSound(hWnd);
+	// 音楽処理の初期化処理
+	if (FAILED(CSound::GetInstance()->Init(hWnd)))
+	{
+		return E_FAIL;
+	}
 
-	//----------------------------
 	// モードの設定
-	//----------------------------
-	m_pFade=CFade::Create();
+	m_pFade = CFade::Create();
 
-	//----------------------------
 	// デバッグ用文字の生成
-	//----------------------------
 	m_pDebugProc = new CDebugProc;
 	m_pDebugProc->Init();
 
 	//スコアリセット
 	ResetScore();
+
+	// Textureの読込み
+	m_pTexture = CTexture::GetInstance();
+	m_pTexture->LoadAll();
 
 	return S_OK;
 }
@@ -74,9 +75,7 @@ HRESULT CApplication::Init(HWND hWnd, bool bWindow, HINSTANCE hInstance)
 //====================================
 void CApplication::Uninit()
 {
-	//----------------------------
 	//レンダリングクラスの破壊
-	//----------------------------
 	if (m_pRenderer != nullptr)
 	{
 		// 終了処理
@@ -85,9 +84,7 @@ void CApplication::Uninit()
 		m_pRenderer = nullptr;
 	}
 
-	//----------------------------
 	// タイトルの終了
-	//----------------------------
 	if (m_pTitle != nullptr)
 	{
 		m_pTitle->Uninit();
@@ -95,9 +92,7 @@ void CApplication::Uninit()
 		m_pTitle = nullptr;
 	}
 
-	//----------------------------
 	// ゲームの終了
-	//----------------------------
 	if (m_pGame != nullptr)
 	{
 		m_pGame->Uninit();
@@ -105,9 +100,7 @@ void CApplication::Uninit()
 		m_pGame = nullptr;
 	}
 
-	//----------------------------
 	// リザルトの終了
-	//----------------------------
 	if (m_pResult != nullptr)
 	{
 		m_pResult->Uninit();
@@ -115,9 +108,7 @@ void CApplication::Uninit()
 		m_pResult = nullptr;
 	}
 
-	//----------------------------
 	// フェードの終了
-	//----------------------------
 	if (m_pFade != nullptr)
 	{
 		m_pFade->Uninit();
@@ -125,9 +116,7 @@ void CApplication::Uninit()
 		m_pFade = nullptr;
 	}
 
-	//----------------------------
 	// デバッグ用文字の終了
-	//----------------------------
 	if (m_pDebugProc != nullptr)
 	{
 		m_pDebugProc->Uninit();
@@ -135,16 +124,17 @@ void CApplication::Uninit()
 		m_pDebugProc = nullptr;
 	}
 
-	//----------------------------
 	// 入力処理の終了
-	//----------------------------
-	if (m_pInput != nullptr)
+	if (CInput::GetKey() != nullptr)
 	{
-		m_pInput->Uninit();
+		CInput::GetKey()->Uninit();
 	}
 
 	//サウンド処理の終了
-	UninitSound();
+	if (CSound::GetInstance() != nullptr)
+	{// 終了処理
+		CSound::GetInstance()->Uninit();
+	}
 }
 
 //====================================
@@ -155,11 +145,11 @@ void CApplication::Update()
 #ifdef _DEBUG
 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetRenderer()->GetDevice();	//デバイスへのポインタ
 																			//ワイヤーフレーム
-	if (m_pInput->Trigger(DIK_1))
+	if (CInput::GetKey()->Trigger(DIK_1))
 	{
 		pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	}
-	if (m_pInput->Trigger(DIK_2))
+	if (CInput::GetKey()->Trigger(DIK_2))
 	{
 		pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	}
@@ -169,9 +159,9 @@ void CApplication::Update()
 	m_pRenderer->Update();
 
 	//キーボードとジョイパッドの更新
-	if (m_pInput != nullptr)
+	if (CInput::GetKey() != nullptr)
 	{
-		m_pInput->Update();
+		CInput::GetKey()->Update();
 	}
 
 	//モードごとの更新

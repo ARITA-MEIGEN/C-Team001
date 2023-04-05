@@ -34,6 +34,7 @@ CLight*CGame::m_pLight = nullptr;
 CFloor*CGame::m_pFloor = nullptr;
 CTimer*CGame::m_pTimer = nullptr;
 CUI*CGame::m_pUI = nullptr;
+
 //====================================
 //コンストラクタ
 //====================================
@@ -95,7 +96,7 @@ HRESULT CGame::Init()
 	//デバッグ用カメラ操作モード
 	bDebugCamera = false;
 
-	PlaySound(SOUND_LABEL_BGM_BATTLE001);
+	CSound::GetInstance()->Play(CSound::LABEL_BGM_BATTLE001);
 
 	m_pTimer = CTimer::Create();
 	m_Timer = 0;
@@ -153,7 +154,7 @@ void CGame::Uninit()
 		delete m_pTimer;
 	}
 
-	StopSound();
+	CSound::GetInstance()->Stop();
 }
 
 //====================================
@@ -161,7 +162,7 @@ void CGame::Uninit()
 //====================================
 void CGame::Update()
 {
-	CInput* pInput = CApplication::getInstance()->GetInput();
+	CInput* pInput = CInput::GetKey();
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
 		m_pUI->Update();	//UI

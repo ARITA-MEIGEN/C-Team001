@@ -23,11 +23,11 @@ class CShadow : public CObject3D
 public:
 	//ÉÅÉìÉoä÷êî
 	explicit CShadow(int nPriority = 3);
-	~CShadow()override;
-	HRESULT Init()override;
-	void Uninit()override;
-	void Update()override;
-	void Draw()override;
+	~CShadow() override;
+	HRESULT Init() override;
+	void Uninit() override;
+	void Update() override;
+	void Draw() override;
 	static CShadow*Create(D3DXVECTOR3 pos, D3DXVECTOR3 siz);
 	static void Load();
 	static void Unload();

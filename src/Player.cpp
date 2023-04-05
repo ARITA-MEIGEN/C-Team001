@@ -1142,7 +1142,7 @@ bool CPlayer::Guard(CCollision::EDAMAGE_POINT dp)
 void CPlayer::GuardSuccses(bool GuardBack)
 {
 	//ガードの音
-	PlaySound(SOUND_LABEL_SE_GUARD);
+	CSound::GetInstance()->Play(CSound::LABEL_SE_GUARD);
 	if (GuardBack == true)
 	{//ガードバック
 		if (m_bLeftSide == true)
@@ -1248,7 +1248,7 @@ void CPlayer::Command()
 					m_move = { BACKSTEP_MOVE_X,BACKSTEP_MOVE_Y,0.0f };
 					m_bJump = true;
 					m_nJumpCount = 1;
-					PlaySound(SOUND_LABEL_SE_BACKSTEP);
+					CSound::GetInstance()->Play(CSound::LABEL_SE_BACKSTEP);
 				}
 			}
 
@@ -1267,7 +1267,7 @@ void CPlayer::Command()
 					m_State = PST_AIR;
 					m_nJumpCount = 1;
 					m_bJump = true;
-					PlaySound(SOUND_LABEL_SE_BACKSTEP);
+					CSound::GetInstance()->Play(CSound::LABEL_SE_BACKSTEP);
 				}
 			}
 
@@ -1490,7 +1490,7 @@ void CPlayer::StateManagement()
 //==============================================
 void CPlayer::Input()
 {
-	CInput* pInput = CApplication::getInstance()->GetInput();
+	CInput* pInput = CInput::GetKey();
 	int Key = 0;
 	pInput->PressDevice(KEY_DOWN_RIGHT);
 	//レバー
@@ -1700,17 +1700,17 @@ void CPlayer::Hit(int Damage, CCollision::EDAMAGE_POINT pro, int HitRig, bool kn
 	//弱打撃
 	if (m_pEne->m_Motion == PM_JP_LATTACK || m_pEne->m_Motion == PM_ST_LATTACK || m_pEne->m_Motion == PM_CR_LATTACK)
 	{
-		PlaySound(SOUND_LABEL_SE_LATK_HIT);
+		CSound::GetInstance()->Play(CSound::LABEL_SE_LATK_HIT);
 	}
 	//中打撃
 	if (m_pEne->m_Motion == PM_JP_MATTACK || m_pEne->m_Motion == PM_ST_MATTACK || m_pEne->m_Motion == PM_CR_MATTACK)
 	{
-		PlaySound(SOUND_LABEL_SE_MATK_HIT);
+		CSound::GetInstance()->Play(CSound::LABEL_SE_MATK_HIT);
 	}
 	//強打撃
 	if (m_pEne->m_Motion == PM_JP_HATTACK || m_pEne->m_Motion == PM_ST_HATTACK || m_pEne->m_Motion == PM_CR_HATTACK)
 	{
-		PlaySound(SOUND_LABEL_SE_HATK_HIT);
+		CSound::GetInstance()->Play(CSound::LABEL_SE_HATK_HIT);
 	}
 
 	//なんちゃってヒットバック

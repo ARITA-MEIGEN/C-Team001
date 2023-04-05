@@ -18,13 +18,13 @@
 //=============================================================================
 CObject3D::CObject3D(int nPriority) :CObject(nPriority)
 {
-	m_pTexture = nullptr;											//ポリゴンのテクスチャ
-	m_pVtxBuff = nullptr;											//ポリゴンの頂点バッファ
-	m_fLength = 0.0f;												//対角線の長さ
-	m_fAngle = 0.0f;												//対角線の角度
-	m_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);							//位置を初期化する
-	m_Rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);							//向きを初期化
-	m_Col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	m_pTexture = nullptr;							// ポリゴンのテクスチャ
+	m_pVtxBuff = nullptr;							// ポリゴンの頂点バッファ
+	m_fLength = 0.0f;								// 対角線の長さ
+	m_fAngle = 0.0f;								// 対角線の角度
+	m_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 位置を初期化する
+	m_Rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 向きを初期化
+	m_Col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// 色
 }
 
 //=============================================================================

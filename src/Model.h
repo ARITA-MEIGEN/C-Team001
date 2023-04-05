@@ -57,23 +57,23 @@ public:
 
 
 private:
-	LPD3DXBUFFER		m_pBuffMat;		//マテリアル情報へのポインタ
-	DWORD				m_nNumMat;		//マテリアル情報の数
-	LPD3DXMESH			m_pMesh;		//メッシュへのポインタ
-	D3DXMATRIX			m_mtxParent;	//親のワールドマトリックス
-	D3DXMATRIX			m_mtxWorld;		//子のワールドマトリックス
-	D3DXMATRIX			m_mtxShadow;	//影用ワールドマトリックス
-	D3DXVECTOR3			m_pos;			//位置
-	D3DXVECTOR3			m_posold;		//前回の位置
-	D3DXVECTOR3			m_rotDest;		//目的の角度の保存
-	D3DXVECTOR3			m_rot;			//向き
-	D3DXVECTOR3			m_vtxMax;		//モデルの最大座標
-	D3DXVECTOR3			m_vtxMin;		//モデルの座標の最小値
-	int					m_nIdx;			//自身の番号
-	CModel*				m_pParent;		//親のモデルへのポインタ
-	D3DXVECTOR3			m_DefaultPos;	//初期位置
-	D3DXVECTOR3			m_DefaultRot;	//初期位置
-	D3DXCOLOR			m_col;			//色
+	LPD3DXBUFFER		m_pBuffMat;		// マテリアル情報へのポインタ
+	DWORD				m_nNumMat;		// マテリアル情報の数
+	LPD3DXMESH			m_pMesh;		// メッシュへのポインタ
+	D3DXMATRIX			m_mtxParent;	// 親のワールドマトリックス
+	D3DXMATRIX			m_mtxWorld;		// 子のワールドマトリックス
+	D3DXMATRIX			m_mtxShadow;	// 影用ワールドマトリックス
+	D3DXVECTOR3			m_pos;			// 位置
+	D3DXVECTOR3			m_posold;		// 前回の位置
+	D3DXVECTOR3			m_rotDest;		// 目的の角度の保存
+	D3DXVECTOR3			m_rot;			// 向き
+	D3DXVECTOR3			m_vtxMax;		// モデルの最大座標
+	D3DXVECTOR3			m_vtxMin;		// モデルの座標の最小値
+	int					m_nIdx;			// 自身の番号
+	CModel*				m_pParent;		// 親のモデルへのポインタ
+	D3DXVECTOR3			m_DefaultPos;	// 初期位置
+	D3DXVECTOR3			m_DefaultRot;	// 初期位置
+	D3DXCOLOR			m_col;			// 色
 };
 
 #endif

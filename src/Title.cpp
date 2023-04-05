@@ -15,7 +15,8 @@
 #include"sound.h"
 
 //静的メンバ変数
-CObject2D*CTitle::m_pBg = nullptr;
+CObject2D* CTitle::m_pBg = nullptr;
+
 //====================================
 //コンストラクタ
 //====================================
@@ -40,12 +41,12 @@ HRESULT CTitle::Init()
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 
 	//テクスチャの読み込み
-	LPDIRECT3DTEXTURE9 tex;
+	LPDIRECT3DTEXTURE9 tex = nullptr;
 
 	//背景の生成
 	m_pBg = new CObject2D(CObject::OBJTYPE_UI);
 	m_pBg->Init();
-	m_pBg->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,0.0f));
+	m_pBg->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
 	m_pBg->SetSiz(D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT));
 	m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
@@ -55,8 +56,6 @@ HRESULT CTitle::Init()
 		&tex);
 
 	m_pBg->BindTexture(tex);
-	PlaySound(SOUND_LABEL_BGM_TITLE);
-
 
 	return S_OK;
 }
@@ -66,7 +65,7 @@ HRESULT CTitle::Init()
 //====================================
 void CTitle::Uninit()
 {
-	StopSound();
+	CSound::GetInstance()->Stop();
 }
 
 //====================================
@@ -74,7 +73,7 @@ void CTitle::Uninit()
 //====================================
 void CTitle::Update()
 {
-	CInput* pInput = CApplication::getInstance()->GetInput();
+	CInput* pInput = CInput::GetKey();
 
 		//指定のキーが押されたかどうか
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
@@ -82,7 +81,7 @@ void CTitle::Update()
 		if (pInput->Trigger(KEY_ALL))
 		{
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
-			PlaySound(SOUND_LABEL_SE_START);
+			CSound::GetInstance()->Play(CSound::LABEL_SE_START);
 		}
 	}
 }

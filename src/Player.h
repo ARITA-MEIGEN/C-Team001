@@ -46,9 +46,6 @@ class CBullet;
 #define	GRAVITY				(0.25f)			//重力
 #define JUMP_FRAME			(50)			//ジャンプの全体フレーム
 
-
-
-
 class CPlayer :public CObject
 {
 public:
