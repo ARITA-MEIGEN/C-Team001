@@ -262,13 +262,14 @@ void CCamera:: ControlPos(void)
 //===========================
 void CCamera::DestPos(void)
 {
-	D3DXVECTOR3 Diffpos=CGame::GetPlayer(0)->GetPos()- CGame::GetPlayer(1)->GetPos();
-	
-	m_posR.x = (CGame::GetPlayer(1)->GetPos().x+ CGame::GetPlayer(0)->GetPos().x)/2;
-	m_posV.x =(CGame::GetPlayer(1)->GetPos().x + CGame::GetPlayer(0)->GetPos().x)/2;
+	//D3DXVECTOR3 Diffpos = CGame::GetPlayer(0)->GetPos() - CGame::GetPlayer(1)->GetPos();
+	D3DXVECTOR3 Diffpos(50.0f,50.0f,50.0f);
 
-	m_posR.y = (CGame::GetPlayer(1)->GetPos().y + CGame::GetPlayer(0)->GetPos().y)/2 + 50.0f;
-	m_posV.y = (CGame::GetPlayer(1)->GetPos().y + CGame::GetPlayer(0)->GetPos().y)/2 + 50.0f;
+	m_posR.x = Diffpos.x * 0.5f;
+	m_posV.x = Diffpos.x * 0.5f;
+
+	m_posR.y = Diffpos.y * 0.5f + 50.0f;
+	m_posV.y = Diffpos.y * 0.5f + 50.0f;
 
 	//íçéãì_ÇÃåvéZ
 	m_posR.z = m_posV.z + sinf(m_rot.x)*cosf(m_rot.y)*m_fDistance;

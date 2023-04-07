@@ -38,19 +38,6 @@ CUI::~CUI()
 //====================================
 HRESULT CUI::Init()
 {
-	LPDIRECT3DDEVICE9 pDevice;
-	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
-
-	//テクスチャの読み込み
-	LPDIRECT3DTEXTURE9 tex[2];
-	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\READY.png",
-		&tex[0]);
-
-	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\FIGHT.png",
-		&tex[1]);
-
 	//背景の生成
 	for (int i = 0; i < 2; i++)
 	{
@@ -59,8 +46,9 @@ HRESULT CUI::Init()
 		m_pStart[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2, 0.0f));
 		m_pStart[i]->SetSiz(D3DXVECTOR2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT));
 		m_pStart[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f - i));
-		m_pStart[i]->BindTexture(tex[i]);
 	}
+	m_pStart[0]->SetTextureKey("TEXT_READY");
+	m_pStart[1]->SetTextureKey("TEXT_FIGTH");
 
 	m_timer = 0;
 	return S_OK;

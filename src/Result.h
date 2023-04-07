@@ -8,13 +8,14 @@
 #define _RESULT_H_
 
 //インクルード
-#include"main.h"
-#include"Application.h"
-#include"Object2D.h"
+#include "main.h"
+#include "Application.h"
+#include "Mode.h"
+#include "Object2D.h"
 
 //前方宣言
 
-class CResult
+class CResult : public CMode
 {
 public:
 	CResult();

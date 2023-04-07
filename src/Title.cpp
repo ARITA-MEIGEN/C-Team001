@@ -50,12 +50,7 @@ HRESULT CTitle::Init()
 	m_pBg->SetSiz(D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT));
 	m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\Title000.png",
-		&tex);
-
-	m_pBg->BindTexture(tex);
+	m_pBg->SetTextureKey("LOGO_TITLE");
 
 	return S_OK;
 }
@@ -81,7 +76,6 @@ void CTitle::Update()
 		if (pInput->Trigger(KEY_ALL))
 		{
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
-			CSound::GetInstance()->Play(CSound::LABEL_SE_START);
 		}
 	}
 }

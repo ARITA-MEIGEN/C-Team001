@@ -256,6 +256,12 @@ void CSound::Uninit()
 
 	// COMライブラリの終了処理
 	CoUninitialize();
+
+	if (m_pSound != nullptr)
+	{// 終了処理
+		delete m_pSound;
+		m_pSound = nullptr;
+	}
 }
 
 //=============================================================================
@@ -263,23 +269,23 @@ void CSound::Uninit()
 //=============================================================================
 HRESULT CSound::Play(CSound::ELabel label)
 {
-	XAUDIO2_BUFFER buffer;
+	//XAUDIO2_BUFFER buffer;
 
-	// バッファの値設定
-	memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
-	buffer.AudioBytes = m_sizeAudio[label];
-	buffer.pAudioData = m_pDataAudio[label];
-	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	buffer.LoopCount = PARAM[label].loop;
+	//// バッファの値設定
+	//memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
+	//buffer.AudioBytes = m_sizeAudio[label];
+	//buffer.pAudioData = m_pDataAudio[label];
+	//buffer.Flags = XAUDIO2_END_OF_STREAM;
+	//buffer.LoopCount = PARAM[label].loop;
 
-	// セグメント停止(ラベル指定)
-	Stop(label);
+	//// セグメント停止(ラベル指定)
+	//Stop(label);
 
-	// オーディオバッファの登録
-	m_pSourceVoice[label]->SubmitSourceBuffer(&buffer);
+	//// オーディオバッファの登録
+	//m_pSourceVoice[label]->SubmitSourceBuffer(&buffer);
 
-	// 再生
-	m_pSourceVoice[label]->Start(0);
+	//// 再生
+	//m_pSourceVoice[label]->Start(0);
 
 	return S_OK;
 }

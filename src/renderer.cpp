@@ -7,7 +7,7 @@
 
 //インクルード
 #include"renderer.h"
-#include"Object2D.h"
+#include"ObjectList.h"
 #include"Application.h"
 #include"DebugProc.h"
 
@@ -117,7 +117,7 @@ HRESULT CRenderer::Init(HWND hWnd, bool bWindow)
 void  CRenderer::Uninit()
 {
 	//オブジェクトの破棄
-	CObject::ReleaseAll();
+	CObjectList::GetInstance()->Uninit();
 
 #ifdef _DEBUG
 	// デバッグ情報表示用フォントの破棄
@@ -149,7 +149,7 @@ void  CRenderer::Uninit()
 void  CRenderer::Update()
 {
 	// ポリゴンの更新処理
-	CObject::UpdateAll();
+	CObjectList::GetInstance()->Update();
 }
 
 //=============================================================================
@@ -166,7 +166,7 @@ void  CRenderer::Draw()
 	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
 	{
 		// ポリゴンの描画処理
-		CObject::DrawAll();
+		CObjectList::GetInstance()->Draw();
 
 		//デバッグ情報の描画
 		CApplication::getInstance()->GetDebugProc()->Draw();

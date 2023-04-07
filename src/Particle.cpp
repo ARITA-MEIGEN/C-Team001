@@ -21,9 +21,9 @@ CParticle::~CParticle()
 //============================
 HRESULT CParticle::Init()
 {
-	m_nSpeed = 1;															//パーティクルの最大速度
-	m_nTimer = 0;															//パーティクルの発射感覚
-	m_moverot = 628;														//拡散	大きければ大きいほど狭くなる
+	m_nSpeed = 1;		// パーティクルの最大速度
+	m_nTimer = 0;		// パーティクルの発射感覚
+	m_moverot = 628;	// 拡散	大きければ大きいほど狭くなる
 
 	nStartRandPosX = 20;	//初期位置の乱数
 	nStartRandPosY = 20;	//初期位置の乱数

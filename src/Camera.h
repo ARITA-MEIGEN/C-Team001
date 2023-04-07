@@ -4,7 +4,6 @@
 //=================================================
 #ifndef _CAMERA_H_		//このマクロ定義がされてなかったら
 #define _CAMERA_H_		//二重インクルード防止のマクロ定義
-#include"main.h"
 
 class CCamera
 {

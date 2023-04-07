@@ -16,6 +16,7 @@
 
 
 LPDIRECT3DTEXTURE9 CTimer::m_apTexture[NUM_TEXTIME] = {};
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -40,7 +41,7 @@ HRESULT CTimer::Init()
 	m_pObject2D->Init();
 	m_pObject2D->SetSiz(D3DXVECTOR2(100.0f, 100.0f));
 	m_pObject2D->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pObject2D->BindTexture(m_apTexture[0]);
+	m_pObject2D->SetTextureKey("TIMER");
 	m_pObject2D->SetPos(D3DXVECTOR3(SCREEN_WIDTH/2, 60.0f, 0.0f));
 
 	for (int i = 0; i < 2; i++)
@@ -49,7 +50,7 @@ HRESULT CTimer::Init()
 		m_apNumber[i]->Init();
 		m_apNumber[i]->SetSiz(D3DXVECTOR2(40.0f, 80.0f));
 		m_apNumber[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		m_apNumber[i]->BindTexture(m_apTexture[1]);
+		m_apNumber[i]->SetTextureKey("NUMBER");
 	}
 	m_apNumber[0]->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2 - 17.0f, 70.0f, 0.0f));
 	m_apNumber[1]->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2 + 17.0f, 70.0f, 0.0f));

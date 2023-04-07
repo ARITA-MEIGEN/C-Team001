@@ -8,14 +8,14 @@
 //インクルード
 #include "Object2D.h"
 #include "renderer.h"
-#include"Application.h"
+#include "Application.h"
+#include "Texture.h"
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 CObject2D::CObject2D(int nPriority) :CObject(nPriority)
 {
-	m_pTexture = nullptr;											//ポリゴンのテクスチャ
 	m_pVtxBuff = nullptr;											//ポリゴンの頂点バッファ
 	m_fLength = 0.0f;												//対角線の長さ
 	m_fAngle = 0.0f;												//対角線の角度
@@ -180,31 +180,19 @@ void  CObject2D::Draw()
 	// 頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
-	//テクスチャの設定
-	pDevice->SetTexture(0, m_pTexture);
+	// テクスチャの取得
+	CTexture* pTexture = CTexture::GetInstance();
+
+	// テクスチャの設定
+	pDevice->SetTexture(0, pTexture->GetTexture(m_textureKey));
 
 	//ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	//ポリゴンの形
 		0,										//頂点の開始場所
 		2);										//プリミティブの数
 
-												//テクスチャの解除
+	// テクスチャの解除
 	pDevice->SetTexture(0, NULL);
-}
-//=============================================================================
-// 位置の設定
-//=============================================================================
-void  CObject2D::Setposition(D3DXVECTOR3 move)
-{
-	m_Pos += move;
-}
-
-//=============================================================================
-// テクスチャの設定
-//=============================================================================
-void CObject2D::BindTexture(LPDIRECT3DTEXTURE9 tex)
-{
-	m_pTexture = tex;
 }
 
 //=============================================================================
@@ -224,14 +212,6 @@ bool CObject2D::Hit(D3DXVECTOR3 pos, D3DXVECTOR3 TargetPos, D3DXVECTOR2 Siz, D3D
 	{
 		return false;
 	}
-}
-
-//=============================================================================
-// 位置の取得
-//=============================================================================
-D3DXVECTOR3 CObject2D::GetPos()
-{
-	return m_Pos;
 }
 
 //=============================================================================
@@ -264,14 +244,6 @@ float CObject2D::GetRot()
 D3DXVECTOR2 CObject2D::GetUV(int number)
 {
 	return m_UV[number];
-}
-
-//=============================================================================
-// 位置の設定
-//=============================================================================
-void CObject2D::SetPos(D3DXVECTOR3 pos)
-{
-	m_Pos = pos;
 }
 
 //=============================================================================
@@ -341,3 +313,4 @@ CObject2D * CObject2D::Create(D3DXVECTOR3 pos, D3DXVECTOR2 siz,int Priority)
 	pObject2D->SetPos(pos);
 	return pObject2D;
 }
+

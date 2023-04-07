@@ -48,24 +48,12 @@ HRESULT CResult::Init()
 	m_pBg->SetSiz(D3DXVECTOR2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT));
 	m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\Result000.png",
-		&tex[0]);
+	std::string textureKey[3];
+	textureKey[0] = "RESULET_000";
+	textureKey[1] = "RESULET_001";
+	textureKey[2] = "RESULET_002";
 
-	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\Result001.png",
-		&tex[1]);
-
-	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\Result002.png",
-		&tex[2]);
-
-	m_pBg->BindTexture(tex[CApplication::getInstance()->GetWinner()]);
-
-	CSound::GetInstance()->Play(CSound::LABEL_BGM_RESULT);
+	m_pBg->SetTextureKey(textureKey[CApplication::getInstance()->GetWinner()]);
 
 	return S_OK;
 }
@@ -90,7 +78,6 @@ void CResult::Update()
 		if ((pInput->Trigger(KEY_ALL)) == true)		//ENTERキー
 		{//エンターでランキングに
 		 //モード設定
-			CSound::GetInstance()->Play(CSound::LABEL_SE_START);
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
 		}
 	}

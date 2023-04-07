@@ -14,6 +14,7 @@
 #include"Player.h"
 
 LPDIRECT3DTEXTURE9 CLife::m_apTexture[NUM_TEXLIFE] = {};
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -34,6 +35,11 @@ CLife::~CLife()
 //=============================================================================
 HRESULT CLife::Init(float Width, float Height)
 {
+	std::string textureKey[3];
+	textureKey[0] = "LIFE_FRAME";
+	textureKey[1] = "LIFE_BAR_BLACK";
+	textureKey[2] = "LIFE_BAR";
+
 	for (int j = 0; j < 2; j++)
 	{
 		for (int i = 0; i < NUM_TEXLIFE; i++)
@@ -43,7 +49,7 @@ HRESULT CLife::Init(float Width, float Height)
 			m_apObject2D[i + j*NUM_TEXLIFE]->SetSiz(D3DXVECTOR2(0.0f, 30.0f));
 			m_apObject2D[i + j*NUM_TEXLIFE]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-			m_apObject2D[i + j*NUM_TEXLIFE]->BindTexture(m_apTexture[i]);
+			m_apObject2D[i + j*NUM_TEXLIFE]->SetTextureKey(textureKey[i]);
 		}
 	}
 	m_apObject2D[0]->SetSiz(D3DXVECTOR2(0.0f, 40.0f));
@@ -79,15 +85,7 @@ HRESULT CLife::Init(float Width, float Height)
 //=============================================================================
 void CLife::Uninit()
 {
-	for (int i = 0; i < NUM_TEXLIFE; i++)
-	{
-		if (m_apTexture[i]!=nullptr)
-		{
-			m_apTexture[i] = nullptr;
-			delete m_apTexture[i];
-		}
-	}
-	
+	Unload();
 }
 
 //=============================================================================

@@ -18,9 +18,7 @@
 class CRenderer;
 class CTexture;
 class CDebugProc;
-class CTitle;
-class CGame;
-class CResult;
+class CMode;
 class CFade;
 
 static const int MAX_POLYGON = 1920;	// ƒ|ƒŠƒSƒ“‚ÌÅ‘å”
@@ -83,8 +81,6 @@ private:
 	int m_nScore[2];
 
 	//‰æ–Ê
-	CTitle* m_pTitle;
-	CGame* m_pGame;
-	CResult* m_pResult;
+	CMode* m_pMode;
 };
 #endif // !_APPLICATION_H_

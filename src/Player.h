@@ -70,9 +70,9 @@ public:
 	struct MOTION_SET
 	{
 		KEY_SET		aKey[NUM_PARTS];		//キーの総数分持つ
-		int			nNumKey;					//キーの総数(ファイルで読み込む)
-		bool		bLoop;						//ループするかどうか
-		int			nHitStopTimer;				//ヒットストップの時間
+		int			nNumKey;				//キーの総数(ファイルで読み込む)
+		bool		bLoop;					//ループするかどうか
+		int			nHitStopTimer;			//ヒットストップの時間
 	};
 
 	enum PLAYER_MOTION

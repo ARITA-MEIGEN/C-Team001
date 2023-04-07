@@ -96,8 +96,6 @@ HRESULT CGame::Init()
 	//デバッグ用カメラ操作モード
 	bDebugCamera = false;
 
-	CSound::GetInstance()->Play(CSound::LABEL_BGM_BATTLE001);
-
 	m_pTimer = CTimer::Create();
 	m_Timer = 0;
 
@@ -183,6 +181,7 @@ void CGame::Update()
 
 	m_pCamera->Update();
 	m_pLight->Update();
+
 	m_Life->Update();
 	GameJudge();
 }

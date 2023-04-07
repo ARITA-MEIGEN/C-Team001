@@ -11,12 +11,13 @@
 #include "main.h"
 #include "input.h"
 #include "DebugProc.h"
-#include "Object.h"
 #include "Fade.h"
 #include "sound.h"
 #include "Title.h"
 #include "Game.h"
 #include "Result.h"
+#include "Texture.h"
+#include "ObjectList.h"
 #include "Texture.h"
 
 //====================================
@@ -84,28 +85,12 @@ void CApplication::Uninit()
 		m_pRenderer = nullptr;
 	}
 
-	// タイトルの終了
-	if (m_pTitle != nullptr)
+	// モードの終了
+	if (m_pMode != nullptr)
 	{
-		m_pTitle->Uninit();
-		delete m_pTitle;
-		m_pTitle = nullptr;
-	}
-
-	// ゲームの終了
-	if (m_pGame != nullptr)
-	{
-		m_pGame->Uninit();
-		delete m_pGame;
-		m_pGame = nullptr;
-	}
-
-	// リザルトの終了
-	if (m_pResult != nullptr)
-	{
-		m_pResult->Uninit();
-		delete m_pResult;
-		m_pResult = nullptr;
+		m_pMode->Uninit();
+		delete m_pMode;
+		m_pMode = nullptr;
 	}
 
 	// フェードの終了
@@ -135,6 +120,13 @@ void CApplication::Uninit()
 	{// 終了処理
 		CSound::GetInstance()->Uninit();
 	}
+
+	//テクスチャの終了
+	if (CTexture::GetInstance() != nullptr)
+	{// 終了処理
+		CTexture::GetInstance()->UnloadAll();
+		delete CTexture::GetInstance();
+	}
 }
 
 //====================================
@@ -144,7 +136,8 @@ void CApplication::Update()
 {
 #ifdef _DEBUG
 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetRenderer()->GetDevice();	//デバイスへのポインタ
-																			//ワイヤーフレーム
+
+	//ワイヤーフレーム
 	if (CInput::GetKey()->Trigger(DIK_1))
 	{
 		pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
@@ -165,23 +158,7 @@ void CApplication::Update()
 	}
 
 	//モードごとの更新
-	switch (m_mode)
-	{
-	case MODE_TITLE:
-		m_pTitle->Update();
-		break;
-
-	case MODE_GAME:
-		m_pGame->Update();
-		break;
-
-	case MODE_RESULT:
-		m_pResult->Update();
-		break;
-
-	default:
-		break;
-	}
+	m_pMode->Update();
 
 	//フェードの更新
 	m_pFade->Update();
@@ -195,23 +172,7 @@ void CApplication::Draw()
 	m_pRenderer->Draw();
 
 	//モードごとの描画
-	switch (m_mode)
-	{
-	case MODE_TITLE:
-		m_pTitle->Draw();
-		break;
-
-	case MODE_GAME:
-		m_pGame->Draw();
-		break;
-
-	case MODE_RESULT:
-		m_pResult->Draw();
-		break;
-
-	default:
-		break;
-	}
+	m_pMode->Draw();
 }
 
 //======================================================
@@ -220,48 +181,32 @@ void CApplication::Draw()
 void CApplication::SetMode(MODE mode)
 {
 	//新しい画面(モード)の初期化処理
-	switch (m_mode)
+	if (m_pMode != nullptr)
 	{
-	case MODE_TITLE:	//タイトル画面
-		m_pTitle->Uninit();
-		delete m_pTitle;
-		m_pTitle=nullptr;
-		break;
-
-	case MODE_GAME:		//ゲーム画面
-		m_pGame->Uninit();
-		delete m_pGame;
-		m_pGame = nullptr;
-		break;
-
-	case MODE_RESULT:	//リザルト画面
-		m_pResult->Uninit();
-		delete m_pResult;
-		m_pResult = nullptr;
-		break;
+		m_pMode->Uninit();
+		delete m_pMode;
+		m_pMode = nullptr;
 	}
+
 	m_mode = mode;	//現在の画面(モード)を切り替える
-	CObject::ReleaseAll();
+	CObjectList::GetInstance()->AllRelease();
 
 	//新しい画面(モード)の初期化処理
 	switch (m_mode)
 	{
 	case MODE_TITLE:	//タイトル画面
-		m_pTitle = nullptr;
-		m_pTitle = new CTitle;
-		m_pTitle->Init();
+		m_pMode = new CTitle;
+		m_pMode->Init();
 		break;
 
 	case MODE_GAME:		//ゲーム画面
-		m_pGame = nullptr;
-		m_pGame = new CGame;
-		m_pGame->Init();
+		m_pMode = new CGame;
+		m_pMode->Init();
 		break;
 
 	case MODE_RESULT:	//リザルト画面
-		m_pResult = nullptr;
-		m_pResult = new CResult;
-		m_pResult->Init();
+		m_pMode = new CResult;
+		m_pMode->Init();
 		break;
 	}
 }

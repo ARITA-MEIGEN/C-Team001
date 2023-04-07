@@ -8,13 +8,14 @@
 #define _TITLE_H_
 
 //インクルード
-#include"main.h"
-#include"Application.h"
+#include "main.h"
+#include "Application.h"
+#include "Mode.h"
 
 //前方宣言
 class CObject2D;
 
-class CTitle
+class CTitle : public CMode
 {
 public:
 	CTitle();

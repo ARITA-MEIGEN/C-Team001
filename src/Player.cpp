@@ -30,8 +30,8 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_nPlayerNumber = m_nNumPlayer;
 	m_nNumPlayer++;
 
-	m_AxisBox = CCollision::Create(m_pos, CCollision::COLLI_AXIS);						//押し出し判定(プレイヤーの軸)
-	m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(80.0f, 0.0f, 80.0f));				//影
+	m_AxisBox = CCollision::Create(m_pos, CCollision::COLLI_AXIS);			// 押し出し判定(プレイヤーの軸)
+	m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(80.0f, 0.0f, 80.0f));	// 影
 
 	m_nJump = JUMP_FRAME;				//ジャンプの全体フレーム
 	m_nJumpTransTime = JUMP_TRANS_TIME;	//ジャンプ移行
