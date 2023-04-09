@@ -7,18 +7,14 @@
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
 
-//インクルード
-#include"main.h"
-
-#define MAX_TYPE (OBJTYPE_MAX+1)
-
 class CObject
 {
 public:
 	//構造体
-	enum EObjType
+	enum EType
 	{
-		OBJTYPE_MAP,
+		OBJTYPE_NONE = -1,
+		OBJTYPE_MAP = 0,
 		OBJTYPE_PLANET,
 		OBJTYPE_GOAL,
 		OBJTYPE_BLOCK,
@@ -32,12 +28,11 @@ public:
 	//メンバ関数
 	explicit CObject(int nPriority = 3);
 	virtual ~CObject();
-	virtual HRESULT Init() = 0;	// 初期化
-	virtual void Uninit() = 0;				// 終了
-	virtual void Update() = 0;				// 更新
-	virtual void Draw() = 0;				// 描画
-	//void SetObjType(EObjType Type);		// 種類の設定
-	//static void test();					// テスト用
+	virtual HRESULT Init() = 0;		// 初期化
+	virtual void Uninit() = 0;		// 終了
+	virtual void Update() = 0;		// 更新
+	virtual void Draw() = 0;		// 描画
+	void SetType(EType Type);		// 種類の設定
 
 	int GetPriority() { return m_nPriority; }
 	
@@ -52,15 +47,14 @@ public:
 	CObject* GetNext() { return m_pNext; }
 
 protected:
-	int m_frame;							// 生成されてからの時間
+	int m_frame;		// 生成されてからの時間
 
 private:
 	//メンバ変数
-	static int m_nNumAll;					// 全体の数
-	int m_nPriority;						// 描画の優先順位
-	CObject* m_pPrev;						// 前のオブジェクトへのポインタ
-	CObject* m_pNext;						// 次のオブジェクトへの
-	bool m_bDead;							// 死亡フラグ
+	int m_nPriority;	// 描画の優先順位
+	CObject* m_pPrev;	// 前のオブジェクト
+	CObject* m_pNext;	// 次のオブジェクト
+	bool m_bDead;		// 死亡フラグ
+	EType m_type;		// タイプ
 };
-
 #endif // !_OBJECT_H_
