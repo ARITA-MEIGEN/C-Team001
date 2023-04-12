@@ -51,7 +51,6 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
-	void Damagejudge();
 	void GameJudge();
 	void ResetGame();	// ƒ‰ƒEƒ“ƒhˆÚs‚Ìˆ—
 

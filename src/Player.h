@@ -161,11 +161,6 @@ public:
 	void			DrawCollision();																//当たり判定の設定
 	void			Axis(void);																		//軸の押し出し判定
 	void			Jump(void);																		//ジャンプ
-	void			AutoTurn(void);																	//自動振りむき
-	bool			Damage();																		//ダメージ処理
-	bool			Guard(CCollision::EDAMAGE_POINT dp);											//ガード処理
-	void			GuardSuccses(bool GuardBack);													//ガード成功時
-	void			Command();																		//コマンド処理	
 	bool			CheckInput(const int *command);													//コマンドの入力判定
 	void			StateManagement();																//プレイヤーの状態管理
 	void			Input();																		//入力処理
@@ -175,13 +170,7 @@ public:
 	void			Down();																			//着地設定
 	void			Hit(int Damage, CCollision::EDAMAGE_POINT pro, int HitRig, bool knockback);		//ダメージ設定
 	void			Die();																			//死亡処理
-	PLAYER_MOTION	FireBall(PLAYER_MOTION nowmotion);												//遠距離技
-	void			Slow();																			//投げ
 	void			Normalization();																//正規化
-	void			StageEdge();																	//ステージの端の処理
-	void			UpdateAfter();																	//同時更新用
-	void			TransDamageMotion();															//ダメージモーションに移行
-	void			TransDamageVector();															//被弾時のベクトル設定
 
 	//セッター
 	void			SetPos(D3DXVECTOR3 pos) { m_pos = pos; };			//位置の設定
@@ -195,13 +184,7 @@ public:
 	//ゲッター
 	D3DXVECTOR3		GetPos() { return m_pos; };
 	int				GetLife() { return m_nLife; };				//体力
-	bool			GetBullet() { return m_bBullet ; };			//弾を使用しているかどうか
-	CBullet*		GetBulletState() { return m_pBullet; };		//弾の情報取得
 	PLAYER_MOTION	GetNowMotion() { return m_Motion; };
-	//当たり判定の取得
-	CCollision*		GetCollision(int number) { return m_apMotion[m_Motion].aKey[m_nCurKey].Collision[number]; };
-	//やられ判定の取得
-	CCollision*		GetHurt(int number) { return m_apMotion[m_Motion].aKey[m_nCurKey].HurtCol[number]; };
 
 
 private:

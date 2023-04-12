@@ -165,7 +165,6 @@ void CGame::Update()
 	{
 		m_pUI->Update();	//UI
 		m_pTimer->Update();
-		Damagejudge();
 
 #ifdef _DEBUG
 		//指定のキーが押されたかどうか
@@ -192,31 +191,6 @@ void CGame::Update()
 void CGame::Draw()
 {
 	m_pCamera->Set();
-}
-
-//====================================
-//ダメージ判定
-//====================================
-void CGame::Damagejudge()
-{
-	//一回だけ通るようにする
-	m_pPlayer[0]->SetDamage(m_pPlayer[0]->Damage());	//ダメージ判定
-	m_pPlayer[1]->SetDamage(m_pPlayer[1]->Damage());	//ダメージ判定
-
-	m_pPlayer[0]->DrawCollision();			//プレイヤー1の当たり判定表示
-	m_pPlayer[1]->DrawCollision();			//プレイヤー2の当たり判定表示
-	m_pPlayer[0]->TransDamageVector();		//プレイヤー1のダメージベクトル設定
-	m_pPlayer[1]->TransDamageVector();		//プレイヤー2のダメージベクトル設定
-	m_pPlayer[0]->TransDamageMotion();		//プレイヤー1のダメージモーション設定
-	m_pPlayer[1]->TransDamageMotion();		//プレイヤー2のダメージモーション設定
-
-	m_pPlayer[0]->Die();					//プレイヤー1死亡処理
-	m_pPlayer[1]->Die();					//プレイヤー2死亡処理
-	m_pPlayer[0]->MotionManager();			//プレイヤー1モーション再生
-	m_pPlayer[1]->MotionManager();			//プレイヤー2モーション再生
-
-	m_pPlayer[0]->SetDamage(false);			//ダメージ判定RESET
-	m_pPlayer[1]->SetDamage(false);			//ダメージ判定RESET
 }
 
 //====================================
