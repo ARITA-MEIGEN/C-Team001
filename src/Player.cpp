@@ -14,6 +14,7 @@
 #include"Model.h"
 #include"Game.h"
 #include"Collision.h"
+#include"PlayerController.h"
 #include"sound.h"
 #include"Time.h"
 #include"effect.h"
@@ -97,6 +98,10 @@ HRESULT CPlayer::Init()
 	
 	//当たり判定表示(デバッグ用)
 	DrawCollision();
+
+	//動的確保
+	m_controller = new CPlayerController(0);
+
 	return S_OK;
 }
 
@@ -121,6 +126,12 @@ void CPlayer::Uninit(void)
 	{
 		m_pShadow = nullptr;
 	}	
+
+	if (m_controller != nullptr)
+	{
+		delete m_controller;
+		m_controller = nullptr;
+	}
 
 	CObject::Release();
 }
@@ -168,6 +179,9 @@ void CPlayer::Update(void)
 			}
 		}
 		
+		// 移動
+		Move();
+
 		Normalization();		//角度の正規化
 		m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
 
@@ -1133,6 +1147,21 @@ void CPlayer::Input()
 	}
 	m_anInput[0] = Key;
 
+}
+
+//-----------------------------------------
+// 移動
+//-----------------------------------------
+void CPlayer::Move()
+{
+	if (m_controller == nullptr)
+	{
+		assert(false);
+		return;
+	}
+
+	// 方向ベクトル掛ける移動量
+	m_move = m_controller->Move() * MOVE_SPEED;
 }
 
 //==============================================

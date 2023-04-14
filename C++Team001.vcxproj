@@ -90,7 +90,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Student\Documents\Visual Studio 2015\Projects\C++Team001\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>Precompile.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <PrecompiledHeaderFile>Precompile.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -154,6 +154,7 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Collision.cpp" />
+    <ClCompile Include="src\Controller.cpp" />
     <ClCompile Include="src\DebugProc.cpp" />
     <ClCompile Include="src\DirectInput.cpp" />
     <ClCompile Include="src\effect.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="src\ObjectX.cpp" />
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\PlayerController.cpp" />
     <ClCompile Include="src\Precompile.cpp" />
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\Result.cpp" />
@@ -195,6 +197,7 @@
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Collision.h" />
     <ClInclude Include="src\Command.h" />
+    <ClInclude Include="src\Controller.h" />
     <ClInclude Include="src\DebugProc.h" />
     <ClInclude Include="src\DirectInput.h" />
     <ClInclude Include="src\Easing.h" />
@@ -223,6 +226,7 @@
     <ClInclude Include="src\ObjectX.h" />
     <ClInclude Include="src\Particle.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\PlayerController.h" />
     <ClInclude Include="src\Precompile.h" />
     <ClInclude Include="src\renderer.h" />
     <ClInclude Include="src\Result.h" />

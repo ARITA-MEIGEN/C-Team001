@@ -17,6 +17,7 @@
 #include"Collision.h"
 
 //前方宣言
+class CController;
 class CShadow;
 class CModel;
 class CBullet;
@@ -45,6 +46,7 @@ class CBullet;
 #define	JUMP_TRANS_TIME		(4)				//ジャンプ移行フレーム
 #define	GRAVITY				(0.25f)			//重力
 #define JUMP_FRAME			(50)			//ジャンプの全体フレーム
+#define MOVE_SPEED			(5.0f)			//プレイヤーのスピード
 
 class CPlayer :public CObject
 {
@@ -152,6 +154,7 @@ public:
 	void			Uninit(void)override;
 	void			Update(void)override;
 	void			Draw(void)override;
+	void			Move();
 	static CPlayer*	Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);	
 	D3DXMATRIX		GetMtx() { return m_mtxWorld; };												//マトリックスの取得
 	void			ReadMotion();
@@ -173,6 +176,7 @@ public:
 	void			Normalization();																//正規化
 
 	//セッター
+	void			SetController(CController* inOperate);
 	void			SetPos(D3DXVECTOR3 pos) { m_pos = pos; };			//位置の設定
 	void			SetRot(D3DXVECTOR3 rot) { m_rot = rot; };			//向きの設定
 	void			SetEnemy(CPlayer* ene) { m_pEne = ene; };			//敵のポインタ
@@ -188,6 +192,7 @@ public:
 
 
 private:
+	CController*	m_controller;					//命令を出す人
 	CModel*			m_apModel[NUM_PLAYERPARTS];		//モデルのインスタンス
 	MOTION_SET		m_apMotion[PM_MAX];				//モーションの数だけ生成モーションの数->キーの総数->モデルの数
 	D3DXMATRIX		m_mtxWorld;						//ワールドマトリックス
