@@ -26,7 +26,7 @@ public:
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
-	static CBlock *Create(D3DXVECTOR3 pos, D3DXVECTOR3 siz, float lot);
+	static CBlock *Create(D3DXVECTOR3 pos, float lot);
 private:
 	//ƒƒ“ƒoŠÖ”
 };

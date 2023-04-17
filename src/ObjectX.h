@@ -26,10 +26,13 @@ public:
 	virtual void Update(void)override;
 	virtual void Draw(void)override;
 	static CObjectX*Create(D3DXVECTOR3 pos, int Priority, LPCTSTR name);
-	void SetPos(D3DXVECTOR3 pos);
-	void SetRot(D3DXVECTOR3 rot);
 	void BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat);
 	void Shadow();
+
+	//セッター
+	void SetPos(D3DXVECTOR3 pos);
+	void SetRot(D3DXVECTOR3 rot);
+	void SetModel(LPCTSTR name) { m_modelname = name; };
 
 private:
 	LPD3DXMESH		m_pMesh;			//メッシュへのポインタ

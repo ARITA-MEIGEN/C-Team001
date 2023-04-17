@@ -65,15 +65,16 @@ void  CBlock::Draw()
 //=============================================================================
 // ¶¬
 //=============================================================================
-CBlock* CBlock::Create(D3DXVECTOR3 pos, D3DXVECTOR3 siz, float lot)
+CBlock* CBlock::Create(D3DXVECTOR3 pos, float lot)
 {
-	CBlock*pEffect;
-	pEffect = new CBlock(5);
-	if (pEffect != nullptr)
+	CBlock*pBlock;
+	pBlock = new CBlock(5);
+	if (pBlock != nullptr)
 	{// ƒ|ƒŠƒSƒ“‚Ì‰Šú‰»ˆ—
-		pEffect->Init();
-		pEffect->SetPos(pos);
-		pEffect->SetRot(D3DXVECTOR3(lot, D3DX_PI*-0.5f, D3DX_PI*0.5f));
+		pBlock->SetModel("data\MODEL\box.x");
+		pBlock->Init();
+		pBlock->SetPos(pos);
+		pBlock->SetRot(D3DXVECTOR3(lot, D3DX_PI*-0.5f, D3DX_PI*0.5f));
 	}
-	return pEffect;
+	return pBlock;
 }
