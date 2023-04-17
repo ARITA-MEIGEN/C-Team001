@@ -50,7 +50,7 @@ void CParticle::Update(void)
 	case CParticle::PAR_FIREFLOWER:
 			m_nLife = 10;
 			m_nNumber = 100;
-			m_fRot = D3DX_PI*BULLET_ANGLE;
+			m_fRot = D3DX_PI;
 
 		break;
 	case CParticle::MAX_PARTICLE:

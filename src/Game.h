@@ -11,7 +11,7 @@
 #include "Application.h"
 #include "Mode.h"
 
-#define MAX_PLAYER	(2)
+#define MAX_PLAYER	(4)
 #define STAGE_WIDTH	(350)	// 中央から端までの長さ
 #define END_TIMER	(120)	// プレイヤーが死んでから終わるまでの時間
 #define END_SCORE	(2)		// ゲーム終了するためのスコア
@@ -51,7 +51,6 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
-	void GameJudge();
 	void ResetGame();	// ラウンド移行時の処理
 
 	// セッター

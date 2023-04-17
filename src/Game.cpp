@@ -16,7 +16,6 @@
 #include"Light.h"
 #include"Shadow.h"
 #include"Fade.h"
-#include"Life.h"
 #include"sound.h"
 #include"input.h"
 #include"effect.h"
@@ -24,7 +23,7 @@
 #include"UI.h"
 
 //静的メンバ変数
-CPlayer*CGame::m_pPlayer[2] = {};
+CPlayer*CGame::m_pPlayer[4] = {};
 CLife*CGame::m_Life = nullptr;				//体力ゲージ
 CGame::GAME CGame::m_gamestate;
 bool CGame::bDebugCamera = nullptr;
@@ -58,19 +57,15 @@ HRESULT CGame::Init()
 	//テクスチャの読み込み
 	CShadow::Load();
 	CFloor::Load();
-	CLife::Load();
 	CEffect::Load();
 	CTimer::Load();
 	CShadow::Load();
 
 	//プレイヤーの生成
-	m_pPlayer[0] = CPlayer::Create(D3DXVECTOR3(-50.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI*0.5f, 0.0f));
-	m_pPlayer[1] = CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
-	m_pPlayer[0]->SetEnemy(m_pPlayer[1]);
-	m_pPlayer[1]->SetEnemy(m_pPlayer[0]);
-
-	//体力ゲージ
-	m_Life = CLife::Create();
+	m_pPlayer[0] = CPlayer::Create(D3DXVECTOR3(-100.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
+	m_pPlayer[1] = CPlayer::Create(D3DXVECTOR3(-50.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
+	m_pPlayer[2] = CPlayer::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
+	m_pPlayer[3] = CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
 
 	//カメラの設定
 	m_pCamera = CCamera::Create();
@@ -115,7 +110,6 @@ void CGame::Uninit()
 	//テクスチャの破棄
 	CShadow::Unload();
 	CFloor::Unload();
-	CLife::Unload();
 	CEffect::Unload();
 	CTimer::Unload();
 	CShadow::Unload();
@@ -132,12 +126,6 @@ void CGame::Uninit()
 	{
 		m_pLight->Uninit();
 		delete m_pLight;
-	}
-
-	if (m_Life != nullptr)
-	{
-		m_Life->Uninit();
-		delete m_Life;
 	}
 
 	if (m_pUI != nullptr)
@@ -181,8 +169,6 @@ void CGame::Update()
 	m_pCamera->Update();
 	m_pLight->Update();
 
-	m_Life->Update();
-	GameJudge();
 }
 
 //====================================
@@ -191,84 +177,6 @@ void CGame::Update()
 void CGame::Draw()
 {
 	m_pCamera->Set();
-}
-
-//====================================
-//勝敗判定
-//====================================
-void CGame::GameJudge()
-{
-	//終了条件
-	for (int i = 0; i < MAX_PLAYER; i++)
-	{//体力が0以下
-		if (m_pPlayer[i]->GetNowMotion() == CPlayer::PM_DOWN)
-		{
-			if (m_pPlayer[i]->GetLife() <= 0 || m_pTimer->GetTimer() <= 0)
-			{
-				m_gamestate = GAME_END;
-				break;
-			}
-		}
-	}
-	//時間切れ
-	if (GetTimer()->GetTimer() <= 0)
-	{
-		m_gamestate = GAME_END;
-	}
-
-	//ラウンド終了条件を満たした場合画面遷移
-	if (m_gamestate == GAME_END&&CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
-	{
-		if (m_Timer == 0)
-		{//最初の一回のみ通る
-			if (m_pPlayer[1]->GetLife() < m_pPlayer[0]->GetLife())
-			{//プレイヤー1勝利
-				CApplication::getInstance()->AddScore(0);
-			}
-			else if (m_pPlayer[0]->GetLife() < m_pPlayer[1]->GetLife())
-			{//プレイヤー2勝利
-				CApplication::getInstance()->AddScore(1);
-			}
-			else //引き分け
-			{//両方のスコアを加算
-				CApplication::getInstance()->AddScore(0);
-				CApplication::getInstance()->AddScore(1);
-			}
-		}
-		//タイマーが一定値以上で画面遷移
-		m_Timer++;	//タイマー加算
-		if (m_Timer >= END_TIMER)
-		{
-			//一定以上のスコアでリザルトへ移行
-			for (int i = 0; i < MAX_PLAYER; i++)
-			{
-				if (CApplication::getInstance()->GetScore(i) >= END_SCORE)
-				{
-					if (CApplication::getInstance()->GetScore(i) > CApplication::getInstance()->GetScore(1 - i))
-					{
-						CApplication::getInstance()->SetWinner(i);
-					}
-					else
-					{//引き分け
-						CApplication::getInstance()->SetWinner(2);
-					}
-
-					//スコアリセット
-					CApplication::getInstance()->ResetScore();
-
-					//ゲームリセット
-					CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
-				}
-			}
-			//ラウンド移行
-			m_Round = static_cast<ROUND>(m_Round + 1);
-			CApplication::getInstance()->GetFade()->SetFade();
-		}
-	}
-	if (m_gamestate == GAME_END&&CApplication::getInstance()->GetFade()->GetFade()==CFade::FADE_IN)
-	{
-		ResetGame();
-	}
 }
 
 //ラウンド移行時の処理

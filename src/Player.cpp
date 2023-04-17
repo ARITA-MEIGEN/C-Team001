@@ -13,7 +13,7 @@
 #include"Mesh.h"
 #include"Model.h"
 #include"Game.h"
-#include"Collision.h"
+#include"PlayerController.h"
 #include"sound.h"
 #include"Time.h"
 #include"effect.h"
@@ -29,11 +29,7 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_nPlayerNumber = m_nNumPlayer;
 	m_nNumPlayer++;
 
-	m_AxisBox = CCollision::Create(m_pos, CCollision::COLLI_AXIS);			// 押し出し判定(プレイヤーの軸)
 	m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(80.0f, 0.0f, 80.0f));	// 影
-
-	m_nJump = JUMP_FRAME;				//ジャンプの全体フレーム
-	m_nJumpTransTime = JUMP_TRANS_TIME;	//ジャンプ移行
 
 	//モデルとモーションの読み込み
 	for (int i = 0; i < NUM_PARTS; i++)
@@ -57,22 +53,6 @@ HRESULT CPlayer::Init()
 {
 	m_Motion = PM_ST_NEUTRAL;	//ニュートラルモーションに変更
 
-	//エラー防止用に全ての数値に0を入れる
-	for (int i = 0; i < MAX_MOTION; i++)
-	{//モーションの初期化
-		for (int j = 0; j < MAX_KEY; j++)
-		{
-			for (int k = 0; k < NUM_PARTS; k++)
-			{
-				m_apMotion[i].aKey[j].aKey[k].fPos = { 0.0f,0.0f,0.0f };
-
-				m_apMotion[i].aKey[j].aKey[k].fRot = { 0.0f,0.0f,0.0f };
-			}
-			m_apMotion[i].aKey[j].nNumCollision = 0;
-			m_apMotion[i].aKey[j].nFrame = 1;
-		}
-	}
-
 	ReadMotion();
 
 	for (int i = 0; i < NUM_PARTS; i++)
@@ -92,11 +72,9 @@ HRESULT CPlayer::Init()
 		}
 	}
 
-	//デバッグ用設定後でファイル入出力できるようにする
-	m_nLife = 1000;			//体力
-	
-	//当たり判定表示(デバッグ用)
-	DrawCollision();
+	//動的確保
+	m_controller = new CPlayerController(0);
+
 	return S_OK;
 }
 
@@ -112,15 +90,17 @@ void CPlayer::Uninit(void)
 		delete m_apModel[i];
 		m_apModel[i] = nullptr;
 	}
-	if (m_pBullet!=nullptr)
-	{
-		m_pBullet = nullptr;
-	}
 
 	if (m_pShadow != nullptr)
 	{
 		m_pShadow = nullptr;
 	}	
+
+	if (m_controller != nullptr)
+	{
+		delete m_controller;
+		m_controller = nullptr;
+	}
 
 	CObject::Release();
 }
@@ -133,41 +113,13 @@ void CPlayer::Update(void)
 
 	if (CGame::GetGame()!=CGame::GAME_END&&CGame::GetGame()!=CGame::GAME_START)
 	{
-		Input();					//入力処理
-		if (m_bAttack == true)
-		{
-			Cancel();				//攻撃キャンセル
-		}
-		if ((m_nHitStop <= 0 && m_pEne->m_nHitStop <= 0) && m_nRig <= 0)
-		{//ヒットストップがない場合
-			m_bGuard = false;		//ガード解除
-			Down();					//ダウン＆起き上がり
-			Updatepos();			//座標更新
-			//カメラ端
-			if (m_pos.x - m_pEne->GetPos().x > FIELD_WIDTH || m_pos.x - m_pEne->GetPos().x < -FIELD_WIDTH)
-			{//一定以上離れると1フレーム前の位置に移動
-				m_pos.x = m_posold.x;
-			}
+		Input();				//入力処理
 
-			if (m_nLife > 0 && m_Motion != PM_DOWN&&m_Motion != PM_STANDUP)
-			{//体力が残っててダウンしていない場合
+		Updatepos();			//座標更新
 
-				Axis();					//軸の押し出し判定
-				Jump();					//ジャンプ
-			}
-			
-		}
-		else
-		{//ヒットストップもしくは硬直中の場合
-			m_nHitStop--;
-			m_nRig--;
-			if (m_NextMotion != PM_ST_NEUTRAL)
-			{
-				m_Motion = m_NextMotion;
-				m_NextMotion = PM_ST_NEUTRAL;	//PM_ST_NEUTRALは使っていない状態
-			}
-		}
-		
+		//移動
+		Move();
+
 		Normalization();		//角度の正規化
 		m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
 
@@ -391,10 +343,6 @@ void CPlayer::ReadMotion()
 												{//ループするかしないか
 													sscanf(Read, "%s = %d", &strLine, (int*)&m_apMotion[motionnumber].bLoop);	//ループするかどうか
 												}
-												else if (strcmp(&strLine[0], "HITSTOP") == 0)
-												{//ヒットストップの時間設定
-													sscanf(Read, "%s = %d", &strLine, &m_apMotion[motionnumber].nHitStopTimer);
-												}
 												else if (strcmp(&strLine[0], "KEYSET") == 0)
 												{
 													while (fgets(Read, lenLine, sta) != nullptr)
@@ -414,129 +362,6 @@ void CPlayer::ReadMotion()
 														else if (strcmp(&strLine[0], "FRAME") == 0)
 														{//キーの再生時間の設定
 															sscanf(Read, "%s = %d", &strLine, &m_apMotion[motionnumber].aKey[key].nFrame);	//再生時間の設定
-														}
-														else if (strcmp(&strLine[0], "COLLISIONSET") == 0)
-														{
-															m_apMotion[motionnumber].aKey[key].Collision[m_apMotion[motionnumber].aKey[key].nNumCollision]
-																= CCollision::Create(m_pos, CCollision::COLLI_DAMAGE);
-															while (fgets(Read, lenLine, sta) != nullptr)
-															{
-																ZeroMemory(strLine, sizeof(char) * lenLine);	//文字列リセット
-																sscanf(Read, "%s", &strLine);					//文字列の分析
-																int select = m_apMotion[motionnumber].aKey[key].nNumCollision;	//現在の当たり判定の番号
-
-																//keyはモデルのキーの番号
-																if (strcmp(&strLine[0], "END_COLLISIONSET") == 0)
-																{
-																	m_apMotion[motionnumber].aKey[key].nNumCollision++;
-																	break;
-																}
-																else if (strcmp(&strLine[0], "STARTFRAME") == 0)
-																{//判定の開始時間
-																	int start;
-																	sscanf(Read, "%s = %d", &strLine, &start);	//ループするかどうか
-																	m_apMotion[motionnumber].aKey[key].Collision[select]->SetStartf(start);
-																}
-																else if (strcmp(&strLine[0], "ENDFRAME") == 0)
-																{//判定の開始時間
-																	int end;
-																	sscanf(Read, "%s = %d", &strLine, &end);	//ループするかどうか
-																	m_apMotion[motionnumber].aKey[key].Collision[select]->SetEndf(end);
-																}
-																else if ((strcmp(&strLine[0], "POS") == 0))
-																{
-																	D3DXVECTOR3 dpos;
-																	sscanf(Read, "%s = %f%f%f", &strLine, &dpos.x, &dpos.y, &dpos.z);	//キーの総数
-																	m_apMotion[motionnumber].aKey[key].Collision[select]->SetDPos(dpos);
-																}
-																else if ((strcmp(&strLine[0], "SIZ") == 0))
-																{
-																	D3DXVECTOR3  dsiz;
-																	sscanf(Read, "%s = %f%f%f", &strLine, &dsiz.x, &dsiz.y, &dsiz.z);	//キーの総数
-																	m_apMotion[motionnumber].aKey[key].Collision[select]->SetSiz(dsiz);
-																}
-																else if ((strcmp(&strLine[0], "DAMAGE_POINT") == 0))
-																{//上段の場合は書かなくていい
-																	int dp;
-																	sscanf(Read, "%s = %d", &strLine, &dp);	//キーの総数
-																	m_apMotion[motionnumber].aKey[key].Collision[select]->SetDP((CCollision::EDAMAGE_POINT)dp);
-																}
-																else if ((strcmp(&strLine[0], "HIT") == 0))
-																{//ヒット硬直の設定
-																	int hit;
-																	sscanf(Read, "%s = %d", &strLine, &hit);	//キーの総数
-																	m_apMotion[motionnumber].aKey[key].Collision[select]->SetHitRig(hit);
-																}
-																else if ((strcmp(&strLine[0], "GUARD") == 0))
-																{//ガード硬直の設定
-																	int Guard;
-																	sscanf(Read, "%s = %d", &strLine, &Guard);	//キーの総数
-																	m_apMotion[motionnumber].aKey[key].Collision[select]->SetGuardRig(Guard);
-																}
-																else if ((strcmp(&strLine[0], "DAMAGE") == 0))
-																{//ダメージ量
-																	int Damage;
-																	sscanf(Read, "%s = %d", &strLine, &Damage);	//キーの総数
-																	m_apMotion[motionnumber].aKey[key].Collision[select]->SetDamage(Damage);
-																}
-																else if ((strcmp(&strLine[0], "HITBACK") == 0))
-																{//ヒットバック
-																	int move;
-																	sscanf(Read, "%s = %d", &strLine, &move);	//キーの総数
-																	m_apMotion[motionnumber].aKey[key].Collision[select]->SetHitBack(move);
-																}
-																else if ((strcmp(&strLine[0], "GUARDBACK") == 0))
-																{//ガードバック
-																	int move;
-																	sscanf(Read, "%s = %d", &strLine, &move);	//キーの総数
-																	m_apMotion[motionnumber].aKey[key].Collision[select]->SetGuardBack(move);
-																}
-															}
-														}
-														else if (strcmp(&strLine[0], "HURTSET") == 0)
-														{
-															m_apMotion[motionnumber].aKey[key].HurtCol[m_apMotion[motionnumber].aKey[key].nNumHurtCol]
-																= CCollision::Create(m_pos, CCollision::COLLI_HURT);
-															while (fgets(Read, lenLine, sta) != nullptr)
-															{
-																ZeroMemory(strLine, sizeof(char) * lenLine);	//文字列リセット
-
-																//文字列の分析
-																sscanf(Read, "%s", &strLine);
-
-																//keyはモデルのキーの番号
-																if (strcmp(&strLine[0], "END_HURTSET") == 0)
-																{
-																	m_apMotion[motionnumber].aKey[key].nNumHurtCol++;
-																	break;
-																}
-																else if (strcmp(&strLine[0], "STARTFRAME") == 0)
-																{//判定の開始時間
-																	int start;
-																	sscanf(Read, "%s = %d", &strLine, &start);	//ループするかどうか
-																	m_apMotion[motionnumber].aKey[key].HurtCol[m_apMotion[motionnumber].aKey[key].nNumHurtCol]->SetStartf(start);
-																}
-																else if (strcmp(&strLine[0], "ENDFRAME") == 0)
-																{//判定の開始時間
-																	int end;
-																	sscanf(Read, "%s = %d", &strLine, &end);	//ループするかどうか
-																	m_apMotion[motionnumber].aKey[key].HurtCol[m_apMotion[motionnumber].aKey[key].nNumHurtCol]->SetEndf(end);
-																}
-																else if ((strcmp(&strLine[0], "POS") == 0))
-																{
-																	D3DXVECTOR3 hpos;
-																	sscanf(Read, "%s = %f%f%f", &strLine, &hpos.x, &hpos.y, &hpos.z);	//キーの総数
-																	m_apMotion[motionnumber].aKey[key].HurtCol[m_apMotion[motionnumber].aKey[key].nNumHurtCol]->SetDPos(hpos);
-																	m_apMotion[motionnumber].aKey[key].HurtCol[m_apMotion[motionnumber].aKey[key].nNumHurtCol]->SetPos(hpos);
-																}
-																else if ((strcmp(&strLine[0], "SIZ") == 0))
-																{
-																	D3DXVECTOR3  hsiz;
-																	int select = m_apMotion[motionnumber].aKey[key].nNumHurtCol;	//現在の当たり判定の番号
-																	sscanf(Read, "%s = %f%f%f", &strLine, &hsiz.x, &hsiz.y, &hsiz.z);	//キーの総数
-																	m_apMotion[motionnumber].aKey[key].HurtCol[select]->SetSiz(hsiz);
-																}
-															}
 														}
 														else if (strcmp(&strLine[0], "KEY") == 0)
 														{//キー設定
@@ -595,15 +420,12 @@ void CPlayer::ReadMotion()
 							{
 								D3DXVECTOR3 axpos;
 								sscanf(Read, "%s = %f%f%f", &strLine, &axpos.x, &axpos.y, &axpos.z);	//キーの総数
-								m_AxisBox->SetPos(axpos + m_pos);
-								m_AxisBox->SetDPos(axpos);
 
 							}
 							else if ((strcmp(&strLine[0], "SIZ") == 0))
 							{
 								D3DXVECTOR3  axsiz;
 								sscanf(Read, "%s = %f%f%f", &strLine, &axsiz.x, &axsiz.y, &axsiz.z);	//キーの総数
-								m_AxisBox->SetSiz(axsiz);
 							}
 						}
 					}
@@ -635,20 +457,10 @@ void CPlayer::MotionPlayer()
 	if (m_nCurKey == m_apMotion[m_Motion].nNumKey&& m_apMotion[m_Motion].bLoop == false)
 	{
 		//ループモーションが終わったらニュートラルにする
-		m_bAttack = false;
 		switch (m_State)
 		{
 		case CPlayer::PST_STAND:
 			m_Motion = PM_ST_NEUTRAL;
-			break;
-		case CPlayer::PST_CROUCH:
-			m_Motion = PM_CR_NEUTRAL;
-			break;
-		case CPlayer::PST_AIR:
-			m_Motion = PM_JP_NEUTRAL;
-			break;
-		case CPlayer::PST_DIE:
-			m_Motion = PM_DOWN;
 			break;
 		}
 		PlayFirstMotion();
@@ -672,11 +484,6 @@ void CPlayer::MotionPlayer()
 				}
 				else if (m_nCurKey == m_apMotion[m_Motion].nNumKey - 1 && m_apMotion[m_Motion].bLoop == false)
 				{//ループしない場合ニュートラルモーションに戻す
-					if (m_Motion == PM_ST_DIE || m_Motion == PM_CR_DIE || m_Motion == PM_JP_DIE)
-					{//死亡モーションの場合そのまま死亡設定にする
-						m_State = PST_DIE;
-					}
-
 					switch (m_State)
 					{//現在の状態に戻す
 					case CPlayer::PST_STAND:
@@ -686,33 +493,6 @@ void CPlayer::MotionPlayer()
 
 						DiffRot = D3DXVECTOR3(//向き差分の取得
 							m_apMotion[0].aKey[0].aKey[i].fRot -
-							m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fRot);
-						break;
-					case CPlayer::PST_CROUCH:
-						DiffPos = D3DXVECTOR3(//座標差分の取得
-							m_apMotion[PM_CR_NEUTRAL].aKey[0].aKey[i].fPos -
-							m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fPos);
-
-						DiffRot = D3DXVECTOR3(//向き差分の取得
-							m_apMotion[PM_CR_NEUTRAL].aKey[0].aKey[i].fRot -
-							m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fRot);
-						break;
-					case CPlayer::PST_AIR:
-						DiffPos = D3DXVECTOR3(//座標差分の取得
-							m_apMotion[0].aKey[0].aKey[i].fPos -
-							m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fPos);
-
-						DiffRot = D3DXVECTOR3(//向き差分の取得
-							m_apMotion[0].aKey[0].aKey[i].fRot -
-							m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fRot);
-						break;
-					case CPlayer::PST_DIE:
-						DiffPos = D3DXVECTOR3(//座標差分の取得
-							m_apMotion[PM_DOWN].aKey[1].aKey[i].fPos -
-							m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fPos);
-
-						DiffRot = D3DXVECTOR3(//向き差分の取得
-							m_apMotion[PM_DOWN].aKey[1].aKey[i].fRot -
 							m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fRot);
 						break;
 					default:
@@ -763,10 +543,6 @@ void CPlayer::MotionPlayer()
 				m_nCurKey = 0;
 			}
 		}
-		for (int j = 0; j < m_apMotion[m_Motion].aKey[m_nCurKey].nNumCollision; j++)
-		{//ダメージフラグ復活
-			m_apMotion[m_Motion].aKey[m_nCurKey].Collision[j]->SetUseDmg(true);
-		}
 	}
 	m_frame++;
 }
@@ -802,291 +578,6 @@ void CPlayer::PlayFirstMotion()
 	m_nCurKey = 0;
 }
 
-//===========================
-//当たり判定を表示するかどうか
-//===========================
-void CPlayer::DrawCollision()
-{
-	//当たり判定の表示
-	for (int i = 0; i < PM_MAX; i++)
-	{
-		for (int k = 0; k < m_apMotion[i].nNumKey; k++)
-		{//プレイヤー1
-			//ダメージ判定
-			for (int j = 0; j < m_apMotion[i].aKey[k].nNumCollision; j++)
-			{//違うモーションの当たり判定をオフにする
-
-				 //攻撃判定再設定
-				if (m_bLeftSide == false)
-				{//敵より右側の場合
-					//プレイヤー1
-					m_apMotion[i].aKey[k].Collision[j]->SetPos(m_pos + m_apMotion[i].aKey[k].Collision[j]->GetDPos());
-				}
-				else
-				{//右向き
-
-					//プレイヤー1
-					m_apMotion[i].aKey[k].Collision[j]->SetPos(D3DXVECTOR3(
-						m_pos.x - m_apMotion[i].aKey[k].Collision[j]->GetDPos().x,				//X
-						m_pos.y + m_apMotion[i].aKey[k].Collision[j]->GetDPos().y,
-						m_pos.z - m_apMotion[i].aKey[k].Collision[j]->GetDPos().z));
-				}
-
-				if (m_Motion == i&&m_nCurKey == k&&m_frame >= m_apMotion[i].aKey[k].Collision[j]->GetStartf() && m_frame <= m_apMotion[i].aKey[k].Collision[j]->GetEndf())
-				{//キーとモーションが一致している場合のみ表示
-					if (m_apMotion[i].aKey[k].Collision[j] != nullptr)
-					{
-						m_apMotion[i].aKey[k].Collision[j]->SetUse(true);
-					}
-				}
-				else
-				{
-					if (m_apMotion[i].aKey[k].Collision[j] != nullptr)
-					{
-						m_apMotion[i].aKey[k].Collision[j]->SetUse(false);
-					}
-				}
-			}
-
-			//やられ判定
-			for (int j = 0; j < m_apMotion[i].aKey[k].nNumHurtCol; j++)
-			{
-				if (m_bLeftSide == true)
-				{//右向き(1P)
-					m_apMotion[i].aKey[k].HurtCol[j]->SetPos(D3DXVECTOR3(
-						m_pos.x - m_apMotion[i].aKey[k].HurtCol[j]->GetDPos().x,
-						m_pos.y + m_apMotion[i].aKey[k].HurtCol[j]->GetDPos().y,
-						m_pos.z + m_apMotion[i].aKey[k].HurtCol[j]->GetDPos().z));
-				}
-				else
-				{//左向き(2P)
-					m_apMotion[i].aKey[k].HurtCol[j]->SetPos(m_apMotion[i].aKey[k].HurtCol[j]->GetDPos() + m_pos);
-				}
-
-				if (m_Motion == i&&m_nCurKey == k&&m_apMotion[i].aKey[k].HurtCol[j] != nullptr&&
-					m_frame >= m_apMotion[i].aKey[k].HurtCol[j]->GetStartf() && m_frame <= m_apMotion[i].aKey[k].HurtCol[j]->GetEndf())
-				{
-					m_apMotion[i].aKey[k].HurtCol[j]->SetUse(true);
-				}
-				else
-				{
-					if (m_apMotion[i].aKey[k].HurtCol[j] != nullptr)
-					{
-						m_apMotion[i].aKey[k].HurtCol[j]->SetUse(false);
-					}
-				}
-			}
-		}
-	}
-}
-
-//=====================
-//押し出し判定
-//=====================
-void CPlayer::Axis(void)
-{
-	if (m_pos.y - m_AxisBox->GetWidth().y / 2 <= m_pEne->m_pos.y + m_pEne->m_AxisBox->GetWidth().y 
-		&& m_pos.y + m_AxisBox->GetWidth().y / 2 >= m_pEne->m_pos.y - m_pEne->m_AxisBox->GetWidth().y )
-	{
-			//X軸
-			//左側
-			if (m_posold.x + m_AxisBox->GetWidth().x / 2 <= m_pEne->m_pos.x - m_pEne->m_AxisBox->GetWidth().x / 2	//前回のプレイヤーの位置がブロックの位置より右にいる場合
-				&& m_pos.x + m_AxisBox->GetWidth().x / 2 >= m_pEne->m_pos.x - m_pEne->m_AxisBox->GetWidth().x / 2 	//現在のプレイヤーの位置がブロックの位置より左にいる(めり込んでいる)場合
-				)//プレイヤーの左右にブロックが当たった場合
-			{//プレイヤ-とブロックが当たった時
-				m_pos.x -= m_move.x;
-				m_AxisBox->SetPos(m_pos + m_AxisBox->GetDPos());
-			}
-			//右側
-			if (m_posold.x - m_AxisBox->GetWidth().x / 2 >= m_pEne->m_pos.x + m_pEne->m_AxisBox->GetWidth().x / 2 	//前回のプレイヤーの位置がブロックの位置より右にいる場合
-				&& m_pos.x - m_AxisBox->GetWidth().x / 2 <= m_pEne->m_pos.x + m_pEne->m_AxisBox->GetWidth().x / 2	//現在のプレイヤーの位置がブロックの位置より左にいる(めり込んでいる)場合
-				)//プレイヤーの左右にブロックが当たった場合
-			{//プレイヤ-とブロックが当たった時
-				m_pos.x -= m_move.x;
-				m_AxisBox->SetPos(m_pos + m_AxisBox->GetDPos());
-			}
-	}
-	if (m_posold.y + m_pEne->m_AxisBox->GetWidth().y >= m_pEne->m_pos.y + m_pEne->m_AxisBox->GetWidth().y
-		&& m_pos.y+ m_pEne->m_AxisBox->GetWidth().y<= m_pEne->m_pos.y + m_pEne->m_AxisBox->GetWidth().y )
-	{//ジャンプした時の押し合いの判定
-		if (m_pos.x - m_AxisBox->GetWidth().x / 2 <= m_pEne->m_pos.x + m_pEne->m_AxisBox->GetWidth().x / 2
-			&& m_pos.x + m_AxisBox->GetWidth().x / 2 >= m_pEne->m_pos.x - m_pEne->m_AxisBox->GetWidth().x / 2)
-		{
-			if (m_pos.x >= m_pEne->m_pos.x)
-			{//中心より→
-				m_pos.x = m_pEne->m_pos.x + m_pEne->m_AxisBox->GetWidth().x+1;
-				m_AxisBox->SetPos(m_pos + m_AxisBox->GetDPos());
-				m_move.x = -m_move.x;
-			}
-			else
-			{//中心より←
-				m_pos.x = m_pEne->m_pos.x - m_pEne->m_AxisBox->GetWidth().x-1;
-				m_AxisBox->SetPos(m_pos + m_AxisBox->GetDPos());
-				m_move.x = -m_move.x;
-			}
-		}
-	}
-}
-
-//=====================
-//ジャンプ
-//=====================
-void CPlayer::Jump(void)
-{
-	if (m_State == PST_AIR)
-	{
-		m_move.y -= GRAVITY;				//少しずつ減速
-
-		if (m_MotionOld == PM_JP_HURT)
-		{
-			m_Motion = PM_JP_HURT;
-
-			if (m_pos.y < 0.0f)
-			{//着地時の設定
-				m_nJumpCount = 0;				//ジャンプカウント初期化
-				m_State = PST_STAND;			//立ち状態に変更
-				m_pos.y = 0.0f;					//位置設定
-				m_move.y = 0.0f;				//移動量を0に戻す
-				m_move.x = 0.0f;				//移動量を0に戻す
-				m_bJump = false;				//ジャンプ状態解除
-				m_bAttack = false;				//攻撃状態を解除
-				if (m_Motion == PM_JP_HURT)
-				{
-					m_Motion = PM_DOWN;
-				}
-				else
-				{
-					m_Motion = PM_ST_NEUTRAL;		//ニュートラルモーションに戻す
-				}
-			}
-		}
-		else if (m_nJumpTransTime <= 0)
-		{
- 			if (m_pos.y < 0.0f)
-			{//着地時の設定
-				m_nJumpCount = 0;				//ジャンプカウント初期化
-				m_State = PST_STAND;			//立ち状態に変更
-				m_pos.y = 0.0f;					//位置設定
-				m_move.y = 0.0f;				//移動量を0に戻す
-				m_move.x = 0.0f;				//移動量を0に戻す
-				m_bJump = false;				//ジャンプ状態解除
-				m_bAttack = false;				//攻撃状態を解除
-				if (m_Motion == PM_JP_HURT)
-				{
-					m_Motion = PM_DOWN;
-				}
-				else
-				{
-					m_Motion = PM_ST_NEUTRAL;		//ニュートラルモーションに戻す
-				}
-			}
-		}
-		else
-		{
-			m_nJumpTransTime--;
-			if (m_nJumpTransTime <= 0)
-			{
-				if (m_Motion == PM_JP_MOVEFORWARD)
-				{
-					if (m_bLeftSide == true)
-					{
-						m_move.x = sinf(D3DX_PI*0.5f)*PLAYER_SPEED*JUMP_FACTOR_X;
-						m_move.z = cosf(D3DX_PI*0.5f)*PLAYER_SPEED*JUMP_FACTOR_X;
-					}
-					else if (m_nJumpCount == 0)
-					{
-						m_move.x = -sinf(D3DX_PI*0.5f)*PLAYER_SPEED*JUMP_FACTOR_X;
-						m_move.z = -cosf(D3DX_PI*0.5f)*PLAYER_SPEED*JUMP_FACTOR_X;
-					}
-				}
-				else if (m_Motion == PM_JP_MOVEBACK)
-				{
-					if (m_bLeftSide == true)
-					{
-						m_move.x = -sinf(D3DX_PI*0.5f)*PLAYER_SPEED*JUMP_FACTOR_X;
-						m_move.z = -cosf(D3DX_PI*0.5f)*PLAYER_SPEED*JUMP_FACTOR_X;
-					}
-					else if (m_nJumpCount == 0)
-					{
-						m_move.x = sinf(D3DX_PI*0.5f)*PLAYER_SPEED*JUMP_FACTOR_X;
-						m_move.z = cosf(D3DX_PI*0.5f)*PLAYER_SPEED*JUMP_FACTOR_X;
-					}
-				}
-				if (m_Motion!=PM_ST_BACKSTEP)
-				{//バックステップ以外初速を設定
-				m_move.y = INITIAL_VELOCITY;	//初速を設定
-				}
-			}
-		}
-	}
-}
-
-//==============================================
-//コマンドの入力判定
-//==============================================
-bool CPlayer::CheckInput(const int * command)
-{
-	//コマンド
-	int i = 0, j = 0;
-	//コマンドの最後を調べる
-	while (!(command[i] & INPUT_END))i++;
-
-	//コマンドの入力時間を取得
-	int time = command[i] & ~INPUT_END;
-
-	//入力時間を調べて正しい場合はtrueそれ以外はfalse
-	for (i--; i >= 0; i--)
-	{
-		int input = command[i];
-
-		//履歴からコマンドの要素を探す
-		while (j < MAX_KEYMEMORY && ((m_anInput[j] & input) != input)) j++;
-
-		//入力時間を超えたり、履歴の末尾に達したら、falseを返す
-		if (j >= time || j == MAX_KEYMEMORY)return false;
-	}
-
-	//コマンドの要素が見つかったらtrue
-	return true;
-}
-
-//==============================================
-//プレイヤーの状態管理
-//==============================================
-void CPlayer::StateManagement()
-{
-	//移動していない場合の処理
-	if (m_Motion == PM_ST_NEUTRAL || m_Motion == PM_CR_NEUTRAL || m_bAttack == true)
-	{
-		if (m_bJump == false)
-		{
-			m_move.x = 0;
-			m_move.z = 0;
-		}
-	}
-
-	//下押していない&地上時&攻撃していない場合
-	if ((m_anInput[0] & INPUT_NOT2) == INPUT_NOT2&&m_State != PST_AIR&&m_bAttack == false)
-	{//下押していない場合立ち状態へ
-		m_State = PST_STAND;
-	}
-
-	//ダッシュ処理
-	if (m_MotionOld == PM_ST_DASH&&m_bAttack == false&& m_State == PST_STAND)
-	{//攻撃していない場合、地上時のみダッシュ維持
-		if (m_bLeftSide==true && (m_anInput[0] & INPUT6) == INPUT6 && (m_anInput[0] & INPUT_NOT4) == INPUT_NOT4)
-		{//前押しっぱなしでかつ後ろ入力なし
-			m_Motion = PM_ST_DASH;
-			m_move.x = DASH_SPEED;
-		}
-		else if (m_bLeftSide==false && (m_anInput[0] & INPUT4) == INPUT4 && (m_anInput[0] & INPUT_NOT6) == INPUT_NOT6)
-		{
-			m_Motion = PM_ST_DASH;
-			m_move.x = -DASH_SPEED;
-		}
-	}
-}
-
 //==============================================
 //入力設定
 //==============================================
@@ -1116,23 +607,22 @@ void CPlayer::Input()
 
 		//ニュートラル
 		Key |= (Key & INPUT_NOT6) == INPUT_NOT6 && (Key & INPUT_NOT2) == INPUT_NOT2 && (Key & INPUT_NOT4) == INPUT_NOT4 && (Key & INPUT_NOT8) == INPUT_NOT8 ? INPUT5 : INPUT_NOT5;
-
-		//攻撃
-		//弱
-		Key |= pInput->Press(DIK_U) || pInput->Press(JOYPAD_A, m_nPlayerNumber) ? INPUT_LATK : INPUT_NOT_LATK;
-		//中
-		Key |= pInput->Press(DIK_I) || pInput->Press(JOYPAD_B, m_nPlayerNumber) ? INPUT_MATK : INPUT_NOT_MATK;
-		//強
-		Key |= pInput->Press(DIK_O) || pInput->Press(JOYPAD_R1, m_nPlayerNumber) ? INPUT_HATK : INPUT_NOT_HATK;
 	}
+}
 
-	//コマンド入れ替え処理
-	for (int i = MAX_KEYMEMORY - 1; i > 0; i--)
+//-----------------------------------------
+// 移動
+//-----------------------------------------
+void CPlayer::Move()
+{
+	if (m_controller == nullptr)
 	{
-		m_anInput[i] = m_anInput[i - 1];
+		assert(false);
+		return;
 	}
-	m_anInput[0] = Key;
 
+	// 方向ベクトル掛ける移動量
+	m_move = m_controller->Move() * MOVE_SPEED;
 }
 
 //==============================================
@@ -1142,230 +632,6 @@ void CPlayer::Updatepos()
 {
 	m_posold = m_pos;		//前回の位置の保存
 	m_pos += m_move;		//位置の更新
-	m_AxisBox->SetPos(m_pos + D3DXVECTOR3(0.0f, m_AxisBox->GetDPos().y, 0.0f));	//軸の判定の位置更新
-}
-
-//==============================================
-//キャンセル
-//==============================================
-void CPlayer::Cancel()
-{
-	switch (m_Motion)
-	{
-	case CPlayer::PM_ST_LATTACK:
-		if ((m_anInput[0] & INPUT_MATK) == INPUT_MATK)
-		{
-			m_NextMotion = PM_ST_MATTACK;
-
-			if ((m_anInput[0] & INPUT2) == INPUT2)
-			{
-				m_NextMotion = PM_CR_MATTACK;
-			}
-		}
-		break;
-
-	case CPlayer::PM_ST_MATTACK:
-		if ((m_anInput[0] & INPUT_HATK) == INPUT_HATK)
-		{
-			m_NextMotion = PM_ST_HATTACK;
-			if ((m_anInput[0] & INPUT2) == INPUT2)
-			{
-				m_NextMotion = PM_CR_HATTACK;
-			}
-		}
-		break;
-
-	case CPlayer::PM_JP_LATTACK:
-		break;
-	case CPlayer::PM_JP_MATTACK:
-		break;
-	case CPlayer::PM_JP_HATTACK:
-		break;
-
-	case CPlayer::PM_CR_LATTACK:
-		if ((m_anInput[0] & INPUT_MATK) == INPUT_MATK)
-		{
-			if ((m_anInput[0] & INPUT2) == INPUT2)
-			{
-				m_NextMotion = PM_CR_MATTACK;
-			}
-			else
-			{
-				m_NextMotion = PM_ST_MATTACK;
-			}
-		}
-		break;
-
-	case CPlayer::PM_CR_MATTACK:
-		if ((m_anInput[0] & INPUT_HATK) == INPUT_HATK)
-		{
-			if ((m_anInput[0] & INPUT2) == INPUT2)
-			{
-				m_NextMotion = PM_CR_HATTACK;
-			}
-			else
-			{
-				m_NextMotion = PM_ST_HATTACK;
-			}
-		}
-
-		break;
-
-	case CPlayer::PM_CR_HATTACK:
-		break;
-	case CPlayer::PM_236L:
-		break;
-	case CPlayer::PM_236M:
-		break;
-	case CPlayer::PM_236H:
-		break;
-	case CPlayer::PM_214L:
-		break;
-	case CPlayer::PM_214M:
-		break;
-	case CPlayer::PM_214H:
-		break;
-	case CPlayer::PM_623L:
-		break;
-	case CPlayer::PM_623M:
-		break;
-	case CPlayer::PM_623H:
-		break;
-	default:
-		break;
-	}
-}
-
-//==============================================
-//当たり判定チェック
-//==============================================
-bool CPlayer::ColJudge(int hurtnumber, int colnum)
-{
-	D3DXVECTOR3 Hurt, col, HurtWidth, colWidth;
-	Hurt = m_apMotion[m_Motion].aKey[m_nCurKey].HurtCol[hurtnumber]->GetPos();
-	col = m_pEne->m_apMotion[m_pEne->m_Motion].aKey[m_pEne->m_nCurKey].Collision[colnum]->GetPos();
-	HurtWidth = m_apMotion[m_Motion].aKey[m_nCurKey].HurtCol[hurtnumber]->GetWidth();
-	colWidth = m_pEne->m_apMotion[m_pEne->m_Motion].aKey[m_pEne->m_nCurKey].Collision[colnum]->GetWidth();
-
-	if (Hurt.x + HurtWidth.x / 2 >= col.x - colWidth.x / 2 &&
-		Hurt.x - HurtWidth.x / 2 <= col.x + colWidth.x / 2 &&
-		Hurt.y + HurtWidth.y / 2 >= col.y - colWidth.y / 2 &&
-		Hurt.y - HurtWidth.y / 2 <= col.y + colWidth.y / 2)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-//==============================================
-//ダウン時の処理
-//==============================================
-void CPlayer::Down()
-{
-	if (m_Motion == PM_DOWN&&m_State != PST_DIE)
-	{
-		m_nRig--;
-		if (m_nRig <= 0)
-		{//倒れたときの処理
-			m_Motion = PM_STANDUP;
-			m_State = PST_STAND;
-		}
-		else
-		{
-			m_Motion = PM_DOWN;
-		}
-	}
-}
-
-//==============================================
-//被弾時の処理時の処理
-//==============================================
-void CPlayer::Hit(int Damage, CCollision::EDAMAGE_POINT pro, int HitRig, bool knockback)
-{
-	m_nLife -= Damage;
-
-	if (m_State != PST_AIR)
-	{
-		//ヒット硬直の値を代入
-		m_nRig = HitRig;
-	}
-
-	//弱打撃
-	if (m_pEne->m_Motion == PM_JP_LATTACK || m_pEne->m_Motion == PM_ST_LATTACK || m_pEne->m_Motion == PM_CR_LATTACK)
-	{
-		CSound::GetInstance()->Play(CSound::LABEL_SE_LATK_HIT);
-	}
-	//中打撃
-	if (m_pEne->m_Motion == PM_JP_MATTACK || m_pEne->m_Motion == PM_ST_MATTACK || m_pEne->m_Motion == PM_CR_MATTACK)
-	{
-		CSound::GetInstance()->Play(CSound::LABEL_SE_MATK_HIT);
-	}
-	//強打撃
-	if (m_pEne->m_Motion == PM_JP_HATTACK || m_pEne->m_Motion == PM_ST_HATTACK || m_pEne->m_Motion == PM_CR_HATTACK)
-	{
-		CSound::GetInstance()->Play(CSound::LABEL_SE_HATK_HIT);
-	}
-
-	//なんちゃってヒットバック
-	if (knockback == true)
-	{
-		if (m_bLeftSide==true)
-		{
-			m_pos.x -= 8.0f;	//ヒットバックのつもり
-
-			if (m_pos.x - m_AxisBox->GetWidth().x * 2 <= -FIELD_WIDTH)
-			{
-				m_pos.x += 8.0f;
-				m_pEne->m_pos.x += 8.0f;	//ヒットバックのつもり
-			}
-		}
-		else
-		{
-			m_pos.x += 8.0f;	//ヒットバックのつもり
-
-			if (m_pos.x + m_AxisBox->GetWidth().x * 2 >= FIELD_WIDTH)
-			{
-				m_pos.x -= 8.0f;
-				m_pEne->m_pos.x -= 8.0f;	//ヒットバックのつもり
-			}
-		}
-	}
-}
-
-//==============================================
-//死亡時の処理
-//==============================================
-void CPlayer::Die()
-{
-	if (m_nLife <= 0)
-	{//体力が亡くなった時
-		switch (m_State)
-		{
-		case CPlayer::PST_STAND:
-			m_Motion = PM_ST_DIE;
-			break;
-		case CPlayer::PST_CROUCH:
-			m_Motion = PM_CR_DIE;
-			break;
-		case CPlayer::PST_AIR:
-			m_Motion = PM_JP_HURT;
-			m_move.y -= GRAVITY;
-			break;
-		}
-
-		if ((m_pos.y <= 0.0f) && (m_Motion == PM_JP_HURT) && (m_move.y <= 0.0f))
-		{//空中で死んだときの処理
-			m_pos.y = 0.0f;
-			m_move.y = 0.0f;
-			m_move.x = 0.0f;
-
-			m_Motion = PM_DOWN;
-			m_State = PST_DIE;
-		}
-	}
 }
 
 //==============================================
