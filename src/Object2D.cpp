@@ -24,7 +24,6 @@ CObject2D::CObject2D(int nPriority) :CObject(nPriority)
 	m_Col= D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	m_UV[0] = D3DXVECTOR2(0.0f, 0.0f);
 	m_UV[1] = D3DXVECTOR2(1.0f, 1.0f);
-	m_nRControl = 0;
 }
 
 //=============================================================================
@@ -132,19 +131,19 @@ void  CObject2D::Update()
  	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	// í∏ì_èÓïÒÇê›íË
-	pVtx[0].pos.x = m_Pos.x + sinf(m_Rot - D3DX_PI + m_fAngle) * m_fLength - m_nLControl;
+	pVtx[0].pos.x = m_Pos.x + sinf(m_Rot - D3DX_PI + m_fAngle) * m_fLength;
 	pVtx[0].pos.y = m_Pos.y + cosf(m_Rot - D3DX_PI + m_fAngle) * m_fLength;
 	pVtx[0].pos.z = 0.0f;
 
-	pVtx[1].pos.x = m_Pos.x + sinf(m_Rot + D3DX_PI - m_fAngle) * m_fLength + m_nRControl;
+	pVtx[1].pos.x = m_Pos.x + sinf(m_Rot + D3DX_PI - m_fAngle) * m_fLength;
 	pVtx[1].pos.y = m_Pos.y + cosf(m_Rot + D3DX_PI - m_fAngle) * m_fLength;
 	pVtx[1].pos.z = 0.0f;
 
-	pVtx[2].pos.x = m_Pos.x + sinf(m_Rot - m_fAngle) * m_fLength - m_nLControl;
+	pVtx[2].pos.x = m_Pos.x + sinf(m_Rot - m_fAngle) * m_fLength;
 	pVtx[2].pos.y = m_Pos.y + cosf(m_Rot - m_fAngle) * m_fLength;
 	pVtx[2].pos.z = 0.0f;
 
-	pVtx[3].pos.x = m_Pos.x + sinf(m_Rot + m_fAngle) * m_fLength + m_nRControl;
+	pVtx[3].pos.x = m_Pos.x + sinf(m_Rot + m_fAngle) * m_fLength;
 	pVtx[3].pos.y = m_Pos.y + cosf(m_Rot + m_fAngle) * m_fLength;
 	pVtx[3].pos.z = 0.0f;
 

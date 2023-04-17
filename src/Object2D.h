@@ -46,10 +46,6 @@ public:
 	void SetPos(const D3DXVECTOR3& pos) { m_Pos = pos; }
 	void AddPos(const D3DXVECTOR3& add) { SetPos(m_Pos + add); }
 	D3DXVECTOR3 GetPos() { return m_Pos; }
-	void SetPosR(float posR) { m_nRControl = posR; };
-	float GetPosR() { return m_nRControl; };
-	void SetPosL(float posL) { m_nLControl = posL; };
-	float GetPosL() { return m_nLControl; };
 
 	// 大きさ
 	void SetSiz(D3DXVECTOR2 Siz);
@@ -81,8 +77,6 @@ private:
 	D3DXVECTOR2 m_Siz;					// 大きさ
 	D3DXCOLOR m_Col;					// 色
 	D3DXVECTOR2 m_UV[2];				// テクスチャ座標
-	float m_nRControl;					// 座標の右側の制御
-	float m_nLControl;					// 座標の←側の制御
 };
 #endif // !_OBJECT_H_
 
