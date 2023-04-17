@@ -32,7 +32,7 @@ CLight*CGame::m_pLight = nullptr;
 CFloor*CGame::m_pFloor = nullptr;
 CTimer*CGame::m_pTimer = nullptr;
 CUI*CGame::m_pUI = nullptr;
-
+CMap*CGame::m_pMap = nullptr;
 //====================================
 //コンストラクタ
 //====================================
@@ -73,7 +73,7 @@ HRESULT CGame::Init()
 	m_pLight->Init();
 
 	//ブロック生成
-	CMap::Create(0);
+	m_pMap = CMap::Create(0);
 
 	//デバッグ用カメラ操作モード
 	bDebugCamera = false;
@@ -116,6 +116,12 @@ void CGame::Uninit()
 	{
 		m_pTimer->Uninit();
 		delete m_pTimer;
+	}
+
+	if (m_pMap != nullptr)
+	{
+		m_pMap->Uninit();
+		delete m_pMap;
 	}
 
 	CSound::GetInstance()->Stop();
