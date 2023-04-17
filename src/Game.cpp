@@ -9,7 +9,6 @@
 #include"Application.h"
 #include"Game.h"
 #include"Player.h"
-#include"Floor.h"
 #include"Player.h"
 #include"Mesh.h"
 #include"Camera.h"
@@ -20,7 +19,7 @@
 #include"input.h"
 #include"effect.h"
 #include"Time.h"
-#include"UI.h"
+#include"Map.h"
 
 //静的メンバ変数
 CPlayer*CGame::m_pPlayer[4] = {};
@@ -56,7 +55,6 @@ HRESULT CGame::Init()
 {
 	//テクスチャの読み込み
 	CShadow::Load();
-	CFloor::Load();
 	CEffect::Load();
 	CTimer::Load();
 	CShadow::Load();
@@ -74,19 +72,8 @@ HRESULT CGame::Init()
 	m_pLight = new CLight;
 	m_pLight->Init();
 
-	//床
-	CFloor::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(500.0f, 500.0f, 500.0f),D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
-	CFloor::Create(D3DXVECTOR3(200.0f, 0.0f, 0.0f), D3DXVECTOR3(500.0f, 500.0f, 500.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
-	CFloor::Create(D3DXVECTOR3(-200.0f, 0.0f, 0.0f), D3DXVECTOR3(500.0f, 500.0f, 500.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
-
-	//奥の壁
-	CFloor::Create(D3DXVECTOR3(0.0f, 100.0f, 300.0f), D3DXVECTOR3(500.0f, 500.0f, 500.0f), D3DXVECTOR3(D3DX_PI*-0.5f,0.0f , 0.0f));	
-	CFloor::Create(D3DXVECTOR3(200.0f, 100.0f, 300.0f), D3DXVECTOR3(500.0f, 500.0f, 500.0f), D3DXVECTOR3(D3DX_PI*-0.5f, 0.0f, 0.0f));
-	CFloor::Create(D3DXVECTOR3(-200.0f, 100.0f, 300.0f), D3DXVECTOR3(500.0f, 500.0f, 500.0f), D3DXVECTOR3(D3DX_PI*-0.5f, 0.0f, 0.0f));
-
-	//横の壁
-	CFloor::Create(D3DXVECTOR3(STAGE_WIDTH, 100.0f, 0.0f), D3DXVECTOR3(500.0f, 500.0f, 500.0f), D3DXVECTOR3(D3DX_PI*-0.5f, D3DX_PI*0.5f, 0.0f));
-	CFloor::Create(D3DXVECTOR3(-STAGE_WIDTH, 100.0f, 0.0f), D3DXVECTOR3(500.0f, 500.0f, 500.0f), D3DXVECTOR3(D3DX_PI*-0.5f, D3DX_PI*-0.5f, 0.0f));
+	//ブロック生成
+	CMap::Create(0);
 
 	//デバッグ用カメラ操作モード
 	bDebugCamera = false;
@@ -94,8 +81,6 @@ HRESULT CGame::Init()
 	m_pTimer = CTimer::Create();
 	m_Timer = 0;
 
-	//UI生成
-	m_pUI = CUI::Create();
 
 	m_Round = ROUND_1;
 
@@ -109,7 +94,6 @@ void CGame::Uninit()
 {
 	//テクスチャの破棄
 	CShadow::Unload();
-	CFloor::Unload();
 	CEffect::Unload();
 	CTimer::Unload();
 	CShadow::Unload();
@@ -126,12 +110,6 @@ void CGame::Uninit()
 	{
 		m_pLight->Uninit();
 		delete m_pLight;
-	}
-
-	if (m_pUI != nullptr)
-	{
-		m_pUI->Uninit();
-		delete m_pUI;
 	}
 	
 	if (m_pTimer != nullptr)
@@ -151,7 +129,6 @@ void CGame::Update()
 	CInput* pInput = CInput::GetKey();
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
-		m_pUI->Update();	//UI
 		m_pTimer->Update();
 
 #ifdef _DEBUG
@@ -191,6 +168,5 @@ void CGame::ResetGame()
 	m_pTimer->Init();
 	m_gamestate = GAME_START;
 	m_Timer = 0;
-	m_pUI->Init();
 	return;
 }
