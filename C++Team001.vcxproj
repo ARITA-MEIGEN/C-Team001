@@ -90,7 +90,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Student\Documents\Visual Studio 2015\Projects\C++Team001\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>Precompile.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <PrecompiledHeaderFile>Precompile.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\DebugProc.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="src\Life.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Mode.cpp" />
     <ClCompile Include="src\Model.cpp" />
@@ -192,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Block.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Collision.h" />
     <ClInclude Include="src\Command.h" />
@@ -212,6 +215,7 @@
     <ClInclude Include="src\Life.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Mode.h" />
     <ClInclude Include="src\Model.h" />
