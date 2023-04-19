@@ -198,6 +198,7 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Block.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\CameraGame.h" />
     <ClInclude Include="src\Command.h" />
     <ClInclude Include="src\Controller.h" />
     <ClInclude Include="src\DebugProc.h" />

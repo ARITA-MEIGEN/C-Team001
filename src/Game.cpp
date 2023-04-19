@@ -34,6 +34,7 @@ CFloor*CGame::m_pFloor = nullptr;
 CTimer*CGame::m_pTimer = nullptr;
 CUI*CGame::m_pUI = nullptr;
 CMap*CGame::m_pMap = nullptr;
+
 //====================================
 //コンストラクタ
 //====================================
