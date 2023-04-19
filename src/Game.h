@@ -24,6 +24,7 @@ class CLight;
 class CFloor;
 class CTimer;
 class CUI;
+class CMap;
 
 class CGame : public CMode
 {
@@ -75,6 +76,7 @@ private:
 	static	bool bDebugCamera;			// デバッグ用カメラのON/OFF
 	static	CTimer*m_pTimer;			// タイマー
 	static	CUI*m_pUI;					// UI
+	static	CMap*m_pMap;				// マップ
 	int		m_Timer;					// フェードアウトまでのタイマー
 	ROUND	m_Round;					// 現在のラウンド
 

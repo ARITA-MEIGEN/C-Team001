@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Controller.cpp" />
     <ClCompile Include="src\DebugProc.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="src\Letter.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Mode.cpp" />
     <ClCompile Include="src\Model.cpp" />
@@ -194,6 +196,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Block.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Command.h" />
     <ClInclude Include="src\Controller.h" />
@@ -215,6 +218,7 @@
     <ClInclude Include="src\Letter.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Mode.h" />
     <ClInclude Include="src\Model.h" />
