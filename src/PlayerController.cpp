@@ -65,7 +65,7 @@ D3DXVECTOR3 CPlayerController::Move()
 	//pad‚ÌˆÚ“®
 	if (input->Press(KEY_UP, m_nInputIdx))
 	{
-		moveInput.y -= 1.0f;
+		moveInput.z += 1.0f;
 	}
 	if (input->Press(KEY_LEFT, m_nInputIdx))
 	{
@@ -73,7 +73,7 @@ D3DXVECTOR3 CPlayerController::Move()
 	}
 	if (input->Press(KEY_DOWN, m_nInputIdx))
 	{
-		moveInput.y += 1.0f;
+		moveInput.z -= 1.0f;
 	}
 	if (input->Press(KEY_RIGHT, m_nInputIdx))
 	{

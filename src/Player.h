@@ -25,8 +25,8 @@ class CBullet;
 #define MAX_KEY				(60)			//キーの総数
 #define MAX_FRAME			(120)			//フレームの最大数
 #define NUM_PARTS			(14)			//パーツの数
-#define PLAYER_SPEED		(2.0f)			//移動速度
-#define MOVE_SPEED			(5.0f)			//プレイヤーのスピード
+#define PLAYER_SPEED		(5.0f)			//移動速度
+#define ITEM_ADD_SPEED		(1.5f)			//アイテムで加算するスピード
 
 class CPlayer :public CObject
 {
@@ -66,6 +66,7 @@ public:
 	{
 		PST_STAND,	//立ち
 		PST_DIE,	//被弾状態
+		PST_SPEED,	//加速状態
 		PST_MAX
 	};
 
@@ -96,7 +97,6 @@ public:
 	PLAYER_MOTION	GetNowMotion() { return m_Motion; };
 	D3DXMATRIX		GetMtx() { return m_mtxWorld; };			//マトリックスの取得
 
-
 private:
 	CController*	m_controller;					//命令を出す人
 	CModel*			m_apModel[NUM_PLAYERPARTS];		//モデルのインスタンス
@@ -116,6 +116,7 @@ private:
 	PLAYER_MOTION	m_MotionOld;					//ひとつ前のモーション
 	static int		m_nNumPlayer;					//プレイヤーの数
 	int				m_nPlayerNumber;				//自分のプレイヤー番号
+	int				m_nBuffTime;					//強化効果時間
 	PLAYER_STATE	m_State;						//プレイヤーの状態
 	bool			m_bLeftSide;					//どっちを向いてるか(trueなら←)
 	int				m_nNowKey;						//キー保存用
