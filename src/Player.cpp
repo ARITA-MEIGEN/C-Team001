@@ -110,9 +110,20 @@ void CPlayer::Uninit(void)
 void CPlayer::Update(void)
 {
 
-	if (CGame::GetGame()!=CGame::GAME_END&&CGame::GetGame()!=CGame::GAME_START)
+	if (CGame::GetGame() != CGame::GAME_END&&CGame::GetGame() != CGame::GAME_START)
 	{
-		Input();				//入力処理
+		//Input();				//入力処理
+		CInput* pInput = CInput::GetKey();
+		if (pInput->Press(DIK_U))
+		{
+			m_nBuffTime = 120;
+			m_State = PST_SPEED;
+		}
+		m_nBuffTime--;
+		if (m_nBuffTime <= 0)
+		{
+			m_State = PST_STAND;
+		}
 
 		Updatepos();			//座標更新
 
@@ -613,7 +624,14 @@ void CPlayer::Move()
 	}
 
 	// 方向ベクトル掛ける移動量
-	m_move = m_controller->Move() * MOVE_SPEED;
+	if (m_State == PST_SPEED)
+	{
+		m_move = m_controller->Move() * PLAYER_SPEED * ITEM_ADD_SPEED;
+	}
+	else
+	{
+		m_move = m_controller->Move() * PLAYER_SPEED;
+	}
 }
 
 //-----------------------------------------
