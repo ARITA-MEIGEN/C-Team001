@@ -21,9 +21,10 @@
 #include"effect.h"
 #include"Time.h"
 #include"UI.h"
+#include"Item_Speed.h"
 
 //静的メンバ変数
-CPlayer*CGame::m_pPlayer[4] = {};
+CPlayer*CGame::m_pPlayer[MAX_PLAYER] = {};
 CLife*CGame::m_Life = nullptr;				//体力ゲージ
 CGame::GAME CGame::m_gamestate;
 bool CGame::bDebugCamera = nullptr;
@@ -62,10 +63,12 @@ HRESULT CGame::Init()
 	CShadow::Load();
 
 	//プレイヤーの生成
-	m_pPlayer[0] = CPlayer::Create(D3DXVECTOR3(-100.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
-	m_pPlayer[1] = CPlayer::Create(D3DXVECTOR3(-50.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
-	m_pPlayer[2] = CPlayer::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
-	m_pPlayer[3] = CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{
+		m_pPlayer[nCnt] = CPlayer::Create(D3DXVECTOR3(-100.0f + (nCnt * 50.0f), 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
+	}
+
+	CSpeed::Create(D3DXVECTOR3(0.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 0.0f, 50.0f), D3DXVECTOR3(-D3DX_PI*0.5f, 0.0f, 0.0f),300);
 
 	//カメラの設定
 	m_pCamera = CCamera::Create();

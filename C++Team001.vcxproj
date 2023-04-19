@@ -165,6 +165,8 @@
     <ClCompile Include="src\inputcontroller.cpp" />
     <ClCompile Include="src\InputJoypad.cpp" />
     <ClCompile Include="src\InputKeyBoard.cpp" />
+    <ClCompile Include="src\Item.cpp" />
+    <ClCompile Include="src\Item_Speed.cpp" />
     <ClCompile Include="src\Letter.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -208,6 +210,8 @@
     <ClInclude Include="src\InputJoyPad.h" />
     <ClInclude Include="src\InputKeyBoard.h" />
     <ClInclude Include="src\inputkeydata.h" />
+    <ClInclude Include="src\Item.h" />
+    <ClInclude Include="src\Item_Speed.h" />
     <ClInclude Include="src\Letter.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\main.h" />

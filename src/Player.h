@@ -96,7 +96,6 @@ public:
 	PLAYER_MOTION	GetNowMotion() { return m_Motion; };
 	D3DXMATRIX		GetMtx() { return m_mtxWorld; };			//マトリックスの取得
 
-
 private:
 	CController*	m_controller;					//命令を出す人
 	CModel*			m_apModel[NUM_PLAYERPARTS];		//モデルのインスタンス
