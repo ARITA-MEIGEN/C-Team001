@@ -13,6 +13,9 @@
 class CSpeed : public CItem
 {
 public:
+	//定義
+	static const int LIMIT_DISPLAY;	//点滅を始める時間
+
 	explicit CSpeed(int nPriority = 3);								//コンストラクタ
 	~CSpeed() override;												//デストラクタ
 
@@ -25,6 +28,7 @@ public:
 
 private:
 	//メンバ変数
+	bool m_bDisplay;			//表示するかどうか
 };
 
 #endif

@@ -8,6 +8,11 @@
 #include "Texture.h"
 
 //======================================================
+// 定義
+//======================================================
+const int CSpeed::LIMIT_DISPLAY = 120;	//点滅を始める時間
+
+//======================================================
 //コンストラクタ
 //======================================================
 CSpeed::CSpeed(int nPriority) : CItem(nPriority)
@@ -28,6 +33,7 @@ HRESULT CSpeed::Init(void)
 {
 	//初期化
 	CObject3D::Init();
+	m_bDisplay = true;
 
 	//テクスチャ設定
 	CTexture::GetInstance()->SetTexture("TEXT_TITLE");
@@ -55,6 +61,11 @@ void CSpeed::Update(void)
 	//表示時間の減算
 	nLife--;
 
+	if (nLife <= LIMIT_DISPLAY)
+	{//表示時間が一定以下になったら点滅させる
+		m_bDisplay = false;
+	}
+
 	//表示時間の設定
 	SetLife(nLife);
 
@@ -72,10 +83,15 @@ void CSpeed::Update(void)
 //======================================================
 void CSpeed::Draw(void)
 {
-	//表示時間の取得
-	int nLife = GetLife();
-
-	if (nLife % 20 <= 5 && nLife <= 60)
+	if (!m_bDisplay)
+	{
+		if (GetLife() % 10 <= 5)
+		{//点滅させる
+			//描画
+			CObject3D::Draw();
+		}
+	}
+	else
 	{
 		//描画
 		CObject3D::Draw();
