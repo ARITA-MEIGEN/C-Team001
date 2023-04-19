@@ -124,7 +124,6 @@ void CGame::Uninit()
 
 	if (m_pMap != nullptr)
 	{
-		m_pMap->Uninit();
 		delete m_pMap;
 	}
 

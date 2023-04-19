@@ -36,9 +36,6 @@ public:
 	explicit CMap();
 	~CMap();
 	HRESULT Init();
-	void Uninit();
-	void Update();
-	void Draw();
 	static CMap *Create(int stgnumber);
 	void Load();
 
