@@ -83,7 +83,6 @@ HRESULT CPlayer::Init()
 //===========================
 void CPlayer::Uninit(void)
 {
-
 	for (int i = 0; i < NUM_PARTS; i++)
 	{//プレイヤーの生成
 		m_apModel[i]->Uninit();
@@ -588,22 +587,14 @@ void CPlayer::Input()
 	pInput->PressDevice(KEY_DOWN_RIGHT);
 	//レバー
 	{
-		//左下
-		Key |= (pInput->Press(DIK_A) && pInput->Press(DIK_S)) || pInput->Press(JOYPAD_DOWN_LEFT, m_nPlayerNumber) ? INPUT1 : INPUT_NOT1;
 		//下
 		Key |= pInput->Press(DIK_S) || pInput->Press(JOYPAD_DOWN, m_nPlayerNumber)|| pInput->Press(JOYPAD_DOWN_LEFT, m_nPlayerNumber) || pInput->Press(JOYPAD_DOWN_RIGHT, m_nPlayerNumber) ? INPUT2 : INPUT_NOT2;
-		//右下
-		Key |= (pInput->Press(DIK_D) && pInput->Press(DIK_S)) || pInput->Press(JOYPAD_DOWN_RIGHT, m_nPlayerNumber) ? INPUT3 : INPUT_NOT3;
 		//左
 		Key |= pInput->Press(DIK_A) || pInput->Press(JOYPAD_LEFT, m_nPlayerNumber) || pInput->Press(JOYPAD_DOWN_LEFT, m_nPlayerNumber) || (pInput->Press(JOYPAD_UP_LEFT, m_nPlayerNumber)) ? INPUT4 : INPUT_NOT4;
 		//右
 		Key |= pInput->Press(DIK_D) || pInput->Press(JOYPAD_RIGHT, m_nPlayerNumber) || (pInput->Press(JOYPAD_UP_RIGHT, m_nPlayerNumber)) || pInput->Press(JOYPAD_DOWN_RIGHT, m_nPlayerNumber) ? INPUT6 : INPUT_NOT6;
-		//左上
-		Key |= (pInput->Press(DIK_A) && pInput->Press(DIK_SPACE)) || (pInput->Press(JOYPAD_UP_LEFT, m_nPlayerNumber)) ? INPUT7 : INPUT_NOT7;
 		//上
-		Key |= pInput->Press(DIK_SPACE) || pInput->Press(JOYPAD_UP, m_nPlayerNumber) || (pInput->Press(JOYPAD_UP_RIGHT, m_nPlayerNumber)) || (pInput->Press(JOYPAD_UP_LEFT, m_nPlayerNumber)) ? INPUT8 : INPUT_NOT8;
-		//右上
-		Key |= (pInput->Press(DIK_D) && pInput->Press(DIK_SPACE)) || (pInput->Press(JOYPAD_UP_RIGHT, m_nPlayerNumber)) ? INPUT9 : INPUT_NOT9;
+		Key |= pInput->Press(DIK_W) || pInput->Press(JOYPAD_UP, m_nPlayerNumber) || (pInput->Press(JOYPAD_UP_RIGHT, m_nPlayerNumber)) || (pInput->Press(JOYPAD_UP_LEFT, m_nPlayerNumber)) ? INPUT8 : INPUT_NOT8;
 
 		//ニュートラル
 		Key |= (Key & INPUT_NOT6) == INPUT_NOT6 && (Key & INPUT_NOT2) == INPUT_NOT2 && (Key & INPUT_NOT4) == INPUT_NOT4 && (Key & INPUT_NOT8) == INPUT_NOT8 ? INPUT5 : INPUT_NOT5;
@@ -623,6 +614,16 @@ void CPlayer::Move()
 
 	// 方向ベクトル掛ける移動量
 	m_move = m_controller->Move() * MOVE_SPEED;
+}
+
+//-----------------------------------------
+// コントローラーの設定
+//-----------------------------------------
+void CPlayer::SetController(CController * inOperate)
+{
+	m_controller = inOperate;
+	m_controller->SetToOrder(this);
+
 }
 
 //==============================================
