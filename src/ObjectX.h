@@ -33,6 +33,14 @@ public:
 	void SetPos(D3DXVECTOR3 pos);
 	void SetRot(D3DXVECTOR3 rot);
 	void SetModel(LPCTSTR name) { m_modelname = name; };
+	void SetCol(D3DXCOLOR col) { m_col = col; };
+
+	//セッター
+	D3DXVECTOR3 GetPos() { return m_pos; };
+	D3DXVECTOR3 GetRot() { return m_rot; };
+	LPCTSTR GetModelName() { return m_modelname; };
+	D3DXVECTOR3	GetSize() { return m_size; };
+	D3DXCOLOR GetCol() { return m_col; };
 
 private:
 	LPD3DXMESH		m_pMesh;			//メッシュへのポインタ
@@ -53,6 +61,7 @@ private:
 	D3DXVECTOR3		m_rotDest;			//目的の角度の保存
 	D3DXMATRIX		m_mtxShadow;		//影のマトリクス
 	LPCTSTR			m_modelname;		//モデルの名前
+	D3DXCOLOR		m_col;				//色
 };
 #endif
 

@@ -10,7 +10,6 @@
 
 //インクルード
 #include"main.h"
-#include"ObjectX.h"
 
 //マクロ定義
 #define PLAYER_LEGPARTS	(13)
