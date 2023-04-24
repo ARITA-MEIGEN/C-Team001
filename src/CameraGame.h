@@ -9,6 +9,7 @@
 
 class CCameraGame : public CCamera
 {
+private:
 	static const float SPEED;		// ˆÚ“®‘¬“x
 	static const float FACTOR;		// ’Ç]‚ÌŒW”
 	static const float ROTSPEED;	// ù‰ñ‘¬“x
