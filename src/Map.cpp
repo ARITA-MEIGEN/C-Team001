@@ -61,9 +61,32 @@ void CMap::Load()
 {
 	using json = nlohmann::json;
 	json map = LoadJson("data/FILE/map.json");
-	for (int i = 0; i < MAX_BLOCK; i++)
+
+	int playerCount = map["PLAYER_SPAWN"].size();
+
+	for (int i = 0; i < playerCount; i++)
 	{
-		D3DXVECTOR3 pos = D3DXVECTOR3(map["BLOCK"][i]["POS"][0], map["BLOCK"][i]["POS"][1], map["BLOCK"][i]["POS"][2]);
-		m_pBlock[i]->SetPos(pos);
+		float x = map["PLAYER_SPAWN"][i][0];
+		float y = map["PLAYER_SPAWN"][i][1];
+	}
+
+	for (int i = 0; i < map["MAP"].size(); i++)
+	{
+		for (int j = 0; j < map["MAP"][i].size(); j++)
+		{
+			switch ((int)map["MAP"][i][j])
+			{
+			case 0:
+				m_pBlock[i] = CBlock::Create(D3DXVECTOR3(i * 50.0f - map["MAP"].size() * 0.5f * 25.0f, 0.0f, j * -25.0f + map["MAP"][i].size() * 0.5f * 25.0f), 0.0f);
+				break;
+			case 1:
+				m_pBlock[i] = CBlock::Create(D3DXVECTOR3(i * 50.0f - map["MAP"].size() * 0.5f * 25.0f, 0.0f, j * -25.0f + map["MAP"][i].size() * 0.5f * 25.0f), 0.0f);
+				break;
+			case -1:
+				break;
+			default:
+				break;
+			}
+		}
 	}
 }
