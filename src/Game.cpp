@@ -11,7 +11,7 @@
 #include"Player.h"
 #include"Player.h"
 #include"Mesh.h"
-#include"Camera.h"
+#include"CameraGame.h"
 #include"Light.h"
 #include"Shadow.h"
 #include"Fade.h"
@@ -70,7 +70,7 @@ HRESULT CGame::Init()
 	CSpeed::Create(D3DXVECTOR3(0.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 0.0f, 50.0f), D3DXVECTOR3(-D3DX_PI*0.5f, 0.0f, 0.0f),300);
 
 	//ƒJƒƒ‰‚Ìİ’è
-	m_pCamera = CCamera::Create();
+	m_pCamera = CCameraGame::Create();
 
 	//ƒ‰ƒCƒg‚Ìİ’è
 	m_pLight = new CLight;
