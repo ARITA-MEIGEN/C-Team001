@@ -28,6 +28,7 @@ class CBullet;
 #define PLAYER_SPEED		(5.0f)			//移動速度
 #define ITEM_ADD_SPEED		(1.5f)			//アイテムで加算するスピード
 
+
 class CPlayer :public CObject
 {
 public:
@@ -77,15 +78,16 @@ public:
 	void			Uninit(void)override;
 	void			Update(void)override;
 	void			Draw(void)override;
-	void			Move();
-	static CPlayer*	Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);	
-	void			ReadMotion();
-	void			MotionPlayer();										//モーションの再生　引数は再生するモーションの番号
-	void			MotionManager();									//状態に合わせてモーション再生する
-	void			PlayFirstMotion();									//前と状態が違う場合のみ最初のモーションを設定する
-	void			Input();											//入力処理
-	void			Updatepos();										//座標の更新
-	void			Normalization();									//正規化
+	void			Move();										//移動
+	static CPlayer*	Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);	//プレイヤー生成
+	void			ReadMotion();								//モーション読み込み
+	void			MotionPlayer();								//モーションの再生　引数は再生するモーションの番号
+	void			MotionManager();							//状態に合わせてモーション再生する
+	void			PlayFirstMotion();							//前と状態が違う場合のみ最初のモーションを設定する
+	void			Input();									//入力処理
+	void			Updatepos();								//座標の更新
+	void			Normalization();							//正規化
+	void			BlockCollision();							//ブロックとの判定
 
 	//セッター
 	void			SetController(CController* inOperate);
