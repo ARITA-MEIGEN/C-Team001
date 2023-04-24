@@ -124,7 +124,6 @@ void CGame::Uninit()
 
 	if (m_pMap != nullptr)
 	{
-		m_pMap->Uninit();
 		delete m_pMap;
 	}
 
@@ -166,7 +165,9 @@ void CGame::Draw()
 	m_pCamera->Set();
 }
 
+//====================================
 //ƒ‰ƒEƒ“ƒhˆÚs‚Ìˆ—
+//====================================
 void CGame::ResetGame()
 {
 	for (int i = 0; i < MAX_PLAYER; i++)

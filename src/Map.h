@@ -36,10 +36,9 @@ public:
 	explicit CMap();
 	~CMap();
 	HRESULT Init();
-	void Uninit();
-	void Update();
-	void Draw();
 	static CMap *Create(int stgnumber);
+	void Load();
+
 private:
 	//ƒƒ“ƒoŠÖ”
 	STAGE m_StageNumber;
