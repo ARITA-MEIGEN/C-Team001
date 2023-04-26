@@ -28,8 +28,15 @@ public:
 	void Draw()override;
 	static CBlock *Create(D3DXVECTOR3 pos, float lot);
 
+	//セッター
+	void SetPlayerNumber(int number);
+
+	//ゲッター
+	int GetNumber() { return m_number; };
+
 private:
-	//メンバ関数
+	//メンバ変数
+	int m_number;//プレイヤーの番号
 };
 
 #endif

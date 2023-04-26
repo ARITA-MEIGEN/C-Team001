@@ -20,6 +20,7 @@ class CController;
 class CShadow;
 class CModel;
 class CBullet;
+class CBlock;
 
 //マクロ定義
 #define MAX_KEY				(60)			//キーの総数
@@ -27,6 +28,7 @@ class CBullet;
 #define NUM_PARTS			(14)			//パーツの数
 #define PLAYER_SPEED		(5.0f)			//移動速度
 #define ITEM_ADD_SPEED		(1.5f)			//アイテムで加算するスピード
+#define MAX_WORD			(255)			//パスの最大文字数
 
 
 class CPlayer :public CObject
@@ -113,7 +115,7 @@ private:
 	int				m_nNumKey;						//キーの総数
 	int				m_nCurKey;						//現在のキー番号
 	int				m_nNumModel;					//読み込むモデルの数
-	char			m_nModelpass[255];				//読み込むモデルのパス
+	char			m_nModelpass[MAX_WORD];				//読み込むモデルのパス
 	PLAYER_MOTION	m_Motion;						//現在のモーション
 	PLAYER_MOTION	m_MotionOld;					//ひとつ前のモーション
 	static int		m_nNumPlayer;					//プレイヤーの数
@@ -123,9 +125,9 @@ private:
 	bool			m_bLeftSide;					//どっちを向いてるか(trueなら←)
 	int				m_nNowKey;						//キー保存用
 	CShadow*		m_pShadow;						//影
+	CBlock*			m_pOnBlock;						//プレイヤーの乗っているブロックへのポインタ
 
 	//押し出し判定関連
-
 	D3DXVECTOR3		m_aAxisSiz[PST_MAX];			//押し出し判定の大きさ
 };
 
