@@ -39,6 +39,9 @@ public:
 	static CMap *Create(int stgnumber);
 	void Load();
 
+	//ゲッター
+	CBlock* GetBlock(int number) { return m_pBlock[number]; };
+
 private:
 	//メンバ関数
 	STAGE m_StageNumber;
