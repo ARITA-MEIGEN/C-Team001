@@ -677,9 +677,14 @@ void CPlayer::Normalization()
 //==============================================
 void CPlayer::BlockCollision()
 {
-	for (int i = 0; i < MAX_BLOCK; i++)
+	for (int i = 0; i < CGame::GetMap()->GetBlockCount(); i++)
 	{
 		CBlock*pBlock = CGame::GetMap()->GetBlock(i);
+
+		if (pBlock == nullptr)
+		{
+			continue;
+		}
 
 		if (m_pos.x <= pBlock->GetPos().x + (pBlock->GetSize().x / 2) && m_pos.x >= pBlock->GetPos().x - (pBlock->GetSize().x / 2))
 		{//XŽ²
