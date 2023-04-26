@@ -682,26 +682,11 @@ void CPlayer::BlockCollision()
 		CBlock*pBlock = CGame::GetMap()->GetBlock(i);
 
 		if (m_pos.x <= pBlock->GetPos().x + (pBlock->GetSize().x / 2) && m_pos.x >= pBlock->GetPos().x - (pBlock->GetSize().x / 2))
-		{
+		{//X軸
 			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z / 2) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z / 2))
-			{
-				switch (m_nPlayerNumber)
-				{
-				case 0:
-					pBlock->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-					break;
-				case 1:
-					pBlock->SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-					break;
-				case 2:
-					pBlock->SetCol(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-					break;
-				case 3:
-					pBlock->SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
-					break;
-				default:
-					break;
-				}
+			{//Z軸
+					pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
+					m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
 	}
