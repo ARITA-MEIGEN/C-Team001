@@ -303,7 +303,7 @@ void CObject2D::SetUV(float U1, float U2, float V1, float V2)
 //=============================================================================
 // 生成
 //=============================================================================
-CObject2D * CObject2D::Create(D3DXVECTOR3 pos, D3DXVECTOR2 siz,int Priority)
+CObject2D * CObject2D::Create(D3DXVECTOR3 pos, D3DXVECTOR2 siz, int Priority)
 {
 	CObject2D*pObject2D;
 	pObject2D = new CObject2D(Priority);
@@ -313,3 +313,21 @@ CObject2D * CObject2D::Create(D3DXVECTOR3 pos, D3DXVECTOR2 siz,int Priority)
 	return pObject2D;
 }
 
+//======================================================
+//座標の設定
+//======================================================
+void CObject2D::SetSkillPos(const float &gauge)
+{
+	VERTEX_2D * pVtx;		//頂点情報へのポインタ
+	//頂点バッファをロックし、頂点情報へのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	//頂点座標の設定
+	pVtx[0].pos = D3DXVECTOR3(m_Pos.x, m_Pos.y - (m_Siz.y / 2.0f), 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(m_Pos.x + (m_Siz.x * gauge), m_Pos.y - (m_Siz.y / 2.0f), 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(m_Pos.x, m_Pos.y + (m_Siz.y / 2.0f), 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(m_Pos.x + (m_Siz.x * gauge), m_Pos.y + (m_Siz.y / 2.0f), 0.0f);
+
+	//頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
+}

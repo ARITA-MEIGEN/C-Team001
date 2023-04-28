@@ -18,6 +18,7 @@
 #include"Time.h"
 #include"effect.h"
 #include"Particle.h"
+#include "SkillGauge.h"
 
 //静的メンバ変数
 int CPlayer::m_nNumPlayer = 0;	//プレイヤーの数
@@ -72,8 +73,35 @@ HRESULT CPlayer::Init()
 		}
 	}
 
+	//初期化
+	m_nSkillGauge = 0;
+
 	//動的確保
-	m_controller = new CPlayerController(0);
+	m_controller = new CPlayerController(m_nPlayerNumber);
+
+	//スキルゲージの生成
+	switch (m_nPlayerNumber)
+	{//16.0fはゲージごとの間の空白大きさ
+		case 0:
+			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
+			break;
+
+		case 1:
+			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
+			break;
+
+		case 2:
+			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), m_nPlayerNumber);
+			break;
+
+		case 3:
+			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f), m_nPlayerNumber);
+			break;
+
+	default:
+		break;
+	}
+	
 
 	return S_OK;
 }
@@ -115,14 +143,29 @@ void CPlayer::Update(void)
 		//Input();				//入力処理
 		CInput* pInput = CInput::GetKey();
 		if (pInput->Press(DIK_U))
-		{
+		{//Uキーでアイテム取得状態へ
 			m_nBuffTime = 120;
 			m_State = PST_SPEED;
 		}
-		m_nBuffTime--;
-		if (m_nBuffTime <= 0)
-		{
+		
+		if (m_nBuffTime > 0)
+		{//強化効果が0より多いなら減算する
+			m_nBuffTime--;
+		}
+
+		if (m_nBuffTime <= 0 && m_State != PST_STAND)
+		{//デフォルトに戻す
 			m_State = PST_STAND;
+		}
+
+		if (pInput->Press(DIK_K))
+		{//Kキーでゲージ上昇
+			m_nSkillGauge++;
+		}
+
+		if (pInput->Press(DIK_R))
+		{//Kキーでゲージ上昇
+			m_nSkillGauge = 0;
 		}
 
 		Updatepos();			//座標更新

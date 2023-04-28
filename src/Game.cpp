@@ -21,10 +21,10 @@
 #include"Time.h"
 #include"Map.h"
 #include"Item_Speed.h"
+#include"SkillGauge.h"
 
 //静的メンバ変数
 CPlayer*CGame::m_pPlayer[MAX_PLAYER] = {};
-CLife*CGame::m_Life = nullptr;				//体力ゲージ
 CGame::GAME CGame::m_gamestate;
 bool CGame::bDebugCamera = nullptr;
 
@@ -67,8 +67,9 @@ HRESULT CGame::Init()
 		m_pPlayer[nCnt] = CPlayer::Create(D3DXVECTOR3(-100.0f + (nCnt * 50.0f), 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
 	}
 
+	//アイテムの生成
 	CSpeed::Create(D3DXVECTOR3(0.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 0.0f, 50.0f), D3DXVECTOR3(-D3DX_PI*0.5f, 0.0f, 0.0f),300);
-
+	
 	//カメラの設定
 	m_pCamera = CCamera::Create();
 
