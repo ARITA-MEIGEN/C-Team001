@@ -36,7 +36,7 @@ private:
 	//メンバ変数
 	LPDIRECT3D9 g_pD3D;								// Direct3Dオブジェクト
 	LPDIRECT3DDEVICE9 g_pD3DDevice;					// Deviceオブジェクト
-	LPD3DXFONT g_pFont;								// フォント
+ 	LPD3DXFONT g_pFont;								// フォント
 
 };
 
