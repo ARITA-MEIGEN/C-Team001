@@ -78,3 +78,29 @@ CBlock* CBlock::Create(D3DXVECTOR3 pos, float lot)
 	}
 	return pBlock;
 }
+
+//=============================================================================
+// ÉvÉåÉCÉÑÅ[ê›íË
+//=============================================================================
+void CBlock::SetPlayerNumber(int number)
+{
+	m_number = number;
+	switch (m_number)
+	{
+	case 0:
+		SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+		break;
+	case 1:
+		SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+		break;
+	case 2:
+		SetCol(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+		break;
+	case 3:
+		SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+		break;
+	default:
+		break;
+	}
+
+}

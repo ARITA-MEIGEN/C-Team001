@@ -18,6 +18,7 @@
 #include"Time.h"
 #include"effect.h"
 #include"Particle.h"
+#include"Map.h"
 #include "SkillGauge.h"
 
 //静的メンバ変数
@@ -175,6 +176,8 @@ void CPlayer::Update(void)
 
 		Normalization();		//角度の正規化
 		m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
+
+		BlockCollision();
 
 #ifdef _DEBUG
 		CDebugProc::Print("現在のプレイヤーの座標:%f %f %f", m_pos.x, m_pos.y, m_pos.z);
@@ -709,5 +712,30 @@ void CPlayer::Normalization()
 	else if (m_rot.y <= -D3DX_PI)
 	{
 		m_rot.y += D3DX_PI * 2;
+	}
+}
+
+//==============================================
+//ブロックとの判定
+//==============================================
+void CPlayer::BlockCollision()
+{
+	for (int i = 0; i < CGame::GetMap()->GetBlockCount(); i++)
+	{
+		CBlock*pBlock = CGame::GetMap()->GetBlock(i);
+
+		if (pBlock == nullptr)
+		{
+			continue;
+		}
+
+		if (m_pos.x <= pBlock->GetPos().x + (pBlock->GetSize().x / 2) && m_pos.x >= pBlock->GetPos().x - (pBlock->GetSize().x / 2))
+		{//X軸
+			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z / 2) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z / 2))
+			{//Z軸
+					pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
+					m_pOnBlock = pBlock;						//乗っているブロックを設定
+			}
+		}
 	}
 }

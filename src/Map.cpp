@@ -9,39 +9,39 @@
 // include
 //-----------------------------------------------------------------------------
 #include"Map.h"
+#include"file.h"
 
+//-----------------------------------------------------------------------------
+// 静的メンバー変数の宣言
+//-----------------------------------------------------------------------------
+const float CMap::BLOCK_WIDTH = 35.0f;	// ブロック同士の幅
+
+//=============================================================================
+// コンストラクタ
+//=============================================================================
 CMap::CMap()
 {
 }
 
+//=============================================================================
+// デストラクタ
+//=============================================================================
 CMap::~CMap()
 {
 }
 
+//=============================================================================
+// 初期化
+//=============================================================================
 HRESULT CMap::Init()
 {
-	for (int i = 0; i < BLOCK_Y; i++)
-	{
-		for (int j = 0; j < BLOCK_X; j++)
-		{
-			m_pBlock[i] = CBlock::Create(D3DXVECTOR3(j*50.0f, 0.0f, i*50.0f), 0.0f);
-		}
-	}
+	Load();
 	return S_OK;
 }
 
-void CMap::Uninit()
-{
-}
-
-void CMap::Update()
-{
-}
-
-void CMap::Draw()
-{
-}
-
+//=============================================================================
+// 生成
+//=============================================================================
 CMap * CMap::Create(int stgnumber)
 {
 	CMap*pMap = new CMap();
@@ -52,4 +52,40 @@ CMap * CMap::Create(int stgnumber)
 	pMap->Init();
 	}
 	return pMap;
+}
+
+//=============================================================================
+// 読み込み
+//=============================================================================
+void CMap::Load()
+{
+	using json = nlohmann::json;
+	json map = LoadJson("data/FILE/map.json");
+
+	int playerCount = map["PLAYER_SPAWN"].size();
+
+	m_pBlock.resize(map["MAP"].size() * map["MAP"][0].size());
+
+	for (int i = 0; i < (int)map["MAP"].size(); i++)
+	{
+		for (int j = 0; j < (int)map["MAP"][i].size(); j++)
+		{
+			float x = i * BLOCK_WIDTH - map["MAP"].size() * 0.5f * BLOCK_WIDTH;
+			float z = j * -BLOCK_WIDTH + map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
+
+			switch ((int)map["MAP"][i][j])
+			{
+			case 0:
+				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z), 0.0f);
+				break;
+			case 1:
+				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z), 0.0f);
+				break;
+			case -1:
+				break;
+			default:
+				break;
+			}
+		}
+	}
 }

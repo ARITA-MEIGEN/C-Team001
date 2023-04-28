@@ -214,6 +214,8 @@ void CObjectX::Draw(void)
 
 		for (int nCnt2 = 0; nCnt2 < (int)m_nNumMat; nCnt2++)
 		{
+			pMat[nCnt2].MatD3D.Emissive = m_col;
+
 			//ƒ}ƒeƒŠƒAƒ‹‚ÌÝ’è
 			pDevice->SetMaterial(&pMat[nCnt2].MatD3D);
 

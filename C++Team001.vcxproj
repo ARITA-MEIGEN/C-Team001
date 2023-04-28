@@ -154,6 +154,7 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\CameraGame.cpp" />
     <ClCompile Include="src\Controller.cpp" />
     <ClCompile Include="src\DebugProc.cpp" />
     <ClCompile Include="src\DirectInput.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\Title.cpp" />
     <ClCompile Include="src\UI.cpp" />
+    <ClCompile Include="src\utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -243,6 +245,7 @@
     <ClInclude Include="src\Time.h" />
     <ClInclude Include="src\Title.h" />
     <ClInclude Include="src\UI.h" />
+    <ClInclude Include="src\utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

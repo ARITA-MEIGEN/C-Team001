@@ -11,7 +11,7 @@
 #include"Player.h"
 #include"Player.h"
 #include"Mesh.h"
-#include"Camera.h"
+#include"CameraGame.h"
 #include"Light.h"
 #include"Shadow.h"
 #include"Fade.h"
@@ -71,7 +71,7 @@ HRESULT CGame::Init()
 	CSpeed::Create(D3DXVECTOR3(0.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 0.0f, 50.0f), D3DXVECTOR3(-D3DX_PI*0.5f, 0.0f, 0.0f),300);
 	
 	//カメラの設定
-	m_pCamera = CCamera::Create();
+	m_pCamera = CCameraGame::Create();
 
 	//ライトの設定
 	m_pLight = new CLight;
@@ -125,7 +125,6 @@ void CGame::Uninit()
 
 	if (m_pMap != nullptr)
 	{
-		m_pMap->Uninit();
 		delete m_pMap;
 	}
 
@@ -167,7 +166,9 @@ void CGame::Draw()
 	m_pCamera->Set();
 }
 
+//====================================
 //ラウンド移行時の処理
+//====================================
 void CGame::ResetGame()
 {
 	for (int i = 0; i < MAX_PLAYER; i++)

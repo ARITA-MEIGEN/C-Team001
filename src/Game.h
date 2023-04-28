@@ -66,6 +66,7 @@ public:
 	static bool GetDebugCamera() { return bDebugCamera; };
 	static CPlayer*GetPlayer(int number) { return m_pPlayer[number]; };
 	static CTimer*GetTimer() { return m_pTimer; };
+	static CMap*GetMap() { return m_pMap; };
 
 private:
 	static	CPlayer*m_pPlayer[MAX_PLAYER];
