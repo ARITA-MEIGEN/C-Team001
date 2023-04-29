@@ -18,13 +18,14 @@
 
 //前方宣言
 class CPlayer;
-class CLife;	// 体力ゲージ
 class CCamera;
 class CLight;
 class CFloor;
 class CTimer;
 class CUI;
 class CMap;
+class CSpeed;
+class CGauge;
 
 class CGame : public CMode
 {
@@ -69,7 +70,6 @@ public:
 
 private:
 	static	CPlayer*m_pPlayer[MAX_PLAYER];
-	static	CLife*m_Life;				// 体力ゲージ
 	static	GAME m_gamestate;			// ゲームの状態
 	static	CCamera*m_pCamera;			// カメラ
 	static	CLight*m_pLight;			// 光源

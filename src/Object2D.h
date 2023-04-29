@@ -45,6 +45,7 @@ public:
 	// 位置
 	void SetPos(const D3DXVECTOR3& pos) { m_Pos = pos; }
 	void AddPos(const D3DXVECTOR3& add) { SetPos(m_Pos + add); }
+	void SetSkillPos(const float &gauge);					//スキルゲージの設定
 	D3DXVECTOR3 GetPos() { return m_Pos; }
 
 	// 大きさ

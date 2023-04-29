@@ -95,13 +95,16 @@ public:
 
 	//セッター
 	void			SetController(CController* inOperate);
-	void			SetPos(D3DXVECTOR3 pos) { m_pos = pos; };	// 位置の設定
-	void			SetRot(D3DXVECTOR3 rot) { m_rot = rot; };	// 向きの設定
+	void			SetPos(D3DXVECTOR3 pos) { m_pos = pos; };			// 位置の設定
+	void			SetRot(D3DXVECTOR3 rot) { m_rot = rot; };			// 向きの設定
+	void			SetSkillGauge(int skill) { m_nSkillGauge = skill; }	// スキルゲージの量の設定
 
 	//ゲッター
 	D3DXVECTOR3		GetPos() { return m_pos; };
 	PLAYER_MOTION	GetNowMotion() { return m_Motion; };
-	D3DXMATRIX		GetMtx() { return m_mtxWorld; };			// マトリックスの取得
+	D3DXMATRIX		GetMtx() { return m_mtxWorld; };				//マトリックスの取得
+	int				GetSkillGauge() { return m_nSkillGauge; }		//スキルゲージの量の取得
+	int				GetPlayerNumber() { return m_nPlayerNumber; }	//プレイヤーの番号の取得
 
 private:
 	CController*	m_controller;					// 命令を出す人
@@ -123,6 +126,7 @@ private:
 	static int		m_nNumPlayer;					// プレイヤーの数
 	int				m_nPlayerNumber;				// 自分のプレイヤー番号
 	int				m_nBuffTime;					// 強化効果時間
+	int				m_nSkillGauge;					//スキルゲージの量
 	PLAYER_STATE	m_State;						// プレイヤーの状態
 	bool			m_bLeftSide;					// どっちを向いてるか(trueなら←)
 	int				m_nNowKey;						// キー保存用
