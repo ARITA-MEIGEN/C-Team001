@@ -45,16 +45,16 @@ public:
 	void BindTexture(LPDIRECT3DTEXTURE9 tex);
 
 	//セッター
-	void SetPos(D3DXVECTOR3 pos);
-	void SetSiz(D3DXVECTOR3 siz);
-	void SetCol(D3DXCOLOR col);
-	void SetRot(D3DXVECTOR3 rot) { m_Rot = rot; };
+	void SetPos(const D3DXVECTOR3& pos);
+	void SetSiz(const D3DXVECTOR3& siz);
+	void SetCol(const D3DXCOLOR& col);
+	void SetRot(const D3DXVECTOR3& rot) { m_Rot = rot; };
 
 	//ゲッター
-	D3DXVECTOR3 GetPos() { return m_Pos; };
-	D3DXVECTOR3 GetSiz() { return m_Siz; };
-	D3DXCOLOR GetCol() { return m_Col; };
-	D3DXVECTOR3 GetRot() { return m_Rot; };
+	const D3DXVECTOR3 GetPos() { return m_Pos; };
+	const D3DXVECTOR3 GetSiz() { return m_Siz; };
+	const D3DXCOLOR GetCol() { return m_Col; };
+	const D3DXVECTOR3 GetRot() { return m_Rot; };
 
 private:
 	//メンバ変数

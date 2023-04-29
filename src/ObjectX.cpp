@@ -242,22 +242,6 @@ CObjectX * CObjectX::Create(D3DXVECTOR3 pos,int Priority, LPCTSTR name)
 }
 
 //===========================
-//à íuê›íË
-//===========================
-void CObjectX::SetPos(D3DXVECTOR3 pos)
-{
-	m_pos = pos;
-}
-
-//===========================
-//ï˚å¸ê›íË
-//===========================
-void CObjectX::SetRot(D3DXVECTOR3 rot)
-{
-	m_rot = rot;
-}
-
-//===========================
 //ÉÇÉfÉãì«Ç›çûÇ›
 //===========================
 void CObjectX::BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat)

@@ -21,7 +21,10 @@
 #include"Map.h"
 
 //静的メンバ変数
-int CPlayer::m_nNumPlayer = 0;	//プレイヤーの数
+const float CPlayer::PLAYER_SPEED = 5.0f; 		// 移動速度
+const float CPlayer::ITEM_ADD_SPEED = 1.5f;		// アイテムで加算するスピード
+int CPlayer::m_nNumPlayer = 0;					// プレイヤーの数
+
 //===========================
 //コンストラクタ
 //===========================
@@ -85,7 +88,7 @@ HRESULT CPlayer::Init()
 void CPlayer::Uninit(void)
 {
 	for (int i = 0; i < NUM_PARTS; i++)
-	{//プレイヤーの生成
+	{// モデル情報の削除
 		m_apModel[i]->Uninit();
 		delete m_apModel[i];
 		m_apModel[i] = nullptr;
@@ -110,38 +113,45 @@ void CPlayer::Uninit(void)
 //===========================
 void CPlayer::Update(void)
 {
-
-	if (CGame::GetGame() != CGame::GAME_END&&CGame::GetGame() != CGame::GAME_START)
+	if ((CGame::GetGame() != CGame::GAME_END) && (CGame::GetGame() != CGame::GAME_START))
 	{
 		//Input();				//入力処理
 		CInput* pInput = CInput::GetKey();
-		if (pInput->Press(DIK_U))
-		{
-			m_nBuffTime = 120;
-			m_State = PST_SPEED;
-		}
+
 		m_nBuffTime--;
+
 		if (m_nBuffTime <= 0)
 		{
 			m_State = PST_STAND;
 		}
 
-		Updatepos();			//座標更新
+		Updatepos();			// 座標更新
 
 		//移動
 		Move();
 
-		Normalization();		//角度の正規化
+		MotionManager();
+
+		Normalization();		// 角度の正規化
 		m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
 
 		BlockCollision();
 
 #ifdef _DEBUG
-		CDebugProc::Print("現在のプレイヤーの座標:%f %f %f", m_pos.x, m_pos.y, m_pos.z);
-		CDebugProc::Print("現在のモーション:%d ", (int)m_Motion);
-		CDebugProc::Print("現在の状態:%d ", (int)m_State);
-		CDebugProc::Print("現在のフレーム:%d", m_frame);
+		CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
+		CDebugProc::Print("現在のモーション:%d\n", (int)m_Motion);
+		CDebugProc::Print("現在の状態:%d\n", (int)m_State);
+		CDebugProc::Print("現在のフレーム:%d\n", m_frame);
 
+		if (pInput->Trigger(DIK_U))
+		{
+			m_nBuffTime = 120;
+			m_State = PST_SPEED;
+		}
+		if (pInput->Trigger(DIK_T))
+		{
+			m_Motion == PM_ST_NEUTRAL ? m_Motion = PM_ST_MOVE : m_Motion = PM_ST_NEUTRAL;
+		}
 #endif // _DEBUG
 	}
 }
@@ -199,22 +209,24 @@ CPlayer * CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 //===========================
 void CPlayer::ReadMotion()
 {
-	const int lenLine = 2048;	//1単語の最大数
-	char strLine[lenLine];		//読み込み用の文字列
-	char Read[lenLine];			//読み取る用
-	int	modelnumber = 0;		//モデルの番号
-	int motionnumber = 0;		//モーションの番号
+	const int lenLine = 2048;	// 1単語の最大数
+	char strLine[lenLine];		// 読み込み用の文字列
+	char Read[lenLine];			// 読み取る用
+	int	modelnumber = 0;		// モデルの番号
+	int motionnumber = 0;		// モーションの番号
 	int key = 0;
 	int partsmotion = 0;
 	int Idx = 0;
 
 	//ファイル読み込み
 	FILE*fp = fopen("data/TXT/Player01/Player01.txt", "r");		//ファイル読み込み
+
 	if (fp == nullptr)
 	{//開けなかった時用
 		assert(false);
 	}
-	if (fp != NULL)
+
+	if (fp != nullptr)
 	{
 		while (fgets(Read, lenLine, fp) != nullptr)
 		{
@@ -467,14 +479,12 @@ void CPlayer::MotionPlayer()
 	D3DXVECTOR3 pos, rot, DiffPos, DiffRot;
 
 	//カウンター更新
-	if (m_nCurKey == m_apMotion[m_Motion].nNumKey&& m_apMotion[m_Motion].bLoop == false)
+	if ((m_nCurKey == m_apMotion[m_Motion].nNumKey) && !m_apMotion[m_Motion].bLoop)
 	{
 		//ループモーションが終わったらニュートラルにする
-		switch (m_State)
+		if (m_State == CPlayer::PST_STAND)
 		{
-		case CPlayer::PST_STAND:
 			m_Motion = PM_ST_NEUTRAL;
-			break;
 		}
 		PlayFirstMotion();
 		return;
@@ -485,31 +495,32 @@ void CPlayer::MotionPlayer()
 		{//パーツ全部のモーション再生
 			if (m_apModel[i] != nullptr)
 			{
-				if (m_nCurKey == m_apMotion[m_Motion].nNumKey - 1 && m_apMotion[m_Motion].bLoop == true)
-				{//ループする場合最初のモーションに移行する
-					DiffPos = D3DXVECTOR3(
-						m_apMotion[m_Motion].aKey[0].aKey[i].fPos -
-						m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fPos);	//差分の取得
+				D3DXVECTOR3 posPlan = m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fPos;	// 現在フレームでの位置
+				D3DXVECTOR3 rotPlan = m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fRot;	// 現在フレームでの向き
 
-					DiffRot = D3DXVECTOR3(
-						m_apMotion[m_Motion].aKey[0].aKey[i].fRot -
-						m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fRot);	//差分の取得
-				}
-				else if (m_nCurKey == m_apMotion[m_Motion].nNumKey - 1 && m_apMotion[m_Motion].bLoop == false)
-				{//ループしない場合ニュートラルモーションに戻す
-					switch (m_State)
-					{//現在の状態に戻す
-					case CPlayer::PST_STAND:
-						DiffPos = D3DXVECTOR3(//座標差分の取得
-							m_apMotion[0].aKey[0].aKey[i].fPos -
-							m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fPos);
+				// カウントが総数と同じになった場合
+				if (m_nCurKey == m_apMotion[m_Motion].nNumKey - 1)
+				{
+					if (m_apMotion[m_Motion].bLoop)
+					{//ループする場合最初のモーションに移行する
+						DiffPos = D3DXVECTOR3(m_apMotion[m_Motion].aKey[0].aKey[i].fPos - posPlan);	//差分の取得
 
-						DiffRot = D3DXVECTOR3(//向き差分の取得
-							m_apMotion[0].aKey[0].aKey[i].fRot -
-							m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fRot);
-						break;
-					default:
-						break;
+						DiffRot = D3DXVECTOR3(m_apMotion[m_Motion].aKey[0].aKey[i].fRot - rotPlan);	//差分の取得
+					}
+					else
+					{//ループしない場合ニュートラルモーションに戻す
+						switch (m_State)
+						{//現在の状態に戻す
+						case CPlayer::PST_STAND:
+							//座標差分の取得
+							DiffPos = D3DXVECTOR3(m_apMotion[0].aKey[0].aKey[i].fPos - posPlan);
+
+							//向き差分の取得
+							DiffRot = D3DXVECTOR3(m_apMotion[0].aKey[0].aKey[i].fRot - rotPlan);
+							break;
+						default:
+							break;
+						}
 					}
 				}
 				else
@@ -518,13 +529,12 @@ void CPlayer::MotionPlayer()
 					{//位置座標の設定しなおし
 						PlayFirstMotion();
 					}
-					DiffPos = D3DXVECTOR3(//座標差分の取得
-						m_apMotion[m_Motion].aKey[m_nCurKey + 1].aKey[i].fPos -
-						m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fPos);
 
-					DiffRot = D3DXVECTOR3(//向き差分の取得
-						m_apMotion[m_Motion].aKey[m_nCurKey + 1].aKey[i].fRot -
-						m_apMotion[m_Motion].aKey[m_nCurKey].aKey[i].fRot);
+					//座標差分の取得
+					DiffPos = D3DXVECTOR3(m_apMotion[m_Motion].aKey[m_nCurKey + 1].aKey[i].fPos - posPlan);
+
+					//向き差分の取得
+					DiffRot = D3DXVECTOR3(m_apMotion[m_Motion].aKey[m_nCurKey + 1].aKey[i].fRot - rotPlan);
 				}
 			}
 
@@ -581,11 +591,9 @@ void CPlayer::PlayFirstMotion()
 	for (int i = 0; i < NUM_PARTS; i++)
 	{
 		//プレイヤーの生成
-		m_apModel[i]->SetPos(D3DXVECTOR3(
-			m_apMotion[m_Motion].aKey[0].aKey[i].fPos) + m_apModel[i]->GetDPos());	//初期位置の設定
+		m_apModel[i]->SetPos(D3DXVECTOR3(m_apMotion[m_Motion].aKey[0].aKey[i].fPos) + m_apModel[i]->GetDPos());	//初期位置の設定
 
-		m_apModel[i]->SetRot(D3DXVECTOR3(
-			m_apMotion[m_Motion].aKey[0].aKey[i].fRot) + m_apModel[i]->GetDRot());	//差分の取得
+		m_apModel[i]->SetRot(D3DXVECTOR3(m_apMotion[m_Motion].aKey[0].aKey[i].fRot) + m_apModel[i]->GetDRot());	//差分の取得
 	}
 	m_frame = 0;
 	m_nCurKey = 0;
@@ -686,9 +694,9 @@ void CPlayer::BlockCollision()
 			continue;
 		}
 
-		if (m_pos.x <= pBlock->GetPos().x + (pBlock->GetSize().x / 2) && m_pos.x >= pBlock->GetPos().x - (pBlock->GetSize().x / 2))
+		if (m_pos.x <= pBlock->GetPos().x + (pBlock->GetSize().x * 0.5f) && m_pos.x >= pBlock->GetPos().x - (pBlock->GetSize().x * 0.5f))
 		{//X軸
-			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z / 2) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z / 2))
+			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f))
 			{//Z軸
 					pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
 					m_pOnBlock = pBlock;						//乗っているブロックを設定

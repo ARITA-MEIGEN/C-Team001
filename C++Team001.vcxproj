@@ -177,6 +177,7 @@
     <ClCompile Include="src\Mode.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\Motion.cpp" />
+    <ClCompile Include="src\MotionModel3D.cpp" />
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\Object2D.cpp" />
     <ClCompile Include="src\Object3D.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="src\Mode.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Motion.h" />
+    <ClInclude Include="src\MotionModel3D.h" />
     <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\Object2D.h" />
     <ClInclude Include="src\Object3D.h" />

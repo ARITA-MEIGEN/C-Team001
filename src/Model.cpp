@@ -65,66 +65,68 @@ void CModel::Update(void)
 //===========================
 void CModel::Draw(D3DXMATRIX pMtx)
 {
-	if (m_pMesh != nullptr)
+	if (m_pMesh == nullptr)
 	{
-		LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
-		pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
-
-		D3DXMATRIX mtxRot, mtxTrans;				//計算用マトリックス
-		D3DMATERIAL9 matDef;						//現在のマテリアル保存用
-		D3DXMATERIAL *pMat;							//マテリアルの情報
-		m_mtxParent = pMtx;
-
-		//現在のマテリアルを維持
-		pDevice->GetMaterial(&matDef);
-
-		//パーツのワールドマトリックスの初期化
-		D3DXMatrixIdentity(&m_mtxWorld);
-
-		//パーツのモデルの向きを反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
-
-		//パーツのモデルの位置を反映
-		D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
-
-		//親のマトリックスと掛け合わせる
-		if (m_pParent != nullptr)
-		{
-			m_mtxParent = m_pParent->GetMtx();
-		}
-		else
-		{//現在(最新)のMtxを取得(PlayerのMtx)親のいないモデルが複数ある場合は別対応が必要
-			pDevice->GetTransform(D3DTS_WORLD, &m_mtxParent);
-		}
-
-		//親の座標とかけ合わせる
-		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxParent);
-
-		//影の生成
-		//Shadow()
-
-		//ワールドマトリックスの設定
-		pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
-		//マテリアルデータへのポインタを取得
-		pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
-
-		//マテリアルの描画
-		for (int nCnt2 = 0; nCnt2 < (int)m_nNumMat; nCnt2++)
-		{
-			pMat[nCnt2].MatD3D.Emissive = m_col;
-
-			//マテリアルの設定
-			pDevice->SetMaterial(&pMat[nCnt2].MatD3D);
-
-			//プレイヤーパーツの描画
-			m_pMesh->DrawSubset(nCnt2);
-		}
-		//保持していたマテリアルを戻す
-		pDevice->SetMaterial(&matDef);
+		return;
 	}
+
+	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
+	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
+
+	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
+	D3DMATERIAL9 matDef;			// 現在のマテリアル保存用
+	D3DXMATERIAL *pMat;				// マテリアルの情報
+	m_mtxParent = pMtx;
+
+	//現在のマテリアルを維持
+	pDevice->GetMaterial(&matDef);
+
+	//パーツのワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	//パーツのモデルの向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	//パーツのモデルの位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	//親のマトリックスと掛け合わせる
+	if (m_pParent != nullptr)
+	{
+		m_mtxParent = m_pParent->GetMtx();
+	}
+	else
+	{//現在(最新)のMtxを取得(PlayerのMtx)親のいないモデルが複数ある場合は別対応が必要
+		pDevice->GetTransform(D3DTS_WORLD, &m_mtxParent);
+	}
+
+	//親の座標とかけ合わせる
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxParent);
+
+	//影の生成
+	//Shadow()
+
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	//マテリアルデータへのポインタを取得
+	pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+
+	//マテリアルの描画
+	for (int nCnt2 = 0; nCnt2 < (int)m_nNumMat; nCnt2++)
+	{
+		pMat[nCnt2].MatD3D.Emissive = m_col;
+
+		//マテリアルの設定
+		pDevice->SetMaterial(&pMat[nCnt2].MatD3D);
+
+		//プレイヤーパーツの描画
+		m_pMesh->DrawSubset(nCnt2);
+	}
+	//保持していたマテリアルを戻す
+	pDevice->SetMaterial(&matDef);
 }
 
 //===========================
@@ -202,7 +204,7 @@ void CModel::Siz()
 	int nNumVtx;		//頂点数
 	DWORD sizeFVF;		//頂点フォーマットのサイズ
 
-						//頂点バッファのロック
+	//頂点バッファのロック
 	m_pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
 
 	//頂点数の取得
@@ -250,8 +252,8 @@ void CModel::Siz()
 	//頂点バッファのアンロック
 	m_pMesh->UnlockVertexBuffer();
 
-	m_vtxMax = vtxMax;							//頂点座標の最大値
-	m_vtxMin = vtxMin;							//頂点座標の最小値
+	m_vtxMax = vtxMax;	// 頂点座標の最大値
+	m_vtxMin = vtxMin;	// 頂点座標の最小値
 }
 
 //===========================

@@ -17,7 +17,7 @@
 //=============================================================================
 CBlock::CBlock(int priorty) :CObjectX(priorty)
 {
-
+	m_number = 0;
 }
 
 //=============================================================================
@@ -34,6 +34,9 @@ CBlock::~CBlock()
 HRESULT  CBlock::Init()
 {
 	CObjectX::Init();
+
+	m_number = -1;
+
 	return S_OK;
 }
 
