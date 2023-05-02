@@ -74,8 +74,9 @@ CBlock* CBlock::Create(D3DXVECTOR3 pos, float lot)
 	pBlock = new CBlock(5);
 	if (pBlock != nullptr)
 	{// ƒ|ƒŠƒSƒ“‚Ì‰Šú‰»ˆ—
-		pBlock->SetModel("data/MODEL/box.x");
 		pBlock->Init();
+		pBlock->SetModel("data/MODEL/box.x");
+		pBlock->SizeCalculate();
 		pBlock->SetPos(pos);
 		pBlock->SetRot(D3DXVECTOR3(0.0f,0.0f,0.0f));
 	}

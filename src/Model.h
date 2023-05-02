@@ -73,7 +73,6 @@ private:
 
 	// 親子関係
 	CModel* m_pParent;					// 親モデルへのポインタ
-	std::vector<CModel*> m_childrens;	// 子モデルへのポインタコンテナ
 
 };
 

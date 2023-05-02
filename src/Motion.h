@@ -19,8 +19,7 @@
 //*****************************************************************************
 // 前方宣言
 //*****************************************************************************
-class CParts;
-class CModel;
+class CObjectX;
 
 //=============================================================================
 // モーションクラス
@@ -96,7 +95,7 @@ public:
 	int GetMaxParts() { return m_nMaxParts; }				// パーツの最大数の取得
 	bool GetMotion() { return m_bMotion; }					// モーションを行っているか取得
 	bool GetMotionBlend() { return m_bMotionBlend; }		// モーションブレンドを行っているか取得
-	CModel* GetParts(int index) { return m_parts[index]; }	// モーションブレンドを行っているか取得
+	CObjectX* GetParts(int index) { return m_parts[index]; }	// モーションブレンドを行っているか取得
 
 private:
 	//--------------------------------------------------------------------
@@ -114,9 +113,9 @@ private:
 	//--------------------------------------------------------------------
 	// メンバ変数
 	//--------------------------------------------------------------------
-	CModel* m_pParent;				// 親
+	CObjectX* m_pParent;				// 親
 	std::vector<MyMotion> m_motion;	// モーション
-	std::vector<CModel*> m_parts;	// パーツ
+	std::vector<CObjectX*> m_parts;	// パーツ
 	std::vector<std::string> m_partsFile;	// パーツのXファイル名
 	int m_nMaxParts;				// パーツ数
 	int m_nNumMotion;				// 扱うモーション

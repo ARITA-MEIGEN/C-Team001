@@ -1,9 +1,11 @@
-//=================================================
+//=============================================================================
 // Content     (ゲームの設定)(player.cpp)
 // Author     : 有田明玄
-//=================================================
+//=============================================================================
 
+//-----------------------------------------------------------------------------
 //インクルード
+//-----------------------------------------------------------------------------
 #include"Player.h"
 #include"Application.h"
 #include"renderer.h"
@@ -11,7 +13,7 @@
 #include"input.h"
 #include"Shadow.h"
 #include"Mesh.h"
-#include"Model.h"
+#include"ObjectX.h"
 #include"Game.h"
 #include"PlayerController.h"
 #include"sound.h"
@@ -21,14 +23,16 @@
 #include"Map.h"
 #include "SkillGauge.h"
 
+//-----------------------------------------------------------------------------
 //静的メンバ変数
+//-----------------------------------------------------------------------------
 const float CPlayer::PLAYER_SPEED = 5.0f; 		// 移動速度
 const float CPlayer::ITEM_ADD_SPEED = 1.5f;		// アイテムで加算するスピード
 int CPlayer::m_nNumPlayer = 0;					// プレイヤーの数
 
-//===========================
-//コンストラクタ
-//===========================
+//-----------------------------------------------------------------------------
+// コンストラクタ
+//-----------------------------------------------------------------------------
 CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 {
 	m_nPlayerNumber = m_nNumPlayer;
@@ -39,21 +43,21 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	//モデルとモーションの読み込み
 	for (int i = 0; i < NUM_PARTS; i++)
 	{//プレイヤーの生成
-		m_apModel[i] = CModel::Create();
+		m_apModel[i] = CObjectX::Create();
 	}
 }
 
-//===========================
-//デストラクタ
-//===========================
+//-----------------------------------------------------------------------------
+// デストラクタ
+//-----------------------------------------------------------------------------
 CPlayer::~CPlayer()
 {
 	m_nNumPlayer--;
 }
 
-//===========================
-//初期化処理
-//===========================
+//-----------------------------------------------------------------------------
+// 初期化処理
+//-----------------------------------------------------------------------------
 HRESULT CPlayer::Init()
 {
 	m_Motion = PM_ST_NEUTRAL;	//ニュートラルモーションに変更
@@ -63,8 +67,8 @@ HRESULT CPlayer::Init()
 	for (int i = 0; i < NUM_PARTS; i++)
 	{
 		//プレイヤーの位置設定
-		m_apModel[i]->SetPos(m_apMotion[0].aKey[0].aKey[i].fPos + m_apModel[i]->GetDPos());	//初期位置の設定
-		m_apModel[i]->SetRot(m_apMotion[0].aKey[0].aKey[i].fRot + m_apModel[i]->GetDRot());	//差分の取得
+		m_apModel[i]->SetPos(m_apMotion[0].aKey[0].aKey[i].fPos + m_apModel[i]->GetPosDefault());	//初期位置の設定
+		m_apModel[i]->SetRot(m_apMotion[0].aKey[0].aKey[i].fRot + m_apModel[i]->GetRotDefault());	//差分の取得
 
 		//色指定
 		if (m_nPlayerNumber == 0)
@@ -110,18 +114,11 @@ HRESULT CPlayer::Init()
 	return S_OK;
 }
 
-//===========================
-//終了処理
-//===========================
+//-----------------------------------------------------------------------------
+// 終了処理
+//-----------------------------------------------------------------------------
 void CPlayer::Uninit(void)
 {
-	for (int i = 0; i < NUM_PARTS; i++)
-	{// モデル情報の削除
-		m_apModel[i]->Uninit();
-		delete m_apModel[i];
-		m_apModel[i] = nullptr;
-	}
-
 	if (m_pShadow != nullptr)
 	{
 		m_pShadow = nullptr;
@@ -136,9 +133,9 @@ void CPlayer::Uninit(void)
 	CObject::Release();
 }
 
-//===========================
-//更新処理
-//===========================
+//-----------------------------------------------------------------------------
+// 更新処理
+//-----------------------------------------------------------------------------
 void CPlayer::Update(void)
 {
 	if ((CGame::GetGame() != CGame::GAME_END) && (CGame::GetGame() != CGame::GAME_START))
@@ -198,13 +195,13 @@ void CPlayer::Update(void)
 	}
 }
 
-//===========================
-//描画処理
-//===========================
+//-----------------------------------------------------------------------------
+// 描画処理
+//-----------------------------------------------------------------------------
 void CPlayer::Draw(void)
 {
-	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
-	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
+	//デバイスへのポインタ
+	LPDIRECT3DDEVICE9 pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
 	D3DMATERIAL9 matDef;			//現在のマテリアル保存用
@@ -228,13 +225,16 @@ void CPlayer::Draw(void)
 
 	for (int i = 0; i < NUM_PARTS; i++)
 	{
-		m_apModel[i]->Draw(m_mtxWorld);
+		if (m_apModel[i]->GetParent() == nullptr)
+		{
+			m_apModel[i]->SetParentMatrix(&m_mtxWorld);
+		}
 	}
 }
 
-//===========================
-//生成
-//===========================
+//-----------------------------------------------------------------------------
+// 生成
+//-----------------------------------------------------------------------------
 CPlayer * CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 {
 	CPlayer*pPlayer;
@@ -246,9 +246,9 @@ CPlayer * CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	return pPlayer;
 }
 
-//===========================
-//モーション読み込み
-//===========================
+//-----------------------------------------------------------------------------
+// モーション読み込み
+//-----------------------------------------------------------------------------
 void CPlayer::ReadMotion()
 {
 	const int lenLine = 2048;	// 1単語の最大数
@@ -330,21 +330,25 @@ void CPlayer::ReadMotion()
 									{//親モデルの設定
 										int Parent;
 										sscanf(Read, "%s = %d", &strLine, &Parent);	//モデルのパスの設定
-										m_apModel[Idx]->SetParent(m_apModel[Parent]);
+
+										if (m_apModel[Parent] != nullptr)
+										{
+											m_apModel[Idx]->SetParent(m_apModel[Parent]);
+										}
 									}
 									else if (strcmp(&strLine[0], "POS") == 0)
 									{//位置
 										D3DXVECTOR3 pos;
 										sscanf(Read, "%s = %f%f%f", &strLine, &pos.x, &pos.y, &pos.z);	//座標の取得
 										m_apModel[Idx]->SetPos(pos);
-										m_apModel[Idx]->SetDPos(pos);
+										m_apModel[Idx]->SetPosDefault(pos);
 									}
 									else if (strcmp(&strLine[0], "ROT") == 0)
 									{//向き
 										D3DXVECTOR3 rot;
 										sscanf(Read, "%s = %f%f%f", &strLine, &rot.x, &rot.y, &rot.z);
 										m_apModel[Idx]->SetRot(rot);
-										m_apModel[Idx]->SetDRot(rot);
+										m_apModel[Idx]->SetRotDefault(rot);
 									}
 								}
 							}
@@ -512,9 +516,9 @@ void CPlayer::ReadMotion()
 	}
 }
 
-//===========================
-//パーツのモーション
-//===========================
+//-----------------------------------------------------------------------------
+// パーツのモーション
+//-----------------------------------------------------------------------------
 void CPlayer::MotionPlayer()
 {
 	D3DXVECTOR3 RelaPos, RelaRot;		//1フレームごとの移動量
@@ -612,9 +616,9 @@ void CPlayer::MotionPlayer()
 	m_frame++;
 }
 
-//===========================
-//モーション管理
-//===========================
+//-----------------------------------------------------------------------------
+// モーション管理
+//-----------------------------------------------------------------------------
 void CPlayer::MotionManager()
 {
 	if (m_MotionOld != m_Motion)
@@ -625,25 +629,25 @@ void CPlayer::MotionManager()
 	m_MotionOld = m_Motion;
 }
 
-//===========================
-//最初のモーションを設定
-//===========================
+//-----------------------------------------------------------------------------
+// 最初のモーションを設定
+//-----------------------------------------------------------------------------
 void CPlayer::PlayFirstMotion()
 {
 	for (int i = 0; i < NUM_PARTS; i++)
 	{
 		//プレイヤーの生成
-		m_apModel[i]->SetPos(D3DXVECTOR3(m_apMotion[m_Motion].aKey[0].aKey[i].fPos) + m_apModel[i]->GetDPos());	//初期位置の設定
+		m_apModel[i]->SetPos(D3DXVECTOR3(m_apMotion[m_Motion].aKey[0].aKey[i].fPos) + m_apModel[i]->GetPosDefault());	//初期位置の設定
 
-		m_apModel[i]->SetRot(D3DXVECTOR3(m_apMotion[m_Motion].aKey[0].aKey[i].fRot) + m_apModel[i]->GetDRot());	//差分の取得
+		m_apModel[i]->SetRot(D3DXVECTOR3(m_apMotion[m_Motion].aKey[0].aKey[i].fRot) + m_apModel[i]->GetRotDefault());	//差分の取得
 	}
 	m_frame = 0;
 	m_nCurKey = 0;
 }
 
-//==============================================
-//入力設定
-//==============================================
+//-----------------------------------------------------------------------------
+// 入力設定
+//-----------------------------------------------------------------------------
 void CPlayer::Input()
 {
 	CInput* pInput = CInput::GetKey();
@@ -665,9 +669,9 @@ void CPlayer::Input()
 	}
 }
 
-//-----------------------------------------
+//-----------------------------------------------------------------------------
 // 移動
-//-----------------------------------------
+//-----------------------------------------------------------------------------
 void CPlayer::Move()
 {
 	if (m_controller == nullptr)
@@ -687,9 +691,9 @@ void CPlayer::Move()
 	}
 }
 
-//-----------------------------------------
+//-----------------------------------------------------------------------------
 // コントローラーの設定
-//-----------------------------------------
+//-----------------------------------------------------------------------------
 void CPlayer::SetController(CController * inOperate)
 {
 	m_controller = inOperate;
@@ -697,18 +701,18 @@ void CPlayer::SetController(CController * inOperate)
 
 }
 
-//==============================================
-//座標の更新
-//==============================================
+//-----------------------------------------------------------------------------
+// 座標の更新
+//-----------------------------------------------------------------------------
 void CPlayer::Updatepos()
 {
 	m_posold = m_pos;		//前回の位置の保存
 	m_pos += m_move;		//位置の更新
 }
 
-//==============================================
-//角度の正規化
-//==============================================
+//-----------------------------------------------------------------------------
+// 角度の正規化
+//-----------------------------------------------------------------------------
 void CPlayer::Normalization()
 {
 	//角度の正規化
@@ -722,14 +726,14 @@ void CPlayer::Normalization()
 	}
 }
 
-//==============================================
-//ブロックとの判定
-//==============================================
+//-----------------------------------------------------------------------------
+// ブロックとの判定
+//-----------------------------------------------------------------------------
 void CPlayer::BlockCollision()
 {
 	for (int i = 0; i < CGame::GetMap()->GetBlockCount(); i++)
 	{
-		CBlock*pBlock = CGame::GetMap()->GetBlock(i);
+		CBlock* pBlock = CGame::GetMap()->GetBlock(i);
 
 		if (pBlock == nullptr)
 		{

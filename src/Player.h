@@ -18,7 +18,7 @@
 //前方宣言
 class CController;
 class CShadow;
-class CModel;
+class CObjectX;
 class CBullet;
 class CBlock;
 
@@ -108,7 +108,7 @@ public:
 
 private:
 	CController*	m_controller;					// 命令を出す人
-	CModel*			m_apModel[NUM_PLAYERPARTS];		// モデルのインスタンス
+	CObjectX*		m_apModel[NUM_PLAYERPARTS];		// モデルのインスタンス
 	MOTION_SET		m_apMotion[PM_MAX];				// モーションの数だけ生成モーションの数->キーの総数->モデルの数
 	D3DXMATRIX		m_mtxWorld;						// ワールドマトリックス
 	D3DXVECTOR3		m_pos;							// 位置
