@@ -175,7 +175,6 @@
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Mode.cpp" />
-    <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\Motion.cpp" />
     <ClCompile Include="src\MotionModel3D.cpp" />
     <ClCompile Include="src\Object.cpp" />
@@ -226,7 +225,6 @@
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Mode.h" />
-    <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Motion.h" />
     <ClInclude Include="src\MotionModel3D.h" />
     <ClInclude Include="src\Object.h" />

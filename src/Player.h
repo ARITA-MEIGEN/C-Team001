@@ -28,6 +28,10 @@ class CBlock;
 #define NUM_PARTS			(14)			//パーツの数
 #define MAX_WORD			(255)			//パスの最大文字数
 
+//マクロ定義
+#define PLAYER_LEGPARTS	(13)
+#define	NUM_PLAYERPARTS	(1+PLAYER_LEGPARTS)
+
 class CPlayer :public CObject
 {
 private:
