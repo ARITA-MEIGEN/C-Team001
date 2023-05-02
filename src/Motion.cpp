@@ -13,7 +13,6 @@
 #include "application.h"
 #include "motion.h"	
 #include "objectX.h"
-#include "model.h"
 #include "texture.h"
 #include "utility.h"
 

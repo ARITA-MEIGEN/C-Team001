@@ -12,7 +12,6 @@
 #include"main.h"
 #include"Object.h"
 #include"ObjectX.h"
-#include"Model.h"
 #include"Command.h"
 
 //‘O•ûéŒ¾
