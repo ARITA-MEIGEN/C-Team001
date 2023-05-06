@@ -123,6 +123,9 @@ void CGame::Uninit()
 //====================================
 void CGame::Update()
 {
+	m_pCamera->Update();
+	m_pLight->Update();
+
 	CInput* pInput = CInput::GetKey();
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
@@ -139,10 +142,6 @@ void CGame::Update()
 		}
 #endif // !_DEBUG
 	}
-
-	m_pCamera->Update();
-	m_pLight->Update();
-
 }
 
 //====================================

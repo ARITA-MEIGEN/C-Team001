@@ -129,6 +129,13 @@ void CPlayer::Uninit(void)
 		m_controller = nullptr;
 	}
 
+	if (m_motion != nullptr)
+	{
+		m_motion->Uninit();
+		delete m_motion;
+		m_motion = nullptr;
+	}
+	
 	CObject::Release();
 }
 

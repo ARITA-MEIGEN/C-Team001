@@ -23,6 +23,7 @@
 
 //***************************************************************************
 // 定数定義
+// Author : Yuda Kaito
 //***************************************************************************
 const unsigned int CMotion::MOTION_BLEND_FRAM = 5;	// モーションブレンドのフレーム数	
 
@@ -93,19 +94,9 @@ void CMotion::Uninit(void)
 
 	for (int i = 0; i < m_nMaxParts; i++)
 	{
-		if (m_parts[i] != NULL)
+		if (m_parts[i] != nullptr)
 		{
-			m_parts[i]->Uninit();
 			m_parts[i] = nullptr;
-		}
-	}
-
-	for (int i = 0; i < (int)m_parts.size(); i++)
-	{
-		if (m_parts.at(i) != nullptr)
-		{
-			delete m_parts.at(i);
-			m_parts.at(i) = nullptr;
 		}
 	}
 }
@@ -347,6 +338,8 @@ void CMotion::MotionBlend()
 //=============================================================================
 // パーツとモーションの読み込み
 // Author : 唐﨑結斗
+// Author : 有田明玄
+// Author : Yuda Kaito
 // 概要 : パーツとモーションの読み込み、初期化を呼び出す
 //=============================================================================
 void CMotion::LoodSetMotion(const char *pFileName)
