@@ -32,11 +32,7 @@ public:
 	//***************************************************************************
 	// 定数定義
 	//***************************************************************************
-	static const unsigned int MAX_MOTION = (128);			// モーション数の最大数
-	static const unsigned int MAX_MODEL_PARTS = (128);		// モデル数の最大数
-	static const unsigned int MAX_KEY = (64);				// キーの最大数
-	static const unsigned int MAX_KEYSET = (64);			// キー設定の最大数
-	static const unsigned int MOTION_BLEND_FRAM = (12);		// モーションブレンドのフレーム数	
+	static const unsigned int MOTION_BLEND_FRAM;		// モーションブレンドのフレーム数	
 
 	//***************************************************************
 	// キー構造体を定義
@@ -78,6 +74,7 @@ public:
 	//--------------------------------------------------------------------
 	// メンバ関数
 	//--------------------------------------------------------------------
+	void Init();	// 初期化
 	void Update();	// 更新
 	void Uninit(void);	// 終了
 
@@ -92,17 +89,15 @@ public:
 	void SetMotionBlend(bool isBlend) { m_bMotionBlend = isBlend; }	// モーションブレンドを行っているか設定
 
 	// Getter
-	int GetMaxParts() { return m_nMaxParts; }				// パーツの最大数の取得
-	bool GetMotion() { return m_bMotion; }					// モーションを行っているか取得
-	bool GetMotionBlend() { return m_bMotionBlend; }		// モーションブレンドを行っているか取得
+	int GetMaxParts() { return m_nMaxParts; }					// パーツの最大数の取得
+	bool GetMotion() { return m_bMotion; }						// モーションを行っているか取得
+	bool GetMotionBlend() { return m_bMotionBlend; }			// モーションブレンドを行っているか取得
 	CObjectX* GetParts(int index) { return m_parts[index]; }	// モーションブレンドを行っているか取得
 
 private:
 	//--------------------------------------------------------------------
 	// メンバ関数
 	//--------------------------------------------------------------------
-	void Init();	// 初期化
-
 	void PlayMotion();	// モーションの再生
 	void MotionBlend();	// モーションブレンド
 	void LoodSetMotion(const char *pFileName);	// モーション読み込み
@@ -113,14 +108,13 @@ private:
 	//--------------------------------------------------------------------
 	// メンバ変数
 	//--------------------------------------------------------------------
-	CObjectX* m_pParent;				// 親
-	std::vector<MyMotion> m_motion;	// モーション
-	std::vector<CObjectX*> m_parts;	// パーツ
+	std::vector<MyMotion> m_motion;			// モーション
+	std::vector<CObjectX*> m_parts;			// パーツ
 	std::vector<std::string> m_partsFile;	// パーツのXファイル名
-	int m_nMaxParts;				// パーツ数
-	int m_nNumMotion;				// 扱うモーション
-	bool m_bMotion;					// モーションを行うか
-	bool m_bMotionBlend;			// モーションブレンド
+	int m_nMaxParts;		// パーツ数
+	int m_nNumMotion;		// 現在行っているモーション
+	bool m_bMotion;			// モーションを行うか
+	bool m_bMotionBlend;	// モーションブレンド
 };
 #endif
 

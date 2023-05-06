@@ -144,9 +144,6 @@
     <ClCompile Include="src\Item_Speed.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\CameraGame.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\utility.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -155,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="src\MotionModel3D.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraGame.cpp">
+      <Filter>ソース ファイル\02_Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

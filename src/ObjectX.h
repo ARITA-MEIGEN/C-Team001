@@ -33,7 +33,7 @@ public:
 	void BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat);
 	void Shadow();
 	void SizeCalculate();
-	void SetModel(char* Filename);
+	void SetModel(const char* Filename);
 
 	// Setter
 	void SetPos(const D3DXVECTOR3& pos) { m_pos = pos; }

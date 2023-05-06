@@ -302,7 +302,7 @@ void CObjectX::SizeCalculate()
 //-----------------------------------------------------------------------------
 // モデルの設定
 //-----------------------------------------------------------------------------
-void CObjectX::SetModel(char * Filename)
+void CObjectX::SetModel(const char * Filename)
 {
 	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
