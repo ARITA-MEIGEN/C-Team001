@@ -29,7 +29,7 @@ class CBlock;
 #define PLAYER_SPEED		(5.0f)			//移動速度
 #define ITEM_ADD_SPEED		(1.5f)			//アイテムで加算するスピード
 #define MAX_WORD			(255)			//パスの最大文字数
-
+#define MAX_GAUGE			(10)
 
 class CPlayer :public CObject
 {

@@ -733,6 +733,10 @@ void CPlayer::BlockCollision()
 		{//X軸
 			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z / 2) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z / 2))
 			{//Z軸
+				if(pBlock->GetNumber() != m_nPlayerNumber && m_nSkillGauge < MAX_GAUGE)
+				{//自分以外の色を塗り替えていたらゲージの加算
+					m_nSkillGauge++;
+				}
 					pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
 					m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
