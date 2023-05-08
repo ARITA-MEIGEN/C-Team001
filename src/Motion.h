@@ -1,54 +1,120 @@
-//=============================================================================
+//**************************************************************************************************
 //
-// モーション読み込み
-// Author : 有田明玄
+// モーション処理(motion.h)
+// Auther：唐﨑結斗
+// 概要 : モーションクラスの設定
 //
+//**************************************************************************************************
+#ifndef _MOTION_H_			// このマクロ定義がされてなかったら
+#define _MOTION_H_			// 二重インクルード防止のマクロ定義
+
+//***************************************************************************
+// インクルード
+//***************************************************************************
+#include "main.h"
+#include "objectX.h"
+#include "renderer.h"
+#include <vector>
+
+//*****************************************************************************
+// 前方宣言
+//*****************************************************************************
+class CObjectX;
+
 //=============================================================================
-#ifndef _MOTION_H_
-#define _MOTION_H_
-                               
-//インクルード
-
-#define MAX_PARTS	(14)	//パーツの数
-
+// モーションクラス
+// Author : 唐﨑結斗
+// 概要 : モーション設定を行うクラス
+//=============================================================================
 class CMotion
 {
-private:
-	static const D3DXVECTOR3 INIT_POS;
-	static const int MAX_MOTION = 320;
-	static const int MAX_KEY = 240;
-	static const int MAX_MOTION_ALL = 160;
-
 public:
-	//構造体
-	struct KEY
-	{
-		D3DXVECTOR3 pos;
-		D3DXVECTOR3 rot;
-	};
+	//***************************************************************************
+	// 定数定義
+	//***************************************************************************
+	static const unsigned int MOTION_BLEND_FRAM;		// モーションブレンドのフレーム数	
 
-	//キー情報
-	struct KEY_SET 
+	//***************************************************************
+	// キー構造体を定義
+	//***************************************************************
+	typedef struct
 	{
-		int nFrame;				//次のモーションまでの時間
-		KEY aKey[MAX_PARTS];
-	};
+		D3DXVECTOR3 pos;	// 現在位置
+		D3DXVECTOR3 rot;	// 現在向き
+	}MyKey;
 
-	//メンバ関数
-	 CMotion(int nPriority = 3);
+	//***************************************************************
+	// キー設定構造体を定義
+	//***************************************************************
+	typedef struct
+	{
+		int nFrame;					// フレーム数
+		std::vector<MyKey> pKey;	// キー情報
+	}MyKeySet;
+
+	//***************************************************************
+	// モーション設定構造体を定義
+	//***************************************************************
+	typedef struct
+	{
+		int nNumKey;		// キー数
+		int nCntKeySet;		// キーセットカウント
+		int nCntFrame;		// フレームカウント
+		bool bLoop;			// ループ使用状況
+		bool bMotion;		// モーションを行っているか
+		std::vector<MyKeySet> pKeySet;	// キー設定情報
+	}MyMotion;
+
+	//--------------------------------------------------------------------
+	// コンストラクタとデストラクタ
+	//--------------------------------------------------------------------
+	CMotion(const char *pFileName);
 	~CMotion();
-	HRESULT Init();						//初期化
-	void Uninit();						//終了
-	void Update();						//更新
-	void Read(char* Filename, D3DXVECTOR3 pos, D3DXVECTOR3 rot);			//読み込み
-	KEY_SET m_MotionKey[MAX_MOTION];	//登録した動きの情報
-protected:
+
+	//--------------------------------------------------------------------
+	// メンバ関数
+	//--------------------------------------------------------------------
+	void Init();	// 初期化
+	void Update();	// 更新
+	void Uninit(void);	// 終了
+
+	void ReloadMotion(const char *pFileName);	// モーションの再読み込み
+
+	// Setter
+	void SetPartsOrigin();							// パーツをもとの場所に配置する
+	void SetMotion(const int nCntMotionSet);		// モーションの初期設定
+	void SetParts(D3DXMATRIX mtxWorld);				// パーツの設定
+	void SetNumMotion(const int nNumMotion);		// モーション番号の設定
+	void SetUseMotion(bool isMotion) { m_bMotion = isMotion; }		// モーションを行っているか設定
+	void SetMotionBlend(bool isBlend) { m_bMotionBlend = isBlend; }	// モーションブレンドを行っているか設定
+
+	// Getter
+	int GetMaxParts() { return m_nMaxParts; }					// パーツの最大数の取得
+	bool GetMotion() { return m_bMotion; }						// モーションを行っているか取得
+	bool GetMotionBlend() { return m_bMotionBlend; }			// モーションブレンドを行っているか取得
+	CObjectX* GetParts(int index) { return m_parts[index]; }	// モーションブレンドを行っているか取得
+
 private:
-	int m_NowKey;	//現在のキー
+	//--------------------------------------------------------------------
+	// メンバ関数
+	//--------------------------------------------------------------------
+	void PlayMotion();	// モーションの再生
+	void MotionBlend();	// モーションブレンド
+	void LoodSetMotion(const char *pFileName);	// モーション読み込み
+	void LoodTxt(const char *pFileName);		// モーション読み込み(.txt)
+	void LoodJson(const char *pFileName);		// モーション読み込み(.json)
+	void CntReset(const int nNumMotionOld);		// カウントリセット
 
-	//メンバ変数
-
+	//--------------------------------------------------------------------
+	// メンバ変数
+	//--------------------------------------------------------------------
+	std::vector<MyMotion> m_motion;			// モーション
+	std::vector<CObjectX*> m_parts;			// パーツ
+	std::vector<std::string> m_partsFile;	// パーツのXファイル名
+	int m_nMaxParts;		// パーツ数
+	int m_nNumMotion;		// 現在行っているモーション
+	bool m_bMotion;			// モーションを行うか
+	bool m_bMotionBlend;	// モーションブレンド
 };
-
-#endif // !_OBJECT_H_
+#endif
 

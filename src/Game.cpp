@@ -28,12 +28,12 @@ CPlayer*CGame::m_pPlayer[MAX_PLAYER] = {};
 CGame::GAME CGame::m_gamestate;
 bool CGame::bDebugCamera = nullptr;
 
-CCamera*CGame::m_pCamera = nullptr;
-CLight*CGame::m_pLight = nullptr;
-CFloor*CGame::m_pFloor = nullptr;
-CTimer*CGame::m_pTimer = nullptr;
-CUI*CGame::m_pUI = nullptr;
-CMap*CGame::m_pMap = nullptr;
+CCamera* CGame::m_pCamera = nullptr;
+CLight* CGame::m_pLight = nullptr;
+CFloor* CGame::m_pFloor = nullptr;
+CTimer* CGame::m_pTimer = nullptr;
+CUI* CGame::m_pUI = nullptr;
+CMap* CGame::m_pMap = nullptr;
 
 //====================================
 //コンストラクタ
@@ -55,21 +55,6 @@ CGame::~CGame()
 //====================================
 HRESULT CGame::Init()
 {
-	//テクスチャの読み込み
-	CShadow::Load();
-	CEffect::Load();
-	CTimer::Load();
-	CShadow::Load();
-
-	//プレイヤーの生成
-	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
-	{
-		m_pPlayer[nCnt] = CPlayer::Create(D3DXVECTOR3(-100.0f + (nCnt * 50.0f), 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI*0.5f, 0.0f));
-	}
-
-	//アイテムの生成
-	CSpeed::Create(D3DXVECTOR3(0.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 0.0f, 50.0f), D3DXVECTOR3(-D3DX_PI*0.5f, 0.0f, 0.0f),300);
-	
 	//カメラの設定
 	m_pCamera = CCameraGame::Create();
 
@@ -77,6 +62,15 @@ HRESULT CGame::Init()
 	m_pLight = new CLight;
 	m_pLight->Init();
 
+	//プレイヤーの生成
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{
+		m_pPlayer[nCnt] = CPlayer::Create(D3DXVECTOR3(-100.0f + (nCnt * 50.0f), 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+	}
+
+	//アイテムの生成
+	CSpeed::Create(D3DXVECTOR3(0.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 0.0f, 50.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300);
+	
 	//ブロック生成
 	m_pMap = CMap::Create(0);
 
@@ -85,7 +79,6 @@ HRESULT CGame::Init()
 
 	m_pTimer = CTimer::Create();
 	m_Timer = 0;
-
 
 	m_Round = ROUND_1;
 
@@ -97,12 +90,6 @@ HRESULT CGame::Init()
 //====================================
 void CGame::Uninit()
 {
-	//テクスチャの破棄
-	CShadow::Unload();
-	CEffect::Unload();
-	CTimer::Unload();
-	CShadow::Unload();
-
 	//カメラの設定
 	if (m_pCamera != nullptr)
 	{
@@ -136,6 +123,9 @@ void CGame::Uninit()
 //====================================
 void CGame::Update()
 {
+	m_pCamera->Update();
+	m_pLight->Update();
+
 	CInput* pInput = CInput::GetKey();
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
@@ -152,10 +142,6 @@ void CGame::Update()
 		}
 #endif // !_DEBUG
 	}
-
-	m_pCamera->Update();
-	m_pLight->Update();
-
 }
 
 //====================================

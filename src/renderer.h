@@ -11,16 +11,10 @@
 //インクルード
 #include"main.h"
 
-//前方宣言
-class CObject2D;
-class CPlayer;
-
 //マクロ定義
 class CRenderer
 {
 public:
-
-
 
 	//メンバ関数
 	CRenderer();

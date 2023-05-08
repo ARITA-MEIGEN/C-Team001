@@ -17,7 +17,7 @@
 //=============================================================================
 CBlock::CBlock(int priorty) :CObjectX(priorty)
 {
-
+	m_number = 0;
 }
 
 //=============================================================================
@@ -34,6 +34,9 @@ CBlock::~CBlock()
 HRESULT  CBlock::Init()
 {
 	CObjectX::Init();
+
+	m_number = -1;
+
 	return S_OK;
 }
 
@@ -71,8 +74,9 @@ CBlock* CBlock::Create(D3DXVECTOR3 pos, float lot)
 	pBlock = new CBlock(5);
 	if (pBlock != nullptr)
 	{// ƒ|ƒŠƒSƒ“‚Ì‰Šú‰»ˆ—
-		pBlock->SetModel("data/MODEL/box.x");
 		pBlock->Init();
+		pBlock->SetModel("data/MODEL/box.x");
+		pBlock->SizeCalculate();
 		pBlock->SetPos(pos);
 		pBlock->SetRot(D3DXVECTOR3(0.0f,0.0f,0.0f));
 	}
