@@ -159,6 +159,7 @@ void CGame::Update()
 			if (pInput->Trigger(DIK_RETURN))
 			{
 				CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
+				BlockCount();
 			}
 		}
 #endif // !_DEBUG
@@ -188,4 +189,31 @@ void CGame::ResetGame()
 	m_gamestate = GAME_START;
 	m_Timer = 0;
 	return;
+}
+
+//====================================
+//勝敗判定(ブロック数のカウント)
+//====================================
+void CGame::BlockCount()
+{
+	int Score[4];
+	int Rank[4];
+	for (int i = 0; i < 4; i++)
+	{
+		Score[i] = m_pMap->GetCountBlockType(i);
+	}
+
+	//昇順に並び変える
+	std::vector<int> rank = { Score[0], Score[1], Score[2],Score[3] };
+	std::sort(rank.begin(), rank.end());
+	for (int i = 0; i < 4; i++)
+	{//並び変えたやつを代入
+		for (int j = 0; j < 4; j++)
+		{
+			if (rank[i] == j)
+			{//順位順にプレイヤー番号を並び変える
+				Rank[i] = j;
+			}
+		}
+	}
 }

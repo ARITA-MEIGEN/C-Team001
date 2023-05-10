@@ -16,6 +16,13 @@
 //-----------------------------------------------------------------------------
 // プロトタイプ宣言
 //-----------------------------------------------------------------------------
+#define MAX_BLOCK	(16)	//ブロックの最大数
+#define BLOCK_X		(4)		//ブロックの数X
+#define BLOCK_Y		(4)		//ブロックの数Y
+
+//-----------------------------------------------------------------------------
+// プロトタイプ宣言
+//-----------------------------------------------------------------------------
 class CMap
 {
 private:
@@ -30,6 +37,7 @@ public:
 	explicit CMap();
 	~CMap();
 	HRESULT Init();
+	void Uninit();
 	static CMap *Create(int stgnumber);
 	void Load();
 
@@ -38,11 +46,14 @@ public:
 	CBlock* GetBlock(const int x, const int y);
 	CBlock* GetPlayerSpawnBlock(const int index) { return GetBlock((int)m_playerSpawnIdx[index].x, (int)m_playerSpawnIdx[index].y); }
 	int GetBlockCount() { return (int)m_pBlock.size(); };
+	int CMap::GetCountBlockType(int nType);
+
 
 private:
 	//メンバ関数
 	STAGE m_StageNumber;
 	std::vector<CBlock*> m_pBlock;
+	int m_nAllBlock[5];
 	std::vector<D3DXVECTOR2> m_playerSpawnIdx;
 	int m_axisSizeX;
 };
