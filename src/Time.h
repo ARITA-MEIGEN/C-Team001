@@ -17,8 +17,8 @@
 class Player;
 
 //マクロ定義
-#define NUM_TEXTIME		(2)
-#define	DEFAULT_TIME	(99)
+#define NUM_TEXTIME (2)
+#define	DEFAULT_TIME (99)
 
 class CTimer
 {
@@ -27,11 +27,9 @@ public:
 	~CTimer();
 	//プロトタイプ宣言
 	HRESULT			Init();
-	void			Uninit(void);
-	void			Update(void);
-	void			Draw(void);
-	static 	HRESULT Load();
-	static 	void	Unload();
+	void			Uninit();
+	void			Update();
+	void			Draw();
 	static	CTimer* Create();
 
 	//ゲッター
@@ -41,7 +39,6 @@ private:
 	CObject2D* m_pObject2D;
 	CObject2D* m_apNumber[NUM_TEXTIME];
 
-	static LPDIRECT3DTEXTURE9 m_apTexture[NUM_TEXTIME];
 	int m_nTimer;
 	int m_nCreateTimer;
 

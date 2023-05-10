@@ -25,7 +25,7 @@ class CMotion;
 //マクロ定義
 #define PLAYER_LEGPARTS	(13)
 #define	NUM_PLAYERPARTS	(1+PLAYER_LEGPARTS)
-#define MAX_GAUGE			(10)
+#define MAX_GAUGE		(100)
 
 class CPlayer :public CObject
 {
@@ -79,6 +79,8 @@ public:
 	int				GetSkillGauge() { return m_nSkillGauge; }		//スキルゲージの量の取得
 	int				GetPlayerNumber() { return m_nPlayerNumber; }	//プレイヤーの番号の取得
 
+private:
+	void TurnLookAtMoveing();		// 移動方向を見て曲がる
 private:
 	CController*	m_controller;					// 命令を出す人
 	CObjectX*		m_apModel[NUM_PLAYERPARTS];		// モデルのインスタンス

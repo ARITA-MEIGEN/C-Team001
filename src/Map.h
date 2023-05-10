@@ -35,12 +35,16 @@ public:
 
 	//ゲッター
 	CBlock* GetBlock(const int number) { return (int)m_pBlock.size() > number ? m_pBlock[number] : nullptr; };
+	CBlock* GetBlock(const int x, const int y);
+	CBlock* GetPlayerSpawnBlock(const int index) { return GetBlock((int)m_playerSpawnIdx[index].x, (int)m_playerSpawnIdx[index].y); }
 	int GetBlockCount() { return (int)m_pBlock.size(); };
 
 private:
 	//メンバ関数
 	STAGE m_StageNumber;
 	std::vector<CBlock*> m_pBlock;
+	std::vector<D3DXVECTOR2> m_playerSpawnIdx;
+	int m_axisSizeX;
 };
 
 #endif

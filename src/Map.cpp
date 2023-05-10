@@ -64,14 +64,24 @@ void CMap::Load()
 
 	int playerCount = map["PLAYER_SPAWN"].size();
 
+	for (int i = 0; i < playerCount; i++)
+	{
+		D3DXVECTOR2 idx;
+		idx.x = map["PLAYER_SPAWN"][i][0];
+		idx.y = map["PLAYER_SPAWN"][i][1];
+
+		m_playerSpawnIdx.push_back(idx);
+	}
+
 	m_pBlock.resize(map["MAP"].size() * map["MAP"][0].size());
+	m_axisSizeX = map["MAP"][0].size();
 
 	for (int i = 0; i < (int)map["MAP"].size(); i++)
 	{
 		for (int j = 0; j < (int)map["MAP"][i].size(); j++)
 		{
-			float x = i * BLOCK_WIDTH - map["MAP"].size() * 0.5f * BLOCK_WIDTH;
-			float z = j * -BLOCK_WIDTH + map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
+			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH;
+			float x = j * BLOCK_WIDTH - map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
 
 			switch ((int)map["MAP"][i][j])
 			{
@@ -88,4 +98,13 @@ void CMap::Load()
 			}
 		}
 	}
+}
+
+//=============================================================================
+// ƒuƒƒbƒN‚ÌŽæ“¾
+//=============================================================================
+CBlock * CMap::GetBlock(const int x, const int y)
+{
+	int idx = (m_axisSizeX * y) + x;
+	return m_pBlock[idx];
 }

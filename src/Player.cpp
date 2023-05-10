@@ -62,7 +62,6 @@ HRESULT CPlayer::Init()
 	}
 
 	m_motion = new CMotion("data/TXT/Player01/Player01.txt");
-	m_motion->Update();
 	m_Motion = PM_ST_NEUTRAL;	//ニュートラルモーションに変更
 
 	for (int i = 0; i < 14; i++)
@@ -85,30 +84,6 @@ HRESULT CPlayer::Init()
 
 	//動的確保
 	m_controller = new CPlayerController(m_nPlayerNumber);
-
-	//スキルゲージの生成
-	switch (m_nPlayerNumber)
-	{//16.0fはゲージごとの間の空白大きさ
-		case 0:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
-			break;
-
-		case 1:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
-			break;
-
-		case 2:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), m_nPlayerNumber);
-			break;
-
-		case 3:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f), m_nPlayerNumber);
-			break;
-
-	default:
-		break;
-	}
-	
 
 	return S_OK;
 }
@@ -144,62 +119,72 @@ void CPlayer::Uninit(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Update(void)
 {
-	if ((CGame::GetGame() != CGame::GAME_END) && (CGame::GetGame() != CGame::GAME_START))
+	if (!(CGame::GetGame() != CGame::GAME_END) && !(CGame::GetGame() != CGame::GAME_START))
 	{
-		//Input();				//入力処理
-		CInput* pInput = CInput::GetKey();
+		return;
+	}
 
-		
-		if (m_nBuffTime > 0)
-		{
-			m_nBuffTime--;
-		}
+	CInput* pInput = CInput::GetKey();
 
-		if (m_nBuffTime <= 0 && m_State != PST_STAND)
-		{//デフォルトに戻す
-			m_State = PST_STAND;
-		}
 
-		if (pInput->Press(DIK_K))
-		{//Kキーでゲージ上昇
-			m_nSkillGauge++;
-		}
+	if (m_nBuffTime > 0)
+	{
+		m_nBuffTime--;
+	}
 
-		if (pInput->Press(DIK_R))
-		{//Kキーでゲージ上昇
-			m_nSkillGauge = 0;
-		}
+	if (m_nBuffTime <= 0 && m_State != PST_STAND)
+	{//デフォルトに戻す
+		m_State = PST_STAND;
+	}
 
-		Updatepos();			// 座標更新
+	if (pInput->Press(DIK_K))
+	{//Kキーでゲージ上昇
+		m_nSkillGauge++;
+	}
 
-		//移動
-		Move();
+	if (pInput->Press(DIK_R))
+	{//Kキーでゲージ上昇
+		m_nSkillGauge = 0;
+	}
 
-		m_motion->Update();
+	if (pInput->Press(DIK_L))
+	{//Kキーでゲージ上昇
+		SetRot(m_rot + D3DXVECTOR3(0.0f, 0.1f, 0.0f));
+	}
 
-		Normalization();		// 角度の正規化
-		m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
+	Updatepos();			// 座標更新
 
-		BlockCollision();
+	//移動
+	Move();
+
+	// 回転
+	TurnLookAtMoveing();
+
+	// モーション
+	m_motion->Update();
+
+	Normalization();		// 角度の正規化
+	m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
+
+	BlockCollision();
 
 #ifdef _DEBUG
-		CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
-		CDebugProc::Print("現在のモーション:%d\n", (int)m_Motion);
-		CDebugProc::Print("現在の状態:%d\n", (int)m_State);
-		CDebugProc::Print("現在のフレーム:%d\n", m_frame);
+	CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
+	CDebugProc::Print("現在のモーション:%d\n", (int)m_Motion);
+	CDebugProc::Print("現在の状態:%d\n", (int)m_State);
+	CDebugProc::Print("現在のフレーム:%d\n", m_frame);
 
-		if (pInput->Trigger(DIK_U))
-		{
-			m_nBuffTime = 120;
-			m_State = PST_SPEED;
-		}
-		if (pInput->Trigger(DIK_T))
-		{
-			m_Motion == PM_ST_NEUTRAL ? m_Motion = PM_ST_MOVE : m_Motion = PM_ST_NEUTRAL;
-			m_motion->SetNumMotion(m_Motion);
-		}
-#endif // _DEBUG
+	if (pInput->Trigger(DIK_U))
+	{
+		m_nBuffTime = 120;
+		m_State = PST_SPEED;
 	}
+	if (pInput->Trigger(DIK_T))
+	{
+		m_Motion == PM_ST_NEUTRAL ? m_Motion = PM_ST_MOVE : m_Motion = PM_ST_NEUTRAL;
+		m_motion->SetNumMotion(m_Motion);
+	}
+#endif // _DEBUG
 }
 
 //-----------------------------------------------------------------------------
@@ -307,6 +292,30 @@ void CPlayer::SetController(CController * inOperate)
 	m_controller = inOperate;
 	m_controller->SetToOrder(this);
 
+}
+
+//-----------------------------------------------------------------------------
+// 移動方向を見て曲がる
+//-----------------------------------------------------------------------------
+void CPlayer::TurnLookAtMoveing()
+{
+	D3DXVECTOR3 move = m_controller->Move();
+	if (move.z > 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
+	}
+	if (move.z < 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	}
+	if (move.x > 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.5f, 0.0f));
+	}
+	if (move.x < 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+	}
 }
 
 //-----------------------------------------------------------------------------
