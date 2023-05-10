@@ -79,8 +79,6 @@ void CObjectList::PriorityProcess(int cnt, std::function<void(CObject*)> func)
 
 		now = next;
 	}
-
-	CDebugProc::Print("Priority %d : %d\n", cnt, objectCnt);
 }
 
 //=============================================================================

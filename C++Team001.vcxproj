@@ -154,6 +154,7 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\CameraGame.cpp" />
     <ClCompile Include="src\Controller.cpp" />
     <ClCompile Include="src\DebugProc.cpp" />
     <ClCompile Include="src\DirectInput.cpp" />
@@ -174,8 +175,8 @@
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Mode.cpp" />
-    <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\Motion.cpp" />
+    <ClCompile Include="src\MotionModel3D.cpp" />
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\Object2D.cpp" />
     <ClCompile Include="src\Object3D.cpp" />
@@ -188,11 +189,13 @@
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\Result.cpp" />
     <ClCompile Include="src\Shadow.cpp" />
+    <ClCompile Include="src\SkillGauge.cpp" />
     <ClCompile Include="src\sound.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\Title.cpp" />
     <ClCompile Include="src\UI.cpp" />
+    <ClCompile Include="src\utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -222,8 +225,8 @@
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Mode.h" />
-    <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Motion.h" />
+    <ClInclude Include="src\MotionModel3D.h" />
     <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\Object2D.h" />
     <ClInclude Include="src\Object3D.h" />
@@ -236,11 +239,13 @@
     <ClInclude Include="src\renderer.h" />
     <ClInclude Include="src\Result.h" />
     <ClInclude Include="src\Shadow.h" />
+    <ClInclude Include="src\SkillGauge.h" />
     <ClInclude Include="src\sound.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Time.h" />
     <ClInclude Include="src\Title.h" />
     <ClInclude Include="src\UI.h" />
+    <ClInclude Include="src\utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

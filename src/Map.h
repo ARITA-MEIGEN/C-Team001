@@ -11,6 +11,7 @@
 // include
 //-----------------------------------------------------------------------------
 #include"Block.h"
+#include <vector>
 
 //-----------------------------------------------------------------------------
 // マクロ定義
@@ -24,6 +25,8 @@
 //-----------------------------------------------------------------------------
 class CMap
 {
+private:
+	static const float BLOCK_WIDTH;	// ブロック同士の幅
 public:
 	enum STAGE
 	{
@@ -39,12 +42,13 @@ public:
 	void Load();
 
 	//ゲッター
-	CBlock* GetBlock(int number) { return m_pBlock[number]; };
-	int GetCountBlockType(int nType);
+	CBlock* GetBlock(const int number) { return (int)m_pBlock.size() > number ? m_pBlock[number] : nullptr; };
+	int GetBlockCount() { return (int)m_pBlock.size(); };
 
 private:
 	//メンバ関数
 	STAGE m_StageNumber;
+	std::vector<CBlock*> m_pBlock;
 	CBlock*m_pBlock[MAX_BLOCK];
 	int m_nAllBlock[5];
 };

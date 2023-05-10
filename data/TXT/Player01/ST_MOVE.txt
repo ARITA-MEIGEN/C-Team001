@@ -1,34 +1,34 @@
 #---------------------------------------
-# [1] 移動
+# [1] �ړ�
 #---------------------------------------
 #========================================
-#  モーション情報
-#  [ モーション番号 : 1 ]
+#  ���[�V�������
+#  [ ���[�V�����ԍ� : 1 ]
 #
 #========================================
 
 
 MOTIONSET
-	LOOP = 1		# ループするかどうか[0:ループしない / 1:ループする]
-	NUM_KEY = 4		# キー数
+	LOOP = 1		# ���[�v���邩�ǂ���[0:���[�v���Ȃ� / 1:���[�v����]
+	NUM_KEY = 4		# �L�[��
 
 	KEYSET			# --- << KEY : 0 / 4 >> ---
 		FRAME = 8
-		#1番目の判定
+		#1�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 8
 				POS = 0.00 15.70 0.00 
 				SIZ = 29.00 25.00 24.00 
 			END_HURTSET
-		#2番目の判定
+		#2�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 8
 				POS = 0.00 38.70 0.00 
 				SIZ = 29.00 19.00 22.00 
 			END_HURTSET
-		#3番目の判定
+		#3�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 8
@@ -94,21 +94,21 @@ MOTIONSET
 		END_KEYSET
 	KEYSET			# --- << KEY : 1 / 4 >> ---
 		FRAME = 10
-		#1番目の判定
+		#1�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 10
 				POS = 0.00 15.70 0.00 
 				SIZ = 29.00 25.00 24.00 
 			END_HURTSET
-		#2番目の判定
+		#2�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 10
 				POS = 0.00 38.70 0.00 
 				SIZ = 29.00 19.00 22.00 
 			END_HURTSET
-		#3番目の判定
+		#3�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 10
@@ -174,21 +174,21 @@ MOTIONSET
 		END_KEYSET
 	KEYSET			# --- << KEY : 2 / 4 >> ---
 		FRAME = 8
-		#1番目の判定
+		#1�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 8
 				POS = 0.00 15.70 0.00 
 				SIZ = 29.00 25.00 24.00 
 			END_HURTSET
-		#2番目の判定
+		#2�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 8
 				POS = 0.00 38.70 0.00 
 				SIZ = 29.00 19.00 22.00 
 			END_HURTSET
-		#3番目の判定
+		#3�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 8
@@ -254,21 +254,21 @@ MOTIONSET
 		END_KEYSET
 	KEYSET			# --- << KEY : 3 / 4 >> ---
 		FRAME = 10
-		#1番目の判定
+		#1�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 10
 				POS = 0.00 15.70 0.00 
 				SIZ = 29.00 25.00 24.00 
 			END_HURTSET
-		#2番目の判定
+		#2�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 10
 				POS = 0.00 38.70 0.00 
 				SIZ = 29.00 19.00 22.00 
 			END_HURTSET
-		#3番目の判定
+		#3�Ԗڂ̔���
 			HURTSET
 				STARTFRAME = 0
 				ENDFRAME = 10

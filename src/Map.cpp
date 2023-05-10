@@ -9,8 +9,12 @@
 // include
 //-----------------------------------------------------------------------------
 #include"Map.h"
-#include "nlohmann/json.hpp"
 #include"file.h"
+
+//-----------------------------------------------------------------------------
+// 静的メンバー変数の宣言
+//-----------------------------------------------------------------------------
+const float CMap::BLOCK_WIDTH = 25.0f;	// ブロック同士の幅
 
 //=============================================================================
 // コンストラクタ
@@ -31,10 +35,6 @@ CMap::~CMap()
 //=============================================================================
 HRESULT CMap::Init()
 {
-	for (int i = 0; i < MAX_BLOCK; i++)
-	{
-		m_pBlock[i] = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f);
-	}
 	Load();
 	return S_OK;
 }
@@ -72,10 +72,32 @@ void CMap::Load()
 {
 	using json = nlohmann::json;
 	json map = LoadJson("data/FILE/map.json");
-	for (int i = 0; i < MAX_BLOCK; i++)
+
+	int playerCount = map["PLAYER_SPAWN"].size();
+
+	m_pBlock.resize(map["MAP"].size() * map["MAP"][0].size());
+
+	for (int i = 0; i < (int)map["MAP"].size(); i++)
 	{
-		D3DXVECTOR3 pos = D3DXVECTOR3(map["BLOCK"][i]["POS"][0], map["BLOCK"][i]["POS"][1], map["BLOCK"][i]["POS"][2]);
-		m_pBlock[i]->SetPos(pos);
+		for (int j = 0; j < (int)map["MAP"][i].size(); j++)
+		{
+			float x = i * BLOCK_WIDTH - map["MAP"].size() * 0.5f * BLOCK_WIDTH;
+			float z = j * -BLOCK_WIDTH + map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
+
+			switch ((int)map["MAP"][i][j])
+			{
+			case 0:
+				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z), 0.0f);
+				break;
+			case 1:
+				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z), 0.0f);
+				break;
+			case -1:
+				break;
+			default:
+				break;
+			}
+		}
 	}
 }
 
