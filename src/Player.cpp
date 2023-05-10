@@ -80,29 +80,33 @@ HRESULT CPlayer::Init()
 		}
 	}
 
-	//動的確保
+	//初期化
 	m_nSkillGauge = 0;
+	m_nSkillLv = 0;
 
 	//動的確保
 	m_controller = new CPlayerController(m_nPlayerNumber);
 
+	//スキルゲージの座標の算出(X:間隔に1つ分のゲージサイズを足している,Y:画面の下端に合わせている)
+	D3DXVECTOR3 SkillPos = D3DXVECTOR3((CGauge::SPACE_SIZE * (m_nPlayerNumber + 1)) + (CGauge::MAX_SIZE * m_nPlayerNumber), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f);
+	
 	//スキルゲージの生成
 	switch (m_nPlayerNumber)
-	{//16.0fはゲージごとの間の空白大きさ
+	{
 		case 0:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
+			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
 			break;
 
 		case 1:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
+			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
 			break;
 
 		case 2:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), m_nPlayerNumber);
+			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), m_nPlayerNumber);
 			break;
 
 		case 3:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f), m_nPlayerNumber);
+			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f), m_nPlayerNumber);
 			break;
 
 	default:
@@ -148,10 +152,9 @@ void CPlayer::Update(void)
 	{
 		//Input();				//入力処理
 		CInput* pInput = CInput::GetKey();
-
 		
 		if (m_nBuffTime > 0)
-		{
+		{//強化効果の時間を減算する
 			m_nBuffTime--;
 		}
 
@@ -160,20 +163,13 @@ void CPlayer::Update(void)
 			m_State = PST_STAND;
 		}
 
-		if (pInput->Press(DIK_K))
-		{//Kキーでゲージ上昇
-			m_nSkillGauge++;
-		}
-
-		if (pInput->Press(DIK_R))
-		{//Kキーでゲージ上昇
-			m_nSkillGauge = 0;
-		}
-
 		Updatepos();			// 座標更新
 
 		//移動
 		Move();
+
+		//スキル処理
+		Skill();
 
 		m_motion->Update();
 
@@ -306,7 +302,6 @@ void CPlayer::SetController(CController * inOperate)
 {
 	m_controller = inOperate;
 	m_controller->SetToOrder(this);
-
 }
 
 //-----------------------------------------------------------------------------
@@ -360,5 +355,65 @@ void CPlayer::BlockCollision()
 					m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// スキル処理
+//-----------------------------------------------------------------------------
+void CPlayer::Skill()
+{
+	//インプットの取得
+	CInput* pInput = CInput::GetKey();
+
+	//ゲージの量によってスキルLvを決める
+	if (m_nSkillGauge == MAX_GAUGE)
+	{
+		m_nSkillLv = 3;
+	}
+	else if(m_nSkillGauge >= 7)
+	{
+		m_nSkillLv = 2;
+	}
+	else if(m_nSkillGauge >= 3)
+	{
+		m_nSkillLv = 1;
+	}
+	else
+	{
+		m_nSkillLv = 0;
+	}
+
+	switch (m_nSkillLv)
+	{
+	case 1:
+		if(pInput->Trigger(DIK_K))
+		{
+			m_nSkillGauge -= 3;
+			m_nBuffTime = 60;
+			m_State = PST_SPEED;
+		}
+		break;
+
+	case 2:
+		if (pInput->Trigger(DIK_K))
+		{
+			m_nSkillGauge -= 7;
+			m_nBuffTime = 120;
+			m_State = PST_SPEED;
+		}
+		break;
+
+	case 3:
+		if (pInput->Trigger(DIK_K))
+		{
+			m_nSkillGauge -= 10;
+			m_nBuffTime = 300;
+			m_State = PST_SPEED;
+		}
+		break;
+
+	default:
+		break;
 	}
 }

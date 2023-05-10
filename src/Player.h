@@ -65,6 +65,7 @@ public:
 	void Updatepos();			// 座標の更新
 	void Normalization();		// 正規化
 	void BlockCollision();		// ブロックとの判定
+	void Skill();				// スキル処理
 
 	// Setter
 	void SetController(CController* inOperate);
@@ -92,6 +93,7 @@ private:
 	PLAYER_MOTION	m_Motion;						// 現在のモーション
 	static int		m_nNumPlayer;					// プレイヤーの数
 	int				m_nPlayerNumber;				// 自分のプレイヤー番号
+	int				m_nSkillLv;						// プレイヤーのスキルLｖ
 	int				m_nBuffTime;					// 強化効果時間
 	int				m_nSkillGauge;					// スキルゲージの量
 	PLAYER_STATE	m_State;						// プレイヤーの状態

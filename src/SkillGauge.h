@@ -16,6 +16,7 @@ public:
 	//定義
 	static const D3DXVECTOR2 GAUGE_SIZE;	//ゲージ一つ分の大きさ
 	static const float MAX_SIZE;			//ゲージの最大値
+	static const float SPACE_SIZE;			//ゲージ同士の間隔の大きさ
 
 	explicit CGauge(int nPriority = 4);					//オーバーライドされたコンストラクタ
 	~CGauge() override;									//デストラクタ
