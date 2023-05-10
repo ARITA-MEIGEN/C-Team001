@@ -19,8 +19,6 @@
 #define BLOCK_X		(4)		//ブロックの数X
 #define BLOCK_Y		(4)		//ブロックの数Y
 
-
-
 //-----------------------------------------------------------------------------
 // プロトタイプ宣言
 //-----------------------------------------------------------------------------
@@ -36,16 +34,19 @@ public:
 	explicit CMap();
 	~CMap();
 	HRESULT Init();
+	void Uninit();
 	static CMap *Create(int stgnumber);
 	void Load();
 
 	//ゲッター
 	CBlock* GetBlock(int number) { return m_pBlock[number]; };
+	int GetCountBlockType(int nType);
 
 private:
 	//メンバ関数
 	STAGE m_StageNumber;
 	CBlock*m_pBlock[MAX_BLOCK];
+	int m_nAllBlock[5];
 };
 
 #endif

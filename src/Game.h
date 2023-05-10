@@ -53,6 +53,7 @@ public:
 	void Update() override;
 	void Draw() override;
 	void ResetGame();	// ラウンド移行時の処理
+	void BlockCount();
 
 	// セッター
 	static void SetGame(GAME gamestate) {m_gamestate = gamestate;};
