@@ -27,8 +27,8 @@
 //-----------------------------------------------------------------------------
 //静的メンバ変数
 //-----------------------------------------------------------------------------
-const float CPlayer::PLAYER_SPEED = 5.0f; 		// 移動速度
-const float CPlayer::ITEM_ADD_SPEED = 1.5f;		// アイテムで加算するスピード
+const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
+const float CPlayer::ITEM_ADD_SPEED = 2.5f;		// アイテムで加算するスピード
 int CPlayer::m_nNumPlayer = 0;					// プレイヤーの数
 
 //-----------------------------------------------------------------------------
@@ -129,6 +129,16 @@ void CPlayer::Update(void)
 
 	//スキル処理
 	Skill();
+
+	if (m_nBuffTime > 0)
+	{//強化効果の時間を減算する
+		m_nBuffTime--;
+	}
+
+	if (m_nBuffTime <= 0 && m_State != PST_STAND)
+	{//デフォルトに戻す
+		m_State = PST_STAND;
+	}
 
 	// 座標更新
 	Updatepos();
@@ -252,15 +262,55 @@ void CPlayer::Move()
 		return;
 	}
 
-	// 方向ベクトル掛ける移動量
-	if (m_State == PST_SPEED)
+	if (D3DXVec3Length(&m_controller->Move()) == 0.0f)
 	{
-		m_move = m_controller->Move() * PLAYER_SPEED * ITEM_ADD_SPEED;
+		return;
+	}
+
+	D3DXVECTOR3 move = m_controller->Move();
+
+	// 斜め入力があった場合
+	if (move.z != 0.0f && move.x != 0.0)
+	{
+		if (m_moveVec.x != 0.0f)
+		{ // X軸に進んでた場合
+			move.z = 0.0f;
+			move.x = 1.0f;
+		}
+		else if (m_moveVec.z != 0.0f)
+		{ // Z軸に進んでた場合
+			move.x = 0.0f;
+			move.z = 1.0f;
+		}
+		else
+		{ // 止まってた場合
+			move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		}
+	}
+
+	if ((m_moveVec.z > 0.0f && move.z < 0.0f) ||
+		(m_moveVec.z < 0.0f && move.z > 0.0f) ||
+		(m_moveVec.x > 0.0f && move.x < 0.0f) ||
+		(m_moveVec.x < 0.0f && move.x > 0.0f))
+	{
+		move = m_move;
 	}
 	else
 	{
-		m_move = m_controller->Move() * PLAYER_SPEED;
+		D3DXVec3Normalize(&m_moveVec, &move);
 	}
+
+	D3DXVec3Normalize(&move, &move);
+
+	// 方向ベクトル掛ける移動量
+	move *= PLAYER_SPEED;
+
+	if (m_State == PST_SPEED)
+	{
+		move *= ITEM_ADD_SPEED;
+	}
+
+	m_move = move;
 }
 
 //-----------------------------------------------------------------------------
@@ -277,20 +327,19 @@ void CPlayer::SetController(CController * inOperate)
 //-----------------------------------------------------------------------------
 void CPlayer::TurnLookAtMoveing()
 {
-	D3DXVECTOR3 move = m_controller->Move();
-	if (move.z > 0.0f)
+	if (m_moveVec.z > 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
 	}
-	if (move.z < 0.0f)
+	if (m_moveVec.z < 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
-	if (move.x > 0.0f)
+	if (m_moveVec.x > 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.5f, 0.0f));
 	}
-	if (move.x < 0.0f)
+	if (m_moveVec.x < 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 	}
