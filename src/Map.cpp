@@ -40,7 +40,7 @@ HRESULT CMap::Init()
 }
 
 //=============================================================================
-// 終了
+// 生成
 //=============================================================================
 void CMap::Uninit()
 {
@@ -71,28 +71,38 @@ CMap * CMap::Create(int stgnumber)
 void CMap::Load()
 {
 	using json = nlohmann::json;
-	json map = LoadJson("data/FILE/map.json");
-
-	int playerCount = map["PLAYER_SPAWN"].size();
+	json map = LoadJson("data/FILE/map01.json");
 
 	m_pBlock.resize(map["MAP"].size() * map["MAP"][0].size());
+	m_axisSizeX = map["MAP"][0].size();
+
+	m_playerSpawnIdx.resize(4);
 
 	for (int i = 0; i < (int)map["MAP"].size(); i++)
 	{
 		for (int j = 0; j < (int)map["MAP"][i].size(); j++)
 		{
-			float x = i * BLOCK_WIDTH - map["MAP"].size() * 0.5f * BLOCK_WIDTH;
-			float z = j * -BLOCK_WIDTH + map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
+			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH;
+			float x = j * BLOCK_WIDTH - map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
 
 			switch ((int)map["MAP"][i][j])
 			{
+			case -1:
+				break;
 			case 0:
 				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z), 0.0f);
 				break;
 			case 1:
+			case 2:
+			case 3:
+			case 4:
+			{
 				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z), 0.0f);
-				break;
-			case -1:
+				D3DXVECTOR2 idx;
+				idx.x = j;
+				idx.y = i;
+				m_playerSpawnIdx[(int)map["MAP"][i][j]-1] = idx;
+			}
 				break;
 			default:
 				break;
@@ -115,4 +125,13 @@ int CMap::GetCountBlockType(int nType)
 		m_nAllBlock[m_pBlock[i]->GetNumber()]++;
 	}
 	return m_nAllBlock[nType];
+}
+
+//=============================================================================
+// ブロックの取得
+//=============================================================================
+CBlock * CMap::GetBlock(const int x, const int y)
+{
+	int idx = (m_axisSizeX * y) + x;
+	return m_pBlock[idx];
 }

@@ -25,7 +25,7 @@ class CMotion;
 //マクロ定義
 #define PLAYER_LEGPARTS	(13)
 #define	NUM_PLAYERPARTS	(1+PLAYER_LEGPARTS)
-#define MAX_GAUGE			(10)
+#define MAX_GAUGE		(100)
 
 class CPlayer :public CObject
 {
@@ -65,6 +65,7 @@ public:
 	void Updatepos();			// 座標の更新
 	void Normalization();		// 正規化
 	void BlockCollision();		// ブロックとの判定
+	void Skill();				// スキル処理
 
 	// Setter
 	void SetController(CController* inOperate);
@@ -80,6 +81,8 @@ public:
 	int				GetPlayerNumber() { return m_nPlayerNumber; }	//プレイヤーの番号の取得
 
 private:
+	void TurnLookAtMoveing();		// 移動方向を見て曲がる
+private:
 	CController*	m_controller;					// 命令を出す人
 	CObjectX*		m_apModel[NUM_PLAYERPARTS];		// モデルのインスタンス
 	CMotion*		m_motion;						// モーション
@@ -92,6 +95,7 @@ private:
 	PLAYER_MOTION	m_Motion;						// 現在のモーション
 	static int		m_nNumPlayer;					// プレイヤーの数
 	int				m_nPlayerNumber;				// 自分のプレイヤー番号
+	int				m_nSkillLv;						// プレイヤーのスキルLｖ
 	int				m_nBuffTime;					// 強化効果時間
 	int				m_nSkillGauge;					// スキルゲージの量
 	PLAYER_STATE	m_State;						// プレイヤーの状態

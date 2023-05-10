@@ -32,7 +32,7 @@ void CLight::Init(void)
 
 	//ライト１
 	//ライトの方向を設定
-	vecDir = D3DXVECTOR3(0.2f, -0.8f, 0.4f);
+	vecDir = D3DXVECTOR3(0.2f, -0.5f, 0.4f);
 
 	//正規化する
 	D3DXVec3Normalize(&vecDir, &vecDir);
@@ -40,7 +40,7 @@ void CLight::Init(void)
 
 	//ライト2
 	//ライトの方向を設定
-	vecDir = D3DXVECTOR3(-0.5f, -0.8f, -0.4f);
+	vecDir = D3DXVECTOR3(-0.5f, -0.5f, -0.4f);
 
 	//正規化する
 	D3DXVec3Normalize(&vecDir, &vecDir);
@@ -48,7 +48,7 @@ void CLight::Init(void)
 
 	//ライト3
 	//ライトの方向を設定
-	vecDir = D3DXVECTOR3(-0.4f, -0.8f, 0.2f);
+	vecDir = D3DXVECTOR3(-0.4f, -0.5f, 0.2f);
 
 	//正規化する
 	D3DXVec3Normalize(&vecDir, &vecDir);
@@ -62,9 +62,9 @@ void CLight::Init(void)
 	//ライトを有効にする
 	pDevice->LightEnable(0, TRUE);
 	//ライトを有効にする
-	pDevice->LightEnable(1, TRUE);
+	//pDevice->LightEnable(1, TRUE);
 	//ライトを有効にする
-	pDevice->LightEnable(2, TRUE);
+	//pDevice->LightEnable(2, TRUE);
 }
 
 //===========================
