@@ -86,33 +86,6 @@ HRESULT CPlayer::Init()
 	//動的確保
 	m_controller = new CPlayerController(m_nPlayerNumber);
 
-	//スキルゲージの座標の算出(X:間隔に1つ分のゲージサイズを足している,Y:画面の下端に合わせている)
-	D3DXVECTOR3 SkillPos = D3DXVECTOR3((CGauge::SPACE_SIZE * (m_nPlayerNumber + 1)) + (CGauge::MAX_SIZE * m_nPlayerNumber), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f);
-	
-	//スキルゲージの生成
-	switch (m_nPlayerNumber)
-	{
-		case 0:
-			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
-			break;
-
-		case 1:
-			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
-			break;
-
-		case 2:
-			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), m_nPlayerNumber);
-			break;
-
-		case 3:
-			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f), m_nPlayerNumber);
-			break;
-
-	default:
-		break;
-	}
-	
-
 	return S_OK;
 }
 
@@ -151,34 +124,23 @@ void CPlayer::Update(void)
 	{
 		return;
 	}
+
 	CInput* pInput = CInput::GetKey();
 
+	//スキル処理
+	Skill();
 
-	if (pInput->Press(DIK_K))
-	{//Kキーでゲージ上昇
-		m_nSkillGauge++;
-	}
+	// 座標更新
+	Updatepos();
 
-	if (pInput->Press(DIK_R))
-	{//Kキーでゲージ上昇
-		m_nSkillGauge = 0;
-	}
-
-		//スキル処理
-		Skill();
-
-		m_motion->Update();
-
-	Updatepos();			// 座標更新
+	// モーション
+	m_motion->Update();
 
 	//移動
 	Move();
 
 	// 回転
 	TurnLookAtMoveing();
-
-	// モーション
-	m_motion->Update();
 
 	Normalization();		// 角度の正規化
 	m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
