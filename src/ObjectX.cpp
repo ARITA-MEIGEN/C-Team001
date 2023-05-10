@@ -1,9 +1,11 @@
-//=================================================
+//=============================================================================
 // Content     (ゲームの設定)(player.cpp)
 // Author     : 有田明玄
-//=================================================
+//=============================================================================
 
-//インクルード
+//-----------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------
 #include"ObjectX.h"
 #include"Game.h"
 #include"renderer.h"
@@ -19,113 +21,40 @@
 
 static int g_nIdxShadow;		//影のID
 
-//===========================
-//コンストラクタ
-//===========================
+//-----------------------------------------------------------------------------
+// コンストラクタ
+//-----------------------------------------------------------------------------
 CObjectX::CObjectX(int nPriority) :CObject(nPriority)
 {
-
+	m_mtxParent = nullptr;
 }
 
-//===========================
-//デストラクタ
-//===========================
+//-----------------------------------------------------------------------------
+// デストラクタ
+//-----------------------------------------------------------------------------
 CObjectX::~CObjectX()
 {
 
 }
 
-//===========================
-//初期化処理
-//===========================
+//-----------------------------------------------------------------------------
+// 初期化処理
+//-----------------------------------------------------------------------------
 HRESULT CObjectX::Init()
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice;
-	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
-	
-	int nNumVtx;		//頂点数
-	DWORD sizeFVF;		//頂点フォーマットのサイズint nNumVtx;		//頂点数
-	BYTE*pVtxBuff;		//頂点バッファへのポインタ
-
-	//Xファイルの読み込み
-	D3DXLoadMeshFromX(m_modelname,
-		D3DXMESH_SYSTEMMEM,
-		pDevice,
-		NULL,
-		&m_pBuffMat,
-		NULL,
-		&m_nNumMat,
-		&m_pMesh);
-
-		//頂点バッファのロック
-		m_pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
-
-		//頂点数の取得
-		nNumVtx = m_pMesh->GetNumVertices();
-
-		//頂点フォーマットのサイズを取得
-		sizeFVF = D3DXGetFVFVertexSize(m_pMesh->GetFVF());
-
-		//頂点座標の代入
-		//すべての頂点のposを取得する
-		D3DXVECTOR3 vtxMax = D3DXVECTOR3(-1000.0f, -1000.0f, -1000.0f);	//最大値の保存用
-		D3DXVECTOR3 vtxMin = D3DXVECTOR3(1000.0f, 1000.0f, 1000.0f);	//最小値の保存用
-		for (int nCntVtx = 0; nCntVtx < nNumVtx; nCntVtx++)
-		{
-			D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;
-			//頂点座標を比較してモデルの最小値最大値を取得
-			if (vtx.x > vtxMax.x)
-			{//Xの最大値を取得
-				vtxMax.x = vtx.x;
-			}
-			if (vtx.x < vtxMin.x)
-			{//Xの最小値を取得
-				vtxMin.x = vtx.x;
-			}
-			if (vtx.y > vtxMax.y)
-			{//Yの最大値を取得
-				vtxMax.y = vtx.y;
-			}
-			if (vtx.y < vtxMin.y)
-			{//Yの最小値を取得
-				vtxMin.y = vtx.y;
-			}
-			if (vtx.z > vtxMax.z)
-			{//Zの最大値を取得
-				vtxMax.z = vtx.z;
-			}
-			if (vtx.z < vtxMin.z)
-			{//Zの最小値を取得
-				vtxMin.z = vtx.z;
-			}
-
-			//頂点フォーマットのサイズ分ポインタを進める
-			pVtxBuff += sizeFVF;
-		}
-		//頂点バッファのアンロック
-		m_pMesh->UnlockVertexBuffer();
-
-		//情報の初期化
-		m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//座標
-		m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//向き
-		m_vtxMax = vtxMax;							//頂点座標の最大値
-		m_vtxMin = vtxMin;							//頂点座標の最小値
-		m_size = vtxMax - vtxMin;					//パーツのサイズ
-	
 	//情報の初期化
-	m_pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
+	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//座標
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//向き
+	
 	//影の生成
 //	m_Shadow = CShadow::Create(m_pos, D3DXVECTOR3(50.0f,0.0f,50.0f));
 
 	return S_OK;
 }
 
-//===========================
-//終了処理
-//===========================
+//-----------------------------------------------------------------------------
+// 終了処理
+//-----------------------------------------------------------------------------
 void CObjectX::Uninit(void)
 {
 	if (m_pMesh != NULL)
@@ -141,9 +70,9 @@ void CObjectX::Uninit(void)
 	CObject::Release();
 }
 
-//===========================
-//更新処理
-//===========================
+//-----------------------------------------------------------------------------
+// 更新処理
+//-----------------------------------------------------------------------------
 void CObjectX::Update(void)
 {
 	m_posold = m_pos;		//前回の位置の保存
@@ -152,114 +81,100 @@ void CObjectX::Update(void)
 //	m_Shadow->SetPos(m_pos);
 
 	//移動量更新(減衰させる)
-	m_move.x += (0.0f - m_move.x)*MIN_SPEED;
-	m_move.z += (0.0f - m_move.z)*MIN_SPEED;
+	m_move.x += (0.0f - m_move.x) * MIN_SPEED;
+	m_move.z += (0.0f - m_move.z) * MIN_SPEED;
 
 }
 
-//===========================
-//描画処理
-//===========================
+//-----------------------------------------------------------------------------
+// 描画処理
+//-----------------------------------------------------------------------------
 void CObjectX::Draw(void)
 {
+	if (m_pMesh == nullptr)
+	{
+		return;
+	}
+
 	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 
-	D3DXMATRIX mtxRot, mtxTrans;				//計算用マトリックス
-	D3DMATERIAL9 matDef;						//現在のマテリアル保存用
-	D3DXMATERIAL *pMat;							//マテリアルのなんか
-	D3DXMATRIX mtxParent;						//多分計算用のマトリックス
+	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
+	D3DMATERIAL9 matDef;			// 現在のマテリアル保存用
+	D3DXMATERIAL *pMat;				// マテリアルの情報
 
 	//現在のマテリアルを維持
 	pDevice->GetMaterial(&matDef);
 
-	//ワールドマトリックスの初期化
+	//パーツのワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
-	////親の向きを反映
-	//D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-	//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+	//パーツのモデルの向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
-	////親の位置を反映	
-	//D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-	//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+	//パーツのモデルの位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
-	for (int nCnt = 0; nCnt < NUM_MODELPARTS; nCnt++)
+	D3DXMATRIX mtxParrent;
+	D3DXMatrixIdentity(&mtxParrent);
+
+	//親のマトリックスと掛け合わせる
+	if (m_pParent != nullptr)
 	{
-		//パーツのワールドマトリックスの初期化
-		D3DXMatrixIdentity(&m_mtxWorld);
+		mtxParrent = m_pParent->GetMatrix();
+	}
+	else if(m_mtxParent != nullptr)
+	{
+		mtxParrent = *m_mtxParent;
+	}
+	else
+	{
+	}
 
-		//パーツのモデルの向きを反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+	//親の座標とかけ合わせる
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParrent);
 
-		//パーツのモデルの位置を反映
-		D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+	//影の生成
+	//Shadow()
 
-		Shadow();
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-		//親のマトリクスを代入
-		mtxParent = m_mtxWorld;
+	//マテリアルデータへのポインタを取得
+	pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
 
-		//モデルのマトリックスとの掛け算　親子関係の掛け算
-		//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
+	//マテリアルの描画
+	for (int nCnt2 = 0; nCnt2 < (int)m_nNumMat; nCnt2++)
+	{
+		pMat[nCnt2].MatD3D.Emissive = m_col;
 
-		//ワールドマトリックスの設定
-		pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+		//マテリアルの設定
+		pDevice->SetMaterial(&pMat[nCnt2].MatD3D);
 
-		//マテリアルデータへのポインタを取得
-		//マテリアルの描画
-		pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
-
-		for (int nCnt2 = 0; nCnt2 < (int)m_nNumMat; nCnt2++)
-		{
-			pMat[nCnt2].MatD3D.Emissive = m_col;
-
-			//マテリアルの設定
-			pDevice->SetMaterial(&pMat[nCnt2].MatD3D);
-
-			//プレイヤーパーツの描画
-			m_pMesh->DrawSubset(nCnt2);
-		}
+		//プレイヤーパーツの描画
+		m_pMesh->DrawSubset(nCnt2);
 	}
 	//保持していたマテリアルを戻す
 	pDevice->SetMaterial(&matDef);
 }
 
-//===========================
-//操作
-//===========================
-CObjectX * CObjectX::Create(D3DXVECTOR3 pos,int Priority, LPCTSTR name)
+//-----------------------------------------------------------------------------
+// 操作
+//-----------------------------------------------------------------------------
+CObjectX * CObjectX::Create()
 {
 	CObjectX*pObjectX;
-	pObjectX = new CObjectX(Priority);
-	pObjectX->m_modelname = name;
+	pObjectX = new CObjectX();
 	pObjectX->Init();
-	pObjectX->SetPos(pos);
 
 	return pObjectX;
 }
 
-//===========================
-//位置設定
-//===========================
-void CObjectX::SetPos(D3DXVECTOR3 pos)
-{
-	m_pos = pos;
-}
-
-//===========================
-//方向設定
-//===========================
-void CObjectX::SetRot(D3DXVECTOR3 rot)
-{
-	m_rot = rot;
-}
-
-//===========================
-//モデル読み込み
-//===========================
+//-----------------------------------------------------------------------------
+// モデル読み込み
+//-----------------------------------------------------------------------------
 void CObjectX::BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat)
 {
 	m_pBuffMat = pBuff;
@@ -267,9 +182,9 @@ void CObjectX::BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat)
 	m_nNumMat = pNumMat;
 }
 
-//===========================
-//影の作成
-//===========================
+//-----------------------------------------------------------------------------
+// 影の作成
+//-----------------------------------------------------------------------------
 void CObjectX::Shadow()
 {
 	D3DXMATERIAL *pMat;							//マテリアルのなんか
@@ -319,4 +234,94 @@ void CObjectX::Shadow()
 		pMat[i].MatD3D.Diffuse = col[0];
 		pMat[i].MatD3D.Emissive = col[1];
 	}
+}
+
+//-----------------------------------------------------------------------------
+// サイズの算出
+//-----------------------------------------------------------------------------
+void CObjectX::SizeCalculate()
+{
+	BYTE*pVtxBuff;		//頂点バッファへのポインタ
+	int nNumVtx;		//頂点数
+	DWORD sizeFVF;		//頂点フォーマットのサイズ
+
+	// 頂点バッファのロック
+	m_pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
+
+	//頂点数の取得
+	nNumVtx = m_pMesh->GetNumVertices();
+
+	//頂点フォーマットのサイズを取得
+	sizeFVF = D3DXGetFVFVertexSize(m_pMesh->GetFVF());
+
+	//頂点座標の代入
+	//すべての頂点のposを取得する
+	D3DXVECTOR3 vtxMax = D3DXVECTOR3(-FLT_MAX, -FLT_MAX, -FLT_MAX);	//最大値の保存用
+	D3DXVECTOR3 vtxMin = D3DXVECTOR3(FLT_MAX, FLT_MAX, FLT_MAX);	//最小値の保存用
+	for (int nCntVtx = 0; nCntVtx < nNumVtx; nCntVtx++)
+	{
+		D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;
+		//頂点座標を比較してモデルの最小値最大値を取得
+		if (vtx.x > vtxMax.x)
+		{//Xの最大値を取得
+			vtxMax.x = vtx.x;
+		}
+		if (vtx.x < vtxMin.x)
+		{//Xの最小値を取得
+			vtxMin.x = vtx.x;
+		}
+		if (vtx.y > vtxMax.y)
+		{//Yの最大値を取得
+			vtxMax.y = vtx.y;
+		}
+		if (vtx.y < vtxMin.y)
+		{//Yの最小値を取得
+			vtxMin.y = vtx.y;
+		}
+		if (vtx.z > vtxMax.z)
+		{//Zの最大値を取得
+			vtxMax.z = vtx.z;
+		}
+		if (vtx.z < vtxMin.z)
+		{//Zの最小値を取得
+			vtxMin.z = vtx.z;
+		}
+
+		//頂点フォーマットのサイズ分ポインタを進める
+		pVtxBuff += sizeFVF;
+	}
+	//頂点バッファのアンロック
+	m_pMesh->UnlockVertexBuffer();
+
+	m_vtxMax = vtxMax;	// 頂点座標の最大値
+	m_vtxMin = vtxMin;	// 頂点座標の最小値
+
+	m_size = vtxMax - vtxMin;	//パーツのサイズ
+}
+
+//-----------------------------------------------------------------------------
+// モデルの設定
+//-----------------------------------------------------------------------------
+void CObjectX::SetModel(const char * Filename)
+{
+	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
+	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
+
+	D3DXLoadMeshFromX(Filename,
+		D3DXMESH_SYSTEMMEM,
+		pDevice,
+		NULL,
+		&m_pBuffMat,
+		NULL,
+		&m_nNumMat,
+		&m_pMesh);
+}
+
+//-----------------------------------------------------------------------------
+// 親モデルの登録かつ、親に自身を子供として保存
+//-----------------------------------------------------------------------------
+void CObjectX::SetParent(CObjectX * pModel)
+{
+	m_pParent = pModel;
+	m_pParent->SetChildren(this);
 }

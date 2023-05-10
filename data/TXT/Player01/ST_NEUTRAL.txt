@@ -1,30 +1,30 @@
 #---------------------------------------
-# [0] ニュートラルモーション
+# [0] �j���[�g�������[�V����
 #---------------------------------------
-# 立ち状態の設定
+# ������Ԃ̐ݒ�
 STATESET = STAND
 	MOTIONSET
-		LOOP = 1		# ループするかどうか[0:ループしない / 1:ループする]
-		NUM_KEY = 2		# キー数
+		LOOP = 1		# ���[�v���邩�ǂ���[0:���[�v���Ȃ� / 1:���[�v����]
+		NUM_KEY = 2		# �L�[��
 
 		KEYSET			# --- << KEY : 0 / 2 >> ---
 			FRAME = 50
 			
-#1番目の判定
+#1�Ԗڂ̔���
 	HURTSET 
 		STARTFRAME = 0
 		ENDFRAME = 50
 		POS = 0.00 15.70 0.00 
 		SIZ = 29.00 25.00 24.00 
 	END_HURTSET
-#2番目の判定
+#2�Ԗڂ̔���
 	HURTSET
 		STARTFRAME = 0
 		ENDFRAME = 50
 		POS = 0.00 38.70 0.00 
 		SIZ = 29.00 19.00 22.00 
 	END_HURTSET
-#3番目の判定
+#3�Ԗڂ̔���
 	HURTSET
 		STARTFRAME = 0
 		ENDFRAME = 50
@@ -107,21 +107,21 @@ STATESET = STAND
 	KEYSET			# --- << KEY : 1 / 2 >> ---
 		FRAME = 50
 		
-		#1番目の判定
+		#1�Ԗڂ̔���
 	HURTSET 
 		STARTFRAME = 0
 		ENDFRAME = 50
 		POS = 0.00 15.70 0.00 
 		SIZ = 29.00 25.00 24.00 
 	END_HURTSET
-#2番目の判定
+#2�Ԗڂ̔���
 	HURTSET
 		STARTFRAME = 0
 		ENDFRAME = 50
 		POS = 0.00 38.70 0.00 
 		SIZ = 29.00 19.00 22.00 
 	END_HURTSET
-#3番目の判定
+#3�Ԗڂ̔���
 	HURTSET
 		STARTFRAME = 0
 		ENDFRAME = 50

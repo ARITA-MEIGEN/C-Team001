@@ -1,165 +1,165 @@
 #==============================================================================
 #
-# ã€Žãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãƒ“ãƒ¥ãƒ¼ãƒ¯ã€ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ« [motion.txt]
+# wƒ‚[ƒVƒ‡ƒ“ƒrƒ…[ƒxƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹ [motion.txt]
 # Author : AKIRA TANAKA
 #
 #==============================================================================
-SCRIPT			# ã“ã®è¡Œã¯çµ¶å¯¾æ¶ˆã•ãªã„ã“ã¨ï¼
+SCRIPT			# ‚±‚Ìs‚Íâ‘ÎÁ‚³‚È‚¢‚±‚ÆI
 
 #------------------------------------------------------------------------------
-# ãƒ¢ãƒ‡ãƒ«æ•°
+# ƒ‚ƒfƒ‹”
 #------------------------------------------------------------------------------
 NUM_MODEL = 14
 
 #------------------------------------------------------------------------------
-# ãƒ¢ãƒ‡ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«å
+# ƒ‚ƒfƒ‹ƒtƒ@ƒCƒ‹–¼
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/Player000body.x		# [0]ä½“
-MODEL_FILENAME = data/MODEL/Player000head.x		# [1]é ­
-MODEL_FILENAME = data/MODEL/Player000Rarm1.x	# [2]å³è…•
-MODEL_FILENAME = data/MODEL/Player000Rarm2.x	# [3]å³è…•
-MODEL_FILENAME = data/MODEL/Player000Rhand.x	# [4]å³æ‰‹
-MODEL_FILENAME = data/MODEL/Player000Larm1.x	# [5]å·¦è…•
-MODEL_FILENAME = data/MODEL/Player000Larm2.x	# [6]å·¦è…•
-MODEL_FILENAME = data/MODEL/Player000Lhand.x	# [7]å·¦æ‰‹
-MODEL_FILENAME = data/MODEL/Player000Rleg1.x	# [8]å³è…¿
-MODEL_FILENAME = data/MODEL/Player000Rleg2.x	# [9]å³è…¿
-MODEL_FILENAME = data/MODEL/Player000Rfoot.x	# [10]å³è¶³
-MODEL_FILENAME = data/MODEL/Player000Lleg1.x	# [11]å·¦è…¿
-MODEL_FILENAME = data/MODEL/Player000Lleg2.x	# [12]å·¦è…¿
-MODEL_FILENAME = data/MODEL/Player000Lfoot.x	# [13]å·¦è¶³
+MODEL_FILENAME = data/MODEL/Player000body.x		# [0]‘Ì
+MODEL_FILENAME = data/MODEL/Player000head.x		# [1]“ª
+MODEL_FILENAME = data/MODEL/Player000Rarm1.x	# [2]‰E˜r
+MODEL_FILENAME = data/MODEL/Player000Rarm2.x	# [3]‰E˜r
+MODEL_FILENAME = data/MODEL/Player000Rhand.x	# [4]‰EŽè
+MODEL_FILENAME = data/MODEL/Player000Larm1.x	# [5]¶˜r
+MODEL_FILENAME = data/MODEL/Player000Larm2.x	# [6]¶˜r
+MODEL_FILENAME = data/MODEL/Player000Lhand.x	# [7]¶Žè
+MODEL_FILENAME = data/MODEL/Player000Rleg1.x	# [8]‰E‘Ú
+MODEL_FILENAME = data/MODEL/Player000Rleg2.x	# [9]‰E‘Ú
+MODEL_FILENAME = data/MODEL/Player000Rfoot.x	# [10]‰E‘«
+MODEL_FILENAME = data/MODEL/Player000Lleg1.x	# [11]¶‘Ú
+MODEL_FILENAME = data/MODEL/Player000Lleg2.x	# [12]¶‘Ú
+MODEL_FILENAME = data/MODEL/Player000Lfoot.x	# [13]¶‘«
 
 #------------------------------------------------------------------------------
-# ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼æƒ…å ±
+# ƒLƒƒƒ‰ƒNƒ^[î•ñ
 #------------------------------------------------------------------------------
 CHARACTERSET
-	NUM_PARTS = 14					# ãƒ‘ãƒ¼ãƒ„æ•°
-	MOVE = 3.0						# ç§»å‹•é‡
-	JUMP = 10.25					# ã‚¸ãƒ£ãƒ³ãƒ—é‡
-	RADIUS = 20.0					# åŠå¾„
+	NUM_PARTS = 14					# ƒp[ƒc”
+	MOVE = 3.0						# ˆÚ“®—Ê
+	JUMP = 10.25					# ƒWƒƒƒ“ƒv—Ê
+	RADIUS = 20.0					# ”¼Œa
 
 	PARTSSET
-		INDEX = 0					# ä½“
-		PARENT = -1					# (è¦ª)NULL
+		INDEX = 0					# ‘Ì
+		PARENT = -1					# (e)NULL
 		POS = 0.0 45.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 1					# é ­
-		PARENT = 0					# (è¦ª)ä½“
+		INDEX = 1					# “ª
+		PARENT = 0					# (e)‘Ì
 		POS = 0.0 10.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 2					# äºŒã®è…•
-		PARENT = 0					# (è¦ª)ä½“
+		INDEX = 2					# “ñ‚Ì˜r
+		PARENT = 0					# (e)‘Ì
 		POS = -8.0 0.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 	
 	PARTSSET
-		INDEX = 3					# å³è…•
-		PARENT = 2					# (è¦ª)ä½“
+		INDEX = 3					# ‰E˜r
+		PARENT = 2					# (e)‘Ì
 		POS = -10.0 0.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 4					# å³æ‰‹
-		PARENT = 3					# (è¦ª)å³è…•
+		INDEX = 4					# ‰EŽè
+		PARENT = 3					# (e)‰E˜r
 		POS = -10.0 0.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 5					# äºŒã®è…•
-		PARENT = 0					# (è¦ª)ä½“
+		INDEX = 5					# “ñ‚Ì˜r
+		PARENT = 0					# (e)‘Ì
 		POS = 8.0 0.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 6					# å·¦è…•
-		PARENT = 5					# (è¦ª)äºŒã®è…•
+		INDEX = 6					# ¶˜r
+		PARENT = 5					# (e)“ñ‚Ì˜r
 		POS = 10.0 0.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 7					# å·¦æ‰‹
-		PARENT = 6					# (è¦ª)å·¦è…•
+		INDEX = 7					# ¶Žè
+		PARENT = 6					# (e)¶˜r
 		POS = 10.0 0.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 8					# å³å¤ªã‚‚ã‚‚
-		PARENT = 0					# (è¦ª)ä½“
+		INDEX = 8					# ‰E‘¾‚à‚à
+		PARENT = 0					# (e)‘Ì
 		POS = -5.0 -13.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 9					# å³è…¿
-		PARENT = 8					# (è¦ª)å³å¤ªã‚‚ã‚‚
+		INDEX = 9					# ‰E‘Ú
+		PARENT = 8					# (e)‰E‘¾‚à‚à
 		POS = 0.0 -10.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 10					# å³è¶³
-		PARENT = 9					# (è¦ª)å³è…¿
+		INDEX = 10					# ‰E‘«
+		PARENT = 9					# (e)‰E‘Ú
 		POS = 0.0 -10.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 	
 	PARTSSET
-		INDEX = 11					# å·¦å¤ªã‚‚ã‚‚
-		PARENT = 0					# (è¦ª)ä½“
+		INDEX = 11					# ¶‘¾‚à‚à
+		PARENT = 0					# (e)‘Ì
 		POS = 5.0 -13.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 12					# å·¦è…¿
-		PARENT = 11					# (è¦ª)å·¦å¤ªã‚‚ã‚‚
+		INDEX = 12					# ¶‘Ú
+		PARENT = 11					# (e)¶‘¾‚à‚à
 		POS = 0.0 -10.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 13					# å·¦è¶³
-		PARENT = 12					# (è¦ª)å·¦è…¿
+		INDEX = 13					# ¶‘«
+		PARENT = 12					# (e)¶‘Ú
 		POS = 0.0 -10.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 END_CHARACTERSET
 
 #------------------------------------------------------------------------------
-# è»¸åˆ¤å®šã®è¨­å®š
+# Ž²”»’è‚ÌÝ’è
 #------------------------------------------------------------------------------
 AXISSET
-	#ç«‹ã¡
+	#—§‚¿
 	POS = 0.00 37.00 0.00 
 	SIZ = 28.00 68.00 24.00 
 END_AXIS
 	
 AXISSET
-	#ã—ã‚ƒãŒã¿
+	#‚µ‚á‚ª‚Ý
 	POS = 0.00 31.00 0.00 
 	SIZ = 28.00 56.00 24.00 
 END_AXIS
 	
 	
 #------------------------------------------------------------------------------
-# ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+# ƒ‚[ƒVƒ‡ƒ“ƒeƒLƒXƒg
 #------------------------------------------------------------------------------
 	MOTIONSET
-		#ç«‹ã¡
+		#—§‚¿
 		MOTION = data/TXT/Player01/ST_NEUTRAL.txt	
 		MOTION = data/TXT/Player01/ST_MOVE.txt		
 		
 	END_MOTIONSET
-END_SCRIPT		# ã“ã®è¡Œã¯çµ¶å¯¾æ¶ˆã•ãªã„ã“ã¨ï¼
+END_SCRIPT		# ‚±‚Ìs‚Íâ‘ÎÁ‚³‚È‚¢‚±‚ÆI
