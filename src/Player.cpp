@@ -363,11 +363,11 @@ void CPlayer::Skill()
 	{
 		m_nSkillLv = 3;
 	}
-	else if(m_nSkillGauge >= 7)
+	else if(m_nSkillGauge >= MAX_GAUGE * 0.7)
 	{
 		m_nSkillLv = 2;
 	}
-	else if(m_nSkillGauge >= 3)
+	else if(m_nSkillGauge >= MAX_GAUGE * 0.3)
 	{
 		m_nSkillLv = 1;
 	}
@@ -381,7 +381,7 @@ void CPlayer::Skill()
 	case 1:
 		if(pInput->Trigger(DIK_K))
 		{
-			m_nSkillGauge -= 3;
+			m_nSkillGauge -= MAX_GAUGE * 0.3;
 			m_nBuffTime = 60;
 			m_State = PST_SPEED;
 		}
@@ -390,7 +390,7 @@ void CPlayer::Skill()
 	case 2:
 		if (pInput->Trigger(DIK_K))
 		{
-			m_nSkillGauge -= 7;
+			m_nSkillGauge -= MAX_GAUGE * 0.7;
 			m_nBuffTime = 120;
 			m_State = PST_SPEED;
 		}
@@ -399,7 +399,7 @@ void CPlayer::Skill()
 	case 3:
 		if (pInput->Trigger(DIK_K))
 		{
-			m_nSkillGauge -= 10;
+			m_nSkillGauge -= MAX_GAUGE;
 			m_nBuffTime = 300;
 			m_State = PST_SPEED;
 		}
