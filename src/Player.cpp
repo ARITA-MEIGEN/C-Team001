@@ -81,9 +81,37 @@ HRESULT CPlayer::Init()
 
 	//動的確保
 	m_nSkillGauge = 0;
+	m_nSkillLv = 0;
 
 	//動的確保
 	m_controller = new CPlayerController(m_nPlayerNumber);
+
+	//スキルゲージの座標の算出(X:間隔に1つ分のゲージサイズを足している,Y:画面の下端に合わせている)
+	D3DXVECTOR3 SkillPos = D3DXVECTOR3((CGauge::SPACE_SIZE * (m_nPlayerNumber + 1)) + (CGauge::MAX_SIZE * m_nPlayerNumber), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f);
+	
+	//スキルゲージの生成
+	switch (m_nPlayerNumber)
+	{
+		case 0:
+			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
+			break;
+
+		case 1:
+			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
+			break;
+
+		case 2:
+			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), m_nPlayerNumber);
+			break;
+
+		case 3:
+			CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f), m_nPlayerNumber);
+			break;
+
+	default:
+		break;
+	}
+	
 
 	return S_OK;
 }
@@ -123,19 +151,8 @@ void CPlayer::Update(void)
 	{
 		return;
 	}
-
 	CInput* pInput = CInput::GetKey();
 
-
-	if (m_nBuffTime > 0)
-	{
-		m_nBuffTime--;
-	}
-
-	if (m_nBuffTime <= 0 && m_State != PST_STAND)
-	{//デフォルトに戻す
-		m_State = PST_STAND;
-	}
 
 	if (pInput->Press(DIK_K))
 	{//Kキーでゲージ上昇
@@ -147,10 +164,10 @@ void CPlayer::Update(void)
 		m_nSkillGauge = 0;
 	}
 
-	if (pInput->Press(DIK_L))
-	{//Kキーでゲージ上昇
-		SetRot(m_rot + D3DXVECTOR3(0.0f, 0.1f, 0.0f));
-	}
+		//スキル処理
+		Skill();
+
+		m_motion->Update();
 
 	Updatepos();			// 座標更新
 
@@ -291,7 +308,6 @@ void CPlayer::SetController(CController * inOperate)
 {
 	m_controller = inOperate;
 	m_controller->SetToOrder(this);
-
 }
 
 //-----------------------------------------------------------------------------
@@ -369,5 +385,65 @@ void CPlayer::BlockCollision()
 					m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// スキル処理
+//-----------------------------------------------------------------------------
+void CPlayer::Skill()
+{
+	//インプットの取得
+	CInput* pInput = CInput::GetKey();
+
+	//ゲージの量によってスキルLvを決める
+	if (m_nSkillGauge == MAX_GAUGE)
+	{
+		m_nSkillLv = 3;
+	}
+	else if(m_nSkillGauge >= 7)
+	{
+		m_nSkillLv = 2;
+	}
+	else if(m_nSkillGauge >= 3)
+	{
+		m_nSkillLv = 1;
+	}
+	else
+	{
+		m_nSkillLv = 0;
+	}
+
+	switch (m_nSkillLv)
+	{
+	case 1:
+		if(pInput->Trigger(DIK_K))
+		{
+			m_nSkillGauge -= 3;
+			m_nBuffTime = 60;
+			m_State = PST_SPEED;
+		}
+		break;
+
+	case 2:
+		if (pInput->Trigger(DIK_K))
+		{
+			m_nSkillGauge -= 7;
+			m_nBuffTime = 120;
+			m_State = PST_SPEED;
+		}
+		break;
+
+	case 3:
+		if (pInput->Trigger(DIK_K))
+		{
+			m_nSkillGauge -= 10;
+			m_nBuffTime = 300;
+			m_State = PST_SPEED;
+		}
+		break;
+
+	default:
+		break;
 	}
 }
