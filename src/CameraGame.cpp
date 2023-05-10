@@ -49,16 +49,14 @@ void CCameraGame::Init()
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot.x = atan2f((m_posV.y - m_posR.y), (m_posV.z - m_posR.z));
-	//m_fDistance=sqrtf(m_fDistance*m_fDistance+DISTANCE_Y);	
 	m_fDistance = sqrtf(DISTANCE_X + DISTANCE_Y + DISTANCE_Z);
 }
 
+//-----------------------------------------------------------------------------
+// 更新
+//-----------------------------------------------------------------------------
 void CCameraGame::Update()
 {
-	//ControlPos();		//視点操作
-	//RadianPosR();		//注視点の旋回
-	//RadianPosV();		//視点の旋回
-	//DestPos();			//カメラの追従
 	NormalizeRadian();	//角度の正規化
 #ifdef _DEBUG
 	CDebugProc::Print("カメラの視点の角度 x:%f y:%f z:%f", m_posV.x, m_posV.y, m_posV.z);
@@ -66,6 +64,9 @@ void CCameraGame::Update()
 
 }
 
+//-----------------------------------------------------------------------------
+// 生成
+//-----------------------------------------------------------------------------
 CCameraGame * CCameraGame::Create()
 {
 	CCameraGame* pCamera = new CCameraGame;

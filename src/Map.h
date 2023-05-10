@@ -14,6 +14,13 @@
 #include <vector>
 
 //-----------------------------------------------------------------------------
+// マクロ定義
+//-----------------------------------------------------------------------------
+#define MAX_BLOCK	(16)	//ブロックの最大数
+#define BLOCK_X		(4)		//ブロックの数X
+#define BLOCK_Y		(4)		//ブロックの数Y
+
+//-----------------------------------------------------------------------------
 // プロトタイプ宣言
 //-----------------------------------------------------------------------------
 class CMap
@@ -30,17 +37,21 @@ public:
 	explicit CMap();
 	~CMap();
 	HRESULT Init();
+	void Uninit();
 	static CMap *Create(int stgnumber);
 	void Load();
 
 	//ゲッター
 	CBlock* GetBlock(const int number) { return (int)m_pBlock.size() > number ? m_pBlock[number] : nullptr; };
 	int GetBlockCount() { return (int)m_pBlock.size(); };
+	int CMap::GetCountBlockType(int nType);
+
 
 private:
 	//メンバ関数
 	STAGE m_StageNumber;
 	std::vector<CBlock*> m_pBlock;
+	int m_nAllBlock[5];
 };
 
 #endif

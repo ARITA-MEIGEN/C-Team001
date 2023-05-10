@@ -118,10 +118,10 @@ void  CObject3D::Update()
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(-(m_Siz.x / 2), 0.0f, -(m_Siz.z / 2));
-	pVtx[1].pos = D3DXVECTOR3(-(m_Siz.x / 2), 0.0f, +(m_Siz.z / 2));
-	pVtx[2].pos = D3DXVECTOR3(+(m_Siz.x / 2), 0.0f, -(m_Siz.z / 2));
-	pVtx[3].pos = D3DXVECTOR3(+(m_Siz.x / 2), 0.0f, +(m_Siz.z / 2));
+	pVtx[0].pos = D3DXVECTOR3(-(m_Siz.x * 0.5f), 0.0f, -(m_Siz.z * 0.5f));
+	pVtx[1].pos = D3DXVECTOR3(-(m_Siz.x * 0.5f), 0.0f, +(m_Siz.z * 0.5f));
+	pVtx[2].pos = D3DXVECTOR3(+(m_Siz.x * 0.5f), 0.0f, -(m_Siz.z * 0.5f));
+	pVtx[3].pos = D3DXVECTOR3(+(m_Siz.x * 0.5f), 0.0f, +(m_Siz.z * 0.5f));
 
 	//法線ベクトルの設定
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -134,12 +134,6 @@ void  CObject3D::Update()
 	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
 	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
 	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
-
-	//頂点カラー設定
-	for (int i = 0; i < 4; i++)
-	{
-		pVtx[i].col = m_Col;
-	}
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
@@ -176,7 +170,7 @@ void  CObject3D::Draw()
 	//頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
-	//ポリゴンの描画       
+	//ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	//ポリゴンの形
 		0,										//頂点の開始場所
 		4);
@@ -185,7 +179,7 @@ void  CObject3D::Draw()
 //=============================================================================
 // 位置の設定
 //=============================================================================
-void CObject3D::SetPos(D3DXVECTOR3 pos)
+void CObject3D::SetPos(const D3DXVECTOR3& pos)
 {
 	m_Pos = pos;
 }
@@ -193,17 +187,34 @@ void CObject3D::SetPos(D3DXVECTOR3 pos)
 //=============================================================================
 // サイズの設定
 //=============================================================================
-void CObject3D::SetSiz(D3DXVECTOR3 siz)
+void CObject3D::SetSiz(const D3DXVECTOR3& siz)
 {
 	m_Siz = siz;
 }
 
 //=============================================================================
-// 位置の設定
+// 色の設定
 //=============================================================================
-void CObject3D::SetCol(D3DXCOLOR col)
+void CObject3D::SetCol(const D3DXCOLOR& col)
 {
 	m_Col = col;
+
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();;
+
+	VERTEX_3D* pVtx;
+
+	//頂点バッファをロックし、頂点データへのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	//頂点カラー設定
+	for (int i = 0; i < 4; i++)
+	{
+		pVtx[i].col = m_Col;
+	}
+
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
 }
 
 //=============================================================================

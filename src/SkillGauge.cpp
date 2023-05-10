@@ -12,8 +12,8 @@
 //======================================================
 // 定義
 //======================================================
-const D3DXVECTOR2 CGauge::GAUGE_SIZE = D3DXVECTOR2(25.0f,50.0f);		//ゲージ一つ分の大きさ
-const float CGauge::MAX_SIZE = 300.0f;									//ゲージの最大値
+const float CGauge::MAX_SIZE = 300.0f;														//ゲージの最大値
+const D3DXVECTOR2 CGauge::GAUGE_SIZE = D3DXVECTOR2(CGauge::MAX_SIZE / MAX_GAUGE, 50.0f);	//ゲージ一つ分の大きさ
 
 //======================================================
 //コンストラクタ
@@ -56,6 +56,7 @@ void CGauge::Update()
 {
 	//プレイヤーの情報の取得
 	CPlayer * pPlayer = CGame::GetPlayer(m_nSkillNumber);
+
 
 	//大きさの設定
 	SetSiz(GAUGE_SIZE);
