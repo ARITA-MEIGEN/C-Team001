@@ -32,7 +32,7 @@ public:
 	void SetPlayerNumber(int number);
 
 	//ゲッター
-	int GetNumber() { return m_number; };
+	int GetNumber() { return m_number; };	//0～3はプレイヤー4はニュートラル
 
 private:
 	//メンバ変数
