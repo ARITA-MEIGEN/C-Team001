@@ -180,6 +180,23 @@ void CPlayer::Update(void)
 		}
 	}
 
+	//
+	{
+		if (m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f) && m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f))
+		{//X軸
+			if (m_pos.z <= m_pOnBlock->GetPos().z + (m_pOnBlock->GetSize().z * 0.05f) && m_pos.z >= m_pOnBlock->GetPos().z - (m_pOnBlock->GetSize().z * 0.05f))
+			{//Z軸
+				 // 方向ベクトル掛ける移動量
+				m_move = m_movePlanVec * PLAYER_SPEED;
+
+				if (m_State == PST_SPEED)
+				{
+					m_move *= ITEM_ADD_SPEED;
+				}
+			}
+		}
+	}
+
 #ifdef _DEBUG
 	CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
 	CDebugProc::Print("現在のモーション:%d\n", (int)m_Motion);
@@ -316,24 +333,12 @@ void CPlayer::Move()
 		(m_moveVec.x > 0.0f && move.x < 0.0f) ||
 		(m_moveVec.x < 0.0f && move.x > 0.0f))
 	{
-		move = m_move;
+		m_movePlanVec = m_move;	// 入力する前に戻る
 	}
 	else
 	{
-		D3DXVec3Normalize(&m_moveVec, &move);
+		D3DXVec3Normalize(&m_movePlanVec, &move);	// 入力ベクトルを用意する
 	}
-
-	D3DXVec3Normalize(&move, &move);
-
-	// 方向ベクトル掛ける移動量
-	move *= PLAYER_SPEED;
-
-	if (m_State == PST_SPEED)
-	{
-		move *= ITEM_ADD_SPEED;
-	}
-
-	m_move = move;
 }
 
 //-----------------------------------------------------------------------------
