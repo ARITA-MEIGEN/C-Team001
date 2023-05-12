@@ -160,8 +160,8 @@ void CGame::Update()
 		{
 			if (pInput->Trigger(DIK_RETURN))
 			{
-				CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
 				BlockCount();
+				CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
 			}
 		}
 #endif // !_DEBUG

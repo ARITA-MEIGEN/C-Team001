@@ -44,6 +44,7 @@ public:
 	//ƒQƒbƒ^[
 	CBlock* GetBlock(const int number) { return (int)m_pBlock.size() > number ? m_pBlock[number] : nullptr; };
 	CBlock* GetBlock(const int x, const int y);
+	D3DXVECTOR2 GetBlockIdx(CBlock* block);
 	CBlock* GetPlayerSpawnBlock(const int index) { return GetBlock((int)m_playerSpawnIdx[index].x, (int)m_playerSpawnIdx[index].y); }
 	int GetBlockCount() { return (int)m_pBlock.size(); };
 	int CMap::GetCountBlockType(int nType);
