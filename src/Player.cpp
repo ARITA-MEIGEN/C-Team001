@@ -157,6 +157,29 @@ void CPlayer::Update(void)
 
 	BlockCollision();
 
+	// ブロック外に行かないように停止処理
+	{
+		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+		D3DXVECTOR2 moveNowVec;
+
+		moveNowVec.x = m_move.x;
+		moveNowVec.y = -m_move.z;
+
+		D3DXVec2Normalize(&moveNowVec, &moveNowVec);
+
+		CDebugProc::Print("moveNowVec : %.1f,%.1f\n", moveNowVec.x, moveNowVec.y);
+
+		BlockIdx += moveNowVec;
+
+		CDebugProc::Print("BlockIdx : %.1f,%.1f\n", BlockIdx.x, BlockIdx.y);
+
+		CBlock* moveBlock = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);	// 進行方向にあるブロック
+		if (moveBlock->IsStop())
+		{
+			m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 停止
+		}
+	}
+
 #ifdef _DEBUG
 	CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
 	CDebugProc::Print("現在のモーション:%d\n", (int)m_Motion);
@@ -388,12 +411,12 @@ void CPlayer::BlockCollision()
 		{//X軸
 			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f))
 			{//Z軸
-				if(pBlock->GetNumber() != m_nPlayerNumber && m_nSkillGauge < MAX_GAUGE)
+				if (pBlock->GetNumber() != m_nPlayerNumber && m_nSkillGauge < MAX_GAUGE)
 				{//自分以外の色を塗り替えていたらゲージの加算
 					m_nSkillGauge++;
 				}
-					pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
-					m_pOnBlock = pBlock;						//乗っているブロックを設定
+				pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
+				m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
 	}

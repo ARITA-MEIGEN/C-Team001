@@ -304,6 +304,11 @@ void CObjectX::SizeCalculate()
 //-----------------------------------------------------------------------------
 void CObjectX::SetModel(const char * Filename)
 {
+	// 初期化
+	m_pBuffMat = nullptr;
+	m_nNumMat = 0;
+	m_pMesh = nullptr;
+
 	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 

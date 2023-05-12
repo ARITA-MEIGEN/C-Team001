@@ -30,13 +30,16 @@ public:
 
 	//セッター
 	void SetPlayerNumber(int number);
+	void SetStop(const bool isStop) { m_isStop = isStop; }
 
 	//ゲッター
 	int GetNumber() { return m_number; };
+	bool IsStop() { return m_isStop; };
 
 private:
 	//メンバ変数
-	int m_number;//プレイヤーの番号
+	int m_number;	// プレイヤーの番号
+	bool m_isStop;	// 進行不可
 };
 
 #endif
