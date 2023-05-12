@@ -44,9 +44,12 @@ HRESULT CMap::Init()
 //=============================================================================
 void CMap::Uninit()
 {
-	for (int i = 0; i < MAX_BLOCK; i++)
+	for (int i = 0; i < GetBlockCount(); i++)
 	{
-		m_pBlock[i] = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f);
+		if (m_pBlock[i]!=nullptr)
+		{
+			m_pBlock[i] = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f);
+		}
 	}
 }
 
@@ -106,13 +109,18 @@ void CMap::Load()
 //=============================================================================
 int CMap::GetCountBlockType(int nType)
 {
+//	CBlock* AllBlock;
 	for (int i = 0; i < 4; i++)
 	{//リセット
 		m_nAllBlock[i] = 0;
 	}
-	for (int i = 0; i < MAX_BLOCK; i++)
+
+	for (int i = 0; i < GetBlockCount(); i++)
 	{//タイプ分け
-		m_nAllBlock[m_pBlock[i]->GetNumber()]++;
+		if (m_pBlock[i]!=nullptr)
+		{//中身がある場合
+			m_nAllBlock[m_pBlock[i]->GetNumber()]++;
+		}
 	}
 	return m_nAllBlock[nType];
 }

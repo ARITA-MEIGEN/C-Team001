@@ -46,7 +46,6 @@ public:
 	int GetBlockCount() { return (int)m_pBlock.size(); };
 	int CMap::GetCountBlockType(int nType);
 
-
 private:
 	//ƒƒ“ƒoŠÖ”
 	STAGE m_StageNumber;

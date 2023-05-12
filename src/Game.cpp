@@ -177,7 +177,7 @@ void CGame::BlockCount()
 {
 	int Score[4];
 	int Rank[4];
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < MAX_PLAYER; i++)
 	{
 		Score[i] = m_pMap->GetCountBlockType(i);
 	}
@@ -185,12 +185,13 @@ void CGame::BlockCount()
 	//昇順に並び変える
 	std::vector<int> rank = { Score[0], Score[1], Score[2],Score[3] };
 	std::sort(rank.begin(), rank.end());
-	for (int i = 0; i < 4; i++)
+
+	for (int i = 0; i < MAX_PLAYER; i++)
 	{//並び変えたやつを代入
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < MAX_PLAYER; j++)
 		{
-			if (rank[i] == j)
-			{//順位順にプレイヤー番号を並び変える
+			if (rank[i] == Score[j])
+			{//ランキングの数値とプレイヤーの数値が一致している場合プレイヤーの番号を代入する
 				Rank[i] = j;
 			}
 		}
