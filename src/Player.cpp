@@ -27,8 +27,8 @@
 //-----------------------------------------------------------------------------
 //静的メンバ変数
 //-----------------------------------------------------------------------------
-const float CPlayer::PLAYER_SPEED = 5.0f; 		// 移動速度
-const float CPlayer::ITEM_ADD_SPEED = 1.5f;		// アイテムで加算するスピード
+const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
+const float CPlayer::ITEM_ADD_SPEED = 2.5f;		// アイテムで加算するスピード
 int CPlayer::m_nNumPlayer = 0;					// プレイヤーの数
 
 //-----------------------------------------------------------------------------
@@ -62,7 +62,6 @@ HRESULT CPlayer::Init()
 	}
 
 	m_motion = new CMotion("data/TXT/Player01/Player01.txt");
-	m_motion->Update();
 	m_Motion = PM_ST_NEUTRAL;	//ニュートラルモーションに変更
 
 	for (int i = 0; i < 14; i++)
@@ -82,33 +81,10 @@ HRESULT CPlayer::Init()
 
 	//動的確保
 	m_nSkillGauge = 0;
+	m_nSkillLv = 0;
 
 	//動的確保
 	m_controller = new CPlayerController(m_nPlayerNumber);
-
-	//スキルゲージの生成
-	switch (m_nPlayerNumber)
-	{//16.0fはゲージごとの間の空白大きさ
-		case 0:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
-			break;
-
-		case 1:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNumber);
-			break;
-
-		case 2:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), m_nPlayerNumber);
-			break;
-
-		case 3:
-			CGauge::Create(D3DXVECTOR3((16.0f + CGauge::MAX_SIZE * m_nPlayerNumber) + (CGauge::GAUGE_SIZE.x / 2.0f), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f), D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f), m_nPlayerNumber);
-			break;
-
-	default:
-		break;
-	}
-	
 
 	return S_OK;
 }
@@ -144,62 +120,60 @@ void CPlayer::Uninit(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Update(void)
 {
-	if ((CGame::GetGame() != CGame::GAME_END) && (CGame::GetGame() != CGame::GAME_START))
+	if (!(CGame::GetGame() != CGame::GAME_END) && !(CGame::GetGame() != CGame::GAME_START))
 	{
-		//Input();				//入力処理
-		CInput* pInput = CInput::GetKey();
+		return;
+	}
 
-		
-		if (m_nBuffTime > 0)
-		{
-			m_nBuffTime--;
-		}
+	CInput* pInput = CInput::GetKey();
 
-		if (m_nBuffTime <= 0 && m_State != PST_STAND)
-		{//デフォルトに戻す
-			m_State = PST_STAND;
-		}
+	//スキル処理
+	Skill();
 
-		if (pInput->Press(DIK_K))
-		{//Kキーでゲージ上昇
-			m_nSkillGauge++;
-		}
+	if (m_nBuffTime > 0)
+	{//強化効果の時間を減算する
+		m_nBuffTime--;
+	}
 
-		if (pInput->Press(DIK_R))
-		{//Kキーでゲージ上昇
-			m_nSkillGauge = 0;
-		}
+	if (m_nBuffTime <= 0 && m_State != PST_STAND)
+	{//デフォルトに戻す
+		m_State = PST_STAND;
+	}
 
-		Updatepos();			// 座標更新
+	// 座標更新
+	Updatepos();
 
-		//移動
-		Move();
+	// モーション
+	m_motion->Update();
 
-		m_motion->Update();
+	//移動
+	Move();
 
-		Normalization();		// 角度の正規化
-		m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
+	// 回転
+	TurnLookAtMoveing();
 
-		BlockCollision();
+	Normalization();		// 角度の正規化
+	m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
+
+	BlockCollision();
 
 #ifdef _DEBUG
-		CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
-		CDebugProc::Print("現在のモーション:%d\n", (int)m_Motion);
-		CDebugProc::Print("現在の状態:%d\n", (int)m_State);
-		CDebugProc::Print("現在のフレーム:%d\n", m_frame);
+	CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
+	CDebugProc::Print("現在のモーション:%d\n", (int)m_Motion);
+	CDebugProc::Print("現在の状態:%d\n", (int)m_State);
+	CDebugProc::Print("現在のフレーム:%d\n", m_frame);
 
-		if (pInput->Trigger(DIK_U))
-		{
-			m_nBuffTime = 120;
-			m_State = PST_SPEED;
-		}
-		if (pInput->Trigger(DIK_T))
-		{
-			m_Motion == PM_ST_NEUTRAL ? m_Motion = PM_ST_MOVE : m_Motion = PM_ST_NEUTRAL;
-			m_motion->SetNumMotion(m_Motion);
-		}
-#endif // _DEBUG
+	if (pInput->Trigger(DIK_U))
+	{
+		m_nBuffTime = 120;
+		m_State = PST_SPEED;
 	}
+	if (pInput->Trigger(DIK_T))
+	{
+		m_Motion == PM_ST_NEUTRAL ? m_Motion = PM_ST_MOVE : m_Motion = PM_ST_NEUTRAL;
+		m_motion->SetNumMotion(m_Motion);
+	}
+#endif // _DEBUG
 }
 
 //-----------------------------------------------------------------------------
@@ -288,15 +262,55 @@ void CPlayer::Move()
 		return;
 	}
 
-	// 方向ベクトル掛ける移動量
-	if (m_State == PST_SPEED)
+	if (D3DXVec3Length(&m_controller->Move()) == 0.0f)
 	{
-		m_move = m_controller->Move() * PLAYER_SPEED * ITEM_ADD_SPEED;
+		return;
+	}
+
+	D3DXVECTOR3 move = m_controller->Move();
+
+	// 斜め入力があった場合
+	if (move.z != 0.0f && move.x != 0.0)
+	{
+		if (m_moveVec.x != 0.0f)
+		{ // X軸に進んでた場合
+			move.z = 0.0f;
+			move.x = 1.0f;
+		}
+		else if (m_moveVec.z != 0.0f)
+		{ // Z軸に進んでた場合
+			move.x = 0.0f;
+			move.z = 1.0f;
+		}
+		else
+		{ // 止まってた場合
+			move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		}
+	}
+
+	if ((m_moveVec.z > 0.0f && move.z < 0.0f) ||
+		(m_moveVec.z < 0.0f && move.z > 0.0f) ||
+		(m_moveVec.x > 0.0f && move.x < 0.0f) ||
+		(m_moveVec.x < 0.0f && move.x > 0.0f))
+	{
+		move = m_move;
 	}
 	else
 	{
-		m_move = m_controller->Move() * PLAYER_SPEED;
+		D3DXVec3Normalize(&m_moveVec, &move);
 	}
+
+	D3DXVec3Normalize(&move, &move);
+
+	// 方向ベクトル掛ける移動量
+	move *= PLAYER_SPEED;
+
+	if (m_State == PST_SPEED)
+	{
+		move *= ITEM_ADD_SPEED;
+	}
+
+	m_move = move;
 }
 
 //-----------------------------------------------------------------------------
@@ -306,7 +320,29 @@ void CPlayer::SetController(CController * inOperate)
 {
 	m_controller = inOperate;
 	m_controller->SetToOrder(this);
+}
 
+//-----------------------------------------------------------------------------
+// 移動方向を見て曲がる
+//-----------------------------------------------------------------------------
+void CPlayer::TurnLookAtMoveing()
+{
+	if (m_moveVec.z > 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
+	}
+	if (m_moveVec.z < 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	}
+	if (m_moveVec.x > 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.5f, 0.0f));
+	}
+	if (m_moveVec.x < 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -360,5 +396,65 @@ void CPlayer::BlockCollision()
 					m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// スキル処理
+//-----------------------------------------------------------------------------
+void CPlayer::Skill()
+{
+	//インプットの取得
+	CInput* pInput = CInput::GetKey();
+
+	//ゲージの量によってスキルLvを決める
+	if (m_nSkillGauge == MAX_GAUGE)
+	{
+		m_nSkillLv = 3;
+	}
+	else if(m_nSkillGauge >= MAX_GAUGE * 0.7)
+	{
+		m_nSkillLv = 2;
+	}
+	else if(m_nSkillGauge >= MAX_GAUGE * 0.3)
+	{
+		m_nSkillLv = 1;
+	}
+	else
+	{
+		m_nSkillLv = 0;
+	}
+
+	switch (m_nSkillLv)
+	{
+	case 1:
+		if(pInput->Trigger(DIK_K))
+		{
+			m_nSkillGauge -= MAX_GAUGE * 0.3;
+			m_nBuffTime = 60;
+			m_State = PST_SPEED;
+		}
+		break;
+
+	case 2:
+		if (pInput->Trigger(DIK_K))
+		{
+			m_nSkillGauge -= MAX_GAUGE * 0.7;
+			m_nBuffTime = 120;
+			m_State = PST_SPEED;
+		}
+		break;
+
+	case 3:
+		if (pInput->Trigger(DIK_K))
+		{
+			m_nSkillGauge -= MAX_GAUGE;
+			m_nBuffTime = 300;
+			m_State = PST_SPEED;
+		}
+		break;
+
+	default:
+		break;
 	}
 }

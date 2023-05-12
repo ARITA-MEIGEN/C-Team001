@@ -14,7 +14,7 @@
 #include <vector>
 
 //-----------------------------------------------------------------------------
-// マクロ定義
+// プロトタイプ宣言
 //-----------------------------------------------------------------------------
 #define MAX_BLOCK	(16)	//ブロックの最大数
 #define BLOCK_X		(4)		//ブロックの数X
@@ -43,6 +43,8 @@ public:
 
 	//ゲッター
 	CBlock* GetBlock(const int number) { return (int)m_pBlock.size() > number ? m_pBlock[number] : nullptr; };
+	CBlock* GetBlock(const int x, const int y);
+	CBlock* GetPlayerSpawnBlock(const int index) { return GetBlock((int)m_playerSpawnIdx[index].x, (int)m_playerSpawnIdx[index].y); }
 	int GetBlockCount() { return (int)m_pBlock.size(); };
 	int CMap::GetCountBlockType(int nType);
 
@@ -51,6 +53,8 @@ private:
 	STAGE m_StageNumber;
 	std::vector<CBlock*> m_pBlock;
 	int m_nAllBlock[5];
+	std::vector<D3DXVECTOR2> m_playerSpawnIdx;
+	int m_axisSizeX;
 };
 
 #endif

@@ -14,9 +14,6 @@
 #include "Time.h"
 #include"sound.h"
 
-
-LPDIRECT3DTEXTURE9 CTimer::m_apTexture[NUM_TEXTIME] = {};
-
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -52,8 +49,8 @@ HRESULT CTimer::Init()
 		m_apNumber[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_apNumber[i]->SetTextureKey("NUMBER");
 	}
-	m_apNumber[0]->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2 - 17.0f, 70.0f, 0.0f));
-	m_apNumber[1]->SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2 + 17.0f, 70.0f, 0.0f));
+	m_apNumber[0]->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 17.0f, 70.0f, 0.0f));
+	m_apNumber[1]->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + 17.0f, 70.0f, 0.0f));
 	m_nTimer = DEFAULT_TIME;
 	m_apNumber[0]->SetUV(0.1f*(m_nTimer / 10), 0.1f*((m_nTimer / 10) + 1), 0.0f, 1.0f);
 	m_apNumber[1]->SetUV(0.1f*(m_nTimer % 10), 0.1f*((m_nTimer % 10) + 1), 0.0f, 1.0f);
@@ -93,41 +90,6 @@ void CTimer::Update()
 void CTimer::Draw()
 {
 
-}
-
-//=============================================================================
-// データを読み込み
-//=============================================================================
-HRESULT CTimer::Load()
-{
-	LPDIRECT3DDEVICE9 pDevice;
-	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
-
-	//タイトルロゴ
-	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\TIME.png",
-		&m_apTexture[0]);
-
-	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\number002.png",
-		&m_apTexture[1]);
-
-	return S_OK;
-}
-
-//=============================================================================
-// データを破棄
-//=============================================================================
-void CTimer::Unload()
-{
-	for (int i = 0; i <NUM_TEXTIME; i++)
-	{
-		if (m_apTexture[i] != nullptr)
-		{//テクスチャの破棄
-			m_apTexture[i]->Release();
-			m_apTexture[i] = nullptr;
-		}
-	}
 }
 
 //=============================================================================

@@ -62,18 +62,41 @@ HRESULT CGame::Init()
 	m_pLight = new CLight;
 	m_pLight->Init();
 
+	//ブロック生成
+	m_pMap = CMap::Create(0);
+
 	//プレイヤーの生成
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{
-		m_pPlayer[nCnt] = CPlayer::Create(D3DXVECTOR3(-100.0f + (nCnt * 50.0f), 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		CBlock* spawnBlock = m_pMap->GetPlayerSpawnBlock(nCnt);
+		m_pPlayer[nCnt] = CPlayer::Create(spawnBlock->GetPos(), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		int number = m_pPlayer[nCnt]->GetPlayerNumber();
+		//スキルゲージの座標の算出(X:間隔に1つ分のゲージサイズを足している,Y:画面の下端に合わせている)
+		D3DXVECTOR3 SkillPos = D3DXVECTOR3((CGauge::SPACE_SIZE * (nCnt+1 + 1)) + (CGauge::MAX_SIZE * nCnt + 1), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f);
+		CGauge* gauge = CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), number);
+
+		switch (number)
+		{
+		case 0:
+			gauge->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+			break;
+		case 1:
+			gauge->SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+			break;
+		case 2:
+			gauge->SetCol(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+			break;
+		case 3:
+			gauge->SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+			break;
+		default:
+			break;
+		}
 	}
 
 	//アイテムの生成
 	CSpeed::Create(D3DXVECTOR3(0.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 0.0f, 50.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300);
 	
-	//ブロック生成
-	m_pMap = CMap::Create(0);
-
 	//デバッグ用カメラ操作モード
 	bDebugCamera = false;
 
