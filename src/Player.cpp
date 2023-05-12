@@ -347,6 +347,13 @@ void CPlayer::BlockCollision()
 					m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
+		if (m_State == PST_PAINT)
+		{
+			if (m_pOnBlock)
+			{
+
+			}
+		}
 	}
 }
 
@@ -376,6 +383,7 @@ void CPlayer::Skill()
 		m_nSkillLv = 0;
 	}
 
+	//現在のスキルLvによって効果量を変える
 	switch (m_nSkillLv)
 	{
 	case 1:

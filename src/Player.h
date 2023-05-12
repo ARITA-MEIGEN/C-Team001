@@ -48,6 +48,7 @@ public:
 		PST_STAND,	// —§‚¿
 		PST_DIE,	// ”í’eó‘Ô
 		PST_SPEED,	// ‰Á‘¬ó‘Ô
+		PST_PAINT,	// “h‚è‹­‰»ó‘Ô
 		PST_MAX
 	};
 
