@@ -27,8 +27,8 @@
 //-----------------------------------------------------------------------------
 //静的メンバ変数
 //-----------------------------------------------------------------------------
-const float CPlayer::PLAYER_SPEED = 5.0f; 		// 移動速度
-const float CPlayer::ITEM_ADD_SPEED = 1.5f;		// アイテムで加算するスピード
+const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
+const float CPlayer::ITEM_ADD_SPEED = 2.5f;		// アイテムで加算するスピード
 int CPlayer::m_nNumPlayer = 0;					// プレイヤーの数
 
 //-----------------------------------------------------------------------------
@@ -130,6 +130,16 @@ void CPlayer::Update(void)
 	//スキル処理
 	Skill();
 
+	if (m_nBuffTime > 0)
+	{//強化効果の時間を減算する
+		m_nBuffTime--;
+	}
+
+	if (m_nBuffTime <= 0 && m_State != PST_STAND)
+	{//デフォルトに戻す
+		m_State = PST_STAND;
+	}
+
 	// 座標更新
 	Updatepos();
 
@@ -146,6 +156,46 @@ void CPlayer::Update(void)
 	m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
 
 	BlockCollision();
+
+	// ブロック外に行かないように停止処理
+	{
+		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+		D3DXVECTOR2 moveNowVec;
+
+		moveNowVec.x = m_move.x;
+		moveNowVec.y = -m_move.z;
+
+		D3DXVec2Normalize(&moveNowVec, &moveNowVec);
+
+		CDebugProc::Print("moveNowVec : %.1f,%.1f\n", moveNowVec.x, moveNowVec.y);
+
+		BlockIdx += moveNowVec;
+
+		CDebugProc::Print("BlockIdx : %.1f,%.1f\n", BlockIdx.x, BlockIdx.y);
+
+		CBlock* moveBlock = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);	// 進行方向にあるブロック
+		if (moveBlock->IsStop())
+		{
+			m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 停止
+		}
+	}
+
+	//
+	{
+		if (m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f) && m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f))
+		{//X軸
+			if (m_pos.z <= m_pOnBlock->GetPos().z + (m_pOnBlock->GetSize().z * 0.05f) && m_pos.z >= m_pOnBlock->GetPos().z - (m_pOnBlock->GetSize().z * 0.05f))
+			{//Z軸
+				 // 方向ベクトル掛ける移動量
+				m_move = m_movePlanVec * PLAYER_SPEED;
+
+				if (m_State == PST_SPEED)
+				{
+					m_move *= ITEM_ADD_SPEED;
+				}
+			}
+		}
+	}
 
 #ifdef _DEBUG
 	CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
@@ -252,14 +302,42 @@ void CPlayer::Move()
 		return;
 	}
 
-	// 方向ベクトル掛ける移動量
-	if (m_State == PST_SPEED)
+	if (D3DXVec3Length(&m_controller->Move()) == 0.0f)
 	{
-		m_move = m_controller->Move() * PLAYER_SPEED * ITEM_ADD_SPEED;
+		return;
+	}
+
+	D3DXVECTOR3 move = m_controller->Move();
+
+	// 斜め入力があった場合
+	if (move.z != 0.0f && move.x != 0.0)
+	{
+		if (m_moveVec.x != 0.0f)
+		{ // X軸に進んでた場合
+			move.z = 0.0f;
+			move.x = 1.0f;
+		}
+		else if (m_moveVec.z != 0.0f)
+		{ // Z軸に進んでた場合
+			move.x = 0.0f;
+			move.z = 1.0f;
+		}
+		else
+		{ // 止まってた場合
+			move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		}
+	}
+
+	if ((m_moveVec.z > 0.0f && move.z < 0.0f) ||
+		(m_moveVec.z < 0.0f && move.z > 0.0f) ||
+		(m_moveVec.x > 0.0f && move.x < 0.0f) ||
+		(m_moveVec.x < 0.0f && move.x > 0.0f))
+	{
+		m_movePlanVec = m_move;	// 入力する前に戻る
 	}
 	else
 	{
-		m_move = m_controller->Move() * PLAYER_SPEED;
+		D3DXVec3Normalize(&m_movePlanVec, &move);	// 入力ベクトルを用意する
 	}
 }
 
@@ -277,20 +355,19 @@ void CPlayer::SetController(CController * inOperate)
 //-----------------------------------------------------------------------------
 void CPlayer::TurnLookAtMoveing()
 {
-	D3DXVECTOR3 move = m_controller->Move();
-	if (move.z > 0.0f)
+	if (m_moveVec.z > 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
 	}
-	if (move.z < 0.0f)
+	if (m_moveVec.z < 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
-	if (move.x > 0.0f)
+	if (m_moveVec.x > 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.5f, 0.0f));
 	}
-	if (move.x < 0.0f)
+	if (m_moveVec.x < 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 	}
@@ -339,12 +416,12 @@ void CPlayer::BlockCollision()
 		{//X軸
 			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f))
 			{//Z軸
-				if(pBlock->GetNumber() != m_nPlayerNumber && m_nSkillGauge < MAX_GAUGE)
+				if (pBlock->GetNumber() != m_nPlayerNumber && m_nSkillGauge < MAX_GAUGE)
 				{//自分以外の色を塗り替えていたらゲージの加算
 					m_nSkillGauge++;
 				}
-					pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
-					m_pOnBlock = pBlock;						//乗っているブロックを設定
+				pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
+				m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
 		if (m_State == PST_PAINT)
