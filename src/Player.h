@@ -83,6 +83,7 @@ public:
 
 private:
 	void TurnLookAtMoveing();		// 移動方向を見て曲がる
+	bool SkillCollision(CBlock *pBlock, D3DXVECTOR3 targetPos, D3DXVECTOR3 targetSize);		// スキルの当たり判定
 private:
 	CController*	m_controller;					// 命令を出す人
 	CObjectX*		m_apModel[NUM_PLAYERPARTS];		// モデルのインスタンス

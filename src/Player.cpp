@@ -127,16 +127,16 @@ void CPlayer::Update(void)
 
 	CInput* pInput = CInput::GetKey();
 
-	//スキル処理
+	// スキル処理
 	Skill();
 
 	if (m_nBuffTime > 0)
-	{//強化効果の時間を減算する
+	{// 強化効果の時間を減算する
 		m_nBuffTime--;
 	}
 
 	if (m_nBuffTime <= 0 && m_State != PST_STAND)
-	{//デフォルトに戻す
+	{// デフォルトに戻す
 		m_State = PST_STAND;
 	}
 
@@ -146,7 +146,7 @@ void CPlayer::Update(void)
 	// モーション
 	m_motion->Update();
 
-	//移動
+	// 移動
 	Move();
 
 	// 回転
@@ -424,14 +424,37 @@ void CPlayer::BlockCollision()
 				m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
-		if (m_State == PST_PAINT)
+		m_State = PST_PAINT;
+		if (m_State == PST_PAINT && m_pOnBlock != nullptr)
 		{
-			if (m_pOnBlock)
-			{
+			//乗っているブロックの番号を取得
+			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+			//進行方向にあるブロック
+			CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x - 1, (int)BlockIdx.y - 1);
 
+			if (SkillCollision(m_pOnBlock, Block->GetPos(), Block->GetSize()))
+			{
+				Block->SetPlayerNumber(m_nPlayerNumber);
 			}
 		}
 	}
+}
+//-----------------------------------------------------------------------------
+// スキルの当たり判定
+//-----------------------------------------------------------------------------
+bool CPlayer::SkillCollision(CBlock *pBlock, D3DXVECTOR3 targetPos, D3DXVECTOR3 targetSize)
+{
+	bool bCollision = false;
+
+	if (targetPos.x - (pBlock->GetSize().x * 0.5f) <= pBlock->GetPos().x + (pBlock->GetSize().x * 0.5f * 2.0f) + CMap::BLOCK_WIDTH
+		&& targetPos.x + (pBlock->GetSize().x * 0.5f) >= pBlock->GetPos().x - (pBlock->GetSize().x * 0.5f * 2.0f) - CMap::BLOCK_WIDTH
+		/*&& targetPos.z - (pBlock->GetSize().z * 0.5f) >= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f * 2.0f) - CMap::BLOCK_WIDTH
+		&& targetPos.z + (pBlock->GetSize().z * 0.5f) <= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f * 2.0f) - CMap::BLOCK_WIDTH*/)
+	{
+		bCollision = true;
+	}
+
+	return bCollision;
 }
 
 //-----------------------------------------------------------------------------
@@ -441,7 +464,7 @@ void CPlayer::Skill()
 {
 	//インプットの取得
 	CInput* pInput = CInput::GetKey();
-
+	
 	//ゲージの量によってスキルLvを決める
 	if (m_nSkillGauge == MAX_GAUGE)
 	{

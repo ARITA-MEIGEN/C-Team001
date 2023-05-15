@@ -25,9 +25,9 @@
 //-----------------------------------------------------------------------------
 class CMap
 {
-private:
-	static const float BLOCK_WIDTH;	// ブロック同士の幅
 public:
+	static const float BLOCK_WIDTH;	// ブロック同士の幅
+
 	enum STAGE
 	{
 		STAGE_01=0,
