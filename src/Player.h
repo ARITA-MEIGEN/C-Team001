@@ -82,6 +82,8 @@ public:
 
 private:
 	void TurnLookAtMoveing();		// 移動方向を見て曲がる
+	void StopNoBlock();				// ブロックがない場所で停まる
+	void TurnCenterBlock();				// ブロックがない場所で停まる
 private:
 	CController*	m_controller;					// 命令を出す人
 	CObjectX*		m_apModel[NUM_PLAYERPARTS];		// モデルのインスタンス
