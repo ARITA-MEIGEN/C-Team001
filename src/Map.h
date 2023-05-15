@@ -25,9 +25,9 @@
 //-----------------------------------------------------------------------------
 class CMap
 {
-private:
-	static const float BLOCK_WIDTH;	// ブロック同士の幅
 public:
+	static const float BLOCK_WIDTH;	// ブロック同士の幅
+
 	enum STAGE
 	{
 		STAGE_01=0,
@@ -38,6 +38,7 @@ public:
 	~CMap();
 	HRESULT Init();
 	void Uninit();
+	void Update();
 	static CMap *Create(int stgnumber);
 	void Load();
 
@@ -57,6 +58,9 @@ private:
 	int m_nAllBlock[5];
 	std::vector<D3DXVECTOR2> m_playerSpawnIdx;
 	int m_axisSizeX;
+
+	// Item関連
+	int m_nPopCnt;
 };
 
 #endif

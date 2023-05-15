@@ -19,6 +19,7 @@ CBlock::CBlock(int priorty) :CObjectX(priorty)
 {
 	m_number = 4;
 	m_isStop = false;
+	m_onItem = nullptr;
 }
 
 //=============================================================================
