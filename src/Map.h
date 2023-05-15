@@ -38,6 +38,7 @@ public:
 	~CMap();
 	HRESULT Init();
 	void Uninit();
+	void Update();
 	static CMap *Create(int stgnumber);
 	void Load();
 
@@ -57,6 +58,9 @@ private:
 	int m_nAllBlock[5];
 	std::vector<D3DXVECTOR2> m_playerSpawnIdx;
 	int m_axisSizeX;
+
+	// ItemŠÖ˜A
+	int m_nPopCnt;
 };
 
 #endif
