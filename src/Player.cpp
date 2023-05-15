@@ -127,16 +127,16 @@ void CPlayer::Update(void)
 
 	CInput* pInput = CInput::GetKey();
 
-	//スキル処理
+	// スキル処理
 	Skill();
 
 	if (m_nBuffTime > 0)
-	{//強化効果の時間を減算する
+	{// 強化効果の時間を減算する
 		m_nBuffTime--;
 	}
 
 	if (m_nBuffTime <= 0 && m_State != PST_STAND)
-	{//デフォルトに戻す
+	{// デフォルトに戻す
 		m_State = PST_STAND;
 	}
 
@@ -146,7 +146,7 @@ void CPlayer::Update(void)
 	// モーション
 	m_motion->Update();
 
-	//移動
+	// 移動
 	Move();
 
 	// 回転
@@ -157,45 +157,11 @@ void CPlayer::Update(void)
 
 	BlockCollision();
 
-	// ブロック外に行かないように停止処理
-	{
-		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-		D3DXVECTOR2 moveNowVec;
+	// ブロックがない空間で停まる
+	StopNoBlock();
 
-		moveNowVec.x = m_move.x;
-		moveNowVec.y = -m_move.z;
-
-		D3DXVec2Normalize(&moveNowVec, &moveNowVec);
-
-		CDebugProc::Print("moveNowVec : %.1f,%.1f\n", moveNowVec.x, moveNowVec.y);
-
-		BlockIdx += moveNowVec;
-
-		CDebugProc::Print("BlockIdx : %.1f,%.1f\n", BlockIdx.x, BlockIdx.y);
-
-		CBlock* moveBlock = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);	// 進行方向にあるブロック
-		if (moveBlock->IsStop())
-		{
-			m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 停止
-		}
-	}
-
-	//
-	{
-		if (m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f) && m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f))
-		{//X軸
-			if (m_pos.z <= m_pOnBlock->GetPos().z + (m_pOnBlock->GetSize().z * 0.05f) && m_pos.z >= m_pOnBlock->GetPos().z - (m_pOnBlock->GetSize().z * 0.05f))
-			{//Z軸
-				 // 方向ベクトル掛ける移動量
-				m_move = m_movePlanVec * PLAYER_SPEED;
-
-				if (m_State == PST_SPEED)
-				{
-					m_move *= ITEM_ADD_SPEED;
-				}
-			}
-		}
-	}
+	// ブロックの中心で曲がる
+	TurnCenterBlock();
 
 #ifdef _DEBUG
 	CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
@@ -304,7 +270,7 @@ void CPlayer::Move()
 
 	if (D3DXVec3Length(&m_controller->Move()) == 0.0f)
 	{
-		return;
+	//	return;
 	}
 
 	D3DXVECTOR3 move = m_controller->Move();
@@ -328,17 +294,7 @@ void CPlayer::Move()
 		}
 	}
 
-	if ((m_moveVec.z > 0.0f && move.z < 0.0f) ||
-		(m_moveVec.z < 0.0f && move.z > 0.0f) ||
-		(m_moveVec.x > 0.0f && move.x < 0.0f) ||
-		(m_moveVec.x < 0.0f && move.x > 0.0f))
-	{
-		m_movePlanVec = m_move;	// 入力する前に戻る
-	}
-	else
-	{
-		D3DXVec3Normalize(&m_movePlanVec, &move);	// 入力ベクトルを用意する
-	}
+	D3DXVec3Normalize(&m_movePlanVec, &move);	// 入力ベクトルを用意する
 }
 
 //-----------------------------------------------------------------------------
@@ -370,6 +326,55 @@ void CPlayer::TurnLookAtMoveing()
 	if (m_moveVec.x < 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+	}
+}
+
+//-----------------------------------------------------------------------------
+// ブロックがない場所で停まる
+//-----------------------------------------------------------------------------
+void CPlayer::StopNoBlock()
+{
+	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+	D3DXVECTOR2 moveNowVec;
+
+	moveNowVec.x = m_movePlanVec.x;
+	moveNowVec.y = -m_movePlanVec.z;
+
+	D3DXVec2Normalize(&moveNowVec, &moveNowVec);
+
+	CDebugProc::Print("moveNowVec : %.1f,%.1f\n", moveNowVec.x, moveNowVec.y);
+
+	BlockIdx += moveNowVec;
+
+	CDebugProc::Print("BlockIdx : %.1f,%.1f\n", BlockIdx.x, BlockIdx.y);
+
+	CBlock* moveBlock = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);	// 進行方向にあるブロック
+
+	if (moveBlock->IsStop())
+	{
+		m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 停止
+	}
+}
+
+//-----------------------------------------------------------------------------
+// ブロックの中心付近で曲がる
+//-----------------------------------------------------------------------------
+void CPlayer::TurnCenterBlock()
+{
+	if (m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f) && m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f))
+	{//X軸
+		if (m_pos.z <= m_pOnBlock->GetPos().z + (m_pOnBlock->GetSize().z * 0.05f) && m_pos.z >= m_pOnBlock->GetPos().z - (m_pOnBlock->GetSize().z * 0.05f))
+		{//Z軸
+		 // 方向ベクトル掛ける移動量
+			m_move = m_movePlanVec * PLAYER_SPEED;
+
+			if (m_State == PST_SPEED)
+			{
+				m_move *= ITEM_ADD_SPEED;
+			}
+
+			D3DXVec3Normalize(&m_moveVec, &m_move);
+		}
 	}
 }
 
@@ -425,6 +430,35 @@ void CPlayer::BlockCollision()
 			}
 		}
 	}
+	m_State = PST_PAINT;
+	if (m_State == PST_PAINT && m_pOnBlock != nullptr)
+	{
+		//乗っているブロックの番号を取得
+		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+		//進行方向にあるブロック
+		CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x - 1, (int)BlockIdx.y - 1);
+		Block->SetPlayerNumber(m_nPlayerNumber);
+
+		Block = CGame::GetMap()->GetBlock((int)BlockIdx.x + 1, (int)BlockIdx.y + 1);
+		Block->SetPlayerNumber(m_nPlayerNumber);
+	}
+}
+//-----------------------------------------------------------------------------
+// スキルの当たり判定
+//-----------------------------------------------------------------------------
+bool CPlayer::SkillCollision(CBlock *pBlock, D3DXVECTOR3 targetPos, D3DXVECTOR3 targetSize)
+{
+	bool bCollision = false;
+
+	if (targetPos.x - (pBlock->GetSize().x * 0.5f) <= pBlock->GetPos().x + (pBlock->GetSize().x * 0.5f * 2.0f) + CMap::BLOCK_WIDTH
+		&& targetPos.x + (pBlock->GetSize().x * 0.5f) >= pBlock->GetPos().x - (pBlock->GetSize().x * 0.5f * 2.0f) - CMap::BLOCK_WIDTH
+		/*&& targetPos.z - (pBlock->GetSize().z * 0.5f) >= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f * 2.0f) - CMap::BLOCK_WIDTH
+		&& targetPos.z + (pBlock->GetSize().z * 0.5f) <= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f * 2.0f) - CMap::BLOCK_WIDTH*/)
+	{
+		bCollision = true;
+	}
+
+	return bCollision;
 }
 
 //-----------------------------------------------------------------------------
@@ -434,7 +468,7 @@ void CPlayer::Skill()
 {
 	//インプットの取得
 	CInput* pInput = CInput::GetKey();
-
+	
 	//ゲージの量によってスキルLvを決める
 	if (m_nSkillGauge == MAX_GAUGE)
 	{
@@ -453,6 +487,7 @@ void CPlayer::Skill()
 		m_nSkillLv = 0;
 	}
 
+	//現在のスキルLvによって効果量を変える
 	switch (m_nSkillLv)
 	{
 	case 1:
