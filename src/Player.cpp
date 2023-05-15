@@ -429,19 +429,19 @@ void CPlayer::BlockCollision()
 				m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
-		m_State = PST_PAINT;
-		if (m_State == PST_PAINT && m_pOnBlock != nullptr)
-		{
-			//乗っているブロックの番号を取得
-			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-			//進行方向にあるブロック
-			CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x - 1, (int)BlockIdx.y - 1);
+		//m_State = PST_PAINT;
+		//if (m_State == PST_PAINT && m_pOnBlock != nullptr)
+		//{
+		//	//乗っているブロックの番号を取得
+		//	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+		//	//進行方向にあるブロック
+		//	CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x - 1, (int)BlockIdx.y - 1);
 
-			if (SkillCollision(m_pOnBlock, Block->GetPos(), Block->GetSize()))
-			{
-				Block->SetPlayerNumber(m_nPlayerNumber);
-			}
-		}
+		//	if (SkillCollision(m_pOnBlock, Block->GetPos(), Block->GetSize()))
+		//	{
+		//		Block->SetPlayerNumber(m_nPlayerNumber);
+		//	}
+		//}
 	}
 }
 //-----------------------------------------------------------------------------
