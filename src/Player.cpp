@@ -421,7 +421,7 @@ void CPlayer::BlockCollision()
 		{//X軸
 			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f))
 			{//Z軸
-				if (pBlock->GetNumber() != m_nPlayerNumber && m_nSkillGauge < MAX_GAUGE)
+				if (pBlock->GetNumber() != m_nPlayerNumber && m_nSkillGauge < MAX_GAUGE && m_State == PST_STAND)
 				{//自分以外の色を塗り替えていたらゲージの加算
 					m_nSkillGauge++;
 				}
@@ -433,32 +433,103 @@ void CPlayer::BlockCollision()
 	m_State = PST_PAINT;
 	if (m_State == PST_PAINT && m_pOnBlock != nullptr)
 	{
-		//乗っているブロックの番号を取得
-		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-		//進行方向にあるブロック
-		CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x - 1, (int)BlockIdx.y - 1);
-		Block->SetPlayerNumber(m_nPlayerNumber);
+		switch (m_nSkillLv)
+		{
+		case 1:
+			//縦の範囲を塗る
+			for (int nCntX = 0; nCntX < 3; nCntX++)
+			{
+				//乗っているブロックの番号を取得
+				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+				//範囲内のブロックを塗る
+				BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y);			//中央左に設定する
+				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y);
+				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
 
-		Block = CGame::GetMap()->GetBlock((int)BlockIdx.x + 1, (int)BlockIdx.y + 1);
-		Block->SetPlayerNumber(m_nPlayerNumber);
+				if (Block != nullptr)
+				{
+					Block->SetPlayerNumber(m_nPlayerNumber);
+				}
+			}
+			break;
+
+		case 2:
+			//十字(横と縦)の範囲を塗る
+			//縦の範囲
+			for (int nCntY = 0; nCntY < 3; nCntY++)
+			{
+				//乗っているブロックの番号を取得
+				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+				//範囲内のブロックを塗る
+				BlockIdx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y - 1.0f);			//中心に設定する
+				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y + nCntY);
+				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+				if (Block != nullptr)
+				{//ブロックを塗る
+					Block->SetPlayerNumber(m_nPlayerNumber);
+				}
+			}
+			//横の範囲
+			for (int nCntX = 0; nCntX < 3; nCntX++)
+			{
+				//乗っているブロックの番号を取得
+				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+				//範囲内のブロックを塗る
+				BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y);			//中央左に設定する
+				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y);
+				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+				if (Block != nullptr)
+				{//ブロックを塗る
+					Block->SetPlayerNumber(m_nPlayerNumber);
+				}
+			}
+			break;
+
+		case 3:
+			//3×3の範囲を塗る
+			for (int nCntY = 0; nCntY < 3; nCntY++)
+			{
+				for (int nCntX = 0; nCntX < 3; nCntX++)
+				{
+					//乗っているブロックの番号を取得
+					D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+					//範囲内のブロックを塗る
+					BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y - 1.0f);			//左上に設定する
+					D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y + nCntY);
+					CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+					if (Block != nullptr)
+					{//ブロックを塗る
+						Block->SetPlayerNumber(m_nPlayerNumber);
+					}
+				}
+			}
+			break;
+
+		default:
+			break;
+		}
 	}
-}
-//-----------------------------------------------------------------------------
-// スキルの当たり判定
-//-----------------------------------------------------------------------------
-bool CPlayer::SkillCollision(CBlock *pBlock, D3DXVECTOR3 targetPos, D3DXVECTOR3 targetSize)
-{
-	bool bCollision = false;
 
-	if (targetPos.x - (pBlock->GetSize().x * 0.5f) <= pBlock->GetPos().x + (pBlock->GetSize().x * 0.5f * 2.0f) + CMap::BLOCK_WIDTH
-		&& targetPos.x + (pBlock->GetSize().x * 0.5f) >= pBlock->GetPos().x - (pBlock->GetSize().x * 0.5f * 2.0f) - CMap::BLOCK_WIDTH
-		/*&& targetPos.z - (pBlock->GetSize().z * 0.5f) >= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f * 2.0f) - CMap::BLOCK_WIDTH
-		&& targetPos.z + (pBlock->GetSize().z * 0.5f) <= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f * 2.0f) - CMap::BLOCK_WIDTH*/)
-	{
-		bCollision = true;
+	//乗っているブロックの番号を取得
+	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+	//乗っているブロックの情報を取得
+	CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);
+
+	if (Block != nullptr)
+	{//アイテムの情報を取得する
+		CItem *pItem = Block->GetOnItem();
+
+		if (pItem != nullptr)
+		{//アイテムを拾った場合
+			m_nBuffTime = 60;
+			m_State = PST_SPEED;
+		}
 	}
 
-	return bCollision;
+	
 }
 
 //-----------------------------------------------------------------------------
