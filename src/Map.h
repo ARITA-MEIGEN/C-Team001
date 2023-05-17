@@ -19,6 +19,7 @@
 #define MAX_BLOCK	(16)	//ブロックの最大数
 #define BLOCK_X		(4)		//ブロックの数X
 #define BLOCK_Y		(4)		//ブロックの数Y
+#define MAX_PLAYER	(4)		//プレイヤーの最大数
 
 //-----------------------------------------------------------------------------
 // プロトタイプ宣言
@@ -40,6 +41,7 @@ public:
 	void Uninit();
 	static CMap *Create(int stgnumber);
 	void Load();
+	int Ranking();	//ランキング
 
 	//ゲッター
 	CBlock* GetBlock(const int number) { return (int)m_pBlock.size() > number ? m_pBlock[number] : nullptr; };
@@ -47,6 +49,7 @@ public:
 	CBlock* GetPlayerSpawnBlock(const int index) { return GetBlock((int)m_playerSpawnIdx[index].x, (int)m_playerSpawnIdx[index].y); }
 	int GetBlockCount() { return (int)m_pBlock.size(); };
 	int CMap::GetCountBlockType(int nType);
+	static int GetRanking(int number) { return m_anRanking[number]; };
 
 private:
 	//メンバ関数
@@ -55,6 +58,8 @@ private:
 	int m_nAllBlock[5];
 	std::vector<D3DXVECTOR2> m_playerSpawnIdx;
 	int m_axisSizeX;
+	static int m_anRanking[MAX_PLAYER];	//	ランキング順位
+
 };
 
 #endif

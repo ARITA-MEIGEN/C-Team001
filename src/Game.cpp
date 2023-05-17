@@ -161,7 +161,7 @@ void CGame::Update()
 			if (pInput->Trigger(DIK_RETURN))
 			{
 				CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
-				BlockCount();
+				m_pMap->Ranking();
 			}
 		}
 #endif // !_DEBUG
@@ -198,25 +198,5 @@ void CGame::ResetGame()
 //====================================
 void CGame::BlockCount()
 {
-	int Score[4];
-	int Rank[4];
-	for (int i = 0; i < MAX_PLAYER; i++)
-	{
-		Score[i] = m_pMap->GetCountBlockType(i);
-	}
-
-	//昇順に並び変える
-	std::vector<int> rank = { Score[0], Score[1], Score[2],Score[3] };
-	std::sort(rank.begin(), rank.end());
-
-	for (int i = 0; i < MAX_PLAYER; i++)
-	{//並び変えたやつを代入
-		for (int j = 0; j < MAX_PLAYER; j++)
-		{
-			if (rank[i] == Score[j])
-			{//ランキングの数値とプレイヤーの数値が一致している場合プレイヤーの番号を代入する
-				Rank[i] = j;
-			}
-		}
-	}
+	
 }
