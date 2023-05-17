@@ -25,7 +25,7 @@ class CMotion;
 //マクロ定義
 #define PLAYER_LEGPARTS	(13)
 #define	NUM_PLAYERPARTS	(1+PLAYER_LEGPARTS)
-#define MAX_GAUGE		(100)
+#define MAX_GAUGE		(10)
 
 class CPlayer :public CObject
 {
@@ -48,6 +48,7 @@ public:
 		PST_STAND,	// 立ち
 		PST_DIE,	// 被弾状態
 		PST_SPEED,	// 加速状態
+		PST_PAINT,	// 塗り強化状態
 		PST_MAX
 	};
 
@@ -82,6 +83,8 @@ public:
 
 private:
 	void TurnLookAtMoveing();		// 移動方向を見て曲がる
+	void StopNoBlock();				// ブロックがない場所で停まる
+	void TurnCenterBlock();				// ブロックがない場所で停まる
 private:
 	CController*	m_controller;					// 命令を出す人
 	CObjectX*		m_apModel[NUM_PLAYERPARTS];		// モデルのインスタンス
@@ -91,6 +94,7 @@ private:
 	D3DXVECTOR3		m_rot;							// 向き
 	D3DXVECTOR3		m_move;							// 移動量
 	D3DXVECTOR3		m_moveVec;						// 移動ベクトル
+	D3DXVECTOR3		m_movePlanVec;						// 移動予定ベクトル
 	D3DXVECTOR3		m_posold;						// 前回の位置
 	D3DXVECTOR3		m_rotDest;						// 目的の角度の保存
 	PLAYER_MOTION	m_Motion;						// 現在のモーション

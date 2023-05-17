@@ -17,7 +17,9 @@
 //=============================================================================
 CBlock::CBlock(int priorty) :CObjectX(priorty)
 {
-	m_number = 4;	//4はプレイヤーのもの以外
+	m_number = 4;
+	m_isStop = false;
+	m_onItem = nullptr;
 }
 
 //=============================================================================
@@ -71,6 +73,7 @@ void  CBlock::Draw()
 CBlock* CBlock::Create(D3DXVECTOR3 pos, float lot)
 {
 	CBlock*pBlock;
+
 	pBlock = new CBlock(5);
 	if (pBlock != nullptr)
 	{// ポリゴンの初期化処理

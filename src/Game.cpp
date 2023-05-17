@@ -93,9 +93,6 @@ HRESULT CGame::Init()
 			break;
 		}
 	}
-
-	//アイテムの生成
-	CSpeed::Create(D3DXVECTOR3(0.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 0.0f, 50.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300);
 	
 	//デバッグ用カメラ操作モード
 	bDebugCamera = false;
@@ -148,6 +145,8 @@ void CGame::Update()
 {
 	m_pCamera->Update();
 	m_pLight->Update();
+
+	m_pMap->Update();
 
 	CInput* pInput = CInput::GetKey();
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)

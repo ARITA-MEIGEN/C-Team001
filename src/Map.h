@@ -26,9 +26,9 @@
 //-----------------------------------------------------------------------------
 class CMap
 {
-private:
-	static const float BLOCK_WIDTH;	// ブロック同士の幅
 public:
+	static const float BLOCK_WIDTH;	// ブロック同士の幅
+
 	enum STAGE
 	{
 		STAGE_01=0,
@@ -39,6 +39,7 @@ public:
 	~CMap();
 	HRESULT Init();
 	void Uninit();
+	void Update();
 	static CMap *Create(int stgnumber);
 	void Load();
 	int Ranking();	//ランキング
@@ -46,6 +47,7 @@ public:
 	//ゲッター
 	CBlock* GetBlock(const int number) { return (int)m_pBlock.size() > number ? m_pBlock[number] : nullptr; };
 	CBlock* GetBlock(const int x, const int y);
+	D3DXVECTOR2 GetBlockIdx(CBlock* block);
 	CBlock* GetPlayerSpawnBlock(const int index) { return GetBlock((int)m_playerSpawnIdx[index].x, (int)m_playerSpawnIdx[index].y); }
 	int GetBlockCount() { return (int)m_pBlock.size(); };
 	int CMap::GetCountBlockType(int nType);
@@ -60,6 +62,9 @@ private:
 	int m_axisSizeX;
 	static int m_anRanking[MAX_PLAYER];	//	ランキング順位
 
+
+	// Item関連
+	int m_nPopCnt;
 };
 
 #endif

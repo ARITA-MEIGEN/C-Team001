@@ -11,7 +11,12 @@
 // include
 //-----------------------------------------------------------------------------
 #include"ObjectX.h"
-#include"Application.h"
+
+//-----------------------------------------------------------------------------
+// 前方宣言
+//-----------------------------------------------------------------------------
+class CPlayer;
+class CItem;
 
 //=============================================================================
 // 構造体定義
@@ -30,13 +35,22 @@ public:
 
 	//セッター
 	void SetPlayerNumber(int number);
+	void SetStop(const bool isStop) { m_isStop = isStop; }
+	void SetOnItem(CItem* onItem) { m_onItem = onItem; }
 
 	//ゲッター
-	int GetNumber() { return m_number; };	//0～3はプレイヤー4はニュートラル
+	int GetNumber() { return m_number; };
+	bool IsStop() { return m_isStop; };
+
+	CPlayer* GetOnPlayer() { return m_onPlayer; };
+	CItem* GetOnItem() { return m_onItem; };
 
 private:
 	//メンバ変数
-	int m_number;//プレイヤーの番号
+	int m_number;	// プレイヤーの番号
+	bool m_isStop;	// 進行不可
+	CPlayer* m_onPlayer;	// 乗ってるプレイヤー
+	CItem* m_onItem;		// 乗ってるアイテム
 };
 
 #endif
