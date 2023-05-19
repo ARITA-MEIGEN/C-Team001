@@ -379,19 +379,6 @@ void CPlayer::TurnCenterBlock()
 }
 
 //-----------------------------------------------------------------------------
-// スキル中の拡大した塗り
-//-----------------------------------------------------------------------------
-void CPlayer::SkillCollision(int x, int y)
-{
-	//乗っているブロックの番号を取得
-	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-
-	//進行方向にあるブロック
-	CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x - x, (int)BlockIdx.y - y);
-	Block->SetPlayerNumber(m_nPlayerNumber);
-}
-
-//-----------------------------------------------------------------------------
 // 座標の更新
 //-----------------------------------------------------------------------------
 void CPlayer::Updatepos()
@@ -500,7 +487,6 @@ void CPlayer::BlockCollision()
 				}
 			}
 			break;
-//-----------------------------------------------------------------------------
 		case 3:
 			//3×3の範囲を塗る
 			for (int nCntY = 0; nCntY < 3; nCntY++)
