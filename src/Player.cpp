@@ -379,6 +379,19 @@ void CPlayer::TurnCenterBlock()
 }
 
 //-----------------------------------------------------------------------------
+// スキル中の拡大した塗り
+//-----------------------------------------------------------------------------
+void CPlayer::SkillCollision(int x, int y)
+{
+	//乗っているブロックの番号を取得
+	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+
+	//進行方向にあるブロック
+	CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x - x, (int)BlockIdx.y - y);
+	Block->SetPlayerNumber(m_nPlayerNumber);
+}
+
+//-----------------------------------------------------------------------------
 // 座標の更新
 //-----------------------------------------------------------------------------
 void CPlayer::Updatepos()
@@ -430,35 +443,13 @@ void CPlayer::BlockCollision()
 			}
 		}
 	}
+
 	m_State = PST_PAINT;
 	if (m_State == PST_PAINT && m_pOnBlock != nullptr)
 	{
-		//乗っているブロックの番号を取得
-		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-		//進行方向にあるブロック
-		CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x - 1, (int)BlockIdx.y - 1);
-		Block->SetPlayerNumber(m_nPlayerNumber);
-
-		Block = CGame::GetMap()->GetBlock((int)BlockIdx.x + 1, (int)BlockIdx.y + 1);
-		Block->SetPlayerNumber(m_nPlayerNumber);
+		SkillCollision(-1, -1);
+		SkillCollision(1, 1);
 	}
-}
-//-----------------------------------------------------------------------------
-// スキルの当たり判定
-//-----------------------------------------------------------------------------
-bool CPlayer::SkillCollision(CBlock *pBlock, D3DXVECTOR3 targetPos, D3DXVECTOR3 targetSize)
-{
-	bool bCollision = false;
-
-	if (targetPos.x - (pBlock->GetSize().x * 0.5f) <= pBlock->GetPos().x + (pBlock->GetSize().x * 0.5f * 2.0f) + CMap::BLOCK_WIDTH
-		&& targetPos.x + (pBlock->GetSize().x * 0.5f) >= pBlock->GetPos().x - (pBlock->GetSize().x * 0.5f * 2.0f) - CMap::BLOCK_WIDTH
-		/*&& targetPos.z - (pBlock->GetSize().z * 0.5f) >= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f * 2.0f) - CMap::BLOCK_WIDTH
-		&& targetPos.z + (pBlock->GetSize().z * 0.5f) <= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f * 2.0f) - CMap::BLOCK_WIDTH*/)
-	{
-		bCollision = true;
-	}
-
-	return bCollision;
 }
 
 //-----------------------------------------------------------------------------
