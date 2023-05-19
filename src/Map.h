@@ -14,20 +14,21 @@
 #include <vector>
 
 //-----------------------------------------------------------------------------
-// マクロ定義
+// プロトタイプ宣言
 //-----------------------------------------------------------------------------
 #define MAX_BLOCK	(16)	//ブロックの最大数
 #define BLOCK_X		(4)		//ブロックの数X
 #define BLOCK_Y		(4)		//ブロックの数Y
+#define MAX_PLAYER	(4)		//プレイヤーの最大数
 
 //-----------------------------------------------------------------------------
 // プロトタイプ宣言
 //-----------------------------------------------------------------------------
 class CMap
 {
-private:
-	static const float BLOCK_WIDTH;	// ブロック同士の幅
 public:
+	static const float BLOCK_WIDTH;	// ブロック同士の幅
+
 	enum STAGE
 	{
 		STAGE_01=0,
@@ -38,20 +39,32 @@ public:
 	~CMap();
 	HRESULT Init();
 	void Uninit();
+	void Update();
 	static CMap *Create(int stgnumber);
 	void Load();
+	int Ranking();	//ランキング
 
 	//ゲッター
 	CBlock* GetBlock(const int number) { return (int)m_pBlock.size() > number ? m_pBlock[number] : nullptr; };
+	CBlock* GetBlock(const int x, const int y);
+	D3DXVECTOR2 GetBlockIdx(CBlock* block);
+	CBlock* GetPlayerSpawnBlock(const int index) { return GetBlock((int)m_playerSpawnIdx[index].x, (int)m_playerSpawnIdx[index].y); }
 	int GetBlockCount() { return (int)m_pBlock.size(); };
 	int CMap::GetCountBlockType(int nType);
-
+	static int GetRanking(int number) { return m_anRanking[number]; };
 
 private:
 	//メンバ関数
 	STAGE m_StageNumber;
 	std::vector<CBlock*> m_pBlock;
 	int m_nAllBlock[5];
+	std::vector<D3DXVECTOR2> m_playerSpawnIdx;
+	int m_axisSizeX;
+	static int m_anRanking[MAX_PLAYER];	//	ランキング順位
+
+
+	// Item関連
+	int m_nPopCnt;
 };
 
 #endif
