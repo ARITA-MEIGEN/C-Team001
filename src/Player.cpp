@@ -430,6 +430,7 @@ void CPlayer::BlockCollision()
 			}
 		}
 	}
+
 	m_State = PST_PAINT;
 	if (m_State == PST_PAINT && m_pOnBlock != nullptr)
 	{
@@ -486,7 +487,6 @@ void CPlayer::BlockCollision()
 				}
 			}
 			break;
-
 		case 3:
 			//3~3‚Ì”ÍˆÍ‚ğ“h‚é
 			for (int nCntY = 0; nCntY < 3; nCntY++)
