@@ -21,24 +21,24 @@ class CItem;
 //=============================================================================
 // 構造体定義
 //=============================================================================
-// 頂点データ
 class CBlock : public CObjectX
 {
 public:
 	explicit CBlock(int nPriority = 2);
-	~CBlock()override;
-	HRESULT Init()override;
-	void Uninit()override;
-	void Update()override;
-	void Draw()override;
+	~CBlock() override;
+	HRESULT Init() override;
+	void Uninit() override;
+	void Update() override;
+	void Draw() override;
 	static CBlock *Create(D3DXVECTOR3 pos, float lot);
 
-	//セッター
+	// Setter
 	void SetPlayerNumber(int number);
 	void SetStop(const bool isStop) { m_isStop = isStop; }
 	void SetOnItem(CItem* onItem) { m_onItem = onItem; }
+	void SetOnPlayer(CPlayer* onPlayer) { m_onPlayer = onPlayer; }
 
-	//ゲッター
+	// Getter
 	int GetNumber() { return m_number; };
 	bool IsStop() { return m_isStop; };
 
