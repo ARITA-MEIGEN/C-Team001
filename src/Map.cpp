@@ -17,6 +17,7 @@
 // 静的メンバー変数の宣言
 //-----------------------------------------------------------------------------
 const float CMap::BLOCK_WIDTH = 25.0f;	// ブロック同士の幅
+int CMap::m_anRanking[MAX_PLAYER];	//	ランキング順位
 
 //=============================================================================
 // コンストラクタ
@@ -49,7 +50,7 @@ HRESULT CMap::Init()
 //=============================================================================
 void CMap::Uninit()
 {
-	for (int i = 0; i < MAX_BLOCK; i++)
+	for (int i = 0; i < GetBlockCount(); i++)
 	{
 		m_pBlock[i] = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f);
 	}
@@ -82,7 +83,7 @@ void CMap::Update()
 			popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(25.0f, 0.0f, 25.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 60));
 			popPlanBlock->SetCol(D3DXCOLOR(1.0f,0.0f,1.0f,1.0f));
 
-			m_nPopCnt = IntRandom(2 * 60, 1 * 60);
+			m_nPopCnt = IntRandom(2 * 10, 1 * 10);
 		}
 	}
 }
@@ -150,15 +151,57 @@ void CMap::Load()
 }
 
 //=============================================================================
+// ランキング処理
+//=============================================================================
+int CMap::Ranking()
+{
+	int Score[4];
+	int Rank[4];	//プレイヤーの番号を渡す
+	int number;
+	for (int i = 0; i < MAX_PLAYER; i++)
+	{
+		Score[i] = GetCountBlockType(i);
+	}
+
+	//昇順に並び変える
+	std::vector<int> rank = { Score[0], Score[1], Score[2],Score[3] };
+	std::sort(rank.begin(), rank.end());
+
+	for (int i = 0; i < MAX_PLAYER; i++)
+	{//並び変えたやつを代入
+		for (int j = 0; j < MAX_PLAYER; j++)
+		{
+			if (rank[i] == Score[j])
+			{//ランキングの数値とプレイヤーの数値が一致している場合プレイヤーの番号を代入する
+				if (Rank[0] != j&& Rank[1] != j && Rank[2] != j && Rank[3] != j)
+				{//他の順位とプレイヤーの番号を被らないようにする
+					Rank[i] = j;
+				}
+			}
+		}
+	}
+
+	//ランキングを代入
+	for (int i = 0; i < MAX_PLAYER; i++)
+	{
+		m_anRanking[i] = Rank[i];
+	}
+
+	return m_anRanking[3];	//一位のプレイヤーの番号を出力
+}
+
+//=============================================================================
 // 読み込み
 //=============================================================================
 int CMap::GetCountBlockType(int nType)
 {
+//	CBlock* AllBlock;
 	for (int i = 0; i < 4; i++)
 	{//リセット
 		m_nAllBlock[i] = 0;
 	}
-	for (int i = 0; i < MAX_BLOCK; i++)
+
+	for (int i = 0; i < GetBlockCount(); i++)
 	{//タイプ分け
 
 		if (m_pBlock[i]->GetNumber() < 0)

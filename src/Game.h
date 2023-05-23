@@ -81,7 +81,6 @@ private:
 	static	CMap*m_pMap;				// マップ
 	int		m_Timer;					// フェードアウトまでのタイマー
 	ROUND	m_Round;					// 現在のラウンド
-
 };
 
 #endif

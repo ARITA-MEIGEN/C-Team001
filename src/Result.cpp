@@ -12,6 +12,7 @@
 #include"Application.h"
 #include"renderer.h"
 #include"sound.h"
+#include"Map.h"
 
 //Ã“Iƒƒ“ƒo•Ï”
 CObject2D*CResult::m_pBg = nullptr;
@@ -48,12 +49,18 @@ HRESULT CResult::Init()
 	m_pBg->SetSiz(D3DXVECTOR2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT));
 	m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-	std::string textureKey[3];
+	std::string textureKey[4];
 	textureKey[0] = "RESULET_000";
 	textureKey[1] = "RESULET_001";
 	textureKey[2] = "RESULET_002";
+	textureKey[3] = "RESULET_003";
 
 	m_pBg->SetTextureKey(textureKey[CApplication::getInstance()->GetWinner()]);
+
+	for (int i = 0; i < MAX_PLAYER; i++)
+	{
+		int Ranking = CMap::GetRanking(i);	//
+	}
 
 	return S_OK;
 }
