@@ -114,6 +114,11 @@ void CPlayer::Uninit(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Update(void)
 {
+	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
+	{
+		return;
+	}
+
 	if (!(CGame::GetGame() != CGame::GAME_END) && !(CGame::GetGame() != CGame::GAME_START))
 	{
 		return;
@@ -353,6 +358,11 @@ void CPlayer::TurnLookAtMoveing()
 //-----------------------------------------------------------------------------
 void CPlayer::StopNoBlock()
 {
+	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
+	{
+		return;
+	}
+
 	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
 	D3DXVECTOR2 moveNowVec;
 
@@ -470,6 +480,11 @@ void CPlayer::Normalization()
 //-----------------------------------------------------------------------------
 void CPlayer::BlockCollision()
 {
+	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
+	{
+		return;
+	}
+
 	for (int i = 0; i < CGame::GetMap()->GetBlockCount(); i++)
 	{
 		CBlock* pBlock = CGame::GetMap()->GetBlock(i);
@@ -517,6 +532,11 @@ void CPlayer::BlockCollision()
 //-----------------------------------------------------------------------------
 void CPlayer::SkillPaint()
 {
+	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
+	{
+		return;
+	}
+
 	if (!(m_State == PST_PAINT && m_pOnBlock != nullptr))
 	{
 		return;
