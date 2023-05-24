@@ -18,9 +18,10 @@
 //=============================================================================
 CBlock::CBlock(int priorty) :CObjectX(priorty)
 {
-	m_number = 4;
+	m_number = 0;
 	m_isStop = false;
 	m_onItem = nullptr;
+	m_onPlayer = nullptr;
 }
 
 //=============================================================================
@@ -62,6 +63,7 @@ void  CBlock::Update()
 	{
 		if (m_onItem->GetLife() <= 0)
 		{
+			m_onItem->Release();
 			m_onItem = nullptr;
 		}
 	}
