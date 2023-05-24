@@ -65,6 +65,7 @@ public:
 	void ResetScore() { CApplication::getInstance()->m_nScore[0] = 0, CApplication::getInstance()->m_nScore[1] = 0; };	// スコアのRESET
 	int GetWinner() { return m_nWinner; };
 	int GetScore(int player) { return CApplication::getInstance()->m_nScore[player]; };	// スコアの取得
+	MODE GetModeState() { return m_mode; }
 
 private:
 	CApplication() = default;
