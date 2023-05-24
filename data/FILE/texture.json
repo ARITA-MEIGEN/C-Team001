@@ -12,9 +12,9 @@
     [ "TOON", "data\/TEXTURE\/toon.png" ],
     [ "CIRCLE_SHADOW", "data\/TEXTURE\/shadow.png" ],
     [ "CHECK", "data\/TEXTURE\/check.png" ],
-    [ "RESULET_000", "data\/TEXTURE\/Result000.png" ],
-    [ "RESULET_001", "data\/TEXTURE\/Result001.png" ],
-    [ "RESULET_002", "data\/TEXTURE\/Result002.png" ],
-    [ "RESULET_003", "data\/TEXTURE\/Result003.png" ]
+    [ "RESULET_000", "data\/TEXTURE\/1st_000.png" ],
+    [ "RESULET_001", "data\/TEXTURE\/2nd_000.png" ],
+    [ "RESULET_002", "data\/TEXTURE\/3rd_000.png" ],
+    [ "RESULET_003", "data\/TEXTURE\/4th_000.png" ]
   ]
 }

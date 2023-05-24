@@ -183,7 +183,7 @@ int CMap::Ranking()
 
 	//ƒ‰ƒ“ƒLƒ“ƒO‚ğ‘ã“ü
 	for (int i = 0; i < MAX_PLAYER; i++)
-	{
+	{//¸‡
 		m_anRanking[i] = Rank[i];
 	}
 
