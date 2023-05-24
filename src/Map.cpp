@@ -80,10 +80,10 @@ void CMap::Update()
 			pos.y += 25.0f;
 
 			//アイテムの生成
-			popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(25.0f, 0.0f, 25.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 60));
+			popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(25.0f, 0.0f, 25.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300));
 			popPlanBlock->SetCol(D3DXCOLOR(1.0f,0.0f,1.0f,1.0f));
 
-			m_nPopCnt = IntRandom(2 * 10, 1 * 10);
+			m_nPopCnt = IntRandom(60, 180);
 		}
 	}
 }
@@ -183,7 +183,7 @@ int CMap::Ranking()
 
 	//ランキングを代入
 	for (int i = 0; i < MAX_PLAYER; i++)
-	{
+	{//昇順
 		m_anRanking[i] = Rank[i];
 	}
 
