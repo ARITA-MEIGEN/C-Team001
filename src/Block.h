@@ -30,6 +30,7 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
+	void DeleteItem();
 	static CBlock *Create(D3DXVECTOR3 pos, float lot);
 
 	// Setter
