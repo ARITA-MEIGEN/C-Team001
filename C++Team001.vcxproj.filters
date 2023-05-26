@@ -156,6 +156,9 @@
     <ClCompile Include="src\CameraGame.cpp">
       <Filter>ソース ファイル\02_Camera</Filter>
     </ClCompile>
+    <ClCompile Include="src\SkillSelect.cpp">
+      <Filter>ソース ファイル\01_Mode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -300,6 +303,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\MotionModel3D.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SkillSelect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
