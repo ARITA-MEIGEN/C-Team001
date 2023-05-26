@@ -120,5 +120,16 @@ void CBlock::SetPlayerNumber(int number)
 	default:
 		break;
 	}
+}
 
+//=============================================================================
+// ƒAƒCƒeƒ€‚ðÁ‚·ˆ—
+//=============================================================================
+void CBlock::DeleteItem(void)
+{
+	if (m_onItem != nullptr)
+	{
+		m_onItem->Uninit();
+		m_onItem = nullptr;
+	}
 }

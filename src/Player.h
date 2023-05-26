@@ -31,7 +31,8 @@ class CPlayer :public CObject
 {
 private:
 	static const float PLAYER_SPEED;	// 移動速度
-	static const float ITEM_ADD_SPEED;	// アイテムで加算するスピード
+	static const float ADD_SPEED;	// アイテムで加算するスピード
+	static const float SKILL_BUFF_TIME;	// バフの効果時間(Lv1基準)
 
 public:
 
@@ -58,6 +59,14 @@ public:
 		SKILL_SPEED = PST_SPEED,	// 加速
 		SKILL_PAINT = PST_PAINT,	// 塗り強化
 		SKILL_MAX
+	};
+
+	enum ITEM_STATE
+	{
+		ITEM_NONE,	// 無し
+		ITEM_SPEED,	// 加速
+		ITEM_PAINT,	// 塗り強化
+		ITEM_MAX
 	};
 
 	explicit CPlayer(int nPriority = 3);
@@ -112,9 +121,11 @@ private:
 	static int		m_nNumPlayer;					// プレイヤーの数
 	int				m_nPlayerNumber;				// 自分のプレイヤー番号
 	int				m_nSkillLv;						// プレイヤーのスキルLｖ
-	int				m_nBuffTime;					// 強化効果時間
+	int				m_nSkillBuffTime;				// スキル強化効果時間
+	int				m_nItemBuffTime;				// アイテム強化効果時間
 	int				m_nSkillGauge;					// スキルゲージの量
 	PLAYER_STATE	m_State;						// プレイヤーの状態
+	ITEM_STATE		m_ItemState;					// アイテムの状態
 	CShadow*		m_pShadow;						// 影
 	CBlock*			m_pOnBlock;						// プレイヤーの乗っているブロックへのポインタ
 

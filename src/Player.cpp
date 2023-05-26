@@ -11,6 +11,7 @@
 #include"renderer.h"
 #include"Camera.h"
 #include"input.h"
+#include"Item.h"
 #include"Shadow.h"
 #include"Mesh.h"
 #include"ObjectX.h"
@@ -21,14 +22,15 @@
 #include"effect.h"
 #include"Particle.h"
 #include"Map.h"
-#include "SkillGauge.h"
-#include "motion.h"
+#include"SkillGauge.h"
+#include"motion.h"
 
 //-----------------------------------------------------------------------------
 //静的メンバ変数
 //-----------------------------------------------------------------------------
 const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
-const float CPlayer::ITEM_ADD_SPEED = 2.5f;		// アイテムで加算するスピード
+const float CPlayer::ADD_SPEED = 2.0f;			// アイテムで加算するスピード
+const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
 int CPlayer::m_nNumPlayer = 0;					// プレイヤーの数
 
 //-----------------------------------------------------------------------------
@@ -138,14 +140,22 @@ void CPlayer::Update(void)
 	// スキル処理
 	Skill();
 
-	if (m_nBuffTime > 0)
-	{// 強化効果の時間を減算する
-		m_nBuffTime--;
+	if (m_nSkillBuffTime > 0)
+	{// スキル強化効果の時間を減算する
+		m_nSkillBuffTime--;
+	}
+	if (m_nItemBuffTime > 0)
+	{// アイテム強化効果の時間を減算する
+		m_nItemBuffTime--;
 	}
 
-	if (m_nBuffTime <= 0 && m_State != PST_STAND)
-	{// デフォルトに戻す
+	if (m_nSkillBuffTime <= 0 && m_State != PST_STAND)
+	{// スキルを使った後に効果時間が切れたらデフォルトに戻す
 		m_State = PST_STAND;
+	}
+	if (m_nItemBuffTime <= 0 && m_ItemState != ITEM_NONE)
+	{// アイテムを拾った後に効果時間が切れたらデフォルトに戻す
+		m_ItemState = ITEM_NONE;
 	}
 
 	// 座標更新
@@ -161,7 +171,7 @@ void CPlayer::Update(void)
 	TurnLookAtMoveing();
 
 	Normalization();		// 角度の正規化
-	m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
+	m_pShadow->SetPos({m_pos.x, 1.0f, m_pos.z});
 
 	BlockCollision();
 
@@ -178,15 +188,23 @@ void CPlayer::Update(void)
 
 #ifdef _DEBUG
 	CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
+	CDebugProc::Print("現在のプレイヤーの角度:%f %f %f\n", m_rot.x, m_rot.y, m_rot.z);
 	CDebugProc::Print("現在のモーション:%d\n", (int)m_Motion);
 	CDebugProc::Print("現在の状態:%d\n", (int)m_State);
 	CDebugProc::Print("現在のフレーム:%d\n", m_frame);
 
 	if (pInput->Trigger(DIK_U))
 	{
-		m_nBuffTime = 120;
+		m_nSkillBuffTime = 120;
 		m_State = PST_SPEED;
 	}
+
+	if (pInput->Trigger(DIK_I))
+	{
+		m_nSkillBuffTime = 120;
+		m_State = PST_PAINT;
+	}
+
 	if (pInput->Trigger(DIK_T))
 	{
 		m_Motion == PM_ST_NEUTRAL ? m_Motion = PM_ST_MOVE : m_Motion = PM_ST_NEUTRAL;
@@ -413,9 +431,9 @@ void CPlayer::MoveSwitchAtCenterBlock()
 		 // 方向ベクトル掛ける移動量
 			m_move = m_movePlanVec * PLAYER_SPEED;
 
-			if (m_State == PST_SPEED)
+			if (m_State == PST_SPEED || m_ItemState == ITEM_SPEED)
 			{
-				m_move *= ITEM_ADD_SPEED;
+				m_move *= ADD_SPEED;
 			}
 
 			D3DXVec3Normalize(&m_moveVec, &m_move);
@@ -508,7 +526,7 @@ void CPlayer::BlockCollision()
 			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f))
 			{//Z軸
 				if (pBlock->GetNumber() != m_nPlayerNumber && m_nSkillGauge < MAX_GAUGE && m_State == PST_STAND)
-				{//自分以外の色を塗り替えていたらゲージの加算
+				{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックではなく、無強化の場合)
 					m_nSkillGauge++;
 				}
 
@@ -534,14 +552,8 @@ void CPlayer::BlockCollision()
 			}
 		}
 	}
-}
-
-//-----------------------------------------------------------------------------
-// スキルで周囲を塗る処理
-//-----------------------------------------------------------------------------
-void CPlayer::SkillPaint()
-{
-	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
+	
+	if (m_State == PST_PAINT && m_pOnBlock != nullptr)
 	{
 		return;
 	}
@@ -608,6 +620,28 @@ void CPlayer::SkillPaint()
 			assert(false);
 			break;
 		}
+	}
+
+	//乗っているブロックの番号を取得
+	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+	//乗っているブロックの情報を取得
+	CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);
+
+	if (Block != nullptr)
+	{//アイテムの情報を取得する
+		CItem *pItem = Block->GetOnItem();
+
+		if (pItem != nullptr)
+		{//アイテムを拾った場合
+			m_nItemBuffTime = (int)CItem::BUFF_TIME;
+			if (pItem->GetEffect() == CItem::SPEED)
+			{
+				m_ItemState = ITEM_SPEED;
+			}
+			//ブロックの上のアイテムを消去
+			Block->DeleteItem();
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -641,26 +675,49 @@ void CPlayer::Skill()
 	{
 		switch (m_nSkillLv)
 		{
-		case 1:
-			m_nSkillGauge -= MAX_GAUGE * 0.3;
-			m_nBuffTime = 60;
+			m_nSkillGauge -= (int)(MAX_GAUGE * 0.3f);
+			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
 			m_State = PST_SPEED;
-			break;
+		}
+		else if (pInput->Trigger(DIK_L))
+		{
+			m_nSkillGauge -= (int)(MAX_GAUGE * 0.3f);
+			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
+			m_State = PST_PAINT;
+		}
+		break;
 
 		case 2:
-			m_nSkillGauge -= MAX_GAUGE * 0.7;
-			m_nBuffTime = 120;
+			m_nSkillGauge -= (int)(MAX_GAUGE * 0.7f);
+			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 2.0f);
 			m_State = PST_SPEED;
-			break;
+		}
+		else if (pInput->Trigger(DIK_L))
+		{
+			m_nSkillGauge -= (int)(MAX_GAUGE * 0.7f);
+			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 2.0f);
+			m_State = PST_PAINT;
+		}
+		break;
 
 		case 3:
 			m_nSkillGauge -= MAX_GAUGE;
-			m_nBuffTime = 300;
+			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 5.0f);
 			m_State = PST_SPEED;
 			break;
 
 		default:
 			break;
 		}
+		else if (pInput->Trigger(DIK_L))
+		{
+			m_nSkillGauge -= MAX_GAUGE;
+			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 5.0f);
+			m_State = PST_PAINT;
+		}
+		break;
+
+	default:
+		break;
 	}
 }
