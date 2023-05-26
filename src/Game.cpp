@@ -159,8 +159,8 @@ void CGame::Update()
 		{
 			if (pInput->Trigger(DIK_RETURN))
 			{
-				BlockCount();
 				CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
+				m_pMap->Ranking();
 			}
 		}
 #endif // !_DEBUG
@@ -197,24 +197,5 @@ void CGame::ResetGame()
 //====================================
 void CGame::BlockCount()
 {
-	int Score[4];
-	int Rank[4];
-	for (int i = 0; i < 4; i++)
-	{
-		Score[i] = m_pMap->GetCountBlockType(i);
-	}
-
-	//è∏èáÇ…ï¿Ç—ïœÇ¶ÇÈ
-	std::vector<int> rank = { Score[0], Score[1], Score[2],Score[3] };
-	std::sort(rank.begin(), rank.end());
-	for (int i = 0; i < 4; i++)
-	{//ï¿Ç—ïœÇ¶ÇΩÇ‚Ç¬Çë„ì¸
-		for (int j = 0; j < 4; j++)
-		{
-			if (rank[i] == j)
-			{//èáà èáÇ…ÉvÉåÉCÉÑÅ[î‘çÜÇï¿Ç—ïœÇ¶ÇÈ
-				Rank[i] = j;
-			}
-		}
-	}
+	
 }

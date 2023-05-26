@@ -9,7 +9,7 @@
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
-#include"Block.h"
+#include "Block.h"
 #include "Item.h"
 
 //Ã“Iƒƒ“ƒo•Ï”
@@ -18,9 +18,10 @@
 //=============================================================================
 CBlock::CBlock(int priorty) :CObjectX(priorty)
 {
-	m_number = 4;
+	m_number = 0;
 	m_isStop = false;
 	m_onItem = nullptr;
+	m_onPlayer = nullptr;
 }
 
 //=============================================================================
@@ -57,6 +58,15 @@ void  CBlock::Uninit()
 void  CBlock::Update()
 {
 	CObjectX::Update();
+
+	if (m_onItem != nullptr)
+	{
+		if (m_onItem->GetLife() <= 0)
+		{
+			m_onItem->Release();
+			m_onItem = nullptr;
+		}
+	}
 }
 
 //=============================================================================

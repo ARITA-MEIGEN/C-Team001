@@ -11,8 +11,8 @@
 #include "Application.h"
 #include "Mode.h"
 
-#define MAX_PLAYER	(4)
 #define STAGE_WIDTH	(350)	// 中央から端までの長さ
+#define MAX_PLAYER	(4)
 #define END_TIMER	(120)	// プレイヤーが死んでから終わるまでの時間
 #define END_SCORE	(2)		// ゲーム終了するためのスコア
 
@@ -81,7 +81,6 @@ private:
 	static	CMap*m_pMap;				// マップ
 	int		m_Timer;					// フェードアウトまでのタイマー
 	ROUND	m_Round;					// 現在のラウンド
-
 };
 
 #endif

@@ -57,12 +57,6 @@ CPlayer::~CPlayer()
 //-----------------------------------------------------------------------------
 HRESULT CPlayer::Init()
 {
-	//モデルとモーションの読み込み
-	for (int i = 0; i < 14; i++)
-	{//プレイヤーの生成
-		m_apModel[i] = CObjectX::Create();
-	}
-
 	m_motion = new CMotion("data/TXT/Player01/Player01.txt");
 	m_Motion = PM_ST_NEUTRAL;	//ニュートラルモーションに変更
 
@@ -122,6 +116,11 @@ void CPlayer::Uninit(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Update(void)
 {
+	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
+	{
+		return;
+	}
+
 	if (!(CGame::GetGame() != CGame::GAME_END) && !(CGame::GetGame() != CGame::GAME_START))
 	{
 		return;
@@ -171,7 +170,12 @@ void CPlayer::Update(void)
 	StopNoBlock();
 
 	// ブロックの中心で曲がる
-	TurnCenterBlock();
+	MoveSwitchAtCenterBlock();
+
+	// アイテムを拾う
+	TakeItem();
+
+	SkillPaint();	// スキルで盤面を塗る
 
 #ifdef _DEBUG
 	CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
@@ -286,10 +290,30 @@ void CPlayer::Move()
 		return;
 	}
 
+	/* ↓コントローラーに接続されている↓ */
+
+	if (m_isKnockBack)
+	{
+		m_knockBackCnt++;
+		if (m_knockBackCnt >= m_knockBackTime)
+		{
+			m_knockBackCnt = 0;
+			m_isKnockBack = false;
+		}
+		return;
+	}
+
+	/* ↓ノックバック状態ではない↓ */
+
+#if 0 //此処を1にいじれば入力がないと進み続ける処理に変更
 	if (D3DXVec3Length(&m_controller->Move()) == 0.0f)
 	{
-	//	return;
+		return;
 	}
+
+	/* ↓入力されている↓ */
+#endif // 0
+
 
 	D3DXVECTOR3 move = m_controller->Move();
 
@@ -329,19 +353,19 @@ void CPlayer::SetController(CController * inOperate)
 //-----------------------------------------------------------------------------
 void CPlayer::TurnLookAtMoveing()
 {
-	if (m_moveVec.z > 0.0f)
+	if (m_move.z > 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
 	}
-	if (m_moveVec.z < 0.0f)
+	if (m_move.z < 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
-	if (m_moveVec.x > 0.0f)
+	if (m_move.x > 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.5f, 0.0f));
 	}
-	if (m_moveVec.x < 0.0f)
+	if (m_move.x < 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 	}
@@ -352,15 +376,24 @@ void CPlayer::TurnLookAtMoveing()
 //-----------------------------------------------------------------------------
 void CPlayer::StopNoBlock()
 {
+	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
+	{
+		return;
+	}
+
 	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
 	D3DXVECTOR2 moveNowVec;
 
 	moveNowVec.x = m_movePlanVec.x;
 	moveNowVec.y = -m_movePlanVec.z;
 
+	CDebugProc::Print("BlockIdx : %.1f,%.1f\n", BlockIdx.x, BlockIdx.y);
+
 	D3DXVec2Normalize(&moveNowVec, &moveNowVec);
 
 	CDebugProc::Print("moveNowVec : %.1f,%.1f\n", moveNowVec.x, moveNowVec.y);
+
+	CDebugProc::Print("move : %.1f,%.1f\n", m_move.x, m_move.z);
 
 	BlockIdx += moveNowVec;
 
@@ -371,13 +404,16 @@ void CPlayer::StopNoBlock()
 	if (moveBlock->IsStop())
 	{
 		m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 停止
+		m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 停止
+
+		m_pos = m_pOnBlock->GetPos();	// 停止
 	}
 }
 
 //-----------------------------------------------------------------------------
-// ブロックの中心付近で曲がる
+// ブロックの中心で移動を切り替える
 //-----------------------------------------------------------------------------
-void CPlayer::TurnCenterBlock()
+void CPlayer::MoveSwitchAtCenterBlock()
 {
 	if (m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f) && m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f))
 	{//X軸
@@ -394,6 +430,42 @@ void CPlayer::TurnCenterBlock()
 			D3DXVec3Normalize(&m_moveVec, &m_move);
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+// アイテムの取得
+//-----------------------------------------------------------------------------
+void CPlayer::TakeItem()
+{
+	if (m_pOnBlock == nullptr)
+	{
+		return;
+	}
+
+	/* ↓ 自身が乗っているブロックがある ↓ */
+
+	CItem* item = m_pOnBlock->GetOnItem();
+	if (item == nullptr)
+	{
+		return;
+	}
+
+	/* ↓ 乗っているブロックの上にアイテムがある ↓ */
+
+	m_nBuffTime = 60;
+	m_State = PST_SPEED;
+}
+
+//-----------------------------------------------------------------------------
+// ノックバック
+//-----------------------------------------------------------------------------
+void CPlayer::KnockBack(const D3DXVECTOR3 & move, const float power)
+{
+	m_isKnockBack = true;
+	m_move = move * power;
+	D3DXVec3Normalize(&m_movePlanVec, &m_move);
+	m_knockBackTime = 20;
+	m_knockBackCnt = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -426,6 +498,11 @@ void CPlayer::Normalization()
 //-----------------------------------------------------------------------------
 void CPlayer::BlockCollision()
 {
+	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
+	{
+		return;
+	}
+
 	for (int i = 0; i < CGame::GetMap()->GetBlockCount(); i++)
 	{
 		CBlock* pBlock = CGame::GetMap()->GetBlock(i);
@@ -443,31 +520,63 @@ void CPlayer::BlockCollision()
 				{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックではなく、無強化の場合)
 					m_nSkillGauge++;
 				}
-				pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
-				m_pOnBlock = pBlock;						//乗っているブロックを設定
+
+				if (m_pOnBlock != nullptr)
+				{
+					m_pOnBlock->SetOnPlayer(nullptr);
+				}
+
+				CPlayer* blockOnPlayer = pBlock->GetOnPlayer();
+
+				if (blockOnPlayer != nullptr)
+				{
+					m_pos = m_pOnBlock->GetPos();
+					pBlock->GetOnPlayer()->KnockBack(m_move, 1.75f);
+					KnockBack(m_move * -1.0f,1.75f);
+				}
+				{
+					pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの乗っているブロックを設定
+					pBlock->SetOnPlayer(this);
+				}
+
+				m_pOnBlock = pBlock;
 			}
 		}
 	}
 	
 	if (m_State == PST_PAINT && m_pOnBlock != nullptr)
 	{
-		switch (m_nSkillLv)
+		return;
+	}
+
+	if (!(m_State == PST_PAINT && m_pOnBlock != nullptr))
+	{
+		return;
+	}
+
+	//乗っているブロックの番号を取得
+	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+
+	auto Paint = [&BlockIdx, this](const D3DXVECTOR2& direction)
+	{
+		//範囲内のブロックを塗る
+		D3DXVECTOR2 Idx = BlockIdx + direction;
+		CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+		if (Block != nullptr)
+		{
+			Block->SetPlayerNumber(m_nPlayerNumber);
+		}
+	};
+
+	switch (m_nSkillLv)
 		{
 		case 1:
 			//縦の範囲を塗る
 			for (int nCntX = 0; nCntX < 3; nCntX++)
 			{
-				//乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-				//範囲内のブロックを塗る
-				BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y);			//中央左に設定する
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-				if (Block != nullptr)
-				{
-					Block->SetPlayerNumber(m_nPlayerNumber);
-				}
+				D3DXVECTOR2 Idx = D3DXVECTOR2(nCntX - 1.0f, 0.0f);
+				Paint(Idx);
 			}
 			break;
 
@@ -476,57 +585,30 @@ void CPlayer::BlockCollision()
 			//縦の範囲
 			for (int nCntY = 0; nCntY < 3; nCntY++)
 			{
-				//乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-				//範囲内のブロックを塗る
-				BlockIdx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y - 1.0f);			//中心に設定する
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y + nCntY);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-				if (Block != nullptr)
-				{//ブロックを塗る
-					Block->SetPlayerNumber(m_nPlayerNumber);
-				}
+				D3DXVECTOR2 Idx = D3DXVECTOR2(0.0f, nCntY - 1.0f);
+				Paint(Idx);
 			}
 			//横の範囲
 			for (int nCntX = 0; nCntX < 3; nCntX++)
 			{
-				//乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-				//範囲内のブロックを塗る
-				BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y);			//中央左に設定する
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-				if (Block != nullptr)
-				{//ブロックを塗る
-					Block->SetPlayerNumber(m_nPlayerNumber);
-				}
+				D3DXVECTOR2 Idx = D3DXVECTOR2(nCntX - 1.0f, 0.0f);
+				Paint(Idx);
 			}
 			break;
-
 		case 3:
 			//3×3の範囲を塗る
 			for (int nCntY = 0; nCntY < 3; nCntY++)
 			{
 				for (int nCntX = 0; nCntX < 3; nCntX++)
 				{
-					//乗っているブロックの番号を取得
-					D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-					//範囲内のブロックを塗る
-					BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y - 1.0f);			//左上に設定する
-					D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y + nCntY);
-					CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-					if (Block != nullptr)
-					{//ブロックを塗る
-						Block->SetPlayerNumber(m_nPlayerNumber);
-					}
+					D3DXVECTOR2 Idx = D3DXVECTOR2(nCntX - 1.0f, nCntY - 1.0f);
+					Paint(Idx);
 				}
 			}
 			break;
 
 		default:
+			assert(false);
 			break;
 		}
 	}
@@ -580,10 +662,9 @@ void CPlayer::Skill()
 	}
 
 	//現在のスキルLvによって効果量を変える
-	switch (m_nSkillLv)
+	if (pInput->Trigger(DIK_K))
 	{
-	case 1:
-		if(pInput->Trigger(DIK_K))
+		switch (m_nSkillLv)
 		{
 			m_nSkillGauge -= (int)(MAX_GAUGE * 0.3f);
 			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
@@ -597,9 +678,7 @@ void CPlayer::Skill()
 		}
 		break;
 
-	case 2:
-		if (pInput->Trigger(DIK_K))
-		{
+		case 2:
 			m_nSkillGauge -= (int)(MAX_GAUGE * 0.7f);
 			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 2.0f);
 			m_State = PST_SPEED;
@@ -612,12 +691,14 @@ void CPlayer::Skill()
 		}
 		break;
 
-	case 3:
-		if (pInput->Trigger(DIK_K))
-		{
+		case 3:
 			m_nSkillGauge -= MAX_GAUGE;
 			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 5.0f);
 			m_State = PST_SPEED;
+			break;
+
+		default:
+			break;
 		}
 		else if (pInput->Trigger(DIK_L))
 		{
