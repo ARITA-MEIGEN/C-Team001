@@ -58,18 +58,27 @@ HRESULT CPlayer::Init()
 	m_motion = new CMotion("data/TXT/Player01/Player01.txt");
 	m_Motion = PM_ST_NEUTRAL;	//ニュートラルモーションに変更
 
-	for (int i = 0; i < 14; i++)
+	for (int i = 0; i < NUM_PLAYERPARTS; i++)
 	{
 		m_apModel[i] = m_motion->GetParts(i);
 
 		//色指定
-		if (m_nPlayerNumber == 0)
+		switch (m_nPlayerNumber)
 		{
+		case 0:
 			m_apModel[i]->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-		}
-		else
-		{
+			break;
+		case 1:
 			m_apModel[i]->SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+			break;
+		case 2:
+			m_apModel[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+			break;
+		case 3:
+			m_apModel[i]->SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+			break;
+		default:
+			break;
 		}
 	}
 
