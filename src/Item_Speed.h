@@ -12,10 +12,10 @@
 //加速クラス
 class CSpeed : public CItem
 {
-public:
+private:
 	//定義
-	static const int LIMIT_DISPLAY;	//点滅を始める時間
-
+	static const int LIMIT_DISPLAY;		// 点滅を始める時間
+public:
 	explicit CSpeed(int nPriority = 3);								//コンストラクタ
 	~CSpeed() override;												//デストラクタ
 

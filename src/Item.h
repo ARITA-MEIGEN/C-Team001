@@ -13,6 +13,16 @@
 class CItem : public CObject3D
 {
 public:
+	static const float BUFF_TIME;	// アイテムバフの効果時間
+
+	enum ITEM_EFFECT
+	{
+		NONE,	// 無し
+		SPEED,	// 加速
+		PAINT,	// 塗り強化
+		MAX
+	};
+
 	explicit CItem(int nPriority = 3);								//コンストラクタ
 	~CItem() override;												//デストラクタ
 
@@ -22,15 +32,17 @@ public:
 	void Draw(void) override;																		//描画処理
 
 	void SetLife(int nLife) { m_nLife = nLife; }													//表示時間の設定
+	void SetEffect(ITEM_EFFECT effect) { m_effect = effect; }										//エフェクトの設定
 
 	int GetLife(void) { return m_nLife; }															//表示時間の取得
+	ITEM_EFFECT GetEffect(void) { return m_effect; }												//エフェクトの取得
 
 	static CItem* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);		//生成処理
 
 private:
 	//メンバ変数
 	int m_nLife;						//表示時間
-
+	ITEM_EFFECT m_effect;				//効果
 };
 
 #endif

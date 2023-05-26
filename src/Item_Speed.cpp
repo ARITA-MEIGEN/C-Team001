@@ -10,7 +10,7 @@
 //======================================================
 // 定義
 //======================================================
-const int CSpeed::LIMIT_DISPLAY = 120;	//点滅を始める時間
+const int CSpeed::LIMIT_DISPLAY = 120;		//点滅を始める時間
 
 //======================================================
 //コンストラクタ
@@ -32,7 +32,7 @@ CSpeed::~CSpeed()
 HRESULT CSpeed::Init(void)
 {
 	//初期化
-	CObject3D::Init();
+	CItem::Init();
 	m_bDisplay = true;
 
 	//テクスチャ設定
@@ -59,7 +59,10 @@ void CSpeed::Update(void)
 	int nLife = GetLife();
 
 	//表示時間の減算
-	nLife--;
+	if (nLife >= 0)
+	{
+		nLife--;
+	}
 
 	if (nLife <= LIMIT_DISPLAY)
 	{//表示時間が一定以下になったら点滅させる
@@ -72,10 +75,10 @@ void CSpeed::Update(void)
 	//更新
 	CObject3D::Update();
 
-	if (nLife <= 0)
-	{//表示時間が0以下になったら消す
-		Uninit();
-	}
+	//if (nLife <= 0)
+	//{//表示時間が0以下になったら消す
+	//	Uninit();
+	//}
 }
 
 //======================================================
@@ -114,6 +117,7 @@ CSpeed *CSpeed::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 		pSpeed->SetSiz(size);
 		pSpeed->SetRot(rot);
 		pSpeed->SetLife(nLife);
+		pSpeed->SetEffect(SPEED);
 	}
 
 	return pSpeed;

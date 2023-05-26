@@ -8,6 +8,11 @@
 #include "Texture.h"
 
 //======================================================
+// 定義
+//======================================================
+const float CItem::BUFF_TIME = 120;	//アイテムバフの効果時間
+
+//======================================================
 //コンストラクタ
 //======================================================
 CItem::CItem(int nPriority) : CObject3D(nPriority)
@@ -27,6 +32,8 @@ CItem::~CItem()
 HRESULT CItem::Init(void)
 {
 	//初期化
+	m_effect = NONE;
+	m_nLife = 0;
 	CObject3D::Init();
 
 	return S_OK;

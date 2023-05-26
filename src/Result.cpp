@@ -61,18 +61,20 @@ HRESULT CResult::Init()
 	//背景の生成
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{
+		//ランキング
 		m_apRank[i] = new CObject2D(CObject::OBJTYPE_UI);
 		m_apRank[i]->Init();
 		m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH/2-100+100 * i, (float)SCREEN_HEIGHT / 2, 0.0f));
 		m_apRank[i]->SetSiz(D3DXVECTOR2((float)100, (float)50));
 		m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	
+		//プレイヤー生成
+		m_pPlayer[i] = CPlayer::Create({-80.0f+80.0f*i,0.0f,0.0f}, D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));		
 	}
 
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{//プレイヤーの番号から順位を獲得
 		m_apRank[CMap::GetRanking(i)]->SetTextureKey(textureKey[i]);
-		m_pPlayer[i] = CPlayer::Create(m_apRank[i]->GetPos(), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-
 	}
 
 	return S_OK;
@@ -84,6 +86,19 @@ HRESULT CResult::Init()
 void CResult::Uninit()
 {
 	CSound::GetInstance()->Stop();
+	//カメラの設定
+	if (m_pCamera != nullptr)
+	{
+		m_pCamera->Uninit();
+		delete m_pCamera;
+	}
+
+	//ライトの設定
+	if (m_pLight != nullptr)
+	{
+		m_pLight->Uninit();
+		delete m_pLight;
+	}
 }
 
 //====================================
@@ -92,6 +107,9 @@ void CResult::Uninit()
 void CResult::Update()
 {
 	CInput* pInput = CInput::GetKey();
+
+	m_pCamera->Update();
+	m_pLight->Update();
 
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
@@ -108,5 +126,5 @@ void CResult::Update()
 //====================================
 void CResult::Draw()
 {
-
+	m_pCamera->Set();
 }
