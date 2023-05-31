@@ -92,7 +92,8 @@ public:
 	int GetMaxParts() { return m_nMaxParts; }					// パーツの最大数の取得
 	bool GetMotion() { return m_bMotion; }						// モーションを行っているか取得
 	bool GetMotionBlend() { return m_bMotionBlend; }			// モーションブレンドを行っているか取得
-	CObjectX* GetParts(int index) { return m_parts[index]; }	// モーションブレンドを行っているか取得
+	std::vector<CObjectX*> GetParts() { return m_parts; }		// パーツモデルの取得
+	CObjectX* GetParts(int index) { return m_parts[index]; }	// 指定された番号のパーツモデルの取得
 
 private:
 	//--------------------------------------------------------------------

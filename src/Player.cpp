@@ -6,31 +6,35 @@
 //-----------------------------------------------------------------------------
 //インクルード
 //-----------------------------------------------------------------------------
-#include"Player.h"
-#include"Application.h"
-#include"renderer.h"
-#include"Camera.h"
-#include"input.h"
-#include"Item.h"
-#include"Shadow.h"
-#include"Mesh.h"
-#include"ObjectX.h"
-#include"Game.h"
-#include"PlayerController.h"
-#include"sound.h"
-#include"Time.h"
-#include"effect.h"
-#include"Particle.h"
-#include"Map.h"
-#include"SkillGauge.h"
-#include"motion.h"
+#include "Player.h"
+#include "PlayerController.h"
+#include "Application.h"
+#include "sound.h"
+#include "renderer.h"
+#include "input.h"
+
+#include "Item.h"
+#include "Shadow.h"
+#include "Mesh.h"
+#include "Game.h"
+#include "Time.h"
+#include "effect.h"
+#include "Particle.h"
+#include "Map.h"
+#include "SkillGauge.h"
+#include "motion.h"
 
 //-----------------------------------------------------------------------------
-//静的メンバ変数
+// 定数
 //-----------------------------------------------------------------------------
+const std::string CPlayer::MOTION_PATH = "data/TXT/Player01/Player01.txt";	// モーションデータパス
 const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
+
+//-----------------------------------------------------------------------------
+// 静的メンバ変数
+//-----------------------------------------------------------------------------
 int CPlayer::m_nNumPlayer = 0;					// プレイヤーの数
 
 //-----------------------------------------------------------------------------
@@ -63,10 +67,10 @@ HRESULT CPlayer::Init()
 		m_apModel[i] = CObjectX::Create();
 	}
 
-	m_motion = new CMotion("data/TXT/Player01/Player01.txt");
+	m_motion = new CMotion(MOTION_PATH.data());
 	m_Motion = PM_ST_NEUTRAL;	//ニュートラルモーションに変更
 
-	for (int i = 0; i < NUM_PLAYERPARTS; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		m_apModel[i] = m_motion->GetParts(i);
 
@@ -261,30 +265,6 @@ CPlayer * CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 }
 
 //-----------------------------------------------------------------------------
-// 入力設定
-//-----------------------------------------------------------------------------
-void CPlayer::Input()
-{
-	CInput* pInput = CInput::GetKey();
-	int Key = 0;
-	pInput->PressDevice(KEY_DOWN_RIGHT);
-	//レバー
-	{
-		//下
-		Key |= pInput->Press(DIK_S) || pInput->Press(JOYPAD_DOWN, m_nPlayerNumber) || pInput->Press(JOYPAD_DOWN_LEFT, m_nPlayerNumber) || pInput->Press(JOYPAD_DOWN_RIGHT, m_nPlayerNumber) ? INPUT2 : INPUT_NOT2;
-		//左
-		Key |= pInput->Press(DIK_A) || pInput->Press(JOYPAD_LEFT, m_nPlayerNumber) || pInput->Press(JOYPAD_DOWN_LEFT, m_nPlayerNumber) || (pInput->Press(JOYPAD_UP_LEFT, m_nPlayerNumber)) ? INPUT4 : INPUT_NOT4;
-		//右
-		Key |= pInput->Press(DIK_D) || pInput->Press(JOYPAD_RIGHT, m_nPlayerNumber) || (pInput->Press(JOYPAD_UP_RIGHT, m_nPlayerNumber)) || pInput->Press(JOYPAD_DOWN_RIGHT, m_nPlayerNumber) ? INPUT6 : INPUT_NOT6;
-		//上
-		Key |= pInput->Press(DIK_W) || pInput->Press(JOYPAD_UP, m_nPlayerNumber) || (pInput->Press(JOYPAD_UP_RIGHT, m_nPlayerNumber)) || (pInput->Press(JOYPAD_UP_LEFT, m_nPlayerNumber)) ? INPUT8 : INPUT_NOT8;
-
-		//ニュートラル
-		Key |= (Key & INPUT_NOT6) == INPUT_NOT6 && (Key & INPUT_NOT2) == INPUT_NOT2 && (Key & INPUT_NOT4) == INPUT_NOT4 && (Key & INPUT_NOT8) == INPUT_NOT8 ? INPUT5 : INPUT_NOT5;
-	}
-}
-
-//-----------------------------------------------------------------------------
 // 移動
 //-----------------------------------------------------------------------------
 void CPlayer::Move()
@@ -388,20 +368,23 @@ void CPlayer::StopNoBlock()
 //-----------------------------------------------------------------------------
 void CPlayer::TurnCenterBlock()
 {
-	if (m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f) && m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f))
-	{//X軸
-		if (m_pos.z <= m_pOnBlock->GetPos().z + (m_pOnBlock->GetSize().z * 0.05f) && m_pos.z >= m_pOnBlock->GetPos().z - (m_pOnBlock->GetSize().z * 0.05f))
-		{//Z軸
+	bool XMin = m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f);
+	bool XMax = m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f);
+	bool ZMin = m_pos.z <= m_pOnBlock->GetPos().z + (m_pOnBlock->GetSize().z * 0.05f);
+	bool ZMax = m_pos.z >= m_pOnBlock->GetPos().z - (m_pOnBlock->GetSize().z * 0.05f);
+
+	// ブロック内に収まっているか
+	if (XMin && XMax && ZMin && ZMax)
+	{
 		 // 方向ベクトル掛ける移動量
-			m_move = m_movePlanVec * PLAYER_SPEED;
+		m_move = m_movePlanVec * PLAYER_SPEED;
 
-			if (m_State == PST_SPEED || m_ItemState == ITEM_SPEED)
-			{
-				m_move *= ADD_SPEED;
-			}
-
-			D3DXVec3Normalize(&m_moveVec, &m_move);
+		if (m_State == PST_SPEED || m_ItemState == ITEM_SPEED)
+		{
+			m_move *= ADD_SPEED;
 		}
+
+		D3DXVec3Normalize(&m_moveVec, &m_move);
 	}
 }
 

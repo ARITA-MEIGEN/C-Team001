@@ -30,6 +30,7 @@ class CMotion;
 class CPlayer :public CObject
 {
 private:
+	static const std::string MOTION_PATH;	// モーションデータパス
 	static const float PLAYER_SPEED;	// 移動速度
 	static const float ADD_SPEED;	// アイテムで加算するスピード
 	static const float SKILL_BUFF_TIME;	// バフの効果時間(Lv1基準)
@@ -71,13 +72,7 @@ public:
 	void			Move();										// 移動
 	static CPlayer*	Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);	// プレイヤー生成
 
-	void Input();				// 入力処理
-	void Updatepos();			// 座標の更新
-	void Normalization();		// 正規化
-	void BlockCollision();		// ブロックとの判定
-	void Skill();				// スキル処理
-
-								// Setter
+	// Setter
 	void SetController(CController* inOperate);
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; };			// 位置の設定
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };			// 向きの設定
@@ -91,9 +86,14 @@ public:
 	int				GetPlayerNumber() { return m_nPlayerNumber; }	//プレイヤーの番号の取得
 
 private:
-	void TurnLookAtMoveing();		// 移動方向を見て曲がる
-	void StopNoBlock();				// ブロックがない場所で停まる
-	void TurnCenterBlock();				// ブロックがない場所で停まる
+	void Updatepos();			// 座標の更新
+	void Normalization();		// 正規化
+	void BlockCollision();		// ブロックとの判定
+	void Skill();				// スキル処理
+
+	void TurnLookAtMoveing();	// 移動方向を見て曲がる
+	void StopNoBlock();			// ブロックがない場所で停まる
+	void TurnCenterBlock();		// ブロックの真ん中で曲がるようになる
 private:
 	CController*	m_controller;					// 命令を出す人
 	CObjectX*		m_apModel[NUM_PLAYERPARTS];		// モデルのインスタンス
@@ -103,7 +103,7 @@ private:
 	D3DXVECTOR3		m_rot;							// 向き
 	D3DXVECTOR3		m_move;							// 移動量
 	D3DXVECTOR3		m_moveVec;						// 移動ベクトル
-	D3DXVECTOR3		m_movePlanVec;						// 移動予定ベクトル
+	D3DXVECTOR3		m_movePlanVec;					// 移動予定ベクトル
 	D3DXVECTOR3		m_posold;						// 前回の位置
 	D3DXVECTOR3		m_rotDest;						// 目的の角度の保存
 	PLAYER_MOTION	m_Motion;						// 現在のモーション

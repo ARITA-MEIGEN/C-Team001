@@ -2,6 +2,11 @@
   "MODEL": [
     [ "BOX", "data\/MODEL\/box.x" ],
     [ "KYUU2", "data\/MODEL\/kyuu2.x" ],
+    [ "ENVIRONMENT_FUTURE1", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building00.x" ],
+    [ "ENVIRONMENT_FUTURE2", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building01.x" ],
+    [ "ENVIRONMENT_FUTURE3", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building02.x" ],
+    [ "ENVIRONMENT_FUTURE4", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building03.x" ],
+    [ "ENVIRONMENT_FUTURE5", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building04.x" ],
     [ "CUBOID", "data\/MODEL\/cuboid.x" ]
   ]
 }
