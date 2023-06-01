@@ -61,19 +61,15 @@ CPlayer::~CPlayer()
 //-----------------------------------------------------------------------------
 HRESULT CPlayer::Init()
 {
-	//モデルとモーションの読み込み
-	for (int i = 0; i < 14; i++)
-	{//プレイヤーの生成
-		m_apModel[i] = CObjectX::Create();
-	}
-
+	// モーションの読込み
 	m_motion = new CMotion(MOTION_PATH.data());
 	m_Motion = PM_ST_NEUTRAL;	//ニュートラルモーションに変更
 
-	for (int i = 0; i < 1; i++)
-	{
-		m_apModel[i] = m_motion->GetParts(i);
+	//モデルとモーションの読み込み
+	m_apModel = m_motion->GetParts();
 
+	for (int i = 0; i < m_apModel.size(); i++)
+	{
 		//色指定
 		switch (m_nPlayerNumber)
 		{
