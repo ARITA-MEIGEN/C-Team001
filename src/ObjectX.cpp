@@ -7,12 +7,11 @@
 // include
 //-----------------------------------------------------------------------------
 #include"ObjectX.h"
-#include"Game.h"
 #include"renderer.h"
 #include"Camera.h"
 #include"InputKeyBoard.h"
 #include"Shadow.h"
-#include"Light.h"
+#include"Application.h"
 
 //マクロ定義
 #define PLAYER_SPEED	(2.0f)	//移動速度
@@ -201,8 +200,8 @@ void CObjectX::Shadow()
 	D3DXMatrixIdentity(&m_mtxShadow);
 
 	//ライトの逆方向最後の数値はディレクショナルライト以外の場合動かすらしい？
-	D3DXVECTOR3 lightvec = CGame::GetLight()->GetVec(2);		//ライトの取得
-	vecLight = D3DXVECTOR4(-lightvec.x, -lightvec.y, -lightvec.z, 0.0f);
+	//D3DXVECTOR3 lightvec = CGame::GetLight()->GetVec(2);		//ライトの取得
+	//vecLight = D3DXVECTOR4(-lightvec.x, -lightvec.y, -lightvec.z, 0.0f);
 
 	pos = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
