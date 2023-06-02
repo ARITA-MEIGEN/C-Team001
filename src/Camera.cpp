@@ -77,8 +77,13 @@ void  CCamera::Update(void)
 	//RadianPosV();		//視点の旋回
 	NormalizeRadian();	//角度の正規化
 #ifdef _DEBUG
-
+	CInput* pInput = CInput::GetKey();
+	if ((pInput->Trigger(DIK_0)) == true)		//ENTERキー
+	{
+		m_posV.x++;
+	}
 	CDebugProc::Print("カメラの視点の角度 x:%f y:%f z:%f",m_posV.x,m_posV.y,m_posV.z);
+
 #endif // _DEBUG
 
 }
