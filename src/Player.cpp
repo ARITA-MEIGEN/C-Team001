@@ -131,6 +131,10 @@ void CPlayer::Uninit(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Update(void)
 {
+	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
+	{
+		return;
+	}
 	if (!(CGame::GetGame() != CGame::GAME_END) && !(CGame::GetGame() != CGame::GAME_START))
 	{
 		return;
