@@ -23,6 +23,8 @@ class CItem;
 //=============================================================================
 class CBlock : public CObjectX
 {
+private:
+	static const float m_sinkLimit;	// 沈む制限
 public:
 	explicit CBlock(int nPriority = 2);
 	~CBlock() override;
@@ -38,6 +40,7 @@ public:
 	void SetStop(const bool isStop) { m_isStop = isStop; }
 	void SetOnItem(CItem* onItem) { m_onItem = onItem; }
 	void SetOnPlayer(CPlayer* onPlayer) { m_onPlayer = onPlayer; }
+	void SetSink(float power);
 
 	// Getter
 	int GetNumber() { return m_number; };
@@ -47,11 +50,18 @@ public:
 	CItem* GetOnItem() { return m_onItem; };
 
 private:
+	void Sink();		// 沈む
+private:
 	//メンバ変数
 	int m_number;	// プレイヤーの番号
 	bool m_isStop;	// 進行不可
 	CPlayer* m_onPlayer;	// 乗ってるプレイヤー
 	CItem* m_onItem;		// 乗ってるアイテム
+
+	// 沈む演出
+	float m_sinkPower;	// 沈む力
+	float m_upPower;	// 浮く力
+	bool m_isSink;		// 沈む状況か？
 };
 
 #endif

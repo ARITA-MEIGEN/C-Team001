@@ -123,7 +123,7 @@ void CMotion::Update()
 // Author : 唐﨑結斗
 // 概要 : モーションの初期位置に設定
 //=============================================================================
-void CMotion::SetMotion(const int nCntMotionSet)
+void CMotion::SetMotion(const unsigned int nCntMotionSet)
 {
 	CMotion::MyMotion& motion = m_motion[nCntMotionSet];
 
@@ -394,8 +394,10 @@ void CMotion::LoodSetMotion(const char *pFileName)
 
 				sscanf(readLineBasicData.c_str(), "%s = %s", tag, pass);	//モデルのパスの設定
 
+				std::string modelKey = "MODEL" + std::to_string(modelnumber);
 				m_parts[modelnumber] = CObjectX::Create();
-				m_parts[modelnumber]->SetModel(pass);
+				m_parts[modelnumber]->BindModel(CObjectXOriginalList::GetInstance()->Load(modelKey, pass));
+				m_parts[modelnumber]->SetModelTag(modelKey);
 				modelnumber++;
 			}
 			else if (StringMatched("CHARACTERSET"))
@@ -583,7 +585,7 @@ void CMotion::CntReset(const int nNumMotionOld)
 // Author : 唐﨑結斗
 // 概要 : モーションの番号の設定
 //=============================================================================
-void CMotion::SetNumMotion(const int nNumMotion)
+void CMotion::SetNumMotion(const unsigned int nNumMotion)
 {
 	// モーションカウントのリセット
 	CntReset(m_nNumMotion);

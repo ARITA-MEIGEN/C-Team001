@@ -45,7 +45,7 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_nPlayerNumber = m_nNumPlayer;
 	m_nNumPlayer++;
 
-	m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(80.0f, 0.0f, 80.0f));	// 影
+//	m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(80.0f, 0.0f, 80.0f));	// 影
 }
 
 //-----------------------------------------------------------------------------
@@ -176,7 +176,7 @@ void CPlayer::Update(void)
 	TurnLookAtMoveing();
 
 	Normalization();		// 角度の正規化
-	m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
+//	m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
 
 	BlockCollision();
 
@@ -435,7 +435,15 @@ void CPlayer::BlockCollision()
 				{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックではなく、無強化の場合)
 					m_nSkillGauge++;
 				}
+
+				if (m_pOnBlock != nullptr)
+				{
+					m_pOnBlock->SetOnPlayer(nullptr);
+				}
+
+				pBlock->SetOnPlayer(this);				//プレイヤーの
 				pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
+				pBlock->SetSink(2.5f);
 				m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
@@ -458,6 +466,7 @@ void CPlayer::BlockCollision()
 
 				if (Block != nullptr)
 				{
+					Block->SetOnPlayer(this);	//プレイヤーの
 					Block->SetPlayerNumber(m_nPlayerNumber);
 				}
 			}
@@ -477,6 +486,7 @@ void CPlayer::BlockCollision()
 
 				if (Block != nullptr)
 				{//ブロックを塗る
+					Block->SetOnPlayer(this);	//プレイヤーの
 					Block->SetPlayerNumber(m_nPlayerNumber);
 				}
 			}
@@ -492,6 +502,7 @@ void CPlayer::BlockCollision()
 
 				if (Block != nullptr)
 				{//ブロックを塗る
+					Block->SetOnPlayer(this);	//プレイヤーの
 					Block->SetPlayerNumber(m_nPlayerNumber);
 				}
 			}
@@ -512,6 +523,7 @@ void CPlayer::BlockCollision()
 
 					if (Block != nullptr)
 					{//ブロックを塗る
+						Block->SetOnPlayer(this);	//プレイヤーの
 						Block->SetPlayerNumber(m_nPlayerNumber);
 					}
 				}

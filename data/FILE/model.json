@@ -7,6 +7,17 @@
     [ "ENVIRONMENT_FUTURE3", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building02.x" ],
     [ "ENVIRONMENT_FUTURE4", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building03.x" ],
     [ "ENVIRONMENT_FUTURE5", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building04.x" ],
+    [ "ENVIRONMENT_NOW1", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/now\/Building00.x" ],
+    [ "ENVIRONMENT_NOW2", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/now\/Building01.x" ],
+    [ "ENVIRONMENT_NOW3", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/now\/Building02.x" ],
+    [ "TILE_1", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile00_lowpoly.x" ],
+    [ "TILE_2", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile01_test.x" ],
+    [ "TILE_3", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile02_test.x" ],
+    [ "TILE_4", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile03_test.x" ],
+    [ "TILE_5", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile04_test.x" ],
+    [ "TILE_6", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile05_test.x" ],
+    [ "TILE_7", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile06_test.x" ],
+    [ "TILE_8", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile07_test.x" ],
     [ "CUBOID", "data\/MODEL\/cuboid.x" ]
   ]
 }

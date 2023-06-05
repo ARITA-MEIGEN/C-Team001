@@ -127,7 +127,7 @@ void CMap::Load()
 			switch ((int)map["MAP"][i][j])
 			{
 			case -1:
-				m_pBlock[i * map["MAP"][i].size() + j]->SetModel("");
+				m_pBlock[i * map["MAP"][i].size() + j]->SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 				m_pBlock[i * map["MAP"][i].size() + j]->SetStop(true);
 				break;
 			case 0:

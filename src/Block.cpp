@@ -12,7 +12,11 @@
 #include "Block.h"
 #include "Item.h"
 
-//静的メンバ変数
+//-----------------------------------------------------------------------------
+// 定数
+//-----------------------------------------------------------------------------
+const float CBlock::m_sinkLimit = -10.0f;
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -39,6 +43,7 @@ HRESULT  CBlock::Init()
 {
 	CObjectX::Init();
 
+	m_upPower = 1.5f;
 	m_number = -1;
 
 	return S_OK;
@@ -67,6 +72,18 @@ void  CBlock::Update()
 			m_onItem = nullptr;
 		}
 	}
+
+
+	if (m_onPlayer == nullptr)
+	{
+		D3DXVECTOR3 pos = GetPos();
+		if (0.0f >= pos.y)
+		{
+			pos.y += m_upPower;
+
+			SetPos(pos);
+		}
+	}
 }
 
 //=============================================================================
@@ -83,16 +100,14 @@ void  CBlock::Draw()
 //=============================================================================
 CBlock* CBlock::Create(D3DXVECTOR3 pos, float lot)
 {
-	CBlock*pBlock;
+	CBlock*pBlock = new CBlock(5);
 
-	pBlock = new CBlock(5);
 	if (pBlock != nullptr)
-	{// ポリゴンの初期化処理
+	{
 		pBlock->Init();
-		pBlock->SetModel("data/MODEL/box.x");
-		pBlock->SizeCalculate();
+		pBlock->BindModel(CObjectXOriginalList::GetInstance()->Load("BLOCK", "data/MODEL/box.x"));
 		pBlock->SetPos(pos);
-		pBlock->SetRot(D3DXVECTOR3(0.0f,0.0f,0.0f));
+		pBlock->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 	return pBlock;
 }
@@ -120,6 +135,38 @@ void CBlock::SetPlayerNumber(int number)
 	default:
 		break;
 	}
+}
+
+//=============================================================================
+// 沈む
+//=============================================================================
+void CBlock::SetSink(float power)
+{
+	D3DXVECTOR3 pos = GetPos();
+	pos.y -= power;
+
+	if (m_sinkLimit >= pos.y)
+	{
+		pos.y = m_sinkLimit;
+		return;
+	}
+
+	SetPos(pos);
+}
+
+//=============================================================================
+// 沈む
+//=============================================================================
+void CBlock::Sink()
+{
+	if (!m_isSink)
+	{
+		return;
+	}
+
+	D3DXVECTOR3 pos = GetPos();
+	pos.y -= m_sinkPower;
+	SetPos(pos);
 }
 
 //=============================================================================

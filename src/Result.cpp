@@ -77,8 +77,7 @@ HRESULT CResult::Init()
 
 		//“y‘ä¶¬
 		m_pCylinder[i]= CObjectX::Create();
-		m_pCylinder[i]->SetModel("data/MODEL/entyu000.x");
-		m_pCylinder[i]->SizeCalculate();
+		m_pCylinder[i]->BindModel(CObjectXOriginalList::GetInstance()->Load("ENTYU", "data/MODEL/entyu000.x"));
 		m_pCylinder[i]->SetPos(D3DXVECTOR3{m_pPlayer[i]->GetPos().x,m_pPlayer[i]->GetPos().y - 250.0f,m_pPlayer[i]->GetPos().z });
 	}
 

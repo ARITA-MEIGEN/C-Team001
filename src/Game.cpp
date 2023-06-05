@@ -23,6 +23,8 @@
 #include"Item_Speed.h"
 #include"SkillGauge.h"
 
+#include "File.h"
+
 //静的メンバ変数
 CPlayer*CGame::m_pPlayer[MAX_PLAYER] = {};
 CGame::GAME CGame::m_gamestate;
@@ -55,6 +57,8 @@ CGame::~CGame()
 //====================================
 HRESULT CGame::Init()
 {
+	CObjectXOriginalList::GetInstance()->LoadAll();
+
 	//カメラの設定
 	m_pCamera = CCameraGame::Create();
 
@@ -102,6 +106,27 @@ HRESULT CGame::Init()
 
 	m_Round = ROUND_1;
 
+	// 背景モデルの設置
+	{
+		nlohmann::json loadData = LoadJson("test.json");
+
+		int loadDataSize = loadData["MODEL"].size();
+
+		for (int i = 0; i < loadDataSize; i++)
+		{
+			std::string tag = loadData["MODEL"][i]["TAG"];
+			D3DXVECTOR3 pos = { loadData["MODEL"][i]["POS"][0],loadData["MODEL"][i]["POS"][1] ,loadData["MODEL"][i]["POS"][2] };
+			D3DXVECTOR3 rot = { loadData["MODEL"][i]["ROT"][0],loadData["MODEL"][i]["ROT"][1] ,loadData["MODEL"][i]["ROT"][2] };
+
+			CObjectX* object = CObjectX::Create();
+			CObjectXOriginalList* original = CObjectXOriginalList::GetInstance();
+			object->BindModel(original->GetModelData(tag));
+			object->SetModelTag(tag);
+			object->SetPos(pos + D3DXVECTOR3(0.0f, -100.0f, 0.0f));
+			object->SetRot(rot);
+		}
+	}
+
 	return S_OK;
 }
 
@@ -110,31 +135,34 @@ HRESULT CGame::Init()
 //====================================
 void CGame::Uninit()
 {
-	//カメラの設定
+	//カメラの終了
 	if (m_pCamera != nullptr)
 	{
 		m_pCamera->Uninit();
 		delete m_pCamera;
 	}
 
-	//ライトの設定
+	// ライトの終了
 	if (m_pLight != nullptr)
 	{
 		m_pLight->Uninit();
 		delete m_pLight;
 	}
 	
+	// タイマーの終了
 	if (m_pTimer != nullptr)
 	{
 		m_pTimer->Uninit();
 		delete m_pTimer;
 	}
 
+	// マップの終了
 	if (m_pMap != nullptr)
 	{
 		delete m_pMap;
 	}
 
+	// 音楽の停止
 	CSound::GetInstance()->Stop();
 }
 
