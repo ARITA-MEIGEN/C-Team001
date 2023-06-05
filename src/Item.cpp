@@ -11,6 +11,7 @@
 // 定義
 //======================================================
 const float CItem::BUFF_TIME = 120;	//アイテムバフの効果時間
+const int CItem::LIMIT_DISPLAY = 120;		//点滅を始める時間
 
 //======================================================
 //コンストラクタ
@@ -34,6 +35,7 @@ HRESULT CItem::Init(void)
 	//初期化
 	m_effect = NONE;
 	m_nLife = 0;
+	m_bDisplay = true;
 	CObject3D::Init();
 
 	return S_OK;
@@ -53,6 +55,35 @@ void CItem::Uninit(void)
 //======================================================
 void CItem::Update(void)
 {
+	//表示時間の取得
+	int nLife = GetLife();
+
+	//表示時間の減算
+	if (nLife >= 0)
+	{
+		nLife--;
+	}
+
+	if (nLife <= LIMIT_DISPLAY)
+	{//表示時間が一定以下になったら点滅させる
+		m_bDisplay = false;
+	}
+
+	//表示時間の設定
+	SetLife(nLife);
+
+	if (m_sizePlan.x > GetSiz().x)
+	{
+		D3DXVECTOR3 addSize = GetSiz() + D3DXVECTOR3(1.5f, 0.0f, 1.5f);
+
+		if (addSize.x >= m_sizePlan.x)
+		{
+			addSize = m_sizePlan;
+		}
+
+		SetSiz(addSize);
+	}
+
 	//更新
 	CObject3D::Update();
 }
@@ -62,8 +93,19 @@ void CItem::Update(void)
 //======================================================
 void CItem::Draw(void)
 {
-	//描画
-	CObject3D::Draw();
+	if (!m_bDisplay)
+	{
+		if (GetLife() % 10 <= 5)
+		{//点滅させる
+		 //描画
+			CObject3D::Draw();
+		}
+	}
+	else
+	{
+		//描画
+		CObject3D::Draw();
+	}
 }
 
 //======================================================
@@ -79,7 +121,7 @@ CItem *CItem::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVE
 		//情報の設定
 		pItem->Init();
 		pItem->SetPos(pos);
-		pItem->SetSiz(size);
+		pItem->m_sizePlan = size;
 		pItem->SetRot(rot);
 	}
 

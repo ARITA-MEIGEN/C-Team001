@@ -173,7 +173,7 @@ CEffect* CEffect::Create(D3DXVECTOR3 pos, D3DXVECTOR3 siz, float lot, D3DXVECTOR
 		pEffect->SetCol(col);
 		pEffect->m_move = move;
 		pEffect->SetSiz(siz);
-		pEffect->BindTexture(m_apTexture[texnumber]);	//テクスチャの設定
+//		pEffect->BindTexture(m_apTexture[texnumber]);	//テクスチャの設定
 		pEffect->m_bAlpha = alpha;
 		pEffect->fAlphagain = col.a / nLife;
 	}

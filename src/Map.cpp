@@ -61,31 +61,7 @@ void CMap::Uninit()
 //=============================================================================
 void CMap::Update()
 {
-	{
-		m_nPopCnt--;
-		if (m_nPopCnt <= 0)
-		{
-			CBlock* popPlanBlock = m_pBlock[IntRandom(m_pBlock.size() - 1, 0)];
-
-			if (popPlanBlock->GetOnItem() != nullptr)
-			{
-				return;
-			}
-			if (popPlanBlock->IsStop())
-			{
-				return;
-			}
-
-			D3DXVECTOR3 pos = popPlanBlock->GetPos();
-			pos.y += 25.0f;
-
-			//アイテムの生成
-			popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(25.0f, 0.0f, 25.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300));
-			popPlanBlock->SetCol(D3DXCOLOR(1.0f,0.0f,1.0f,1.0f));
-
-			m_nPopCnt = IntRandom(60, 180);
-		}
-	}
+	PopItem();
 }
 
 //=============================================================================
@@ -138,8 +114,8 @@ void CMap::Load()
 			case 4:
 			{
 				D3DXVECTOR2 idx;
-				idx.x = j;
-				idx.y = i;
+				idx.x = (float)j;
+				idx.y = (float)i;
 				m_playerSpawnIdx[(int)map["MAP"][i][j]-1] = idx;
 			}
 				break;
@@ -157,7 +133,7 @@ int CMap::Ranking()
 {
 	int Score[4];
 	int Rank[4];	//プレイヤーの番号を渡す
-	int number;
+
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{
 		Score[i] = GetCountBlockType(i);
@@ -215,6 +191,46 @@ int CMap::GetCountBlockType(int nType)
 }
 
 //=============================================================================
+// アイテムの出現
+//=============================================================================
+void CMap::PopItem()
+{
+	m_nPopCnt--;
+	if (m_nPopCnt > 0)
+	{
+		return;
+	}
+
+	/* ↓出現間隔が0以下↓ */
+
+	CBlock* popPlanBlock = m_pBlock[IntRandom(m_pBlock.size() - 1, 0)];
+
+	if (popPlanBlock->IsStop())
+	{
+		return;
+	}
+
+	/* ↓ランダム指定のブロックが侵入不可ブロックではない↓ */
+
+
+	if (popPlanBlock->GetOnItem() != nullptr)
+	{
+		return;
+	}
+
+	/* ↓ランダム指定のブロックにアイテムが乗っていない↓ */
+
+	D3DXVECTOR3 pos = popPlanBlock->GetPos();
+	pos.y += 25.0f;
+
+	//アイテムの生成
+	popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(25.0f, 0.0f, 25.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300));
+
+	// 次回出現時間の設定
+	m_nPopCnt = IntRandom(60, 180);
+}
+
+//=============================================================================
 // ブロックの取得
 //=============================================================================
 CBlock * CMap::GetBlock(const int x, const int y)
@@ -240,8 +256,8 @@ D3DXVECTOR2 CMap::GetBlockIdx(CBlock * block)
 		if (pBlock == block)
 		{
 			D3DXVECTOR2 idx;
-			idx.y = i / m_axisSizeX;
-			idx.x = i % m_axisSizeX;
+			idx.y = (float)(i / m_axisSizeX);
+			idx.x = (float)(i % m_axisSizeX);
 			return idx;
 		}
 	}

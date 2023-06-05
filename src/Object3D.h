@@ -56,9 +56,10 @@ public:
 	const D3DXCOLOR GetCol() { return m_Col; };
 	const D3DXVECTOR3 GetRot() { return m_Rot; };
 
+	void SetTextureKey(const std::string key) { m_textureKey = key; }
 private:
 	//メンバ変数
-	LPDIRECT3DTEXTURE9 m_pTexture;		//ポリゴンのテクスチャ
+	std::string m_textureKey;			// テクスチャにアクセスするキー
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	//ポリゴンの頂点バッファ
 	float m_fLength;					//対角線の長さ
 	float m_fAngle;						//対角線の角度

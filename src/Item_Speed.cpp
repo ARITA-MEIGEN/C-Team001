@@ -8,11 +8,6 @@
 #include "Texture.h"
 
 //======================================================
-// 定義
-//======================================================
-const int CSpeed::LIMIT_DISPLAY = 120;		//点滅を始める時間
-
-//======================================================
 //コンストラクタ
 //======================================================
 CSpeed::CSpeed(int nPriority) : CItem(nPriority)
@@ -33,10 +28,9 @@ HRESULT CSpeed::Init(void)
 {
 	//初期化
 	CItem::Init();
-	m_bDisplay = true;
 
 	//テクスチャ設定
-	CTexture::GetInstance()->SetTexture("TEXT_TITLE");
+	SetTextureKey("SPEED_UP_ITEM_ICON");
 
 	return S_OK;
 }
@@ -55,45 +49,8 @@ void CSpeed::Uninit(void)
 //======================================================
 void CSpeed::Update(void)
 {
-	//表示時間の取得
-	int nLife = GetLife();
-
-	//表示時間の減算
-	if (nLife >= 0)
-	{
-		nLife--;
-	}
-
-	if (nLife <= LIMIT_DISPLAY)
-	{//表示時間が一定以下になったら点滅させる
-		m_bDisplay = false;
-	}
-
-	//表示時間の設定
-	SetLife(nLife);
-
 	//更新
-	CObject3D::Update();
-}
-
-//======================================================
-//描画処理
-//======================================================
-void CSpeed::Draw(void)
-{
-	if (!m_bDisplay)
-	{
-		if (GetLife() % 10 <= 5)
-		{//点滅させる
-			//描画
-			CObject3D::Draw();
-		}
-	}
-	else
-	{
-		//描画
-		CObject3D::Draw();
-	}
+	CItem::Update();
 }
 
 //======================================================
@@ -109,7 +66,7 @@ CSpeed *CSpeed::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 		//情報の設定
 		pSpeed->Init();
 		pSpeed->SetPos(pos);
-		pSpeed->SetSiz(size);
+		pSpeed->SetSizePlan(size);
 		pSpeed->SetRot(rot);
 		pSpeed->SetLife(nLife);
 		pSpeed->SetEffect(SPEED);
