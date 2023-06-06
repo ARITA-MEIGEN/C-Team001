@@ -176,10 +176,36 @@ void  CObject3D::Draw()
 	// テクスチャの設定
 	pDevice->SetTexture(0, pTexture->GetTexture(m_textureKey));
 
+	// カリング無効
+	//pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+	// αテストを有効
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+
+	// αテストの設定
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 100);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+	// ライトを無効
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 	//ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	//ポリゴンの形
 		0,										//頂点の開始場所
 		4);
+
+	// ライトを有効	
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+	// αテストを無効
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+	//カリングの設定を元に戻す
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+	//テクスチャの設定
+	pDevice->SetTexture(0, NULL);
+
 }
 
 //=============================================================================

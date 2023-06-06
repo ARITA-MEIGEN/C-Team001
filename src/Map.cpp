@@ -16,7 +16,7 @@
 //-----------------------------------------------------------------------------
 // 静的メンバー変数の宣言
 //-----------------------------------------------------------------------------
-const float CMap::BLOCK_WIDTH = 25.0f;	// ブロック同士の幅
+const float CMap::BLOCK_WIDTH = 30.0f;	// ブロック同士の幅
 int CMap::m_anRanking[MAX_PLAYER];	//	ランキング順位
 
 //=============================================================================
@@ -52,7 +52,7 @@ void CMap::Uninit()
 {
 	for (int i = 0; i < GetBlockCount(); i++)
 	{
-		m_pBlock[i] = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f);
+		m_pBlock[i] = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 }
 
@@ -99,7 +99,7 @@ void CMap::Load()
 			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH;
 			float x = j * BLOCK_WIDTH - map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
 
-			m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z), 0.0f);
+			m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z));
 			switch ((int)map["MAP"][i][j])
 			{
 			case -1:
@@ -221,10 +221,10 @@ void CMap::PopItem()
 	/* ↓ランダム指定のブロックにアイテムが乗っていない↓ */
 
 	D3DXVECTOR3 pos = popPlanBlock->GetPos();
-	pos.y += 25.0f;
+	pos.y += 30.0f;
 
 	//アイテムの生成
-	popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(25.0f, 0.0f, 25.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300));
+	popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300));
 
 	// 次回出現時間の設定
 	m_nPopCnt = IntRandom(60, 180);

@@ -84,6 +84,21 @@ void CItem::Update(void)
 		SetSiz(addSize);
 	}
 
+#if 1	// è„â∫à⁄ìÆ
+	D3DXVECTOR3 pos = GetPos();
+	float add = sinf(nLife / 20.0f) * 0.25f;
+	pos.y += add;
+
+	SetPos(pos);
+#endif // 0
+
+#if 0	// âÒì]
+	D3DXVECTOR3 rot = GetRot();
+	rot.y += 0.01f;
+	SetRot(rot);
+#endif // 0
+
+
 	//çXêV
 	CObject3D::Update();
 }

@@ -15,7 +15,8 @@
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const float CBlock::m_sinkLimit = -10.0f;
+const float CBlock::SINK_LIMIT = -10.0f;	// 下限値
+const float CBlock::UP_POWER = 0.5f;	// 下限値
 
 //=============================================================================
 // コンストラクタ
@@ -42,8 +43,6 @@ CBlock::~CBlock()
 HRESULT  CBlock::Init()
 {
 	CObjectX::Init();
-
-	m_upPower = 1.5f;
 	m_number = -1;
 
 	return S_OK;
@@ -79,7 +78,7 @@ void  CBlock::Update()
 		D3DXVECTOR3 pos = GetPos();
 		if (0.0f >= pos.y)
 		{
-			pos.y += m_upPower;
+			pos.y += UP_POWER;
 
 			SetPos(pos);
 		}
@@ -98,7 +97,7 @@ void  CBlock::Draw()
 //=============================================================================
 // 生成
 //=============================================================================
-CBlock* CBlock::Create(D3DXVECTOR3 pos, float lot)
+CBlock* CBlock::Create(D3DXVECTOR3 pos)
 {
 	CBlock*pBlock = new CBlock(5);
 
@@ -145,27 +144,12 @@ void CBlock::SetSink(float power)
 	D3DXVECTOR3 pos = GetPos();
 	pos.y -= power;
 
-	if (m_sinkLimit >= pos.y)
+	if (SINK_LIMIT >= pos.y)
 	{
-		pos.y = m_sinkLimit;
+		pos.y = SINK_LIMIT;
 		return;
 	}
 
-	SetPos(pos);
-}
-
-//=============================================================================
-// 沈む
-//=============================================================================
-void CBlock::Sink()
-{
-	if (!m_isSink)
-	{
-		return;
-	}
-
-	D3DXVECTOR3 pos = GetPos();
-	pos.y -= m_sinkPower;
 	SetPos(pos);
 }
 

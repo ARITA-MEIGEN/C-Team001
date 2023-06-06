@@ -68,7 +68,7 @@ HRESULT CPlayer::Init()
 	//モデルとモーションの読み込み
 	m_apModel = m_motion->GetParts();
 
-	for (int i = 0; i < m_apModel.size(); i++)
+	for (int i = 0; i < (int)m_apModel.size(); i++)
 	{
 		//色指定
 		switch (m_nPlayerNumber)
