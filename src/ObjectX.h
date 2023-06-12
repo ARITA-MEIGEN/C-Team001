@@ -32,7 +32,7 @@ public:
 	static CObjectX*Create();
 
 	void BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat);
-	void BindModel(CObjectXOriginalList::SModelData  model) { m_modelData = model; }
+	void BindModel(CObjectXOriginalList::SModelData  model);
 	void SetModelTag(std::string inTag) { m_modelTag = inTag; }
 	std::string GetModelTag() { return m_modelTag; }
 	void Shadow();
@@ -48,7 +48,8 @@ public:
 	void SetParent(CObjectX* pModel);
 	void SetParentMatrix(D3DXMATRIX* inMatrix) { m_mtxParent = inMatrix; }
 	void SetChildren(CObjectX* pModel) { m_childrens.push_back(pModel); }
-	void SetCol(const D3DXCOLOR& col) { m_col = col; };
+	void SetCol(const D3DXCOLOR& col) { m_materialColor[0] = col; };
+	void SetColorMaterial(const int index ,const D3DXCOLOR& col) { m_materialColor[index] = col; };
 
 	// Getter
 	const D3DXVECTOR3 GetPos() { return m_pos; };
@@ -71,7 +72,8 @@ private:
 	int				m_nIdxModelParent;	// 親モデルのインデックスaModelの番号
 	LPCTSTR			m_modelname;		// モデルの名前
 	D3DXCOLOR		m_col;				// 色
-  
+	std::vector<D3DXCOLOR>	m_materialColor;	// マテリアルごと設定する色
+
 	D3DXMATRIX*		m_mtxParent;		// 親のワールドマトリックス
 
 	// 位置

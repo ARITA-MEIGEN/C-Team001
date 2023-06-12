@@ -6,20 +6,17 @@
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
-#include"ObjectX.h"
-#include"Game.h"
-#include"renderer.h"
-#include"Camera.h"
-#include"InputKeyBoard.h"
-#include"Shadow.h"
-#include"Light.h"
+#include "ObjectX.h"
+#include "Application.h"
+#include "renderer.h"
+#include "Camera.h"
+#include "InputKeyBoard.h"
+#include "Shadow.h"
+#include "Light.h"
+#include "Game.h"
 
 //マクロ定義
-#define PLAYER_SPEED	(2.0f)	//移動速度
 #define MIN_SPEED		(0.1f)	//摩擦による最低速度
-#define NUM_MODELPARTS	(1)		//モデルのパーツ数
-
-static int g_nIdxShadow;		//影のID
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -44,8 +41,8 @@ CObjectX::~CObjectX()
 HRESULT CObjectX::Init()
 {
 	//情報の初期化
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//座標
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//向き
+	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 座標
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 向き
 	m_col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);	// 色
 	//影の生成
 //	m_Shadow = CShadow::Create(m_pos, D3DXVECTOR3(50.0f,0.0f,50.0f));
@@ -75,6 +72,28 @@ void CObjectX::Update(void)
 	m_move.x += (0.0f - m_move.x) * MIN_SPEED;
 	m_move.z += (0.0f - m_move.z) * MIN_SPEED;
 
+
+	if (m_modelData.numMat >= 2)
+	{
+		static bool red = false;
+		static int index = 1;
+		if (!red)
+		{
+			m_materialColor[index].r += 0.01f;
+			if (m_materialColor[index].r >= 1.0f)
+			{
+				red = true;
+			}
+		}
+		else
+		{
+			m_materialColor[index].r -= 0.01f;
+			if (m_materialColor[index].r <= 0.0f)
+			{
+				red = false;
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -134,8 +153,8 @@ void CObjectX::Draw(void)
 	//マテリアルの描画
 	for (int nCnt2 = 0; nCnt2 < (int)m_modelData.numMat; nCnt2++)
 	{
-		pMat[nCnt2].MatD3D.Emissive = m_col;
-		pMat[nCnt2].MatD3D.Diffuse.a = m_col.a;
+		pMat[nCnt2].MatD3D.Emissive = m_materialColor[nCnt2];
+		pMat[nCnt2].MatD3D.Diffuse.a = m_materialColor[nCnt2].a;
 
 		//マテリアルの設定
 		pDevice->SetMaterial(&pMat[nCnt2].MatD3D);
@@ -170,11 +189,24 @@ void CObjectX::BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat)
 }
 
 //-----------------------------------------------------------------------------
+// モデルの割り当て
+//-----------------------------------------------------------------------------
+void CObjectX::BindModel(CObjectXOriginalList::SModelData model)
+{
+	m_modelData = model;
+	m_materialColor.resize(m_modelData.numMat);
+	for (int i = 0; i < m_modelData.numMat; i++)
+	{
+		SetColorMaterial(i,D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+	}
+}
+
+//-----------------------------------------------------------------------------
 // 影の作成
 //-----------------------------------------------------------------------------
 void CObjectX::Shadow()
 {
-	D3DXMATERIAL *pMat;							//マテリアルのなんか
+	D3DXMATERIAL *pMat;			//マテリアルのなんか
 	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 

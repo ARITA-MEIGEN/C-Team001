@@ -122,7 +122,7 @@ HRESULT CGame::Init()
 			CObjectXOriginalList* original = CObjectXOriginalList::GetInstance();
 			object->BindModel(original->GetModelData(tag));
 			object->SetModelTag(tag);
-			object->SetPos(pos + D3DXVECTOR3(0.0f, -100.0f, 0.0f));
+			object->SetPos(pos + D3DXVECTOR3(0.0f, -500.0f, 0.0f));
 			object->SetRot(rot);
 		}
 	}
