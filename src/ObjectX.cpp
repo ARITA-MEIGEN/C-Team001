@@ -71,31 +71,6 @@ void CObjectX::Update(void)
 	//ˆÚ“®—ÊXV(Œ¸Š‚³‚¹‚é)
 	m_move.x += (0.0f - m_move.x) * MIN_SPEED;
 	m_move.z += (0.0f - m_move.z) * MIN_SPEED;
-
-#ifdef 0
-	if (m_modelData.numMat >= 2)
-	{
-		static bool red = false;
-		static int index = 1;
-		if (!red)
-		{
-			m_materialColor[index].r += 0.01f;
-			if (m_materialColor[index].r >= 1.0f)
-			{
-				red = true;
-			}
-		}
-		else
-		{
-			m_materialColor[index].r -= 0.01f;
-			if (m_materialColor[index].r <= 0.0f)
-			{
-				red = false;
-			}
-		}
-	}
-
-#endif // 0
 }
 
 //-----------------------------------------------------------------------------

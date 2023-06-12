@@ -173,6 +173,7 @@
     <ClCompile Include="src\inputcontroller.cpp" />
     <ClCompile Include="src\InputJoypad.cpp" />
     <ClCompile Include="src\InputKeyBoard.cpp" />
+    <ClCompile Include="src\inputmouse.cpp" />
     <ClCompile Include="src\Item.cpp" />
     <ClCompile Include="src\Item_Speed.cpp" />
     <ClCompile Include="src\Letter.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="src\InputJoyPad.h" />
     <ClInclude Include="src\InputKeyBoard.h" />
     <ClInclude Include="src\inputkeydata.h" />
+    <ClInclude Include="src\inputmouse.h" />
     <ClInclude Include="src\Item.h" />
     <ClInclude Include="src\Item_Speed.h" />
     <ClInclude Include="src\Letter.h" />
