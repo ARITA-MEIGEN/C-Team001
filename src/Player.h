@@ -77,7 +77,7 @@ public:
 	void BlockCollision();		// ブロックとの判定
 	void Skill();				// スキル処理
 
-								// Setter
+	// Setter
 	void SetController(CController* inOperate);
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; };			// 位置の設定
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };			// 向きの設定

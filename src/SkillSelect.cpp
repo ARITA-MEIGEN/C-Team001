@@ -14,10 +14,13 @@
 #include"renderer.h"
 #include"sound.h"
 #include"Map.h"
+#include"Game.h"
 #include"Player.h"
-#include"CameraGame.h"
-#include"Light.h"
 
+//====================================
+//静的メンバ変数
+//====================================
+//CObject2D* CSkillSelect::m_pBg = nullptr;
 
 //====================================
 //コンストラクタ
@@ -31,7 +34,6 @@ CSkillSelect::CSkillSelect()
 //====================================
 CSkillSelect::~CSkillSelect()
 {
-
 }
 
 //====================================
@@ -41,31 +43,25 @@ HRESULT CSkillSelect::Init()
 {
 	LPDIRECT3DDEVICE9 pDevice;
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
-	//テクスチャの読み込み
-	std::string textureKey[4];
-	textureKey[0] = "RESULET_003";
-	textureKey[1] = "RESULET_002";
-	textureKey[2] = "RESULET_001";
-	textureKey[3] = "RESULET_000";
 
+	//初期化
+	m_state = NONE;
+	m_nSkill[MAX_PLAYER] = {};
 
-	//カメラの設定
-	m_pCamera = CCameraGame::Create();
+	//背景の生成
+	m_pBg = new CObject2D(CObject::OBJTYPE_UI);
+	m_pBg->Init();
+	m_pBg->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
+	m_pBg->SetSiz(D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT));
+	m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-	//ライトの設定
-	m_pLight = new CLight;
-	m_pLight->Init();
+	m_pBg->SetTextureKey("TEXT_TITLE");
 
-
-	////背景の生成
-	//for (int i = 0; i < MAX_PLAYER; i++)
-	//{
-	//	m_apRank[i] = new CObject2D(CObject::OBJTYPE_UI);
-	//	m_apRank[i]->Init();
-	//	m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH / 2 - 100 + 100 * i, (float)SCREEN_HEIGHT / 2, 0.0f));
-	//	m_apRank[i]->SetSiz(D3DXVECTOR2((float)100, (float)50));
-	//	m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	//}
+	//スキル選択の部分の生成
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{
+		m_pObj2D[nCnt] = CObject2D::Create(D3DXVECTOR3(200.0f + (300.0f * nCnt), 600.0f, 0.0f), D3DXVECTOR2(150.0f, 80.0f), 5);
+	}
 
 	return S_OK;
 }
@@ -83,14 +79,32 @@ void CSkillSelect::Uninit()
 //====================================
 void CSkillSelect::Update()
 {
+	//インプットの情報を取得
 	CInput* pInput = CInput::GetKey();
 
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
-		if ((pInput->Trigger(KEY_ALL)) == true)		//ENTERキー
-		{//エンターでランキングに
+		//if (pInput->Press(JOYPAD_LEFT, 0))
+		//{
+		//	m_nSkill[0]--;
+		//}
+		//if (pInput->Press(JOYPAD_LEFT, 1))
+		//{
+		//	m_nSkill[1]--;
+		//}
+		//if (pInput->Press(JOYPAD_LEFT, 2))
+		//{
+		//	m_nSkill[2]--;
+		//}
+		//if (pInput->Press(JOYPAD_LEFT, 3))
+		//{
+		//	m_nSkill[3]--;
+		//}
+
+		if ((pInput->Trigger(DIK_RETURN)) == true)		//ENTERキー
+		{//エンターでゲームに
 		 //モード設定
-			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
 		}
 	}
 }

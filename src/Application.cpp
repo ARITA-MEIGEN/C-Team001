@@ -19,6 +19,7 @@
 #include "Texture.h"
 #include "ObjectList.h"
 #include "Texture.h"
+#include "SkillSelect.h"
 
 //====================================
 //静的メンバ変数
@@ -196,6 +197,11 @@ void CApplication::SetMode(MODE mode)
 	{
 	case MODE_TITLE:	//タイトル画面
 		m_pMode = new CTitle;
+		m_pMode->Init();
+		break;
+
+	case MODE_SELECT:	//選択画面
+		m_pMode = new CSkillSelect;
 		m_pMode->Init();
 		break;
 
