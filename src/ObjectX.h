@@ -9,8 +9,9 @@
 #define _OBJECTX_H_
 
 //インクルード
-#include"main.h"
-#include"Object.h"
+#include "main.h"
+#include "Object.h"
+#include "ObjectXOriginalList.h"
 #include <vector>
 
 //前方宣言
@@ -31,8 +32,10 @@ public:
 	static CObjectX*Create();
 
 	void BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat);
+	void BindModel(CObjectXOriginalList::SModelData  model);
+	void SetModelTag(std::string inTag) { m_modelTag = inTag; }
+	std::string GetModelTag() { return m_modelTag; }
 	void Shadow();
-	void SizeCalculate();
 	void SetModel(const char* Filename);
 
 	// Setter
@@ -45,7 +48,8 @@ public:
 	void SetParent(CObjectX* pModel);
 	void SetParentMatrix(D3DXMATRIX* inMatrix) { m_mtxParent = inMatrix; }
 	void SetChildren(CObjectX* pModel) { m_childrens.push_back(pModel); }
-	void SetCol(const D3DXCOLOR& col) { m_col = col; };
+	void SetCol(const D3DXCOLOR& col) { m_materialColor[0] = col; };
+	void SetColorMaterial(const int index ,const D3DXCOLOR& col) { m_materialColor[index] = col; };
 
 	// Getter
 	const D3DXVECTOR3 GetPos() { return m_pos; };
@@ -54,24 +58,22 @@ public:
 	const D3DXVECTOR3 GetRotDest() { return m_rotDest; };
 	const D3DXVECTOR3 GetPosDefault() { return m_DefaultPos; };
 	const D3DXVECTOR3 GetRotDefault() { return m_DefaultRot; };
+	const CObjectXOriginalList::SModelData GetModelData() { return m_modelData; };
 	const LPCTSTR GetModelName() { return m_modelname; }
-	const D3DXVECTOR3 GetSize() { return m_size; }
+	const D3DXVECTOR3 GetSize() { return m_modelData.size; }
 	const D3DXCOLOR GetCol() { return m_col; }
 	CObjectX* GetParent() { return m_pParent; }
 	const D3DXMATRIX& GetMatrix() { return m_mtxWorld; }
 
 private:
-	LPD3DXMESH		m_pMesh;			// メッシュへのポインタ
-	LPD3DXBUFFER	m_pBuffMat;			// マテリアル情報へのポインタ
-	DWORD			m_nNumMat;			// マテリアル情報の数
+	std::string m_modelTag;	// モデルデータのタグ
+	CObjectXOriginalList::SModelData m_modelData;	//モデルデータの参照
 	D3DXMATRIX		m_mtxWorld;			// ワールドマトリックス
-	D3DXVECTOR3		m_size;				// 大きさ
-	D3DXVECTOR3		m_vtxMax;			// モデルの最大座標
-	D3DXVECTOR3		m_vtxMin;			// モデルの座標の最小値
 	int				m_nIdxModelParent;	// 親モデルのインデックスaModelの番号
 	LPCTSTR			m_modelname;		// モデルの名前
 	D3DXCOLOR		m_col;				// 色
-  
+	std::vector<D3DXCOLOR>	m_materialColor;	// マテリアルごと設定する色
+
 	D3DXMATRIX*		m_mtxParent;		// 親のワールドマトリックス
 
 	// 位置

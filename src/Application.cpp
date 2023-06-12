@@ -128,6 +128,8 @@ void CApplication::Uninit()
 		CTexture::GetInstance()->UnloadAll();
 		delete CTexture::GetInstance();
 	}
+
+	CObjectXOriginalList::GetInstance()->Uninit();
 }
 
 //====================================

@@ -17,9 +17,12 @@
 #include"CameraGame.h"
 #include"Light.h"
 
+//-----------------------------------------------------------------------------
+//静的変数宣言
+//-----------------------------------------------------------------------------
+const float CResult::RANK_WIDTH = 270.0f;	// ランキングの設置間隔
+const float CResult::PLAYER_WIDTH = 120.0f;	// プレイヤーの設置間隔
 
-//静的メンバ変数
-//CObject2D*CResult::m_apRank[4] = {};
 //====================================
 //コンストラクタ
 //====================================
@@ -52,6 +55,8 @@ HRESULT CResult::Init()
 
 	//カメラの設定
 	m_pCamera = CCameraGame::Create();
+	m_pCamera->SetPosV(D3DXVECTOR3(0.0f, 250.0f, -400.0f));
+	m_pCamera->SetPosR(D3DXVECTOR3(0.0f,250.0f, 200.0f));
 
 	//ライトの設定
 	m_pLight = new CLight;
@@ -64,12 +69,16 @@ HRESULT CResult::Init()
 		//ランキング
 		m_apRank[i] = new CObject2D(CObject::OBJTYPE_UI);
 		m_apRank[i]->Init();
-		m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH/2-100+100 * i, (float)SCREEN_HEIGHT / 2, 0.0f));
 		m_apRank[i]->SetSiz(D3DXVECTOR2((float)100, (float)50));
-		m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 	
 		//プレイヤー生成
-		m_pPlayer[i] = CPlayer::Create({-80.0f+80.0f*i,0.0f,0.0f}, D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));		
+		m_pPlayer[i] = CPlayer::Create({ -(PLAYER_WIDTH*1.5f) + (PLAYER_WIDTH * i),0.0f,0.0f }, D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+
+		//土台生成
+		m_pCylinder[i]= CObjectX::Create();
+		m_pCylinder[i]->BindModel(CObjectXOriginalList::GetInstance()->Load("ENTYU", "data/MODEL/entyu000.x"));
+		m_pCylinder[i]->SetPos(D3DXVECTOR3{m_pPlayer[i]->GetPos().x,m_pPlayer[i]->GetPos().y - 250.0f,m_pPlayer[i]->GetPos().z });
 	}
 
 	for (int i = 0; i < MAX_PLAYER; i++)
@@ -113,12 +122,29 @@ void CResult::Update()
 
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
-		if ((pInput->Trigger(KEY_ALL)) == true)		//ENTERキー
+		if ((pInput->Trigger(DIK_RETURN)) == true)		//ENTERキー
 		{//エンターでランキングに
 		 //モード設定
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
 		}
 	}
+
+
+	for (int i = 0; i < MAX_PLAYER; i++)
+	{
+		if (m_pCylinder[i]->GetPos().y < CMap::GetRanking(i) * 20 - 150)
+		{
+			m_pCylinder[i]->SetPos(D3DXVECTOR3{ m_pCylinder[i]->GetPos().x, m_pCylinder[i]->GetPos().y + 1.0f , m_pCylinder[i]->GetPos().z });
+			m_pPlayer[i]->SetPos({ m_pPlayer[i]->GetPos().x,  m_pCylinder[i]->GetPos().y + m_pCylinder[i]->GetSize().y ,m_pPlayer[i]->GetPos().z });
+
+		}
+		else
+		{
+			m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH / 2 - (RANK_WIDTH * 1.5f) + RANK_WIDTH * i, (float)SCREEN_HEIGHT / 2- CMap::GetRanking(i) * 40.0f, 0.0f));
+			m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		}
+	}
+
 }
 
 //====================================

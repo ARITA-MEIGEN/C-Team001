@@ -2,6 +2,7 @@
 //
 // モーション処理(motion.h)
 // Auther：唐﨑結斗
+// Auther：Yuda Katio
 // 概要 : モーションクラスの設定
 //
 //**************************************************************************************************
@@ -80,19 +81,24 @@ public:
 
 	void ReloadMotion(const char *pFileName);	// モーションの再読み込み
 
-	// Setter
-	void SetPartsOrigin();							// パーツをもとの場所に配置する
-	void SetMotion(const int nCntMotionSet);		// モーションの初期設定
-	void SetParts(D3DXMATRIX mtxWorld);				// パーツの設定
-	void SetNumMotion(const int nNumMotion);		// モーション番号の設定
+	// モーションの有無
 	void SetUseMotion(bool isMotion) { m_bMotion = isMotion; }		// モーションを行っているか設定
+	bool GetMotion() { return m_bMotion; }							// モーションを行っているか取得
+
+	// モーションブレンドを行なっているか
+	bool GetMotionBlend() { return m_bMotionBlend; }				// モーションブレンドを行っているか取得
 	void SetMotionBlend(bool isBlend) { m_bMotionBlend = isBlend; }	// モーションブレンドを行っているか設定
+
+	// Setter
+	void SetPartsOrigin();									// パーツをもとの場所に配置する
+	void SetMotion(const unsigned int nCntMotionSet);		// モーションの初期設定
+	void SetParts(D3DXMATRIX mtxWorld);						// パーツの設定
+	void SetNumMotion(const unsigned int nNumMotion);		// モーション番号の設定
 
 	// Getter
 	int GetMaxParts() { return m_nMaxParts; }					// パーツの最大数の取得
-	bool GetMotion() { return m_bMotion; }						// モーションを行っているか取得
-	bool GetMotionBlend() { return m_bMotionBlend; }			// モーションブレンドを行っているか取得
-	CObjectX* GetParts(int index) { return m_parts[index]; }	// モーションブレンドを行っているか取得
+	std::vector<CObjectX*> GetParts() { return m_parts; }		// パーツモデルの取得
+	CObjectX* GetParts(int index) { return m_parts[index]; }	// パーツのオブジェクトを取得
 
 private:
 	//--------------------------------------------------------------------

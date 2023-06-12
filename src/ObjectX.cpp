@@ -6,20 +6,17 @@
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
-#include"ObjectX.h"
-#include"Game.h"
-#include"renderer.h"
-#include"Camera.h"
-#include"InputKeyBoard.h"
-#include"Shadow.h"
-#include"Light.h"
+#include "ObjectX.h"
+#include "Application.h"
+#include "renderer.h"
+#include "Camera.h"
+#include "InputKeyBoard.h"
+#include "Shadow.h"
+#include "Light.h"
+#include "Game.h"
 
 //マクロ定義
-#define PLAYER_SPEED	(2.0f)	//移動速度
 #define MIN_SPEED		(0.1f)	//摩擦による最低速度
-#define NUM_MODELPARTS	(1)		//モデルのパーツ数
-
-static int g_nIdxShadow;		//影のID
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -27,6 +24,7 @@ static int g_nIdxShadow;		//影のID
 CObjectX::CObjectX(int nPriority) :CObject(nPriority)
 {
 	m_mtxParent = nullptr;
+	//m_modelData = nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -43,9 +41,9 @@ CObjectX::~CObjectX()
 HRESULT CObjectX::Init()
 {
 	//情報の初期化
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//座標
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//向き
-	
+	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 座標
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 向き
+	m_col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);	// 色
 	//影の生成
 //	m_Shadow = CShadow::Create(m_pos, D3DXVECTOR3(50.0f,0.0f,50.0f));
 
@@ -57,16 +55,6 @@ HRESULT CObjectX::Init()
 //-----------------------------------------------------------------------------
 void CObjectX::Uninit(void)
 {
-	if (m_pMesh != NULL)
-	{
-		m_pMesh->Release();
-		m_pMesh = NULL;
-	}
-	if (m_pBuffMat != NULL)
-	{
-		m_pBuffMat->Release();
-		m_pBuffMat = NULL;
-	}
 	CObject::Release();
 }
 
@@ -84,6 +72,30 @@ void CObjectX::Update(void)
 	m_move.x += (0.0f - m_move.x) * MIN_SPEED;
 	m_move.z += (0.0f - m_move.z) * MIN_SPEED;
 
+#ifdef 0
+	if (m_modelData.numMat >= 2)
+	{
+		static bool red = false;
+		static int index = 1;
+		if (!red)
+		{
+			m_materialColor[index].r += 0.01f;
+			if (m_materialColor[index].r >= 1.0f)
+			{
+				red = true;
+			}
+		}
+		else
+		{
+			m_materialColor[index].r -= 0.01f;
+			if (m_materialColor[index].r <= 0.0f)
+			{
+				red = false;
+			}
+		}
+	}
+
+#endif // 0
 }
 
 //-----------------------------------------------------------------------------
@@ -91,11 +103,6 @@ void CObjectX::Update(void)
 //-----------------------------------------------------------------------------
 void CObjectX::Draw(void)
 {
-	if (m_pMesh == nullptr)
-	{
-		return;
-	}
-
 	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 
@@ -143,18 +150,19 @@ void CObjectX::Draw(void)
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
 	//マテリアルデータへのポインタを取得
-	pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+	pMat = (D3DXMATERIAL*)m_modelData.pBuffMat->GetBufferPointer();
 
 	//マテリアルの描画
-	for (int nCnt2 = 0; nCnt2 < (int)m_nNumMat; nCnt2++)
+	for (int nCnt2 = 0; nCnt2 < (int)m_modelData.numMat; nCnt2++)
 	{
-		pMat[nCnt2].MatD3D.Emissive = m_col;
+		pMat[nCnt2].MatD3D.Emissive = m_materialColor[nCnt2];
+		pMat[nCnt2].MatD3D.Diffuse.a = m_materialColor[nCnt2].a;
 
 		//マテリアルの設定
 		pDevice->SetMaterial(&pMat[nCnt2].MatD3D);
 
 		//プレイヤーパーツの描画
-		m_pMesh->DrawSubset(nCnt2);
+		m_modelData.pMesh->DrawSubset(nCnt2);
 	}
 	//保持していたマテリアルを戻す
 	pDevice->SetMaterial(&matDef);
@@ -177,9 +185,22 @@ CObjectX * CObjectX::Create()
 //-----------------------------------------------------------------------------
 void CObjectX::BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat)
 {
-	m_pBuffMat = pBuff;
-	m_pMesh = pMesh;
-	m_nNumMat = pNumMat;
+	m_modelData.pBuffMat = pBuff;
+	m_modelData.pMesh = pMesh;
+	m_modelData.numMat = pNumMat;
+}
+
+//-----------------------------------------------------------------------------
+// モデルの割り当て
+//-----------------------------------------------------------------------------
+void CObjectX::BindModel(CObjectXOriginalList::SModelData model)
+{
+	m_modelData = model;
+	m_materialColor.resize(m_modelData.numMat);
+	for (int i = 0; i < m_modelData.numMat; i++)
+	{
+		SetColorMaterial(i,D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -187,7 +208,7 @@ void CObjectX::BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat)
 //-----------------------------------------------------------------------------
 void CObjectX::Shadow()
 {
-	D3DXMATERIAL *pMat;							//マテリアルのなんか
+	D3DXMATERIAL *pMat;			//マテリアルのなんか
 	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 
@@ -213,12 +234,12 @@ void CObjectX::Shadow()
 	D3DXMatrixMultiply(&m_mtxShadow, &m_mtxShadow, &m_mtxWorld);
 
 	//影の描画
-	//マテリアルの描画
-	pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+	//マテリアルデータへのポインタを取得
+	pMat = (D3DXMATERIAL*)m_modelData.pBuffMat->GetBufferPointer();
 
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxShadow);
 
-	for (int i = 0; i < (int)m_nNumMat; i++)
+	for (int i = 0; i < (int)m_modelData.numMat; i++)
 	{
 		col[0] = pMat[i].MatD3D.Diffuse;
 		col[1] = pMat[i].MatD3D.Emissive;
@@ -229,7 +250,7 @@ void CObjectX::Shadow()
 		pDevice->SetMaterial(&pMat[i].MatD3D);
 
 		//プレイヤーパーツの描画
-		m_pMesh->DrawSubset(i);
+		m_modelData.pMesh->DrawSubset(i);
 
 		pMat[i].MatD3D.Diffuse = col[0];
 		pMat[i].MatD3D.Emissive = col[1];
@@ -237,89 +258,10 @@ void CObjectX::Shadow()
 }
 
 //-----------------------------------------------------------------------------
-// サイズの算出
-//-----------------------------------------------------------------------------
-void CObjectX::SizeCalculate()
-{
-	BYTE*pVtxBuff;		//頂点バッファへのポインタ
-	int nNumVtx;		//頂点数
-	DWORD sizeFVF;		//頂点フォーマットのサイズ
-
-	// 頂点バッファのロック
-	m_pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
-
-	//頂点数の取得
-	nNumVtx = m_pMesh->GetNumVertices();
-
-	//頂点フォーマットのサイズを取得
-	sizeFVF = D3DXGetFVFVertexSize(m_pMesh->GetFVF());
-
-	//頂点座標の代入
-	//すべての頂点のposを取得する
-	D3DXVECTOR3 vtxMax = D3DXVECTOR3(-FLT_MAX, -FLT_MAX, -FLT_MAX);	//最大値の保存用
-	D3DXVECTOR3 vtxMin = D3DXVECTOR3(FLT_MAX, FLT_MAX, FLT_MAX);	//最小値の保存用
-	for (int nCntVtx = 0; nCntVtx < nNumVtx; nCntVtx++)
-	{
-		D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;
-		//頂点座標を比較してモデルの最小値最大値を取得
-		if (vtx.x > vtxMax.x)
-		{//Xの最大値を取得
-			vtxMax.x = vtx.x;
-		}
-		if (vtx.x < vtxMin.x)
-		{//Xの最小値を取得
-			vtxMin.x = vtx.x;
-		}
-		if (vtx.y > vtxMax.y)
-		{//Yの最大値を取得
-			vtxMax.y = vtx.y;
-		}
-		if (vtx.y < vtxMin.y)
-		{//Yの最小値を取得
-			vtxMin.y = vtx.y;
-		}
-		if (vtx.z > vtxMax.z)
-		{//Zの最大値を取得
-			vtxMax.z = vtx.z;
-		}
-		if (vtx.z < vtxMin.z)
-		{//Zの最小値を取得
-			vtxMin.z = vtx.z;
-		}
-
-		//頂点フォーマットのサイズ分ポインタを進める
-		pVtxBuff += sizeFVF;
-	}
-	//頂点バッファのアンロック
-	m_pMesh->UnlockVertexBuffer();
-
-	m_vtxMax = vtxMax;	// 頂点座標の最大値
-	m_vtxMin = vtxMin;	// 頂点座標の最小値
-
-	m_size = vtxMax - vtxMin;	//パーツのサイズ
-}
-
-//-----------------------------------------------------------------------------
 // モデルの設定
 //-----------------------------------------------------------------------------
 void CObjectX::SetModel(const char * Filename)
 {
-	// 初期化
-	m_pBuffMat = nullptr;
-	m_nNumMat = 0;
-	m_pMesh = nullptr;
-
-	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
-	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
-
-	D3DXLoadMeshFromX(Filename,
-		D3DXMESH_SYSTEMMEM,
-		pDevice,
-		NULL,
-		&m_pBuffMat,
-		NULL,
-		&m_nNumMat,
-		&m_pMesh);
 }
 
 //-----------------------------------------------------------------------------

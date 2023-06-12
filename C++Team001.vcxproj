@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BgStage.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Camera.cpp" />
@@ -181,12 +182,12 @@
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Mode.cpp" />
     <ClCompile Include="src\Motion.cpp" />
-    <ClCompile Include="src\MotionModel3D.cpp" />
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\Object2D.cpp" />
     <ClCompile Include="src\Object3D.cpp" />
     <ClCompile Include="src\ObjectList.cpp" />
     <ClCompile Include="src\ObjectX.cpp" />
+    <ClCompile Include="src\ObjectXOriginalList.cpp" />
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\PlayerController.cpp" />
@@ -204,6 +205,7 @@
     <ClCompile Include="src\utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BgStage.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Block.h" />
     <ClInclude Include="src\Camera.h" />
@@ -232,12 +234,12 @@
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Mode.h" />
     <ClInclude Include="src\Motion.h" />
-    <ClInclude Include="src\MotionModel3D.h" />
     <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\Object2D.h" />
     <ClInclude Include="src\Object3D.h" />
     <ClInclude Include="src\ObjectList.h" />
     <ClInclude Include="src\ObjectX.h" />
+    <ClInclude Include="src\ObjectXOriginalList.h" />
     <ClInclude Include="src\Particle.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\PlayerController.h" />

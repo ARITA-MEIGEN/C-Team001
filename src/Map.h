@@ -54,6 +54,8 @@ public:
 	static int GetRanking(int number) { return m_anRanking[number]; };
 
 private:
+	void PopItem();
+private:
 	//ƒƒ“ƒoŠÖ”
 	STAGE m_StageNumber;
 	std::vector<CBlock*> m_pBlock;

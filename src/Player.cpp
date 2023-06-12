@@ -6,31 +6,35 @@
 //-----------------------------------------------------------------------------
 //インクルード
 //-----------------------------------------------------------------------------
-#include"Player.h"
-#include"Application.h"
-#include"renderer.h"
-#include"Camera.h"
-#include"input.h"
-#include"Item.h"
-#include"Shadow.h"
-#include"Mesh.h"
-#include"ObjectX.h"
-#include"Game.h"
-#include"PlayerController.h"
-#include"sound.h"
-#include"Time.h"
-#include"effect.h"
-#include"Particle.h"
-#include"Map.h"
-#include"SkillGauge.h"
-#include"motion.h"
+#include "Player.h"
+#include "PlayerController.h"
+#include "Application.h"
+#include "sound.h"
+#include "renderer.h"
+#include "input.h"
+
+#include "Item.h"
+#include "Shadow.h"
+#include "Mesh.h"
+#include "Game.h"
+#include "Time.h"
+#include "effect.h"
+#include "Particle.h"
+#include "Map.h"
+#include "SkillGauge.h"
+#include "motion.h"
 
 //-----------------------------------------------------------------------------
-//静的メンバ変数
+// 定数
 //-----------------------------------------------------------------------------
+const std::string CPlayer::MOTION_PATH = "data/TXT/Player01/Player01.txt";	// モーションデータパス
 const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
+
+//-----------------------------------------------------------------------------
+// 静的メンバ変数
+//-----------------------------------------------------------------------------
 int CPlayer::m_nNumPlayer = 0;					// プレイヤーの数
 
 //-----------------------------------------------------------------------------
@@ -41,7 +45,7 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_nPlayerNumber = m_nNumPlayer;
 	m_nNumPlayer++;
 
-	m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(80.0f, 0.0f, 80.0f));	// 影
+//	m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(80.0f, 0.0f, 80.0f));	// 影
 }
 
 //-----------------------------------------------------------------------------
@@ -57,19 +61,15 @@ CPlayer::~CPlayer()
 //-----------------------------------------------------------------------------
 HRESULT CPlayer::Init()
 {
-	//モデルとモーションの読み込み
-	for (int i = 0; i < 14; i++)
-	{//プレイヤーの生成
-		m_apModel[i] = CObjectX::Create();
-	}
-
-	m_motion = new CMotion("data/TXT/Player01/Player01.txt");
+	// モーションの読込み
+	m_motion = new CMotion(MOTION_PATH.data());
 	m_Motion = PM_ST_NEUTRAL;	//ニュートラルモーションに変更
 
-	for (int i = 0; i < NUM_PLAYERPARTS; i++)
-	{
-		m_apModel[i] = m_motion->GetParts(i);
+	//モデルとモーションの読み込み
+	m_apModel = m_motion->GetParts();
 
+	for (int i = 0; i < (int)m_apModel.size(); i++)
+	{
 		//色指定
 		switch (m_nPlayerNumber)
 		{
@@ -131,6 +131,10 @@ void CPlayer::Uninit(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Update(void)
 {
+	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
+	{
+		return;
+	}
 	if (!(CGame::GetGame() != CGame::GAME_END) && !(CGame::GetGame() != CGame::GAME_START))
 	{
 		return;
@@ -172,7 +176,7 @@ void CPlayer::Update(void)
 	TurnLookAtMoveing();
 
 	Normalization();		// 角度の正規化
-	m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
+//	m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
 
 	BlockCollision();
 
@@ -258,30 +262,6 @@ CPlayer * CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	pPlayer->Init();
 
 	return pPlayer;
-}
-
-//-----------------------------------------------------------------------------
-// 入力設定
-//-----------------------------------------------------------------------------
-void CPlayer::Input()
-{
-	CInput* pInput = CInput::GetKey();
-	int Key = 0;
-	pInput->PressDevice(KEY_DOWN_RIGHT);
-	//レバー
-	{
-		//下
-		Key |= pInput->Press(DIK_S) || pInput->Press(JOYPAD_DOWN, m_nPlayerNumber) || pInput->Press(JOYPAD_DOWN_LEFT, m_nPlayerNumber) || pInput->Press(JOYPAD_DOWN_RIGHT, m_nPlayerNumber) ? INPUT2 : INPUT_NOT2;
-		//左
-		Key |= pInput->Press(DIK_A) || pInput->Press(JOYPAD_LEFT, m_nPlayerNumber) || pInput->Press(JOYPAD_DOWN_LEFT, m_nPlayerNumber) || (pInput->Press(JOYPAD_UP_LEFT, m_nPlayerNumber)) ? INPUT4 : INPUT_NOT4;
-		//右
-		Key |= pInput->Press(DIK_D) || pInput->Press(JOYPAD_RIGHT, m_nPlayerNumber) || (pInput->Press(JOYPAD_UP_RIGHT, m_nPlayerNumber)) || pInput->Press(JOYPAD_DOWN_RIGHT, m_nPlayerNumber) ? INPUT6 : INPUT_NOT6;
-		//上
-		Key |= pInput->Press(DIK_W) || pInput->Press(JOYPAD_UP, m_nPlayerNumber) || (pInput->Press(JOYPAD_UP_RIGHT, m_nPlayerNumber)) || (pInput->Press(JOYPAD_UP_LEFT, m_nPlayerNumber)) ? INPUT8 : INPUT_NOT8;
-
-		//ニュートラル
-		Key |= (Key & INPUT_NOT6) == INPUT_NOT6 && (Key & INPUT_NOT2) == INPUT_NOT2 && (Key & INPUT_NOT4) == INPUT_NOT4 && (Key & INPUT_NOT8) == INPUT_NOT8 ? INPUT5 : INPUT_NOT5;
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -388,20 +368,23 @@ void CPlayer::StopNoBlock()
 //-----------------------------------------------------------------------------
 void CPlayer::TurnCenterBlock()
 {
-	if (m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f) && m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f))
-	{//X軸
-		if (m_pos.z <= m_pOnBlock->GetPos().z + (m_pOnBlock->GetSize().z * 0.05f) && m_pos.z >= m_pOnBlock->GetPos().z - (m_pOnBlock->GetSize().z * 0.05f))
-		{//Z軸
+	bool XMin = m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f);
+	bool XMax = m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f);
+	bool ZMin = m_pos.z <= m_pOnBlock->GetPos().z + (m_pOnBlock->GetSize().z * 0.05f);
+	bool ZMax = m_pos.z >= m_pOnBlock->GetPos().z - (m_pOnBlock->GetSize().z * 0.05f);
+
+	// ブロック内に収まっているか
+	if (XMin && XMax && ZMin && ZMax)
+	{
 		 // 方向ベクトル掛ける移動量
-			m_move = m_movePlanVec * PLAYER_SPEED;
+		m_move = m_movePlanVec * PLAYER_SPEED;
 
-			if (m_State == PST_SPEED || m_ItemState == ITEM_SPEED)
-			{
-				m_move *= ADD_SPEED;
-			}
-
-			D3DXVec3Normalize(&m_moveVec, &m_move);
+		if (m_State == PST_SPEED || m_ItemState == ITEM_SPEED)
+		{
+			m_move *= ADD_SPEED;
 		}
+
+		D3DXVec3Normalize(&m_moveVec, &m_move);
 	}
 }
 
@@ -452,7 +435,15 @@ void CPlayer::BlockCollision()
 				{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックではなく、無強化の場合)
 					m_nSkillGauge++;
 				}
+
+				if (m_pOnBlock != nullptr)
+				{
+					m_pOnBlock->SetOnPlayer(nullptr);
+				}
+
+				pBlock->SetOnPlayer(this);				//プレイヤーの
 				pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
+				pBlock->SetSink(2.5f);
 				m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
@@ -475,6 +466,7 @@ void CPlayer::BlockCollision()
 
 				if (Block != nullptr)
 				{
+					Block->SetOnPlayer(this);	//プレイヤーの
 					Block->SetPlayerNumber(m_nPlayerNumber);
 				}
 			}
@@ -494,6 +486,7 @@ void CPlayer::BlockCollision()
 
 				if (Block != nullptr)
 				{//ブロックを塗る
+					Block->SetOnPlayer(this);	//プレイヤーの
 					Block->SetPlayerNumber(m_nPlayerNumber);
 				}
 			}
@@ -509,6 +502,7 @@ void CPlayer::BlockCollision()
 
 				if (Block != nullptr)
 				{//ブロックを塗る
+					Block->SetOnPlayer(this);	//プレイヤーの
 					Block->SetPlayerNumber(m_nPlayerNumber);
 				}
 			}
@@ -529,6 +523,7 @@ void CPlayer::BlockCollision()
 
 					if (Block != nullptr)
 					{//ブロックを塗る
+						Block->SetOnPlayer(this);	//プレイヤーの
 						Block->SetPlayerNumber(m_nPlayerNumber);
 					}
 				}

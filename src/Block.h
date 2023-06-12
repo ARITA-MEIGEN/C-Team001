@@ -23,6 +23,9 @@ class CItem;
 //=============================================================================
 class CBlock : public CObjectX
 {
+private:
+	static const float SINK_LIMIT;	// íæÇﬁêßå¿
+	static const float UP_POWER;	// íæÇﬁêßå¿
 public:
 	explicit CBlock(int nPriority = 2);
 	~CBlock() override;
@@ -31,13 +34,14 @@ public:
 	void Update() override;
 	void Draw() override;
 	void DeleteItem();
-	static CBlock *Create(D3DXVECTOR3 pos, float lot);
+	static CBlock *Create(D3DXVECTOR3 pos);
 
 	// Setter
 	void SetPlayerNumber(int number);
 	void SetStop(const bool isStop) { m_isStop = isStop; }
 	void SetOnItem(CItem* onItem) { m_onItem = onItem; }
 	void SetOnPlayer(CPlayer* onPlayer) { m_onPlayer = onPlayer; }
+	void SetSink(float power);
 
 	// Getter
 	int GetNumber() { return m_number; };
