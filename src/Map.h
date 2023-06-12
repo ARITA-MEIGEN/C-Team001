@@ -11,6 +11,7 @@
 // include
 //-----------------------------------------------------------------------------
 #include"Block.h"
+#include "Game.h"
 #include <vector>
 
 //-----------------------------------------------------------------------------
@@ -19,7 +20,6 @@
 #define MAX_BLOCK	(16)	//ブロックの最大数
 #define BLOCK_X		(4)		//ブロックの数X
 #define BLOCK_Y		(4)		//ブロックの数Y
-#define MAX_PLAYER	(4)		//プレイヤーの最大数
 
 //-----------------------------------------------------------------------------
 // プロトタイプ宣言
@@ -53,6 +53,8 @@ public:
 	int CMap::GetCountBlockType(int nType);
 	static int GetRanking(int number) { return m_anRanking[number]; };
 
+private:
+	void PopItem();
 private:
 	//メンバ関数
 	STAGE m_StageNumber;

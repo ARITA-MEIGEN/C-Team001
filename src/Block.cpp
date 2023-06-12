@@ -12,15 +12,21 @@
 #include "Block.h"
 #include "Item.h"
 
-//静的メンバ変数
+//-----------------------------------------------------------------------------
+// 定数
+//-----------------------------------------------------------------------------
+const float CBlock::SINK_LIMIT = -10.0f;	// 下限値
+const float CBlock::UP_POWER = 0.5f;	// 下限値
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 CBlock::CBlock(int priorty) :CObjectX(priorty)
 {
-	m_number = 4;
+	m_number = 0;
 	m_isStop = false;
 	m_onItem = nullptr;
+	m_onPlayer = nullptr;
 }
 
 //=============================================================================
@@ -37,7 +43,6 @@ CBlock::~CBlock()
 HRESULT  CBlock::Init()
 {
 	CObjectX::Init();
-
 	m_number = -1;
 
 	return S_OK;
@@ -62,7 +67,20 @@ void  CBlock::Update()
 	{
 		if (m_onItem->GetLife() <= 0)
 		{
+			m_onItem->Release();
 			m_onItem = nullptr;
+		}
+	}
+
+
+	if (m_onPlayer == nullptr)
+	{
+		D3DXVECTOR3 pos = GetPos();
+		if (0.0f >= pos.y)
+		{
+			pos.y += UP_POWER;
+
+			SetPos(pos);
 		}
 	}
 }
@@ -79,18 +97,16 @@ void  CBlock::Draw()
 //=============================================================================
 // 生成
 //=============================================================================
-CBlock* CBlock::Create(D3DXVECTOR3 pos, float lot)
+CBlock* CBlock::Create(D3DXVECTOR3 pos)
 {
-	CBlock*pBlock;
+	CBlock*pBlock = new CBlock(5);
 
-	pBlock = new CBlock(5);
 	if (pBlock != nullptr)
-	{// ポリゴンの初期化処理
+	{
 		pBlock->Init();
-		pBlock->SetModel("data/MODEL/box.x");
-		pBlock->SizeCalculate();
+		pBlock->BindModel(CObjectXOriginalList::GetInstance()->Load("BLOCK", "data/MODEL/box.x"));
 		pBlock->SetPos(pos);
-		pBlock->SetRot(D3DXVECTOR3(0.0f,0.0f,0.0f));
+		pBlock->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 	return pBlock;
 }
@@ -118,5 +134,33 @@ void CBlock::SetPlayerNumber(int number)
 	default:
 		break;
 	}
+}
 
+//=============================================================================
+// 沈む
+//=============================================================================
+void CBlock::SetSink(float power)
+{
+	D3DXVECTOR3 pos = GetPos();
+	pos.y -= power;
+
+	if (SINK_LIMIT >= pos.y)
+	{
+		pos.y = SINK_LIMIT;
+		return;
+	}
+
+	SetPos(pos);
+}
+
+//=============================================================================
+// アイテムを消す処理
+//=============================================================================
+void CBlock::DeleteItem(void)
+{
+	if (m_onItem != nullptr)
+	{
+		m_onItem->Uninit();
+		m_onItem = nullptr;
+	}
 }

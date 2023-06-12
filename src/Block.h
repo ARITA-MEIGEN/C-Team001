@@ -21,24 +21,29 @@ class CItem;
 //=============================================================================
 // 構造体定義
 //=============================================================================
-// 頂点データ
 class CBlock : public CObjectX
 {
+private:
+	static const float SINK_LIMIT;	// 沈む制限
+	static const float UP_POWER;	// 沈む制限
 public:
 	explicit CBlock(int nPriority = 2);
-	~CBlock()override;
-	HRESULT Init()override;
-	void Uninit()override;
-	void Update()override;
-	void Draw()override;
-	static CBlock *Create(D3DXVECTOR3 pos, float lot);
+	~CBlock() override;
+	HRESULT Init() override;
+	void Uninit() override;
+	void Update() override;
+	void Draw() override;
+	void DeleteItem();
+	static CBlock *Create(D3DXVECTOR3 pos);
 
-	//セッター
+	// Setter
 	void SetPlayerNumber(int number);
 	void SetStop(const bool isStop) { m_isStop = isStop; }
 	void SetOnItem(CItem* onItem) { m_onItem = onItem; }
+	void SetOnPlayer(CPlayer* onPlayer) { m_onPlayer = onPlayer; }
+	void SetSink(float power);
 
-	//ゲッター
+	// Getter
 	int GetNumber() { return m_number; };
 	bool IsStop() { return m_isStop; };
 

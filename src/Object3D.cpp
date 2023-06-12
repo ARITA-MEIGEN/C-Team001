@@ -10,6 +10,7 @@
 #include "renderer.h"
 #include"Application.h"
 #include"Shadow.h"
+#include "Texture.h"
 
 #define POLIGON_SIZE	(500.0f)	//ポリゴンの大きさ
 
@@ -18,7 +19,6 @@
 //=============================================================================
 CObject3D::CObject3D(int nPriority) :CObject(nPriority)
 {
-	m_pTexture = nullptr;							// ポリゴンのテクスチャ
 	m_pVtxBuff = nullptr;							// ポリゴンの頂点バッファ
 	m_fLength = 0.0f;								// 対角線の長さ
 	m_fAngle = 0.0f;								// 対角線の角度
@@ -118,10 +118,10 @@ void  CObject3D::Update()
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(-(m_Siz.x * 0.5f), 0.0f, -(m_Siz.z * 0.5f));
-	pVtx[1].pos = D3DXVECTOR3(-(m_Siz.x * 0.5f), 0.0f, +(m_Siz.z * 0.5f));
-	pVtx[2].pos = D3DXVECTOR3(+(m_Siz.x * 0.5f), 0.0f, -(m_Siz.z * 0.5f));
-	pVtx[3].pos = D3DXVECTOR3(+(m_Siz.x * 0.5f), 0.0f, +(m_Siz.z * 0.5f));
+	pVtx[0].pos = D3DXVECTOR3(-(m_Siz.x * 0.5f), 0.0f, +(m_Siz.z * 0.5f));
+	pVtx[1].pos = D3DXVECTOR3(+(m_Siz.x * 0.5f), 0.0f, +(m_Siz.z * 0.5f));
+	pVtx[2].pos = D3DXVECTOR3(-(m_Siz.x * 0.5f), 0.0f, -(m_Siz.z * 0.5f));
+	pVtx[3].pos = D3DXVECTOR3(+(m_Siz.x * 0.5f), 0.0f, -(m_Siz.z * 0.5f));
 
 	//法線ベクトルの設定
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -170,10 +170,42 @@ void  CObject3D::Draw()
 	//頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
+	// テクスチャの取得
+	CTexture* pTexture = CTexture::GetInstance();
+
+	// テクスチャの設定
+	pDevice->SetTexture(0, pTexture->GetTexture(m_textureKey));
+
+	// カリング無効
+	//pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+	// αテストを有効
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+
+	// αテストの設定
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 100);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+	// ライトを無効
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 	//ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	//ポリゴンの形
 		0,										//頂点の開始場所
 		4);
+
+	// ライトを有効	
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+	// αテストを無効
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+	//カリングの設定を元に戻す
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+	//テクスチャの設定
+	pDevice->SetTexture(0, NULL);
+
 }
 
 //=============================================================================
@@ -230,12 +262,3 @@ CObject3D * CObject3D::Create(D3DXVECTOR3 pos, D3DXVECTOR3 siz, int Priority)
 
 	return pObject3D;
 }
-
-//=============================================================================
-// テクスチャの設定
-//=============================================================================
-void CObject3D::BindTexture(LPDIRECT3DTEXTURE9 tex)
-{
-	m_pTexture = tex;
-}
-

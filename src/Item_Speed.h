@@ -12,23 +12,18 @@
 //加速クラス
 class CSpeed : public CItem
 {
+private:
 public:
-	//定義
-	static const int LIMIT_DISPLAY;	//点滅を始める時間
+	explicit CSpeed(int nPriority = 3);		// コンストラクタ
+	~CSpeed() override;						// デストラクタ
 
-	explicit CSpeed(int nPriority = 3);								//コンストラクタ
-	~CSpeed() override;												//デストラクタ
+	HRESULT Init(void) override;			// 初期化処理
+	void Uninit(void) override;				// 終了処理
+	void Update(void) override;				// 更新処理
 
-	HRESULT Init(void) override;									//初期化処理
-	void Uninit(void) override;										//終了処理
-	void Update(void) override;										//更新処理
-	void Draw(void) override;										//描画処理
-
-	static CSpeed* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife);		//生成処理
+	static CSpeed* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife);	// 生成処理
 
 private:
-	//メンバ変数
-	bool m_bDisplay;			//表示するかどうか
 };
 
 #endif

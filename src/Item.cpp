@@ -8,6 +8,12 @@
 #include "Texture.h"
 
 //======================================================
+// 定義
+//======================================================
+const float CItem::BUFF_TIME = 120;		// アイテムバフの効果時間
+const int CItem::LIMIT_DISPLAY = 120;	// 点滅を始める時間
+
+//======================================================
 //コンストラクタ
 //======================================================
 CItem::CItem(int nPriority) : CObject3D(nPriority)
@@ -27,6 +33,9 @@ CItem::~CItem()
 HRESULT CItem::Init(void)
 {
 	//初期化
+	m_effect = NONE;
+	m_nLife = 0;
+	m_bDisplay = true;
 	CObject3D::Init();
 
 	return S_OK;
@@ -46,6 +55,50 @@ void CItem::Uninit(void)
 //======================================================
 void CItem::Update(void)
 {
+	//表示時間の取得
+	int nLife = GetLife();
+
+	//表示時間の減算
+	if (nLife >= 0)
+	{
+		nLife--;
+	}
+
+	if (nLife <= LIMIT_DISPLAY)
+	{//表示時間が一定以下になったら点滅させる
+		m_bDisplay = false;
+	}
+
+	//表示時間の設定
+	SetLife(nLife);
+
+	if (m_sizePlan.x > GetSiz().x)
+	{
+		D3DXVECTOR3 addSize = GetSiz() + D3DXVECTOR3(1.5f, 0.0f, 1.5f);
+
+		if (addSize.x >= m_sizePlan.x)
+		{
+			addSize = m_sizePlan;
+		}
+
+		SetSiz(addSize);
+	}
+
+#if 1	// 上下移動
+	D3DXVECTOR3 pos = GetPos();
+	float add = sinf(nLife / 20.0f) * 0.25f;
+	pos.y += add;
+
+	SetPos(pos);
+#endif // 0
+
+#if 0	// 回転
+	D3DXVECTOR3 rot = GetRot();
+	rot.y += 0.01f;
+	SetRot(rot);
+#endif // 0
+
+
 	//更新
 	CObject3D::Update();
 }
@@ -55,8 +108,19 @@ void CItem::Update(void)
 //======================================================
 void CItem::Draw(void)
 {
-	//描画
-	CObject3D::Draw();
+	if (!m_bDisplay)
+	{
+		if (GetLife() % 10 <= 5)
+		{//点滅させる
+		 //描画
+			CObject3D::Draw();
+		}
+	}
+	else
+	{
+		//描画
+		CObject3D::Draw();
+	}
 }
 
 //======================================================
@@ -72,7 +136,7 @@ CItem *CItem::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVE
 		//情報の設定
 		pItem->Init();
 		pItem->SetPos(pos);
-		pItem->SetSiz(size);
+		pItem->m_sizePlan = size;
 		pItem->SetRot(rot);
 	}
 

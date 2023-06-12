@@ -1,20 +1,19 @@
 //=============================================================================
 //
-// オブジェクト
-// Author : 有田明玄
+// スキル選択
+// Author : 髙野馨將
 //
 //=============================================================================
-#ifndef _RESULT_H_
-#define _RESULT_H_
+#ifndef _SKILLSELECT_H_
+#define _SKILLSELECT_H_
 
 //インクルード
 #include "main.h"
 #include "Application.h"
 #include "Mode.h"
 #include "Object2D.h"
-#include"ObjectX.h"
 
-
+//定義
 #define	MAX_PLAYER	(4)		//プレイヤー人数
 
 //前方宣言
@@ -22,11 +21,11 @@ class CPlayer;
 class CCamera;
 class CLight;
 
-class CResult : public CMode
+class CSkillSelect : public CMode
 {
 public:
-	CResult();
-	~CResult();
+	CSkillSelect();
+	~CSkillSelect();
 
 	HRESULT Init();
 	void Uninit();
@@ -38,13 +37,9 @@ public:
 private:
 	CCamera*m_pCamera;					// カメラ
 	CLight*m_pLight;					// 光源
-	CObject2D*m_apRank[MAX_PLAYER];		//順位表示UI
-	CPlayer*m_pPlayer[MAX_PLAYER];		//プレイヤー
-	CObjectX*m_pCylinder[MAX_PLAYER];	//ランキング用の柱
 
-	static const float RANK_WIDTH;		// ランキングのUIの設置間隔
-	static const float PLAYER_WIDTH;	// プレイヤーのUIの設置間隔
-	
+	CPlayer*m_pPlayer[MAX_PLAYER];		//プレイヤー
+
 };
 
 #endif // !_OBJECT_H_

@@ -25,6 +25,11 @@ public:
 
 	static CCamera* Create(void);	// 生成
 
+	void SetPosV(D3DXVECTOR3 posV) { m_posV = posV; };	//視点
+	void SetPosR(D3DXVECTOR3 posR) { m_posR = posR; };	//注視点
+	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };		//向き
+	void SetVecU(D3DXVECTOR3 vec) { m_vecU = vec; };
+
 protected:
 	D3DXVECTOR3 m_posV;				// 視点
 	D3DXVECTOR3 m_posVDest;			// 視点の目的地

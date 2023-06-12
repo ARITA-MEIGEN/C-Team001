@@ -23,15 +23,15 @@ class CBlock;
 class CMotion;
 
 //マクロ定義
-#define PLAYER_LEGPARTS	(13)
-#define	NUM_PLAYERPARTS	(1+PLAYER_LEGPARTS)
 #define MAX_GAUGE		(10)
 
 class CPlayer :public CObject
 {
 private:
+	static const std::string MOTION_PATH;	// モーションデータパス
 	static const float PLAYER_SPEED;	// 移動速度
-	static const float ITEM_ADD_SPEED;	// アイテムで加算するスピード
+	static const float ADD_SPEED;	// アイテムで加算するスピード
+	static const float SKILL_BUFF_TIME;	// バフの効果時間(Lv1基準)
 
 public:
 
@@ -52,6 +52,14 @@ public:
 		PST_MAX
 	};
 
+	enum ITEM_STATE
+	{
+		ITEM_NONE,	// 無し
+		ITEM_SPEED,	// 加速
+		ITEM_PAINT,	// 塗り強化
+		ITEM_MAX
+	};
+
 	explicit CPlayer(int nPriority = 3);
 	~CPlayer();
 	//プロトタイプ宣言
@@ -61,12 +69,6 @@ public:
 	void			Draw() override;
 	void			Move();										// 移動
 	static CPlayer*	Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);	// プレイヤー生成
-
-	void Input();				// 入力処理
-	void Updatepos();			// 座標の更新
-	void Normalization();		// 正規化
-	void BlockCollision();		// ブロックとの判定
-	void Skill();				// スキル処理
 
 	// Setter
 	void SetController(CController* inOperate);
@@ -82,33 +84,40 @@ public:
 	int				GetPlayerNumber() { return m_nPlayerNumber; }	//プレイヤーの番号の取得
 
 private:
-	void TurnLookAtMoveing();		// 移動方向を見て曲がる
-	void StopNoBlock();				// ブロックがない場所で停まる
-	void TurnCenterBlock();				// ブロックがない場所で停まる
+	void Updatepos();			// 座標の更新
+	void Normalization();		// 正規化
+	void BlockCollision();		// ブロックとの判定
+	void Skill();				// スキル処理
+
+	void TurnLookAtMoveing();	// 移動方向を見て曲がる
+	void StopNoBlock();			// ブロックがない場所で停まる
+	void TurnCenterBlock();		// ブロックの真ん中で曲がるようになる
 private:
-	CController*	m_controller;					// 命令を出す人
-	CObjectX*		m_apModel[NUM_PLAYERPARTS];		// モデルのインスタンス
-	CMotion*		m_motion;						// モーション
-	D3DXMATRIX		m_mtxWorld;						// ワールドマトリックス
-	D3DXVECTOR3		m_pos;							// 位置
-	D3DXVECTOR3		m_rot;							// 向き
-	D3DXVECTOR3		m_move;							// 移動量
-	D3DXVECTOR3		m_moveVec;						// 移動ベクトル
-	D3DXVECTOR3		m_movePlanVec;						// 移動予定ベクトル
-	D3DXVECTOR3		m_posold;						// 前回の位置
-	D3DXVECTOR3		m_rotDest;						// 目的の角度の保存
-	PLAYER_MOTION	m_Motion;						// 現在のモーション
-	static int		m_nNumPlayer;					// プレイヤーの数
-	int				m_nPlayerNumber;				// 自分のプレイヤー番号
-	int				m_nSkillLv;						// プレイヤーのスキルLｖ
-	int				m_nBuffTime;					// 強化効果時間
-	int				m_nSkillGauge;					// スキルゲージの量
-	PLAYER_STATE	m_State;						// プレイヤーの状態
-	CShadow*		m_pShadow;						// 影
-	CBlock*			m_pOnBlock;						// プレイヤーの乗っているブロックへのポインタ
+	CController*	m_controller;			// 命令を出す人
+	std::vector<CObjectX*>	m_apModel;		// モデルのインスタンス
+	CMotion*		m_motion;				// モーション
+	D3DXMATRIX		m_mtxWorld;				// ワールドマトリックス
+	D3DXVECTOR3		m_pos;					// 位置
+	D3DXVECTOR3		m_rot;					// 向き
+	D3DXVECTOR3		m_move;					// 移動量
+	D3DXVECTOR3		m_moveVec;				// 移動ベクトル
+	D3DXVECTOR3		m_movePlanVec;			// 移動予定ベクトル
+	D3DXVECTOR3		m_posold;				// 前回の位置
+	D3DXVECTOR3		m_rotDest;				// 目的の角度の保存
+	PLAYER_MOTION	m_Motion;				// 現在のモーション
+	static int		m_nNumPlayer;			// プレイヤーの数
+	int				m_nPlayerNumber;		// 自分のプレイヤー番号
+	int				m_nSkillLv;				// プレイヤーのスキルLｖ
+	int				m_nSkillBuffTime;		// スキル強化効果時間
+	int				m_nItemBuffTime;		// アイテム強化効果時間
+	int				m_nSkillGauge;			// スキルゲージの量
+	PLAYER_STATE	m_State;				// プレイヤーの状態
+	ITEM_STATE		m_ItemState;			// アイテムの状態
+	CShadow*		m_pShadow;				// 影
+	CBlock*			m_pOnBlock;				// プレイヤーの乗っているブロックへのポインタ
 
 	//押し出し判定関連
-	D3DXVECTOR3		m_aAxisSiz[PST_MAX];			// 押し出し判定の大きさ
+	D3DXVECTOR3		m_aAxisSiz[PST_MAX];	// 押し出し判定の大きさ
 };
 
 #endif
