@@ -72,7 +72,7 @@ void CObjectX::Update(void)
 	m_move.x += (0.0f - m_move.x) * MIN_SPEED;
 	m_move.z += (0.0f - m_move.z) * MIN_SPEED;
 
-
+#ifdef 0
 	if (m_modelData.numMat >= 2)
 	{
 		static bool red = false;
@@ -94,6 +94,8 @@ void CObjectX::Update(void)
 			}
 		}
 	}
+
+#endif // 0
 }
 
 //-----------------------------------------------------------------------------
