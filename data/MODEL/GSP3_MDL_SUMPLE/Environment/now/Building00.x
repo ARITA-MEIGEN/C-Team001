@@ -187,7 +187,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\C-Team001\\data\\TEXTURE\\window_bule.jpg";
+    "data\\TEXTURE\\window_bule.jpg";
    }
   }
   Material {
@@ -196,7 +196,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\C-Team001\\data\\TEXTURE\\window_bule.jpg";
+    "data\\TEXTURE\\window_bule.jpg";
    }
   }
   Material {
