@@ -129,7 +129,7 @@ void CMap::Load()
 //=============================================================================
 // ランキング処理
 //=============================================================================
-int CMap::Ranking()
+void CMap::Ranking()
 {
 	int Score[4];
 	int Rank[4];	//プレイヤーの番号を渡す
@@ -140,7 +140,7 @@ int CMap::Ranking()
 	}
 
 	//昇順に並び変える
-	std::vector<int> rank = { Score[0], Score[1], Score[2],Score[3] };
+	std::vector<int> rank = { Score[0], Score[1], Score[2],Score[3] };	//スコア
 	std::sort(rank.begin(), rank.end());
 
 	for (int i = 0; i < MAX_PLAYER; i++)
@@ -157,13 +157,20 @@ int CMap::Ranking()
 		}
 	}
 
+	//Rankの中身は昇順0が最下位
+
 	//ランキングを代入
 	for (int i = 0; i < MAX_PLAYER; i++)
-	{//昇順
-		m_anRanking[i] = Rank[i];
+	{//プレイヤーの番号順に代入
+		m_anRanking[Rank[MAX_PLAYER-1-i]] = i;
+		if (i>=1)
+		{
+			if (rank[MAX_PLAYER - 1 - i] == rank[MAX_PLAYER - 1 - i + 1])
+			{
+				m_anRanking[Rank[MAX_PLAYER - 1 - i]] = m_anRanking[Rank[MAX_PLAYER - 1 - i + 1]];
+			}
+		}
 	}
-
-	return m_anRanking[3];	//一位のプレイヤーの番号を出力
 }
 
 //=============================================================================
