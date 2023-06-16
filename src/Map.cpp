@@ -24,7 +24,7 @@ int CMap::m_anRanking[MAX_PLAYER];	//	ランキング順位
 //=============================================================================
 CMap::CMap()
 {
-	m_nPopCnt = 0;
+	m_nItemPopCount = 0;
 }
 
 //=============================================================================
@@ -41,7 +41,7 @@ HRESULT CMap::Init()
 {
 	Load();
 
-	m_nPopCnt = IntRandom(2 * 60, 1 * 60);
+	m_nItemPopCount = IntRandom(2 * 60, 1 * 60);
 	return S_OK;
 }
 
@@ -195,8 +195,8 @@ int CMap::GetCountBlockType(int nType)
 //=============================================================================
 void CMap::PopItem()
 {
-	m_nPopCnt--;
-	if (m_nPopCnt > 0)
+	m_nItemPopCount--;
+	if (m_nItemPopCount > 0)
 	{
 		return;
 	}
@@ -227,7 +227,48 @@ void CMap::PopItem()
 	popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300));
 
 	// 次回出現時間の設定
-	m_nPopCnt = IntRandom(60, 180);
+	m_nItemPopCount = IntRandom(60, 180);
+}
+
+//=============================================================================
+// 未来エリアの出現
+//=============================================================================
+void CMap::PopFutureArea()
+{
+	m_nItemPopCount--;
+	if (m_nItemPopCount > 0)
+	{
+		return;
+	}
+
+	/* ↓出現間隔が0以下↓ */
+
+	CBlock* popPlanBlock = m_pBlock[IntRandom(m_pBlock.size() - 1, 0)];
+
+	if (popPlanBlock->IsStop())
+	{
+		return;
+	}
+
+	/* ↓ランダム指定のブロックが侵入不可ブロックではない↓ */
+
+
+	if (popPlanBlock->GetOnItem() != nullptr)
+	{
+		return;
+	}
+
+	/* ↓ランダム指定のブロックにアイテムが乗っていない↓ */
+
+	D3DXVECTOR3 pos = popPlanBlock->GetPos();
+	pos.y += 30.0f;
+
+	//アイテムの生成
+	popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300));
+
+	// 次回出現時間の設定
+	m_nAreaPopCount = IntRandom(60, 180);
+
 }
 
 //=============================================================================

@@ -30,9 +30,6 @@
     <ClCompile Include="src\DebugProc.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\DirectInput.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\effect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -167,6 +164,12 @@
     </ClCompile>
     <ClCompile Include="src\inputmouse.cpp">
       <Filter>ソース ファイル\03_Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectInput.cpp">
+      <Filter>ソース ファイル\03_Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\area.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -321,6 +324,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\inputmouse.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\area.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
