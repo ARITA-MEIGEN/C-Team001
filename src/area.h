@@ -11,6 +11,7 @@
 // include
 //-----------------------------------------------------------------------------
 #include"Object.h"
+#include <functional>
 
 //-----------------------------------------------------------------------------
 // 前方宣言
@@ -30,13 +31,16 @@ public:
 	void Uninit();
 	void Update();
 	void Draw();
-	static CArea *Create(D3DXVECTOR2 index, const unsigned int inRangel,const unsigned int inTime);
+	static CArea* Create(D3DXVECTOR2 index, const unsigned int inRange,const unsigned int inTime);
+
+	void SetFunctionAtDied(std::function<void()> inFunction) { m_functionAtDied = inFunction; }
 
 private:
 	//メンバ変数
 	D3DXVECTOR2 m_centerIndex;	// 中心のブロック番号
-	unsigned int m_rangel;		// 範囲
+	unsigned int m_range;		// 範囲
 	unsigned int m_time;		// 時間
+	std::function<void()> m_functionAtDied;	// 死亡時の処理
 };
 
 #endif

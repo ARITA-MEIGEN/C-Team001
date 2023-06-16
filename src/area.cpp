@@ -22,6 +22,13 @@ void CArea::Uninit()
 void CArea::Update()
 {
 	m_time--;
+
+	if (m_time <= 0)
+	{
+		m_functionAtDied();
+		Release();		// ”jŠü—\’è
+		return;
+	}
 }
 
 void CArea::Draw()
@@ -31,7 +38,7 @@ void CArea::Draw()
 //=============================================================================
 // ¶¬
 //=============================================================================
-CArea * CArea::Create(D3DXVECTOR2 index, const unsigned int inRangel, const unsigned int inTime)
+CArea * CArea::Create(D3DXVECTOR2 index, const unsigned int inRange, const unsigned int inTime)
 {
 	CArea* area = new CArea;
 
@@ -41,6 +48,6 @@ CArea * CArea::Create(D3DXVECTOR2 index, const unsigned int inRangel, const unsi
 	area->Init();
 	area->m_centerIndex = index;
 	area->m_time = inTime;
-	area->m_rangel = inRangel;
+	area->m_range = inRange;
 	return area;
 }

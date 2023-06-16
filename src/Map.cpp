@@ -12,6 +12,7 @@
 #include "file.h"
 #include "utility.h"
 #include "Item_Speed.h"
+#include "area.h"
 
 //-----------------------------------------------------------------------------
 // 静的メンバー変数の宣言
@@ -62,6 +63,7 @@ void CMap::Uninit()
 void CMap::Update()
 {
 	PopItem();
+	PopFutureArea();
 }
 
 //=============================================================================
@@ -270,8 +272,48 @@ void CMap::PopFutureArea()
 	D3DXVECTOR3 pos = popPlanBlock->GetPos();
 	pos.y += 30.0f;
 
-	//アイテムの生成
-	popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300));
+	D3DXVECTOR2 popBlockIndex = GetBlockIdx(popPlanBlock);
+
+	int range = 1;
+
+	//エリアの生成
+	CArea* area = CArea::Create(popBlockIndex, range,100);
+
+	std::vector<CBlock*> areaBlock;
+	std::map<CBlock*, int> areaBlockIndex;
+
+	for (int y = 0; y < range * 2 + 1; y++)
+	{
+		for (int x = 0; x < range * 2 + 1; x++)
+		{
+			CBlock* block = GetBlock(x + popBlockIndex.x - range, y + popBlockIndex.y - range);
+
+			if (block == nullptr)
+			{
+				continue;
+			}
+
+			if (!block->IsStop())
+			{
+				areaBlock.push_back(block);
+				areaBlockIndex[block] = block->GetNumber();
+				block->SetPlayerNumber(-1);
+			}
+		}
+	}
+
+	// エリア死亡時の処理
+	auto atDead = [this, areaBlock, areaBlockIndex]()
+	{
+		std::map<CBlock*, int> BlockIndex = areaBlockIndex;
+		int size = areaBlock.size();
+		for (int i = 0; i < size; i++)
+		{
+			areaBlock[i]->SetPlayerNumber(BlockIndex[areaBlock[i]]);
+		}
+	};
+
+	area->SetFunctionAtDied(atDead);
 
 	// 次回出現時間の設定
 	m_nAreaPopCount = IntRandom(60, 180);
@@ -284,6 +326,12 @@ void CMap::PopFutureArea()
 CBlock * CMap::GetBlock(const int x, const int y)
 {
 	int idx = (m_axisSizeX * y) + x;
+
+	if (idx < 0 || idx >= m_pBlock.size())
+	{
+		return nullptr;
+	}
+
 	return m_pBlock[idx];
 }
 
