@@ -33,6 +33,7 @@ public:
 	enum MODE
 	{//ÉQÅ[ÉÄÉÇÅ[Éh
 		MODE_TITLE = 0,
+		MODE_SELECT,
 		MODE_GAME,
 		MODE_RESULT,
 		MODE_MAX
