@@ -39,11 +39,16 @@ public:
 	void Update();			//更新
 	void Draw();			//描画
 
+	void Input();			//入力
+	void Select();			//選択処理
+
+	static int GetSelectSkill(int nCntPlayer) { return m_nSkill[nCntPlayer]; }
 private:
-	CObject2D*m_pBg;				//背景
+	static int m_nSkill[MAX_PLAYER];			//現在選択されているスキルの番号
+	CObject2D*m_pBg;					//背景
 	CObject2D*m_pObj2D[MAX_PLAYER];		//スキル選択の枠
 	SKILL_STATE m_state;				//状態
-	int m_nSkill[MAX_PLAYER];			//現在選択されているスキルの番号
+	
 };
 
 #endif // !_OBJECT_H_

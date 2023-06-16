@@ -45,10 +45,12 @@ public:
 
 	enum PLAYER_STATE
 	{
-		PST_STAND,	// 立ち
-		PST_DIE,	// 被弾状態
-		PST_SPEED,	// 加速状態
-		PST_PAINT,	// 塗り強化状態
+		PST_STAND,		// 立ち
+		PST_DIE,		// 被弾状態
+		PST_SPEED,		// 加速状態
+		PST_PAINT,		// 塗り強化状態
+		PST_KNOCKBACK,	// ノックバック強化状態
+		PST_AREA,		// エリア生成状態
 		PST_MAX
 	};
 
@@ -60,6 +62,14 @@ public:
 		ITEM_MAX
 	};
 
+	enum SKILL_STATE
+	{
+		SKILL_SPEED,		// 加速
+		SKILL_PAINT,		// 塗範囲拡大
+		SKILL_KNOCKBACK,	// ノックバック
+		SKILL_AREA			// エリア生成
+	};
+
 	explicit CPlayer(int nPriority = 3);
 	~CPlayer();
 	//プロトタイプ宣言
@@ -69,12 +79,6 @@ public:
 	void			Draw() override;
 	void			Move();										// 移動
 	static CPlayer*	Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);	// プレイヤー生成
-
-	void Input();				// 入力処理
-	void Updatepos();			// 座標の更新
-	void Normalization();		// 正規化
-	void BlockCollision();		// ブロックとの判定
-	void Skill();				// スキル処理
 
 	// Setter
 	void SetController(CController* inOperate);
@@ -119,6 +123,7 @@ private:
 	int				m_nSkillGauge;			// スキルゲージの量
 	PLAYER_STATE	m_State;				// プレイヤーの状態
 	ITEM_STATE		m_ItemState;			// アイテムの状態
+	SKILL_STATE		m_SkillState;			// 使えるスキルの状態
 	CShadow*		m_pShadow;				// 影
 	CBlock*			m_pOnBlock;				// プレイヤーの乗っているブロックへのポインタ
 

@@ -22,6 +22,7 @@
 #include "Particle.h"
 #include "Map.h"
 #include "SkillGauge.h"
+#include "SkillSelect.h"
 #include "motion.h"
 
 //-----------------------------------------------------------------------------
@@ -90,9 +91,10 @@ HRESULT CPlayer::Init()
 		}
 	}
 
-	//動的確保
+	//初期化
 	m_nSkillGauge = 0;
 	m_nSkillLv = 0;
+	m_SkillState = (SKILL_STATE)CSkillSelect::GetSelectSkill(m_nNumPlayer - 1);
 
 	//動的確保
 	m_controller = new CPlayerController(m_nPlayerNumber);
@@ -432,7 +434,7 @@ void CPlayer::BlockCollision()
 			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f))
 			{//Z軸
 				if (pBlock->GetNumber() != m_nPlayerNumber && m_nSkillGauge < MAX_GAUGE && m_State == PST_STAND)
-				{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックではなく、無強化の場合)
+				{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックスではなく、無強化の場合)
 					m_nSkillGauge++;
 				}
 
@@ -565,73 +567,95 @@ void CPlayer::Skill()
 	//インプットの取得
 	CInput* pInput = CInput::GetKey();
 
-	//ゲージの量によってスキルLvを決める
-	if (m_nSkillGauge == MAX_GAUGE)
+	if (m_nSkillBuffTime <= 0)
 	{
-		m_nSkillLv = 3;
-	}
-	else if (m_nSkillGauge >= MAX_GAUGE * 0.7)
-	{
-		m_nSkillLv = 2;
-	}
-	else if (m_nSkillGauge >= MAX_GAUGE * 0.3)
-	{
-		m_nSkillLv = 1;
-	}
-	else
-	{
-		m_nSkillLv = 0;
+		//ゲージの量によってスキルLvを決める
+		if (m_nSkillGauge == MAX_GAUGE)
+		{
+			m_nSkillLv = 3;
+		}
+		else if (m_nSkillGauge >= MAX_GAUGE * 0.7)
+		{
+			m_nSkillLv = 2;
+		}
+		else if (m_nSkillGauge >= MAX_GAUGE * 0.3)
+		{
+			m_nSkillLv = 1;
+		}
+		else
+		{
+			m_nSkillLv = 0;
+		}
+
+		//現在のスキルLvによって効果量を変える
+		switch (m_nSkillLv)
+		{
+		case 1:
+			if (pInput->Trigger(DIK_K))
+			{
+				m_nSkillGauge -= (int)(MAX_GAUGE * 0.3f);
+				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
+			}
+			else if (pInput->Trigger(DIK_L))
+			{
+				m_nSkillGauge -= (int)(MAX_GAUGE * 0.3f);
+				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
+			}
+			break;
+
+		case 2:
+			if (pInput->Trigger(DIK_K))
+			{
+				m_nSkillGauge -= (int)(MAX_GAUGE * 0.7f);
+				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 2.0f);
+			}
+			else if (pInput->Trigger(DIK_L))
+			{
+				m_nSkillGauge -= (int)(MAX_GAUGE * 0.7f);
+				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 2.0f);
+			}
+			break;
+
+		case 3:
+			if (pInput->Trigger(DIK_K))
+			{
+				m_nSkillGauge -= MAX_GAUGE;
+				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 5.0f);
+			}
+			else if (pInput->Trigger(DIK_L))
+			{
+				m_nSkillGauge -= MAX_GAUGE;
+				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 5.0f);
+			}
+			break;
+
+		default:
+			break;
+		}
 	}
 
-	//現在のスキルLvによって効果量を変える
-	switch (m_nSkillLv)
+	if (m_nSkillBuffTime > 0)
 	{
-	case 1:
-		if (pInput->Trigger(DIK_K))
+		switch (m_SkillState)
 		{
-			m_nSkillGauge -= (int)(MAX_GAUGE * 0.3f);
-			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
+		case 0:
 			m_State = PST_SPEED;
-		}
-		else if (pInput->Trigger(DIK_L))
-		{
-			m_nSkillGauge -= (int)(MAX_GAUGE * 0.3f);
-			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
-			m_State = PST_PAINT;
-		}
-		break;
+			break;
 
-	case 2:
-		if (pInput->Trigger(DIK_K))
-		{
-			m_nSkillGauge -= (int)(MAX_GAUGE * 0.7f);
-			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 2.0f);
-			m_State = PST_SPEED;
-		}
-		else if (pInput->Trigger(DIK_L))
-		{
-			m_nSkillGauge -= (int)(MAX_GAUGE * 0.7f);
-			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 2.0f);
+		case 1:
 			m_State = PST_PAINT;
-		}
-		break;
+			break;
 
-	case 3:
-		if (pInput->Trigger(DIK_K))
-		{
-			m_nSkillGauge -= MAX_GAUGE;
-			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 5.0f);
-			m_State = PST_SPEED;
-		}
-		else if (pInput->Trigger(DIK_L))
-		{
-			m_nSkillGauge -= MAX_GAUGE;
-			m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 5.0f);
-			m_State = PST_PAINT;
-		}
-		break;
+		case 2:
+			m_State = PST_KNOCKBACK;
+			break;
 
-	default:
-		break;
+		case 3:
+			m_State = PST_AREA;
+			break;
+
+		default:
+			break;
+		}
 	}
 }

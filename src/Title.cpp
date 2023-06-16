@@ -73,7 +73,7 @@ void CTitle::Update()
 		//Žw’è‚ÌƒL[‚ª‰Ÿ‚³‚ê‚½‚©‚Ç‚¤‚©
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
-		if (pInput->Trigger(DIK_RETURN))
+		if (pInput->Trigger(KEY_ALL))
 		{
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_SELECT);
 		}
