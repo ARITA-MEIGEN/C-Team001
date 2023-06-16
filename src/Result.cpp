@@ -20,8 +20,12 @@
 //-----------------------------------------------------------------------------
 //静的変数宣言
 //-----------------------------------------------------------------------------
-const float CResult::RANK_WIDTH = 270.0f;	// ランキングの設置間隔
-const float CResult::PLAYER_WIDTH = 120.0f;	// プレイヤーの設置間隔
+const float CResult::RANK_WIDTH = 270.0f;		// ランキングの設置間隔
+const float CResult::PLAYER_WIDTH = 120.0f;		// プレイヤーの設置間隔
+const float CResult::TOP_HEIGHT = -40.0f;		// 1位の高さ
+const float CResult::PLAYER_HEIGHT = 40.0f;	//  プレイヤー間の順位ごとの高さの間隔
+
+
 
 //====================================
 //コンストラクタ
@@ -47,10 +51,10 @@ HRESULT CResult::Init()
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 	//テクスチャの読み込み
 	std::string textureKey[4];
-	textureKey[0] = "RESULET_003";
-	textureKey[1] = "RESULET_002";
-	textureKey[2] = "RESULET_001";
-	textureKey[3] = "RESULET_000";
+	textureKey[0] = "RESULET_000";
+	textureKey[1] = "RESULET_001";
+	textureKey[2] = "RESULET_002";
+	textureKey[3] = "RESULET_003";
 
 
 	//カメラの設定
@@ -83,7 +87,7 @@ HRESULT CResult::Init()
 
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{//プレイヤーの番号から順位を獲得
-		m_apRank[CMap::GetRanking(i)]->SetTextureKey(textureKey[i]);
+		m_apRank[i]->SetTextureKey(textureKey[CMap::GetRanking(i)]);
 	}
 
 	return S_OK;
@@ -132,15 +136,14 @@ void CResult::Update()
 
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{
-		if (m_pCylinder[i]->GetPos().y < CMap::GetRanking(i) * 20 - 150)
-		{
+		if (m_pCylinder[i]->GetPos().y < TOP_HEIGHT - CMap::GetRanking(i) * PLAYER_HEIGHT)//高さ
+		{//プレイヤーを上に移動
 			m_pCylinder[i]->SetPos(D3DXVECTOR3{ m_pCylinder[i]->GetPos().x, m_pCylinder[i]->GetPos().y + 1.0f , m_pCylinder[i]->GetPos().z });
 			m_pPlayer[i]->SetPos({ m_pPlayer[i]->GetPos().x,  m_pCylinder[i]->GetPos().y + m_pCylinder[i]->GetSize().y ,m_pPlayer[i]->GetPos().z });
-
 		}
 		else
-		{
-			m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH / 2 - (RANK_WIDTH * 1.5f) + RANK_WIDTH * i, (float)SCREEN_HEIGHT / 2- CMap::GetRanking(i) * 40.0f, 0.0f));
+		{//順位表示
+			m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH / 2 - (RANK_WIDTH * 1.5f) + RANK_WIDTH * i, 150.0f + CMap::GetRanking(i) * 80.0f, 0.0f));
 			m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		}
 	}

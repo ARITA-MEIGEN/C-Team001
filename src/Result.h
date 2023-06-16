@@ -44,7 +44,8 @@ private:
 
 	static const float RANK_WIDTH;		// ランキングのUIの設置間隔
 	static const float PLAYER_WIDTH;	// プレイヤーのUIの設置間隔
-	
+	static const float TOP_HEIGHT;		// 1stの高さ
+	static const float PLAYER_HEIGHT;	// プレイヤー間の順位ごとの高さの間隔
 };
 
 #endif // !_OBJECT_H_
