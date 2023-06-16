@@ -46,7 +46,7 @@ public:
 	void Update();
 	static CMap *Create(int stgnumber);
 	void Load();
-	int Ranking();	//ランキング
+	void Ranking();	//ランキング
 
 	//ゲッター
 	CBlock* GetBlock(const int number) { return (int)m_pBlock.size() > number ? m_pBlock[number] : nullptr; };
