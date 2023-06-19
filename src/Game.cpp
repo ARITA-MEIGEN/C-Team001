@@ -192,6 +192,16 @@ void CGame::Update()
 			}
 		}
 #endif // !_DEBUG
+
+		//w’è‚ÌƒL[‚ª‰Ÿ‚³‚ê‚½‚©‚Ç‚¤‚©
+		if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
+		{
+			if (pInput->Trigger(DIK_RETURN))
+			{
+				CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
+				m_pMap->Ranking();
+			}
+		}
 	}
 }
 
