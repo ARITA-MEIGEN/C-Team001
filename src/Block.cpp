@@ -119,6 +119,9 @@ void CBlock::SetPlayerNumber(int number)
 	m_number = number;
 	switch (m_number)
 	{
+	case -1:
+		SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+		break;
 	case 0:
 		SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 		break;

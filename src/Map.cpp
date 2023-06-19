@@ -12,6 +12,7 @@
 #include "file.h"
 #include "utility.h"
 #include "Item_Speed.h"
+#include "area.h"
 
 //-----------------------------------------------------------------------------
 // 静的メンバー変数の宣言
@@ -24,7 +25,7 @@ int CMap::m_anRanking[MAX_PLAYER];	//	ランキング順位
 //=============================================================================
 CMap::CMap()
 {
-	m_nPopCnt = 0;
+	m_nItemPopCount = 0;
 }
 
 //=============================================================================
@@ -41,7 +42,7 @@ HRESULT CMap::Init()
 {
 	Load();
 
-	m_nPopCnt = IntRandom(2 * 60, 1 * 60);
+	m_nItemPopCount = IntRandom(2 * 60, 1 * 60);
 	return S_OK;
 }
 
@@ -62,6 +63,7 @@ void CMap::Uninit()
 void CMap::Update()
 {
 	PopItem();
+	PopFutureArea();
 }
 
 //=============================================================================
@@ -202,8 +204,8 @@ int CMap::GetCountBlockType(int nType)
 //=============================================================================
 void CMap::PopItem()
 {
-	m_nPopCnt--;
-	if (m_nPopCnt > 0)
+	m_nItemPopCount--;
+	if (m_nItemPopCount > 0)
 	{
 		return;
 	}
@@ -234,7 +236,88 @@ void CMap::PopItem()
 	popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300));
 
 	// 次回出現時間の設定
-	m_nPopCnt = IntRandom(60, 180);
+	m_nItemPopCount = IntRandom(60, 180);
+}
+
+//=============================================================================
+// 未来エリアの出現
+//=============================================================================
+void CMap::PopFutureArea()
+{
+	m_nItemPopCount--;
+	if (m_nItemPopCount > 0)
+	{
+		return;
+	}
+
+	/* ↓出現間隔が0以下↓ */
+
+	CBlock* popPlanBlock = m_pBlock[IntRandom(m_pBlock.size() - 1, 0)];
+
+	if (popPlanBlock->IsStop())
+	{
+		return;
+	}
+
+	/* ↓ランダム指定のブロックが侵入不可ブロックではない↓ */
+
+
+	if (popPlanBlock->GetOnItem() != nullptr)
+	{
+		return;
+	}
+
+	/* ↓ランダム指定のブロックにアイテムが乗っていない↓ */
+
+	D3DXVECTOR3 pos = popPlanBlock->GetPos();
+	pos.y += 30.0f;
+
+	D3DXVECTOR2 popBlockIndex = GetBlockIdx(popPlanBlock);
+
+	int range = 1;
+
+	//エリアの生成
+	CArea* area = CArea::Create(popBlockIndex, range,100);
+
+	std::vector<CBlock*> areaBlock;
+	std::map<CBlock*, int> areaBlockIndex;
+
+	for (int y = 0; y < range * 2 + 1; y++)
+	{
+		for (int x = 0; x < range * 2 + 1; x++)
+		{
+			CBlock* block = GetBlock(x + popBlockIndex.x - range, y + popBlockIndex.y - range);
+
+			if (block == nullptr)
+			{
+				continue;
+			}
+
+			if (!block->IsStop())
+			{
+				areaBlock.push_back(block);
+				areaBlockIndex[block] = block->GetNumber();
+				block->SetPlayerNumber(-1);
+			}
+		}
+	}
+
+	// エリア死亡時の処理
+	auto atDead = [this, areaBlock, areaBlockIndex]()
+	{
+		std::map<CBlock*, int> BlockIndex = areaBlockIndex;
+		int size = areaBlock.size();
+		for (int i = 0; i < size; i++)
+		{
+			areaBlock[i]->SetPlayerNumber(BlockIndex[areaBlock[i]]);
+		}
+	};
+
+	area->SetFunctionAtDied(atDead);
+
+	// 次回出現時間の設定
+	m_nAreaPopCount = IntRandom(60, 180);
+
 }
 
 //=============================================================================
@@ -243,6 +326,12 @@ void CMap::PopItem()
 CBlock * CMap::GetBlock(const int x, const int y)
 {
 	int idx = (m_axisSizeX * y) + x;
+
+	if (idx < 0 || idx >= m_pBlock.size())
+	{
+		return nullptr;
+	}
+
 	return m_pBlock[idx];
 }
 

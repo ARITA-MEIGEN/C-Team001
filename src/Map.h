@@ -15,6 +15,10 @@
 #include <vector>
 
 //-----------------------------------------------------------------------------
+//  前方宣言
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
 // プロトタイプ宣言
 //-----------------------------------------------------------------------------
 #define MAX_BLOCK	(16)	//ブロックの最大数
@@ -55,6 +59,7 @@ public:
 
 private:
 	void PopItem();
+	void PopFutureArea();
 private:
 	//メンバ関数
 	STAGE m_StageNumber;
@@ -64,9 +69,12 @@ private:
 	int m_axisSizeX;
 	static int m_anRanking[MAX_PLAYER];	//	ランキング順位
 
-
 	// Item関連
-	int m_nPopCnt;
+	int m_nItemPopCount;
+
+	// Area関連
+	int m_nAreaPopCount;
+
 };
 
 #endif

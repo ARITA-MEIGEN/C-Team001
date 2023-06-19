@@ -14,10 +14,13 @@
 #include"renderer.h"
 #include"sound.h"
 #include"Map.h"
+#include"Game.h"
 #include"Player.h"
-#include"CameraGame.h"
-#include"Light.h"
 
+//====================================
+// 定数
+//====================================
+int CSkillSelect::m_nSkill[MAX_PLAYER] = {};
 
 //====================================
 //コンストラクタ
@@ -31,7 +34,6 @@ CSkillSelect::CSkillSelect()
 //====================================
 CSkillSelect::~CSkillSelect()
 {
-
 }
 
 //====================================
@@ -39,33 +41,21 @@ CSkillSelect::~CSkillSelect()
 //====================================
 HRESULT CSkillSelect::Init()
 {
-	LPDIRECT3DDEVICE9 pDevice;
-	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
-	//テクスチャの読み込み
-	std::string textureKey[4];
-	textureKey[0] = "RESULET_003";
-	textureKey[1] = "RESULET_002";
-	textureKey[2] = "RESULET_001";
-	textureKey[3] = "RESULET_000";
+	//初期化
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{
+		m_nSkill[nCnt] = 1;
+		m_pObj2D[nCnt] = CObject2D::Create(D3DXVECTOR3(200.0f + (300.0f * nCnt), 600.0f, 0.0f), D3DXVECTOR2(150.0f, 80.0f), 5);
+	}
 
+	//背景の生成
+	m_pBg = new CObject2D(CObject::OBJTYPE_UI);
+	m_pBg->Init();
+	m_pBg->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
+	m_pBg->SetSiz(D3DXVECTOR2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT));
+	m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-	//カメラの設定
-	m_pCamera = CCameraGame::Create();
-
-	//ライトの設定
-	m_pLight = new CLight;
-	m_pLight->Init();
-
-
-	////背景の生成
-	//for (int i = 0; i < MAX_PLAYER; i++)
-	//{
-	//	m_apRank[i] = new CObject2D(CObject::OBJTYPE_UI);
-	//	m_apRank[i]->Init();
-	//	m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH / 2 - 100 + 100 * i, (float)SCREEN_HEIGHT / 2, 0.0f));
-	//	m_apRank[i]->SetSiz(D3DXVECTOR2((float)100, (float)50));
-	//	m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	//}
+	m_pBg->SetTextureKey("TEXT_TITLE");
 
 	return S_OK;
 }
@@ -83,16 +73,11 @@ void CSkillSelect::Uninit()
 //====================================
 void CSkillSelect::Update()
 {
-	CInput* pInput = CInput::GetKey();
+	//入力処理
+	Input();
 
-	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
-	{
-		if ((pInput->Trigger(KEY_ALL)) == true)		//ENTERキー
-		{//エンターでランキングに
-		 //モード設定
-			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
-		}
-	}
+	//選択処理
+	Select();
 }
 
 //====================================
@@ -101,4 +86,87 @@ void CSkillSelect::Update()
 void CSkillSelect::Draw()
 {
 
+}
+
+//====================================
+//入力
+//====================================
+void CSkillSelect::Input()
+{
+	//インプットの情報を取得
+	CInput* pInput = CInput::GetKey();
+
+	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
+	{
+		//左入力で左を選択
+		for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+		{
+			if (m_nSkill[nCnt] >= 1)
+			{
+				if (pInput->Press(JOYPAD_LEFT, nCnt))
+				{
+					m_nSkill[nCnt]--;
+				}
+			}
+		}
+
+		//右入力で右を選択
+		for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+		{
+			if (m_nSkill[nCnt] <= 2)
+			{
+				if (pInput->Press(JOYPAD_RIGHT, nCnt))
+				{
+					m_nSkill[nCnt]++;
+				}
+			}
+		}
+
+		if (pInput->Trigger(DIK_O))
+		{
+			if (m_nSkill[0] >= 1)
+			{
+				m_nSkill[0]--;
+			}
+		}
+		else if (pInput->Trigger(DIK_P))
+		{
+			if (m_nSkill[0] <= 2)
+			{
+				m_nSkill[0]++;
+			}
+		}
+
+		if ((pInput->Trigger(DIK_RETURN)) == true)		//ENTERキー
+		{//エンターでゲームに
+		 //モード設定
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
+		}
+	}
+}
+
+//====================================
+//選択
+//====================================
+void CSkillSelect::Select()
+{
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{
+		if (m_nSkill[nCnt] == 0)
+		{
+			m_pObj2D[nCnt]->SetTextureKey("RESULET_000");
+		}
+		else if (m_nSkill[nCnt] == 1)
+		{
+			m_pObj2D[nCnt]->SetTextureKey("RESULET_001");
+		}
+		else if (m_nSkill[nCnt] == 2)
+		{
+			m_pObj2D[nCnt]->SetTextureKey("RESULET_002");
+		}
+		else if (m_nSkill[nCnt] == 3)
+		{
+			m_pObj2D[nCnt]->SetTextureKey("RESULET_003");
+		}
+	}
 }

@@ -50,7 +50,7 @@ HRESULT CTitle::Init()
 	m_pBg->SetSiz(D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT));
 	m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-	m_pBg->SetTextureKey("LOGO_TITLE");
+	m_pBg->SetTextureKey("TITLE_BG");
 
 	return S_OK;
 }
@@ -74,6 +74,10 @@ void CTitle::Update()
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
 		if (pInput->Trigger(KEY_ALL))
+		{
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_SELECT);
+		}
+		else if (pInput->Trigger(KEY_ALL))
 		{
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
 		}
