@@ -40,14 +40,11 @@ HRESULT CTitle::Init()
 	LPDIRECT3DDEVICE9 pDevice;
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 
-	//ƒeƒNƒXƒ`ƒƒ‚Ì“Ç‚Ýž‚Ý
-	LPDIRECT3DTEXTURE9 tex = nullptr;
-
 	//”wŒi‚Ì¶¬
 	m_pBg = new CObject2D(CObject::OBJTYPE_UI);
 	m_pBg->Init();
 	m_pBg->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
-	m_pBg->SetSiz(D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT));
+	m_pBg->SetSiz(D3DXVECTOR2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT));
 	m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 	m_pBg->SetTextureKey("TITLE_BG");

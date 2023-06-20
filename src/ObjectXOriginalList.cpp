@@ -309,9 +309,9 @@ std::string CObjectXOriginalList::GetTag(int index)
 	{
 		return m_tagList[0];
 	}
-	else if (m_tagList.size() <= index)
+	else if ((int)m_tagList.size() <= index)
 	{
-		return m_tagList[m_tagList.size() - 1];
+		return m_tagList[(int)m_tagList.size() - 1];
 	}
 	else
 	{

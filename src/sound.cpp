@@ -269,23 +269,28 @@ void CSound::Uninit()
 //=============================================================================
 HRESULT CSound::Play(CSound::ELabel label)
 {
-	//XAUDIO2_BUFFER buffer;
+	if (m_sizeAudio[label] == 0)
+	{
+		return E_FAIL;
+	}
 
-	//// バッファの値設定
-	//memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
-	//buffer.AudioBytes = m_sizeAudio[label];
-	//buffer.pAudioData = m_pDataAudio[label];
-	//buffer.Flags = XAUDIO2_END_OF_STREAM;
-	//buffer.LoopCount = PARAM[label].loop;
+	XAUDIO2_BUFFER buffer;
 
-	//// セグメント停止(ラベル指定)
-	//Stop(label);
+	// バッファの値設定
+	memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
+	buffer.AudioBytes = m_sizeAudio[label];
+	buffer.pAudioData = m_pDataAudio[label];
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	buffer.LoopCount = PARAM[label].loop;
 
-	//// オーディオバッファの登録
-	//m_pSourceVoice[label]->SubmitSourceBuffer(&buffer);
+	// セグメント停止(ラベル指定)
+	Stop(label);
 
-	//// 再生
-	//m_pSourceVoice[label]->Start(0);
+	// オーディオバッファの登録
+	m_pSourceVoice[label]->SubmitSourceBuffer(&buffer);
+
+	// 再生
+	m_pSourceVoice[label]->Start(0);
 
 	return S_OK;
 }
