@@ -1,24 +1,47 @@
+//-----------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------
 #include "area.h"
 #include "Map.h"
 #include "Application.h"
+#include "Object3D.h"
 
+//=============================================================================
+// コンストラクタ
+//=============================================================================
 CArea::CArea(int nPriority) : CObject(nPriority)
 {
 }
 
+//=============================================================================
+// デストラクタ
+//=============================================================================
 CArea::~CArea()
 {
 }
 
+//=============================================================================
+// 初期化
+//=============================================================================
 HRESULT CArea::Init()
 {
 	return S_OK;
 }
 
+//=============================================================================
+// 終了
+//=============================================================================
 void CArea::Uninit()
 {
+	m_wall[0]->Release();
+	m_wall[1]->Release();
+	m_wall[2]->Release();
+	m_wall[3]->Release();
 }
 
+//=============================================================================
+// 更新
+//=============================================================================
 void CArea::Update()
 {
 	m_time--;
@@ -29,10 +52,6 @@ void CArea::Update()
 		Release();		// 破棄予定
 		return;
 	}
-}
-
-void CArea::Draw()
-{
 }
 
 //=============================================================================
@@ -50,4 +69,38 @@ CArea * CArea::Create(D3DXVECTOR2 index, const unsigned int inRange, const unsig
 	area->m_time = inTime;
 	area->m_range = inRange;
 	return area;
+}
+
+void CArea::CreateWall(D3DXVECTOR3 inPos)
+{
+	D3DXVECTOR3 pos(inPos);
+
+	{
+		D3DXVECTOR3 wallpos = pos;
+		wallpos.z -= 45.0f;
+		m_wall[0] = CObject3D::Create(wallpos, D3DXVECTOR3(90.0f, 0.0f, 35.0f), 0);
+		m_wall[0]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f));
+		m_wall[0]->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.8f));
+	}
+	{
+		D3DXVECTOR3 wallpos = pos;
+		wallpos.z += 45.0f;
+		m_wall[1] = CObject3D::Create(wallpos, D3DXVECTOR3(90.0f, 0.0f, 35.0f), 0);
+		m_wall[1]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f));
+		m_wall[1]->SetCol(D3DXCOLOR(1.0f,0.0f,0.0f,0.8f));
+	}
+	{
+		D3DXVECTOR3 wallpos = pos;
+		wallpos.x -= 45.0f;
+		m_wall[2] = CObject3D::Create(wallpos, D3DXVECTOR3(90.0f, 0.0f, 35.0f), 0);
+		m_wall[2]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, D3DX_PI * 0.5f, 0.0f));
+		m_wall[2]->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.8f));
+	}
+	{
+		D3DXVECTOR3 wallpos = pos;
+		wallpos.x += 45.0f;
+		m_wall[3] = CObject3D::Create(wallpos, D3DXVECTOR3(90.0f, 0.0f, 35.0f), 0);
+		m_wall[3]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, D3DX_PI * 0.5f, 0.0f));
+		m_wall[3]->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.8f));
+	}
 }

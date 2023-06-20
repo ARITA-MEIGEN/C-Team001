@@ -16,8 +16,7 @@
 //-----------------------------------------------------------------------------
 // ‘O•ûéŒ¾
 //-----------------------------------------------------------------------------
-class CPlayer;
-class CItem;
+class CObject3D;
 
 //=============================================================================
 // \‘¢‘Ì’è‹`
@@ -30,8 +29,9 @@ public:
 	HRESULT Init();
 	void Uninit();
 	void Update();
-	void Draw();
+	void Draw() {}
 	static CArea* Create(D3DXVECTOR2 index, const unsigned int inRange,const unsigned int inTime);
+	void CreateWall(D3DXVECTOR3 inPos);
 
 	void SetFunctionAtDied(std::function<void()> inFunction) { m_functionAtDied = inFunction; }
 
@@ -41,6 +41,9 @@ private:
 	unsigned int m_range;		// ”ÍˆÍ
 	unsigned int m_time;		// ŠÔ
 	std::function<void()> m_functionAtDied;	// €–S‚Ìˆ—
+
+	CObject3D* m_wall[4];
+	D3DXVECTOR3 m_pos;
 };
 
 #endif

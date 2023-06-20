@@ -47,6 +47,7 @@ public:
 	void SetRotDefault(const D3DXVECTOR3& rot) { m_DefaultRot = rot; };
 	void SetParent(CObjectX* pModel);
 	void SetParentMatrix(D3DXMATRIX* inMatrix) { m_mtxParent = inMatrix; }
+	void SetSizeMag(const D3DXVECTOR3& size) { m_sizeMag = size; }
 	void SetChildren(CObjectX* pModel) { m_childrens.push_back(pModel); }
 	void SetCol(const D3DXCOLOR& col) { m_materialColor[0] = col; };
 	void SetColorMaterial(const int index ,const D3DXCOLOR& col) { m_materialColor[index] = col; };
@@ -61,6 +62,7 @@ public:
 	const CObjectXOriginalList::SModelData GetModelData() { return m_modelData; };
 	const LPCTSTR GetModelName() { return m_modelname; }
 	const D3DXVECTOR3 GetSize() { return m_modelData.size; }
+	const D3DXVECTOR3 GetSizeMag() { return m_sizeMag; }
 	const D3DXCOLOR GetCol() { return m_col; }
 	CObjectX* GetParent() { return m_pParent; }
 	const D3DXMATRIX& GetMatrix() { return m_mtxWorld; }
@@ -89,6 +91,9 @@ private:
 	D3DXVECTOR3 m_rot;			// Œü‚«
 	D3DXVECTOR3 m_addRot;		// ‰ÁŽZŒü‚«
 	D3DXVECTOR3 m_rotDest;		// –Ú“I‚ÌŠp“x
+
+	// ‘å‚«‚³”{—¦
+	D3DXVECTOR3 m_sizeMag;			// ”{—¦
 
 	// ‰e	   
 	CShadow*  m_Shadow;			// ‰e

@@ -177,7 +177,7 @@ void  CObject3D::Draw()
 	pDevice->SetTexture(0, pTexture->GetTexture(m_textureKey));
 
 	// カリング無効
-	//pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	// αテストを有効
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);

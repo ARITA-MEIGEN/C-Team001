@@ -49,7 +49,7 @@ HRESULT CSkillSelect::Init()
 	}
 
 	//”wŒi‚Ì¶¬
-	m_pBg = new CObject2D(CObject::OBJTYPE_UI);
+	m_pBg = new CObject2D(CObject::OBJTYPE_MAP);
 	m_pBg->Init();
 	m_pBg->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
 	m_pBg->SetSiz(D3DXVECTOR2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT));

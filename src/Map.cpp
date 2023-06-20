@@ -279,6 +279,8 @@ void CMap::PopFutureArea()
 	//ƒGƒŠƒA‚Ì¶¬
 	CArea* area = CArea::Create(popBlockIndex, range,100);
 
+	area->CreateWall(GetBlock(popBlockIndex.x, popBlockIndex.y)->GetPos());
+
 	std::vector<CBlock*> areaBlock;
 	std::map<CBlock*, int> areaBlockIndex;
 

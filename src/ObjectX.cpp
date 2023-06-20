@@ -43,6 +43,7 @@ HRESULT CObjectX::Init()
 	//情報の初期化
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 座標
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 向き
+	m_sizeMag = D3DXVECTOR3(1.0f, 1.0f, 1.0f);		// 向き
 	m_col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);	// 色
 	//影の生成
 //	m_Shadow = CShadow::Create(m_pos, D3DXVECTOR3(50.0f,0.0f,50.0f));
@@ -90,6 +91,10 @@ void CObjectX::Draw(void)
 
 	//パーツのワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
+
+	// 大きさを反映
+	D3DXMatrixScaling(&mtxTrans, m_sizeMag.x, m_sizeMag.y, m_sizeMag.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	//パーツのモデルの向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
