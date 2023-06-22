@@ -96,14 +96,15 @@ void CSkillSelect::Input()
 	//インプットの情報を取得
 	CInput* pInput = CInput::GetKey();
 
+	//フェードしていなければ
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
 		//左入力で左を選択
 		for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
-		{
+		{//プレイヤーごとに分ける
 			if (m_nSkill[nCnt] >= 1)
-			{
-				if (pInput->Press(JOYPAD_LEFT, nCnt))
+			{//左端ではないなら左へ
+				if (pInput->Trigger(JOYPAD_LEFT, nCnt))
 				{
 					m_nSkill[nCnt]--;
 				}
@@ -112,10 +113,10 @@ void CSkillSelect::Input()
 
 		//右入力で右を選択
 		for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
-		{
+		{//プレイヤーごとに分ける
 			if (m_nSkill[nCnt] <= 2)
-			{
-				if (pInput->Press(JOYPAD_RIGHT, nCnt))
+			{//右端ではないなら右へ
+				if (pInput->Trigger(JOYPAD_RIGHT, nCnt))
 				{
 					m_nSkill[nCnt]++;
 				}
@@ -123,16 +124,16 @@ void CSkillSelect::Input()
 		}
 
 		if (pInput->Trigger(DIK_O))
-		{
+		{//左に動く
 			if (m_nSkill[0] >= 1)
-			{
+			{//左端ではないなら左へ
 				m_nSkill[0]--;
 			}
 		}
 		else if (pInput->Trigger(DIK_P))
-		{
+		{//右に動く
 			if (m_nSkill[0] <= 2)
-			{
+			{//右端ではないなら右へ
 				m_nSkill[0]++;
 			}
 		}
@@ -153,19 +154,19 @@ void CSkillSelect::Select()
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{
 		if (m_nSkill[nCnt] == 0)
-		{
+		{//プレイヤーの能力を表すテクスチャ1
 			m_pObj2D[nCnt]->SetTextureKey("RESULET_000");
 		}
 		else if (m_nSkill[nCnt] == 1)
-		{
+		{//プレイヤーの能力を表すテクスチャ2
 			m_pObj2D[nCnt]->SetTextureKey("RESULET_001");
 		}
 		else if (m_nSkill[nCnt] == 2)
-		{
+		{//プレイヤーの能力を表すテクスチャ3
 			m_pObj2D[nCnt]->SetTextureKey("RESULET_002");
 		}
 		else if (m_nSkill[nCnt] == 3)
-		{
+		{//プレイヤーの能力を表すテクスチャ4
 			m_pObj2D[nCnt]->SetTextureKey("RESULET_003");
 		}
 	}
