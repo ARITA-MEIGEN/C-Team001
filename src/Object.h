@@ -7,6 +7,8 @@
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
 
+#include <functional>
+
 class CObject
 {
 public:
@@ -30,7 +32,7 @@ public:
 	virtual ~CObject();
 	virtual HRESULT Init() = 0;		// 初期化
 	virtual void Uninit() = 0;		// 終了
-	virtual void Update() = 0;		// 更新
+	virtual void Update();		// 更新
 	virtual void Draw() = 0;		// 描画
 	void SetType(EType Type);		// 種類の設定
 
@@ -47,14 +49,28 @@ public:
 	CObject* GetNext() { return m_pNext; }
 
 protected:
+	//typedef void (CObject::*UPDATE_FUNC)();
+	using UPDATE_FUNC = std::function<void(CObject&)>;
+public:
+	void InitStateFunc(const UPDATE_FUNC *funcList, int numFunc);
+
+protected:
+	void SetState(int inState) { m_nState = inState; }
+	int GetState() const { return m_nState; }
+
+protected:
 	int m_frame;		// 生成されてからの時間
 
-private:
-	//メンバ変数
+private:	//メンバ変数
+	const UPDATE_FUNC *m_funcList;
+	int m_numFunc;
+	int m_nState;
+
 	int m_nPriority;	// 描画の優先順位
 	CObject* m_pPrev;	// 前のオブジェクト
 	CObject* m_pNext;	// 次のオブジェクト
 	bool m_bDead;		// 死亡フラグ
 	EType m_type;		// タイプ
 };
+
 #endif // !_OBJECT_H_

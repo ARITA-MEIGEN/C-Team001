@@ -11,8 +11,8 @@
 //インクルード
 #include"main.h"
 #include"Object.h"
-#include"ObjectX.h"
 #include"Command.h"
+#include <vector>
 
 //前方宣言
 class CController;
