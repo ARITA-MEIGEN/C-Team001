@@ -92,8 +92,9 @@ HRESULT CPlayer::Init()
 	}
 
 	//初期化
-	m_nSkillGauge = 0;
 	m_nSkillLv = 0;
+	m_fSkillGauge = 0.0f;
+	m_fSubGauge = 0.0f;
 	m_SkillState = (SKILL_STATE)CSkillSelect::GetSelectSkill(m_nNumPlayer - 1);
 
 	//動的確保
@@ -433,9 +434,9 @@ void CPlayer::BlockCollision()
 		{//X軸
 			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f))
 			{//Z軸
-				if (pBlock->GetNumber() != m_nPlayerNumber && m_nSkillGauge < MAX_GAUGE && m_State == PST_STAND)
+				if (pBlock->GetNumber() != m_nPlayerNumber && m_fSkillGauge < MAX_GAUGE && m_State == PST_STAND)
 				{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックスではなく、無強化の場合)
-					m_nSkillGauge++;
+					m_fSkillGauge++;
 				}
 
 				if (m_pOnBlock != nullptr)
@@ -557,6 +558,11 @@ void CPlayer::BlockCollision()
 			Block->DeleteItem();
 		}
 	}
+
+	if (m_fSkillGauge >= MAX_GAUGE)
+	{//最大値を超えたら最大値にする
+		m_fSkillGauge = MAX_GAUGE;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -567,18 +573,21 @@ void CPlayer::Skill()
 	//インプットの取得
 	CInput* pInput = CInput::GetKey();
 
+	//減らすゲージの量を格納する
+	float fSubGauge = 0.0f;
+
 	if (m_nSkillBuffTime <= 0)
 	{
 		//ゲージの量によってスキルLvを決める
-		if (m_nSkillGauge == MAX_GAUGE)
+		if (m_fSkillGauge >= MAX_GAUGE)
 		{
 			m_nSkillLv = 3;
 		}
-		else if (m_nSkillGauge >= MAX_GAUGE * 0.7)
+		else if (m_fSkillGauge >= MAX_GAUGE * 0.7)
 		{
 			m_nSkillLv = 2;
 		}
-		else if (m_nSkillGauge >= MAX_GAUGE * 0.3)
+		else if (m_fSkillGauge >= MAX_GAUGE * 0.3)
 		{
 			m_nSkillLv = 1;
 		}
@@ -593,12 +602,12 @@ void CPlayer::Skill()
 		case 1:
 			if (pInput->Trigger(DIK_K))
 			{
-				m_nSkillGauge -= (int)(MAX_GAUGE * 0.3f);
+				fSubGauge = (MAX_GAUGE * 0.3f);
 				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
 			}
 			else if (pInput->Trigger(DIK_L))
 			{
-				m_nSkillGauge -= (int)(MAX_GAUGE * 0.3f);
+				fSubGauge = (MAX_GAUGE * 0.3f);
 				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
 			}
 			break;
@@ -606,12 +615,12 @@ void CPlayer::Skill()
 		case 2:
 			if (pInput->Trigger(DIK_K))
 			{
-				m_nSkillGauge -= (int)(MAX_GAUGE * 0.7f);
+				fSubGauge = (MAX_GAUGE * 0.7f);
 				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 2.0f);
 			}
 			else if (pInput->Trigger(DIK_L))
 			{
-				m_nSkillGauge -= (int)(MAX_GAUGE * 0.7f);
+				fSubGauge = (MAX_GAUGE * 0.7f);
 				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 2.0f);
 			}
 			break;
@@ -619,12 +628,12 @@ void CPlayer::Skill()
 		case 3:
 			if (pInput->Trigger(DIK_K))
 			{
-				m_nSkillGauge -= MAX_GAUGE;
+				fSubGauge = MAX_GAUGE;
 				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 5.0f);
 			}
 			else if (pInput->Trigger(DIK_L))
 			{
-				m_nSkillGauge -= MAX_GAUGE;
+				fSubGauge = MAX_GAUGE;
 				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 5.0f);
 			}
 			break;
@@ -632,10 +641,15 @@ void CPlayer::Skill()
 		default:
 			break;
 		}
+
+		if (m_nSkillBuffTime != 0)
+		{//スキルゲージの減少量を算出
+			m_fSubGauge = (fSubGauge / (float)m_nSkillBuffTime);
+		}
 	}
 
 	if (m_nSkillBuffTime > 0)
-	{
+	{//スキルの効果時間があったら
 		switch (m_SkillState)
 		{
 		case 0:
@@ -655,6 +669,22 @@ void CPlayer::Skill()
 			break;
 
 		default:
+			break;
+		}
+
+		//現在のスキルLvによって減少量
+		switch (m_nSkillLv)
+		{
+		case 1:
+			m_fSkillGauge -= m_fSubGauge;
+			break;
+
+		case 2:
+			m_fSkillGauge -= m_fSubGauge;
+			break;
+
+		case 3:
+			m_fSkillGauge -= m_fSubGauge;
 			break;
 		}
 	}

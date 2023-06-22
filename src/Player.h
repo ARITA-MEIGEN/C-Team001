@@ -84,13 +84,13 @@ public:
 	void SetController(CController* inOperate);
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; };			// 位置の設定
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };			// 向きの設定
-	void SetSkillGauge(int skill) { m_nSkillGauge = skill; }	// スキルゲージの量の設定
+	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }	// スキルゲージの量の設定
 
 	// Getter
 	D3DXVECTOR3		GetPos() { return m_pos; };
 	PLAYER_MOTION	GetNowMotion() { return m_Motion; };
 	D3DXMATRIX		GetMtx() { return m_mtxWorld; };				//マトリックスの取得
-	int				GetSkillGauge() { return m_nSkillGauge; }		//スキルゲージの量の取得
+	float			GetSkillGauge() { return m_fSkillGauge; }		//スキルゲージの量の取得
 	int				GetPlayerNumber() { return m_nPlayerNumber; }	//プレイヤーの番号の取得
 
 private:
@@ -120,7 +120,8 @@ private:
 	int				m_nSkillLv;				// プレイヤーのスキルLｖ
 	int				m_nSkillBuffTime;		// スキル強化効果時間
 	int				m_nItemBuffTime;		// アイテム強化効果時間
-	int				m_nSkillGauge;			// スキルゲージの量
+	float			m_fSkillGauge;			// スキルゲージの量
+	float			m_fSubGauge;			// スキルゲージを減算させる
 	PLAYER_STATE	m_State;				// プレイヤーの状態
 	ITEM_STATE		m_ItemState;			// アイテムの状態
 	SKILL_STATE		m_SkillState;			// 使えるスキルの状態
