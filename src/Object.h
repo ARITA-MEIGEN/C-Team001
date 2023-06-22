@@ -9,6 +9,8 @@
 
 #include <functional>
 
+#define UPDATE_FUNC_CAST(func) (static_cast<void(CObject::*)()>(&(func)))
+
 class CObject
 {
 public:
@@ -49,8 +51,7 @@ public:
 	CObject* GetNext() { return m_pNext; }
 
 protected:
-	//typedef void (CObject::*UPDATE_FUNC)();
-	using UPDATE_FUNC = std::function<void(CObject&)>;
+	using UPDATE_FUNC = void(CObject::*)();
 public:
 	void InitStateFunc(const UPDATE_FUNC *funcList, int numFunc);
 

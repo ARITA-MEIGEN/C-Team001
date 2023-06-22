@@ -18,6 +18,7 @@
  CObject::CObject(int nPriority /*=3*/)
  {
 	 m_nState = -1;
+	 m_numFunc = 0;
 	 m_nPriority = nPriority;
 
 	 CObjectList* taskGroup = CObjectList::GetInstance();
@@ -41,8 +42,7 @@ void CObject::Update()
 {
 	//int state = GetState();
 	//assert((state >= 0) && (state < m_numFunc));
-	////(this->*(m_funcList[state]))();
-	//(m_funcList[state])(*this);
+	//(this->*(m_funcList[state]))();
 }
 
 void CObject::InitStateFunc(const UPDATE_FUNC * funcList, int numFunc)
