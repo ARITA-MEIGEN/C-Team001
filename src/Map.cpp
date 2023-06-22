@@ -87,7 +87,7 @@ CMap * CMap::Create(int stgnumber)
 void CMap::Load()
 {
 	using json = nlohmann::json;
-	json map = LoadJson("data/FILE/map01.json");
+	json map = LoadJson("data/FILE//MAP/map01.json");
 
 	m_pBlock.resize(map["MAP"].size() * map["MAP"][0].size());
 	m_axisSizeX = map["MAP"][0].size();
