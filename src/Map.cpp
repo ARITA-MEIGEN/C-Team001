@@ -12,6 +12,7 @@
 #include "file.h"
 #include "utility.h"
 #include "Item_Speed.h"
+#include "Item_Paint.h"
 #include "area.h"
 
 //-----------------------------------------------------------------------------
