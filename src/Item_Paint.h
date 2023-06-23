@@ -1,26 +1,26 @@
 //=============================================================================
 //
-// item_speed.h
+// item_paint.h
 // Author : 髙野馨將
 //
 //=============================================================================
-#ifndef _ITEM_SPEED_H_
-#define _ITEM_SPEED_H_
+#ifndef _ITEM_PAINT_H_
+#define _ITEM_PAINT_H_
 
 #include "item.h"
 
 //加速クラス
-class CSpeed : public CItem
+class CPaint : public CItem
 {
 public:
-	explicit CSpeed(int nPriority = 3);		// コンストラクタ
-	~CSpeed() override;						// デストラクタ
+	explicit CPaint(int nPriority = 3);		// コンストラクタ
+	~CPaint() override;						// デストラクタ
 
 	HRESULT Init(void) override;			// 初期化処理
 	void Uninit(void) override;				// 終了処理
 	void Update(void) override;				// 更新処理
 
-	static CSpeed* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife);	// 生成処理
+	static CPaint* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife);	// 生成処理
 
 private:
 };

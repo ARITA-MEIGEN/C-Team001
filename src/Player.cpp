@@ -457,7 +457,7 @@ void CPlayer::BlockCollision()
 		switch (m_nSkillLv)
 		{
 		case 1:
-			//縦の範囲を塗る
+			//横の範囲を塗る
 			for (int nCntX = 0; nCntX < 3; nCntX++)
 			{
 				//乗っているブロックの番号を取得
@@ -537,6 +537,25 @@ void CPlayer::BlockCollision()
 			break;
 		}
 	}
+	else if (m_ItemState == ITEM_PAINT && m_pOnBlock != nullptr)
+	{
+		//横の範囲を塗る
+		for (int nCntX = 0; nCntX < 3; nCntX++)
+		{
+			//乗っているブロックの番号を取得
+			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+			//範囲内のブロックを塗る
+			BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y);			//中央左に設定する
+			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y);
+			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+			if (Block != nullptr)
+			{
+				Block->SetOnPlayer(this);	//プレイヤーの
+				Block->SetPlayerNumber(m_nPlayerNumber);
+			}
+		}
+	}
 
 	//乗っているブロックの番号を取得
 	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
@@ -549,11 +568,17 @@ void CPlayer::BlockCollision()
 
 		if (pItem != nullptr)
 		{//アイテムを拾った場合
-			m_nItemBuffTime = (int)CItem::BUFF_TIME;
+			m_nItemBuffTime = (int)CItem::BUFF_TIME;		//バフの効果時間を設定する
+
 			if (pItem->GetEffect() == CItem::SPEED)
 			{
 				m_ItemState = ITEM_SPEED;
 			}
+			else if (pItem->GetEffect() == CItem::PAINT)
+			{
+				m_ItemState = ITEM_PAINT;
+			}
+
 			//ブロックの上のアイテムを消去
 			Block->DeleteItem();
 		}
