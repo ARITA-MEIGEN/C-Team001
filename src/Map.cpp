@@ -134,8 +134,8 @@ void CMap::Load()
 //=============================================================================
 void CMap::Ranking()
 {
-	int Score[4];
-	int Rank[4];	//プレイヤーの番号を渡す
+	int Score[MAX_PLAYER];
+	int Rank[MAX_PLAYER];	//プレイヤーの番号を渡す
 
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{
@@ -234,7 +234,23 @@ void CMap::PopItem()
 	pos.y += 30.0f;
 
 	//アイテムの生成
-	popPlanBlock->SetOnItem(CSpeed::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300));
+	CItem* popItem = nullptr;
+
+	int random = IntRandom(0, 2);
+
+	switch (random)
+	{
+	case 1:
+		popItem = CPaint::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300);
+		break;
+	case 2:
+		popItem = CSpeed::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300);
+		break;
+	default:
+		break;
+	}
+
+	popPlanBlock->SetOnItem(popItem);
 
 	// 次回出現時間の設定
 	m_nItemPopCount = IntRandom(60, 180);
