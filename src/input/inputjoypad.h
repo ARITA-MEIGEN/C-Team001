@@ -13,6 +13,7 @@
 //----------------------------------------------------------------------------
 #include "DirectInput.h"
 #include "inputkeydata.h"
+#include <string>
 
 //----------------------------------------------------------------------------
 //クラス定義
@@ -21,23 +22,27 @@ class CInputJoyPad : public CDirectInput
 {
 
 private:
-	static const int MAX_JOY_KEY = 32;		//ジョイパッドの使ってないキーを含めた最大数
-	static const int JOYPAD_DATA_MAX = 4;	//同時接続可能最大数
-	static const int KEY_CONFIG_SUPPORTED_KEY_NUMBER = 13; //キーコンフィグ対応のキー数
-	static const int LINE_MAX_READING_LENGTH = 256; //読み込み際の1行当たりの最大文字数
-	static const int DEVICE_ADDITIONAL_INTERVAL_EXECUTING_APP = 120; //アプリ実行中のデバイス追加間隔
+	static const int MAX_JOY_KEY = 32;									//ジョイパッドの使ってないキーを含めた最大数
+	static const int JOYPAD_DATA_MAX = 4;								//同時接続可能最大数
+	static const int KEY_CONFIG_SUPPORTED_KEY_NUMBER = 13;				//キーコンフィグ対応のキー数
+	static const int LINE_MAX_READING_LENGTH = 256;						//読み込み際の1行当たりの最大文字数
+	static const int DEVICE_ADDITIONAL_INTERVAL_EXECUTING_APP = 120;	//アプリ実行中のデバイス追加間隔
+	static const int DIRECTION_COUNT_OF_STICK_AND_CROSS = 8;			//スティックと十字キーの方向数
+
+	static const std::string KEYCONFIG_TXT_PATH;
 
 	//ジョイパッドのひとつに必要な情報の構造体
 	struct SJoyPad
 	{
-		LPDIRECTINPUTDEVICE8 pInputDevice;				//入力デバイスへのポインタ
-		DIJOYSTATE aKeyState;							//ジョイパッドのプレス情報
-		DIJOYSTATE aKeyStateTrigger;					//ジョイパッドのトリガー情報
-		DIJOYSTATE aKeyStateRelease;					//ジョイパッドのリリース情報
-		DirectJoypad aOldKeyTrigger;					//前回押されたトリガーキーの種類
-		DirectJoypad aOldKeyRelease;					//前回押されたリリースキーの種類
-		int nCrossPressRot;								//ジョイパッドの十字キーの押されている方向
-		bool bInit;										//初期登録が完了しているかどうか
+		LPDIRECTINPUTDEVICE8 pInputDevice;							//入力デバイスへのポインタ
+		DIJOYSTATE aKeyState;										//ジョイパッドのプレス情報
+		DIJOYSTATE aKeyStateTrigger;								//ジョイパッドのトリガー情報
+		DIJOYSTATE aKeyStateRelease;								//ジョイパッドのリリース情報
+		bool bOldKeyTrigger[DIRECTION_COUNT_OF_STICK_AND_CROSS];	//各スティックと十字キーの方向が押されたかどうかトリガー			
+		bool bOldKeyRelease[DIRECTION_COUNT_OF_STICK_AND_CROSS];	//各スティックと十字キーの方向が押されたかどうかリリース
+		DirectJoypad aOldKeyTrigger;								//前回押されたトリガーキーの種類
+		DirectJoypad aOldKeyRelease;								//前回押されたリリースキーの種類
+		int nCrossPressRot;											//ジョイパッドの十字キーの押されている方向
 	};
 
 public:
@@ -51,11 +56,10 @@ public:
 	HRESULT JoyPadDeviceRegistration(HWND hWnd);
 
 	//入力デバイスへのポインタの取得
-	LPDIRECTINPUTDEVICE8 GetInputDevice();
 	LPDIRECTINPUTDEVICE8 GetInputDevice(int nNum) { return m_JoyPadData[nNum].pInputDevice; }
 
-	//入力デバイスへのポインタの設定
-	void SetInputDevice(LPDIRECTINPUTDEVICE8 pInputDeviceint);
+	//入力デバイスへのポインタの設定 (返り値は登録した際の配列番号)
+	int SetInputDevice(LPDIRECTINPUTDEVICE8 pInputDeviceint);
 
 	//現在接続されているジョイパッドの数の取得
 	int GetJoyPadNumMax() { return m_nJoyNumCnt; }
@@ -94,6 +98,12 @@ public:
 	int GetAfterAppExecutionJoyNumCnt() { return m_nAfterAppExecutionJoyNumCnt; }
 	void AddAfterAppExecutionJoyNumCnt() { m_nAfterAppExecutionJoyNumCnt++; }
 
+	//一時保存用デバイスポインタの配列、Set
+	void SetDevicePointer(LPDIRECTINPUTDEVICE8 pDevice) { m_apDevice[m_nAfterAppExecutionJoyNumCnt] = pDevice; m_nAfterAppExecutionJoyNumCnt++; }
+
+	void IntermediateReception(bool bIR = false) { m_bIntermediateReception = bIR; }	//デバイスの途中検知のオンオフ
+	bool GetIntermediateReception() { return m_bIntermediateReception; }		//現在デバイスの途中検知を行っているかどうか
+
 private:
 	SJoyPad m_JoyPadData[JOYPAD_DATA_MAX];		//ジョイパッドのひとつに必要な情報の構造体
 	DirectJoypad m_AllOldKeyTrigger;			//全ジョイパッド共通の前回されたトリガーキー
@@ -103,5 +113,7 @@ private:
 	DirectJoypad m_KeyConfig[JOYPAD_DATA_MAX][KEY_CONFIG_SUPPORTED_KEY_NUMBER]; //キーコンフィグの対応用（この変数内の数値によって認識するキーが変わる）
 	HWND m_hWnd;								//ウィンドウハンドルの保存
 	int m_nDeviceAdditionalIntervalExecutingApp;//アプリ実行中のデバイス追加間隔
+	LPDIRECTINPUTDEVICE8 m_apDevice[JOYPAD_DATA_MAX]; //デバイスポインタの一時保存場所
+	bool m_bIntermediateReception;	//途中デバイス受付
 };
 #endif

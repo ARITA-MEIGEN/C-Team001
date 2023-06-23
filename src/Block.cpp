@@ -15,8 +15,8 @@
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const float CBlock::SINK_LIMIT = -10.0f;	// 下限値
-const float CBlock::UP_POWER = 0.5f;	// 下限値
+const float CBlock::SINK_LIMIT = -10.0f;	// 沈む下限値
+const float CBlock::UP_POWER = 0.5f;		// 沈んだブロックが浮上する時間
 
 //=============================================================================
 // コンストラクタ
@@ -116,7 +116,13 @@ CBlock* CBlock::Create(D3DXVECTOR3 pos)
 //=============================================================================
 void CBlock::SetPlayerNumber(int number)
 {
+	if (m_isStop)
+	{
+		return;
+	}
+
 	m_number = number;
+
 	switch (m_number)
 	{
 	case -1:
