@@ -109,6 +109,8 @@ void  CObject3D::Uninit()
 //=============================================================================
 void  CObject3D::Update()
 {
+	CObject::Update();
+
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice;
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();

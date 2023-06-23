@@ -98,7 +98,6 @@ void CItem::Update(void)
 	SetRot(rot);
 #endif // 0
 
-
 	//XV
 	CObject3D::Update();
 }

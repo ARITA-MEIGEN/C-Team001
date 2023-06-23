@@ -157,7 +157,7 @@ void CMotion::SetMotion(const unsigned int nCntMotionSet)
 // Author : 唐﨑結斗
 // 概要 : 行列を利用して、パーツの親子関係と描画設定を行う
 //=============================================================================
-void CMotion::SetParts(D3DXMATRIX mtxWorld)
+void CMotion::SetParts(D3DXMATRIX /*mtxWorld*/)
 {
 	for (int nCntParts = 0; nCntParts < m_nMaxParts; nCntParts++)
 	{// モデルの描画

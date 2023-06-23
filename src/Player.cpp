@@ -33,6 +33,21 @@ const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
 
+const CObject::UPDATE_FUNC CPlayer::mUpdateFunc[] =
+{
+	UPDATE_FUNC_CAST(Update_Idle),
+	UPDATE_FUNC_CAST(Update_Walk),
+	UPDATE_FUNC_CAST(Update_Jump),
+};
+
+const CPlayer::SKILL_FUNC CPlayer::m_SkillFunc[] =
+{
+	UPDATE_FUNC_CAST(Skill_Idel),
+	UPDATE_FUNC_CAST(Skill_Speed),
+	UPDATE_FUNC_CAST(Skill_Paint),
+	UPDATE_FUNC_CAST(Skill_Knockback),
+};
+
 //-----------------------------------------------------------------------------
 // 静的メンバ変数
 //-----------------------------------------------------------------------------
@@ -95,10 +110,15 @@ HRESULT CPlayer::Init()
 	m_nSkillLv = 0;
 	m_fSkillGauge = 0.0f;
 	m_fSubGauge = 0.0f;
-	m_SkillState = (SKILL_STATE)CSkillSelect::GetSelectSkill(m_nNumPlayer - 1);
+	m_SkillState = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
 
 	//動的確保
 	m_controller = new CPlayerController(m_nPlayerNumber);
+
+	InitStateFunc(mUpdateFunc, STATE_MAX);
+
+	m_funcSkill = m_SkillFunc;
+	SetSkill(SKILL_IDLE);
 
 	return S_OK;
 }
@@ -138,29 +158,23 @@ void CPlayer::Update(void)
 	{
 		return;
 	}
+
 	if (!(CGame::GetGame() != CGame::GAME_END) && !(CGame::GetGame() != CGame::GAME_START))
 	{
 		return;
 	}
 
+	CObject::Update();
+
 	CInput* pInput = CInput::GetKey();
 
-	// スキル処理
 	Skill();
 
-	if (m_nSkillBuffTime > 0)
-	{// スキル強化効果の時間を減算する
-		m_nSkillBuffTime--;
-	}
 	if (m_nItemBuffTime > 0)
 	{// アイテム強化効果の時間を減算する
 		m_nItemBuffTime--;
 	}
 
-	if (m_nSkillBuffTime <= 0 && m_State != PST_STAND)
-	{// スキルを使った後に効果時間が切れたらデフォルトに戻す
-		m_State = PST_STAND;
-	}
 	if (m_nItemBuffTime <= 0 && m_ItemState != ITEM_NONE)
 	{// アイテムを拾った後に効果時間が切れたらデフォルトに戻す
 		m_ItemState = ITEM_NONE;
@@ -253,6 +267,30 @@ void CPlayer::Draw(void)
 	}
 }
 
+//--------------------------------------------------
+// アイドルの処理
+//--------------------------------------------------
+void CPlayer::Update_Idle()
+{
+	SetState(STATE_WALK);
+}
+
+//--------------------------------------------------
+// 歩いてるとき
+//--------------------------------------------------
+void CPlayer::Update_Walk()
+{
+	SetState(STATE_JUMP);
+}
+
+//--------------------------------------------------
+// ジャンプしたとき
+//--------------------------------------------------
+void CPlayer::Update_Jump()
+{
+	SetState(STATE_IDLE);
+}
+
 //-----------------------------------------------------------------------------
 // 生成
 //-----------------------------------------------------------------------------
@@ -314,6 +352,220 @@ void CPlayer::SetController(CController * inOperate)
 {
 	m_controller = inOperate;
 	m_controller->SetToOrder(this);
+}
+
+//-----------------------------------------------------------------------------
+// スキル処理
+//-----------------------------------------------------------------------------
+void CPlayer::Skill()
+{
+	// スキル処理
+	assert((m_SkillStateNow >= 0) && (m_SkillStateNow < SKILL_MAX));
+	(this->*(m_funcSkill[m_SkillStateNow]))();
+
+	if (m_nSkillBuffTime > 0)
+	{//スキルの効果時間があったら
+		//現在のスキルLvによって減少量
+		m_fSkillGauge -= m_fSubGauge;
+	}
+
+	if (m_nSkillBuffTime <= 0 && m_State != PST_STAND)
+	{// スキルを使った後に効果時間が切れたらデフォルトに戻す
+		m_State = PST_STAND;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// スキルが未使用の状態関数
+//-----------------------------------------------------------------------------
+void CPlayer::Skill_Idel()
+{
+	if (m_nSkillBuffTime > 0)
+	{
+		return;
+	}
+
+	/* ↓スキル未使用時↓ */
+
+	//ゲージの量によってスキルLvを決める
+	if (m_fSkillGauge >= MAX_GAUGE)
+	{
+		m_nSkillLv = 3;
+	}
+	else if (m_fSkillGauge >= MAX_GAUGE * 0.7)
+	{
+		m_nSkillLv = 2;
+	}
+	else if (m_fSkillGauge >= MAX_GAUGE * 0.3)
+	{
+		m_nSkillLv = 1;
+	}
+	else
+	{
+		m_nSkillLv = 0;
+	}
+
+	if (m_nSkillLv == 0)
+	{
+		return;
+	}
+
+	/* ↓スキルレベルが設定されてる↓ */
+
+	CInput* pInput = CInput::GetKey();	//インプットの取得
+
+	//現在のスキルLvによって効果量を変える
+	if (pInput->Trigger(DIK_K) || pInput->Trigger(DIK_L))
+	{
+		SetSkill(m_SkillState);
+
+		//減らすゲージの量を格納する
+		float fSubGauge = 0.0f;
+
+		m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
+
+		switch (m_nSkillLv)
+		{
+		case 1:
+			fSubGauge = (MAX_GAUGE * 0.3f);
+			break;
+		case 2:
+			fSubGauge = (MAX_GAUGE * 0.7f);
+			m_nSkillBuffTime *= 2;
+			break;
+		case 3:
+			fSubGauge = MAX_GAUGE;
+			m_nSkillBuffTime *= 5;
+			break;
+		default:
+			break;
+		}
+
+		//スキルゲージの減少量を算出
+		m_fSubGauge = (fSubGauge / (float)m_nSkillBuffTime);
+	}
+}
+
+//-----------------------------------------------------------------------------
+// スピードアップスキル
+//-----------------------------------------------------------------------------
+void CPlayer::Skill_Speed()
+{
+	m_nSkillBuffTime--;
+	if (m_nSkillBuffTime <= 0)
+	{
+		SetSkill(SKILL_IDLE);
+		return;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// 塗り範囲強化スキル
+//-----------------------------------------------------------------------------
+void CPlayer::Skill_Paint()
+{
+	m_nSkillBuffTime--;
+	if (m_nSkillBuffTime <= 0)
+	{
+		SetSkill(SKILL_IDLE);
+		return;
+	}
+
+	switch (m_nSkillLv)
+	{
+	case 1:
+		//縦の範囲を塗る
+		for (int nCntX = 0; nCntX < 3; nCntX++)
+		{
+			//乗っているブロックの番号を取得
+			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+			//範囲内のブロックを塗る
+			BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y);			//中央左に設定する
+			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y);
+			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+			if (Block != nullptr)
+			{
+				Block->SetOnPlayer(this);	//プレイヤーの
+				Block->SetPlayerNumber(m_nPlayerNumber);
+			}
+		}
+		break;
+
+	case 2:
+		//十字(横と縦)の範囲を塗る
+		//縦の範囲
+		for (int nCntY = 0; nCntY < 3; nCntY++)
+		{
+			//乗っているブロックの番号を取得
+			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+			//範囲内のブロックを塗る
+			BlockIdx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y - 1.0f);			//中心に設定する
+			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y + nCntY);
+			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+			if (Block != nullptr)
+			{//ブロックを塗る
+				Block->SetOnPlayer(this);	//プレイヤーの
+				Block->SetPlayerNumber(m_nPlayerNumber);
+			}
+		}
+		//横の範囲
+		for (int nCntX = 0; nCntX < 3; nCntX++)
+		{
+			//乗っているブロックの番号を取得
+			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+			//範囲内のブロックを塗る
+			BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y);			//中央左に設定する
+			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y);
+			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+			if (Block != nullptr)
+			{//ブロックを塗る
+				Block->SetOnPlayer(this);	//プレイヤーの
+				Block->SetPlayerNumber(m_nPlayerNumber);
+			}
+		}
+		break;
+
+	case 3:
+		//3×3の範囲を塗る
+		for (int nCntY = 0; nCntY < 3; nCntY++)
+		{
+			for (int nCntX = 0; nCntX < 3; nCntX++)
+			{
+				//乗っているブロックの番号を取得
+				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+				//範囲内のブロックを塗る
+				BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y - 1.0f);			//左上に設定する
+				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y + nCntY);
+				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+				if (Block != nullptr)
+				{//ブロックを塗る
+					Block->SetOnPlayer(this);	//プレイヤーの
+					Block->SetPlayerNumber(m_nPlayerNumber);
+				}
+			}
+		}
+		break;
+
+	default:
+		break;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// ノックバックスキル
+//-----------------------------------------------------------------------------
+void CPlayer::Skill_Knockback()
+{
+	m_nSkillBuffTime--;
+	if (m_nSkillBuffTime <= 0)
+	{
+		SetSkill(SKILL_IDLE);
+		return;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -587,130 +839,5 @@ void CPlayer::BlockCollision()
 	if (m_fSkillGauge >= MAX_GAUGE)
 	{//最大値を超えたら最大値にする
 		m_fSkillGauge = MAX_GAUGE;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// スキル処理
-//-----------------------------------------------------------------------------
-void CPlayer::Skill()
-{
-	//インプットの取得
-	CInput* pInput = CInput::GetKey();
-
-	//減らすゲージの量を格納する
-	float fSubGauge = 0.0f;
-
-	if (m_nSkillBuffTime <= 0)
-	{
-		//ゲージの量によってスキルLvを決める
-		if (m_fSkillGauge >= MAX_GAUGE)
-		{
-			m_nSkillLv = 3;
-		}
-		else if (m_fSkillGauge >= MAX_GAUGE * 0.7)
-		{
-			m_nSkillLv = 2;
-		}
-		else if (m_fSkillGauge >= MAX_GAUGE * 0.3)
-		{
-			m_nSkillLv = 1;
-		}
-		else
-		{
-			m_nSkillLv = 0;
-		}
-
-		//現在のスキルLvによって効果量を変える
-		switch (m_nSkillLv)
-		{
-		case 1:
-			if (pInput->Trigger(DIK_K))
-			{
-				fSubGauge = (MAX_GAUGE * 0.3f);
-				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
-			}
-			else if (pInput->Trigger(DIK_L))
-			{
-				fSubGauge = (MAX_GAUGE * 0.3f);
-				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
-			}
-			break;
-
-		case 2:
-			if (pInput->Trigger(DIK_K))
-			{
-				fSubGauge = (MAX_GAUGE * 0.7f);
-				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 2.0f);
-			}
-			else if (pInput->Trigger(DIK_L))
-			{
-				fSubGauge = (MAX_GAUGE * 0.7f);
-				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 2.0f);
-			}
-			break;
-
-		case 3:
-			if (pInput->Trigger(DIK_K))
-			{
-				fSubGauge = MAX_GAUGE;
-				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 5.0f);
-			}
-			else if (pInput->Trigger(DIK_L))
-			{
-				fSubGauge = MAX_GAUGE;
-				m_nSkillBuffTime = (int)(SKILL_BUFF_TIME * 5.0f);
-			}
-			break;
-
-		default:
-			break;
-		}
-
-		if (m_nSkillBuffTime != 0)
-		{//スキルゲージの減少量を算出
-			m_fSubGauge = (fSubGauge / (float)m_nSkillBuffTime);
-		}
-	}
-
-	if (m_nSkillBuffTime > 0)
-	{//スキルの効果時間があったら
-		switch (m_SkillState)
-		{
-		case 0:
-			m_State = PST_SPEED;
-			break;
-
-		case 1:
-			m_State = PST_PAINT;
-			break;
-
-		case 2:
-			m_State = PST_KNOCKBACK;
-			break;
-
-		case 3:
-			m_State = PST_AREA;
-			break;
-
-		default:
-			break;
-		}
-
-		//現在のスキルLvによって減少量
-		switch (m_nSkillLv)
-		{
-		case 1:
-			m_fSkillGauge -= m_fSubGauge;
-			break;
-
-		case 2:
-			m_fSkillGauge -= m_fSubGauge;
-			break;
-
-		case 3:
-			m_fSkillGauge -= m_fSubGauge;
-			break;
-		}
 	}
 }
