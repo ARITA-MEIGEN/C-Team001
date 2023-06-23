@@ -109,6 +109,7 @@ private:
 	void TurnLookAtMoveing();	// 移動方向を見て曲がる
 	void StopNoBlock();			// ブロックがない場所で停まる
 	void TurnCenterBlock();		// ブロックの真ん中で曲がるようになる
+	void KnockBack();			// ノックバック処理
 private:	// 静的メンバー変数
 	static const UPDATE_FUNC mUpdateFunc[];
 	static int		m_nNumPlayer;			// プレイヤーの数

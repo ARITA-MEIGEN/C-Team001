@@ -330,7 +330,7 @@
       <Filter>ソース ファイル\03_Input</Filter>
     </ClInclude>
     <ClInclude Include="src\Item_Paint.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
