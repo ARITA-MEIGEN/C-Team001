@@ -23,6 +23,7 @@ public:
 	void Update() override;
 
 	D3DXVECTOR3 Move() override;
+	bool Skill() override;
 
 private:
 	int m_nInputIdx;

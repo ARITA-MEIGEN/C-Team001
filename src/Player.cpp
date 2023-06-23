@@ -415,7 +415,7 @@ void CPlayer::Skill_Idel()
 	CInput* pInput = CInput::GetKey();	//インプットの取得
 
 	//現在のスキルLvによって効果量を変える
-	if (pInput->Trigger(DIK_K) || pInput->Trigger(JOYPAD_Y,m_nPlayerNumber) || pInput->Trigger(JOYPAD_X, m_nPlayerNumber))
+	if (m_controller->Skill() || pInput->Trigger(JOYPAD_Y,m_nPlayerNumber) || pInput->Trigger(JOYPAD_X, m_nPlayerNumber))
 	{
 		SetSkill(m_SkillState);
 

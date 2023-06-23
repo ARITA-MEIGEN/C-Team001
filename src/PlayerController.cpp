@@ -105,3 +105,12 @@ D3DXVECTOR3 CPlayerController::Move()
 
 	return moveInput;
 }
+
+//-----------------------------------------
+// スキル
+//-----------------------------------------
+bool CPlayerController::Skill()
+{
+	CInput* pInput = CInput::GetKey();	//インプットの取得
+	return 	pInput->Trigger(DIK_K) || pInput->Trigger(DIK_L);
+}
