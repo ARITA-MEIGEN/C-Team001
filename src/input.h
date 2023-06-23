@@ -11,8 +11,8 @@
 //*****************************************************************************
 // インクルード
 //*****************************************************************************
-#include "inputkeydata.h"
-#include "DirectInput.h"
+#include "input\inputkeydata.h"
+#include "input\DirectInput.h"
 #include <vector>
 
 //----------------------------------------------------------------------------
@@ -64,13 +64,11 @@ public:
 	/* JoyPad */
 	bool Press(DirectJoypad key, int nNum = 0);			//ジョイパットプレス
 	bool Trigger(DirectJoypad key, int nNum = 0);		//ジョイパットトリガー
+	bool Release(DirectJoypad key, int nNum = 0);		//ジョイパットリリース
 
 	D3DXVECTOR3 VectorMoveKey(int nNum);				//十字キー式のベクトル取得
 	D3DXVECTOR3 VectorMoveJoyStick(int nNum = 0, bool bleftandright = false); //ジョイスティックのベクトル取得
 	D3DXVECTOR3 VectorMoveJoyStickAll(bool bleftandright = false); //ジョイスティックのベクトル取得
-
-	// 繋がってるJoyPadの数
-	int GetAcceptJoyPadCount();
 
 	/* Mouse */
 	bool Press(MOUSE_KEY key);				//プレス
@@ -87,6 +85,12 @@ public:
 	InputType GetOldInputType() { return m_nOldInputType; }		//最後に触ったデバイス
 																
 	void SetJoypadKeyConfig(int nPlayerNum, DirectJoypad OldKey, DirectJoypad NewKey); //キーの入れ替え
+
+	bool IsConnected(int nNum);	//ジョイパッドが接続されているかどうか
+	int GetIsConnectedNumMax(); //ジョイパッドの接続数
+
+	void IntermediateReception(bool bIR = false);	//デバイスの途中検知のオンオフ
+	bool GetIntermediateReception();		//現在デバイスの途中検知を行っているかどうか
 
 private:
 	bool KeyChackAll(STAN_DART_INPUT_KEY key, int type);			// 全デバイスの入力を確認

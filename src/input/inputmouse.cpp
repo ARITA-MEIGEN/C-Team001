@@ -12,8 +12,7 @@
 //***************************************************************************
 #include <assert.h>
 #include <stdio.h>
-#include "main.h"
-#include "Application.h"
+#include "../Application.h"
 #include "inputmouse.h"
 
 //=============================================================================
@@ -48,7 +47,7 @@ CInputMouse::~CInputMouse()
 // Author2 : KOZUNA HIROHITO
 // 概要 : マウスのアクセス権を獲得できた場合、処理を継続する
 //=============================================================================
-HRESULT CInputMouse::Init(HINSTANCE hInstance, HWND hWnd)
+HRESULT CInputMouse::Init(HINSTANCE /*hInstance*/, HWND hWnd)
 {
 
 	// 入力デバイス（マウス）の生成
@@ -121,10 +120,11 @@ void CInputMouse::Update(void)
 
 			// マウスリリース情報を保存
 			m_aKeyStateRelease.rgbButtons[nCntKey] = m_aKeyState.rgbButtons[nCntKey] & ~aKeyState.rgbButtons[nCntKey];
-
-			// マウスプレス情報を保存
-			m_aKeyState = aKeyState;
+			
 		}
+
+		// マウスプレス情報を保存
+		m_aKeyState = aKeyState;
 	}
 	else
 	{

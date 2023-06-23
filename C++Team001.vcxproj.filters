@@ -129,21 +129,6 @@
     <ClCompile Include="src\input.cpp">
       <Filter>ソース ファイル\03_Input</Filter>
     </ClCompile>
-    <ClCompile Include="src\inputcontroller.cpp">
-      <Filter>ソース ファイル\03_Input</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InputJoypad.cpp">
-      <Filter>ソース ファイル\03_Input</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InputKeyBoard.cpp">
-      <Filter>ソース ファイル\03_Input</Filter>
-    </ClCompile>
-    <ClCompile Include="src\inputmouse.cpp">
-      <Filter>ソース ファイル\03_Input</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DirectInput.cpp">
-      <Filter>ソース ファイル\03_Input</Filter>
-    </ClCompile>
     <ClCompile Include="src\area.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -173,6 +158,18 @@
     </ClCompile>
     <ClCompile Include="src\utility.cpp">
       <Filter>ソース ファイル\00_Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\input\DirectInput.cpp">
+      <Filter>ソース ファイル\03_Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\input\inputjoypad.cpp">
+      <Filter>ソース ファイル\03_Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\input\inputkeyboard.cpp">
+      <Filter>ソース ファイル\03_Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\input\inputmouse.cpp">
+      <Filter>ソース ファイル\03_Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -272,25 +269,7 @@
     <ClInclude Include="src\Camera.h">
       <Filter>ソース ファイル\02_Camera</Filter>
     </ClInclude>
-    <ClInclude Include="src\DirectInput.h">
-      <Filter>ソース ファイル\03_Input</Filter>
-    </ClInclude>
     <ClInclude Include="src\input.h">
-      <Filter>ソース ファイル\03_Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\inputcontroller.h">
-      <Filter>ソース ファイル\03_Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InputJoyPad.h">
-      <Filter>ソース ファイル\03_Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InputKeyBoard.h">
-      <Filter>ソース ファイル\03_Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\inputkeydata.h">
-      <Filter>ソース ファイル\03_Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\inputmouse.h">
       <Filter>ソース ファイル\03_Input</Filter>
     </ClInclude>
     <ClInclude Include="src\Result.h">
@@ -332,5 +311,25 @@
     <ClInclude Include="src\utility.h">
       <Filter>ソース ファイル\00_Main</Filter>
     </ClInclude>
+    <ClInclude Include="src\input\DirectInput.h">
+      <Filter>ソース ファイル\03_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\input\inputjoypad.h">
+      <Filter>ソース ファイル\03_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\input\inputkeyboard.h">
+      <Filter>ソース ファイル\03_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\input\inputkeydata.h">
+      <Filter>ソース ファイル\03_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\input\inputmouse.h">
+      <Filter>ソース ファイル\03_Input</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\input\KeyConfigData.txt">
+      <Filter>ソース ファイル\03_Input</Filter>
+    </Text>
   </ItemGroup>
 </Project>
