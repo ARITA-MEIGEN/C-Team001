@@ -181,6 +181,7 @@
     <ClCompile Include="src\input\inputkeyboard.cpp" />
     <ClCompile Include="src\input\inputmouse.cpp" />
     <ClCompile Include="src\Item.cpp" />
+    <ClCompile Include="src\Item_Paint.cpp" />
     <ClCompile Include="src\Item_Speed.cpp" />
     <ClCompile Include="src\Letter.cpp" />
     <ClCompile Include="src\Light.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="src\input\inputkeydata.h" />
     <ClInclude Include="src\input\inputmouse.h" />
     <ClInclude Include="src\Item.h" />
+    <ClInclude Include="src\Item_Paint.h" />
     <ClInclude Include="src\Item_Speed.h" />
     <ClInclude Include="src\Letter.h" />
     <ClInclude Include="src\Light.h" />

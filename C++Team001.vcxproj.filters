@@ -171,6 +171,9 @@
     <ClCompile Include="src\input\inputmouse.cpp">
       <Filter>ソース ファイル\03_Input</Filter>
     </ClCompile>
+    <ClCompile Include="src\Item_Paint.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\area.h">
@@ -325,6 +328,9 @@
     </ClInclude>
     <ClInclude Include="src\input\inputmouse.h">
       <Filter>ソース ファイル\03_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Item_Paint.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
