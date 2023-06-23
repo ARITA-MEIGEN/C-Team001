@@ -9,7 +9,7 @@
 
 #include "object2D.h"
 
-//HPゲージクラス
+//スキルゲージUIクラス
 class CGauge : public CObject2D
 {
 public:
@@ -32,7 +32,7 @@ public:
 
 private:
 	//メンバ変数
-	int m_nSkillNumber;					//スキルゲージの番号
+	int m_nSkillNumber;			//スキルゲージの番号
 };
 
 #endif
