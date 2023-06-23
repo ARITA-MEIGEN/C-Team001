@@ -365,8 +365,7 @@ void CPlayer::Skill()
 
 	if (m_nSkillBuffTime > 0)
 	{//スキルの効果時間があったら
-
-	 //現在のスキルLvによって減少量
+		//現在のスキルLvによって減少量
 		m_fSkillGauge -= m_fSubGauge;
 	}
 
@@ -386,7 +385,7 @@ void CPlayer::Skill_Idel()
 		return;
 	}
 
-	/* スキル未使用時 */
+	/* ↓スキル未使用時↓ */
 
 	//ゲージの量によってスキルLvを決める
 	if (m_fSkillGauge >= MAX_GAUGE)
@@ -411,7 +410,7 @@ void CPlayer::Skill_Idel()
 		return;
 	}
 
-	/* スキルレベルが設定されてる */
+	/* ↓スキルレベルが設定されてる↓ */
 
 	CInput* pInput = CInput::GetKey();	//インプットの取得
 
@@ -556,6 +555,9 @@ void CPlayer::Skill_Paint()
 	}
 }
 
+//-----------------------------------------------------------------------------
+// ノックバックスキル
+//-----------------------------------------------------------------------------
 void CPlayer::Skill_Knockback()
 {
 	m_nSkillBuffTime--;
@@ -700,10 +702,6 @@ void CPlayer::BlockCollision()
 				m_pOnBlock = pBlock;						//乗っているブロックを設定
 			}
 		}
-	}
-
-	if (m_State == PST_PAINT && m_pOnBlock != nullptr)
-	{
 	}
 
 	//乗っているブロックの番号を取得
