@@ -278,7 +278,6 @@ void CMap::PopFutureArea()
 
 	/* ↓ランダム指定のブロックが侵入不可ブロックではない↓ */
 
-
 	if (popPlanBlock->GetOnItem() != nullptr)
 	{
 		return;
@@ -286,18 +285,39 @@ void CMap::PopFutureArea()
 
 	/* ↓ランダム指定のブロックにアイテムが乗っていない↓ */
 
-	D3DXVECTOR3 pos = popPlanBlock->GetPos();
-	pos.y += 30.0f;
-
 	D3DXVECTOR2 popBlockIndex = GetBlockIdx(popPlanBlock);
 
 	int range = 1;
 
 	//エリアの生成
-	CArea* area = CArea::Create(popBlockIndex, range,100);
+	CArea* area = CArea::Create(popBlockIndex, range,60,40);
 
 	area->CreateWall(GetBlock(popBlockIndex.x, popBlockIndex.y)->GetPos());
 
+	// 予兆終了後行なって欲しい処理
+	auto atFutrue = [this, range, popBlockIndex]()
+	{
+		for (int y = 0; y < range * 2 + 1; y++)
+		{
+			for (int x = 0; x < range * 2 + 1; x++)
+			{
+				CBlock* block = GetBlock((int)(x + popBlockIndex.x - range), (int)(y + popBlockIndex.y - range));
+
+				if (block == nullptr || block->IsStop())
+				{
+					continue;
+				}
+
+				/* ↓block がnullではないか、壁ではない↓ */
+
+				block->SetPlayerNumber(-1);
+			}
+		}
+	};
+
+	area->SetFunctionAtSignsEnd(atFutrue);
+
+	// 未来エリアに行く予定のブロックの色を取得しとく
 	std::vector<CBlock*> areaBlock;
 	std::map<CBlock*, int> areaBlockIndex;
 
@@ -305,23 +325,21 @@ void CMap::PopFutureArea()
 	{
 		for (int x = 0; x < range * 2 + 1; x++)
 		{
-			CBlock* block = GetBlock(x + popBlockIndex.x - range, y + popBlockIndex.y - range);
+			CBlock* block = GetBlock((int)(x + popBlockIndex.x - range), (int)(y + popBlockIndex.y - range));
 
-			if (block == nullptr)
+			if (block == nullptr || block->IsStop())
 			{
 				continue;
 			}
 
-			if (!block->IsStop())
-			{
-				areaBlock.push_back(block);
-				areaBlockIndex[block] = block->GetNumber();
-				block->SetPlayerNumber(-1);
-			}
+			/* ↓block がnullではないか、壁ではない↓ */
+
+			areaBlock.push_back(block);
+			areaBlockIndex[block] = block->GetNumber();
 		}
 	}
 
-	// エリア死亡時の処理
+	// エリア死亡時行なって欲しい処理
 	auto atDead = [this, areaBlock, areaBlockIndex]()
 	{
 		std::map<CBlock*, int> BlockIndex = areaBlockIndex;
