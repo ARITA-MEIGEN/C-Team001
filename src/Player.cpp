@@ -197,12 +197,6 @@ void CPlayer::Update(void)
 
 	BlockCollision();
 
-	// ブロックがない空間で停まる
-	StopNoBlock();
-
-	// ブロックの中心で曲がる
-	TurnCenterBlock();
-
 #ifdef _DEBUG
 	CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
 	CDebugProc::Print("現在のプレイヤーの角度:%f %f %f\n", m_rot.x, m_rot.y, m_rot.z);
@@ -310,6 +304,12 @@ CPlayer * CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 //-----------------------------------------------------------------------------
 void CPlayer::Move()
 {
+	// ブロックがない空間で停まる
+	StopNoBlock();
+
+	// ブロックの中心で曲がる
+	TurnCenterBlock();
+
 	if (m_controller == nullptr)
 	{
 		assert(false);
