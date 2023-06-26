@@ -81,19 +81,19 @@ D3DXVECTOR3 CPlayerController::Move()
 	}
 
 	//キーボードの移動
-	if (input->Press(KEY_UP))
+	if (input->Press(KEY_UP,-1))
 	{
 		moveInput.z += 1.0f;
 	}
-	if (input->Press(KEY_LEFT))
+	if (input->Press(KEY_LEFT, -1))
 	{
 		moveInput.x -= 1.0f;
 	}
-	if (input->Press(KEY_DOWN))
+	if (input->Press(KEY_DOWN, -1))
 	{
 		moveInput.z -= 1.0f;
 	}
-	if (input->Press(KEY_RIGHT))
+	if (input->Press(KEY_RIGHT, -1))
 	{
 		moveInput.x += 1.0f;
 	}
@@ -104,4 +104,13 @@ D3DXVECTOR3 CPlayerController::Move()
 	}
 
 	return moveInput;
+}
+
+//-----------------------------------------
+// スキル
+//-----------------------------------------
+bool CPlayerController::Skill()
+{
+	CInput* pInput = CInput::GetKey();	//インプットの取得
+	return 	pInput->Trigger(DIK_K) || pInput->Trigger(DIK_L);
 }
