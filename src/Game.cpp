@@ -181,6 +181,12 @@ void CGame::Update()
 	{
 		m_pTimer->Update();
 
+		if (m_pTimer->GetTimer() <= 0)
+		{
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
+			m_pMap->Ranking();
+		}
+
 #ifdef _DEBUG
 		//Žw’è‚ÌƒL[‚ª‰Ÿ‚³‚ê‚½‚©‚Ç‚¤‚©
 		if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
