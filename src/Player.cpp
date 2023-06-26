@@ -691,11 +691,15 @@ void CPlayer::BlockCollision()
 					m_fSkillGauge++;
 				}
 
-				if (m_pOnBlock != nullptr)
+				if (m_pOnBlock != nullptr && pBlock != m_pOnBlock)
 				{
 					m_pOnBlock->SetOnPlayer(nullptr);
 				}
 
+				if (pBlock->GetOnPlayer() != this && pBlock->GetOnPlayer() != nullptr)
+				{//乗ったブロックにすでにプレイヤーがいたら
+					KnockBack(pBlock->GetOnPlayer(),this);
+				}
 				pBlock->SetOnPlayer(this);				//プレイヤーの
 				pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
 				pBlock->SetSink(2.5f);
@@ -760,7 +764,9 @@ void CPlayer::BlockCollision()
 //-----------------------------------------------------------------------------
 // ノックバック処理
 //-----------------------------------------------------------------------------
-void CPlayer::KnockBack()
+void CPlayer::KnockBack(CPlayer *pFastPlayer, CPlayer *pLatePlayer)
 {
-
+	pFastPlayer->m_move;
+	pLatePlayer->m_move;
+	int a = 0;
 }
