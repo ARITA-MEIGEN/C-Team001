@@ -13,6 +13,8 @@
     [ "TOON", "data\/TEXTURE\/toon.png" ],
     [ "CIRCLE_SHADOW", "data\/TEXTURE\/Effect\/Effect_shadow.png" ],
     [ "SPEED_UP_ITEM_ICON", "data\/TEXTURE\/Game\/Item\/SpeedUp\/Item_SpeedUp_wing.png" ],
+    [ "PAINT_UP_ITEM_ICON", "data\/TEXTURE\/SpeedUp100.png" ],
+
     [ "CHECK", "data\/TEXTURE\/Icon\/Icon_check.png" ],
     [ "RESULET_000", "data\/TEXTURE\/Result\/Rank\/Result_rank_1st.png" ],
     [ "RESULET_001", "data\/TEXTURE\/Result\/Rank\/Result_rank_2nd.png" ],
