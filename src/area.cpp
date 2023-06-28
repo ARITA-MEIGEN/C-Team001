@@ -45,6 +45,17 @@ void CArea::Uninit()
 void CArea::Update()
 {
 	m_time--;
+	m_signsTime--;
+	
+	if (m_signsTime <= 0)
+	{
+		m_functionAtSignsEnd();
+
+		for (int i = 0; i < 4; i++)
+		{
+			m_wall[i]->SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.8f));
+		}
+	}
 
 	if (m_time <= 0)
 	{
@@ -57,7 +68,7 @@ void CArea::Update()
 //=============================================================================
 // ¶¬
 //=============================================================================
-CArea * CArea::Create(D3DXVECTOR2 index, const unsigned int inRange, const unsigned int inTime)
+CArea * CArea::Create(D3DXVECTOR2 index, const unsigned int inRange, const unsigned int inSignsTime, const unsigned int inDiedTime)
 {
 	CArea* area = new CArea;
 
@@ -66,11 +77,15 @@ CArea * CArea::Create(D3DXVECTOR2 index, const unsigned int inRange, const unsig
 
 	area->Init();
 	area->m_centerIndex = index;
-	area->m_time = inTime;
+	area->m_time = inSignsTime + inDiedTime;
+	area->m_signsTime = inSignsTime;
 	area->m_range = inRange;
 	return area;
 }
 
+//=============================================================================
+// •Ç‚Ì¶¬
+//=============================================================================
 void CArea::CreateWall(D3DXVECTOR3 inPos)
 {
 	D3DXVECTOR3 pos(inPos);
@@ -81,6 +96,7 @@ void CArea::CreateWall(D3DXVECTOR3 inPos)
 		m_wall[0] = CObject3D::Create(wallpos, D3DXVECTOR3(90.0f, 0.0f, 35.0f), 0);
 		m_wall[0]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f));
 		m_wall[0]->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.8f));
+		m_wall[0]->SetBackCulling(true);
 	}
 	{
 		D3DXVECTOR3 wallpos = pos;
@@ -88,6 +104,7 @@ void CArea::CreateWall(D3DXVECTOR3 inPos)
 		m_wall[1] = CObject3D::Create(wallpos, D3DXVECTOR3(90.0f, 0.0f, 35.0f), 0);
 		m_wall[1]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f));
 		m_wall[1]->SetCol(D3DXCOLOR(1.0f,0.0f,0.0f,0.8f));
+		m_wall[1]->SetBackCulling(true);
 	}
 	{
 		D3DXVECTOR3 wallpos = pos;
@@ -95,6 +112,7 @@ void CArea::CreateWall(D3DXVECTOR3 inPos)
 		m_wall[2] = CObject3D::Create(wallpos, D3DXVECTOR3(90.0f, 0.0f, 35.0f), 0);
 		m_wall[2]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, D3DX_PI * 0.5f, 0.0f));
 		m_wall[2]->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.8f));
+		m_wall[2]->SetBackCulling(true);
 	}
 	{
 		D3DXVECTOR3 wallpos = pos;
@@ -102,5 +120,6 @@ void CArea::CreateWall(D3DXVECTOR3 inPos)
 		m_wall[3] = CObject3D::Create(wallpos, D3DXVECTOR3(90.0f, 0.0f, 35.0f), 0);
 		m_wall[3]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, D3DX_PI * 0.5f, 0.0f));
 		m_wall[3]->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.8f));
+		m_wall[3]->SetBackCulling(true);
 	}
 }

@@ -18,7 +18,7 @@ class Player;
 
 //É}ÉNÉçíËã`
 #define NUM_TEXTIME (2)
-#define	DEFAULT_TIME (99)
+#define	DEFAULT_TIME (60)
 
 class CTimer
 {
@@ -41,8 +41,6 @@ private:
 
 	int m_nTimer;
 	int m_nCreateTimer;
-
 };
-
 #endif
 
