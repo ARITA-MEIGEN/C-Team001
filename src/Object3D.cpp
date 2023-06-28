@@ -20,6 +20,7 @@
 CObject3D::CObject3D(int nPriority) :CObject(nPriority)
 {
 	m_pVtxBuff = nullptr;							// ポリゴンの頂点バッファ
+	m_isBackCulling = false;
 	m_fLength = 0.0f;								// 対角線の長さ
 	m_fAngle = 0.0f;								// 対角線の角度
 	m_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 位置を初期化する
@@ -40,6 +41,8 @@ CObject3D::~CObject3D()
 //=============================================================================
 HRESULT  CObject3D::Init()
 {
+	m_isBackCulling = false;
+
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice;
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
@@ -153,18 +156,18 @@ void  CObject3D::Draw()
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
 
 	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorldPolygon);
+	D3DXMatrixIdentity(&m_mtxWorld);
 
 	//向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot,m_Rot.y, m_Rot.x, m_Rot.z);
-	D3DXMatrixMultiply(&m_mtxWorldPolygon, &m_mtxWorldPolygon, &mtxRot);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
 	//位置を反映
 	D3DXMatrixTranslation(&mtxTrans, m_Pos.x, m_Pos.y, m_Pos.z);
-	D3DXMatrixMultiply(&m_mtxWorldPolygon, &m_mtxWorldPolygon, &mtxTrans);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	//ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorldPolygon);
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
 	//頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_3D));
@@ -179,7 +182,10 @@ void  CObject3D::Draw()
 	pDevice->SetTexture(0, pTexture->GetTexture(m_textureKey));
 
 	// カリング無効
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	if (m_isBackCulling)
+	{
+		pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	}
 
 	// αテストを有効
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);

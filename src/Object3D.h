@@ -47,14 +47,15 @@ public:
 	//セッター
 	void SetPos(const D3DXVECTOR3& pos);
 	void SetSiz(const D3DXVECTOR3& siz);
-	void SetCol(const D3DXCOLOR& col);
 	void SetRot(const D3DXVECTOR3& rot) { m_Rot = rot; };
+	void SetCol(const D3DXCOLOR& col);
+	void SetBackCulling(const bool isCulling) { m_isBackCulling = isCulling; }
 
 	//ゲッター
-	const D3DXVECTOR3 GetPos() { return m_Pos; };
-	const D3DXVECTOR3 GetSiz() { return m_Siz; };
-	const D3DXCOLOR GetCol() { return m_Col; };
-	const D3DXVECTOR3 GetRot() { return m_Rot; };
+	const D3DXVECTOR3 GetPos() const { return m_Pos; }
+	const D3DXVECTOR3 GetSiz() const { return m_Siz; }
+	const D3DXVECTOR3 GetRot() const { return m_Rot; }
+	const D3DXCOLOR GetCol() const { return m_Col; }
 
 	void SetTextureKey(const std::string key) { m_textureKey = key; }
 private:
@@ -64,10 +65,11 @@ private:
 	float m_fLength;					//対角線の長さ
 	float m_fAngle;						//対角線の角度
 	D3DXVECTOR3 m_Rot;					//回転
-	D3DXMATRIX m_mtxWorldPolygon;
+	D3DXMATRIX m_mtxWorld;		// ワールドマトリックス
 	D3DXVECTOR3 m_Pos;					//位置
 	D3DXVECTOR3 m_Siz;					//大きさ
 	D3DXCOLOR m_Col;					//色
+	bool m_isBackCulling;				// 背面カリングの使用有無
 };
 #endif // !_OBJECT_H_
 

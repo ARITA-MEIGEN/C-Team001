@@ -25,18 +25,18 @@
     <Filter Include="ソース ファイル\00_Main">
       <UniqueIdentifier>{1c986e72-20e9-46d3-8e28-25e08c930522}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\04_Item">
+      <UniqueIdentifier>{111ad2a3-1c18-4a46-a2d0-91b5a7098beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\05_Map">
+      <UniqueIdentifier>{ea0ea196-9053-404c-8e15-d526b7bedec7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\effect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Floor.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Light.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\Mesh.cpp">
@@ -99,18 +99,6 @@
     <ClCompile Include="src\PlayerController.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Block.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Map.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Item.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Item_Speed.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\SkillGauge.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -128,9 +116,6 @@
     </ClCompile>
     <ClCompile Include="src\input.cpp">
       <Filter>ソース ファイル\03_Input</Filter>
-    </ClCompile>
-    <ClCompile Include="src\area.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\Application.cpp">
       <Filter>ソース ファイル\00_Main</Filter>
@@ -171,18 +156,33 @@
     <ClCompile Include="src\input\inputmouse.cpp">
       <Filter>ソース ファイル\03_Input</Filter>
     </ClCompile>
+    <ClCompile Include="src\Item.cpp">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClCompile>
     <ClCompile Include="src\Item_Paint.cpp">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Item_Speed.cpp">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="src\area.cpp">
+      <Filter>ソース ファイル\05_Map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Block.cpp">
+      <Filter>ソース ファイル\05_Map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Floor.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Map.cpp">
+      <Filter>ソース ファイル\05_Map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>ソース ファイル\00_Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\area.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="BgStage.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Block.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Command.h">
@@ -200,22 +200,7 @@
     <ClInclude Include="src\File.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\Floor.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Item.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Item_Speed.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\Light.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\main.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Map.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Mesh.h">
@@ -329,8 +314,29 @@
     <ClInclude Include="src\input\inputmouse.h">
       <Filter>ソース ファイル\03_Input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Item.h">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Item_Speed.h">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClInclude>
     <ClInclude Include="src\Item_Paint.h">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="src\area.h">
+      <Filter>ソース ファイル\05_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Block.h">
+      <Filter>ソース ファイル\05_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Floor.h">
       <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Map.h">
+      <Filter>ソース ファイル\05_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main.h">
+      <Filter>ソース ファイル\00_Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
