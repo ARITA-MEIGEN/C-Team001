@@ -61,4 +61,5 @@ D3DXVECTOR3 CComputerController::Move()
 //-----------------------------------------
 bool CComputerController::Skill()
 {
+	return false;
 }
