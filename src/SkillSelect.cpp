@@ -138,7 +138,7 @@ void CSkillSelect::Input()
 			}
 		}
 
-		if ((pInput->Trigger(DIK_RETURN)) == true)		//ENTERキー
+		if ((pInput->Trigger(DIK_RETURN)) == true || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
 		{//エンターでゲームに
 		 //モード設定
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
