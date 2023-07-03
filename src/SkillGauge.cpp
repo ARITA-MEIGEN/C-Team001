@@ -13,7 +13,7 @@
 // 定義
 //======================================================
 const D3DXVECTOR2 CGauge::GAUGE_SIZE = D3DXVECTOR2(CGauge::MAX_SIZE / MAX_GAUGE, 50.0f);	//ゲージ一つ分の大きさ
-const float CGauge::MAX_SIZE = 300.0f;														//ゲージの最大値
+const float CGauge::MAX_SIZE = 250.0f;														//ゲージの最大値
 const float CGauge::SPACE_SIZE = (SCREEN_WIDTH - (MAX_SIZE * 4.0f)) / 5.0f;					//ゲージ同士の間隔の大きさ
 
 //======================================================
@@ -38,11 +38,14 @@ HRESULT CGauge::Init(void)
 	//初期化処理
 	CObject2D::Init();
 
+	//テクスチャの設定
+	CObject2D::SetTextureKey("SKILL_GAUGE");
+
 	return S_OK;
 }
 
 //======================================================
-//更新処理
+//終了処理
 //======================================================
 void CGauge::Uninit()
 {
@@ -72,7 +75,7 @@ void CGauge::Update()
 }
 
 //======================================================
-//更新処理
+//描画処理
 //======================================================
 void CGauge::Draw()
 {
