@@ -59,7 +59,7 @@ public:
 	// 角度
 	void SetRot(float Rot);
 	float GetRot();
-
+	
 	// テクスチャ
 	void SetTextureKey(const std::string key) { m_textureKey = key; }
 	void SetUV(float U1, float U2, float V1, float V2);

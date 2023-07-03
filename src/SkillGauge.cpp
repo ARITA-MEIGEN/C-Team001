@@ -69,8 +69,10 @@ void CGauge::Update()
 
 	if (pPlayer != nullptr)
 	{//プレイヤーのスキルゲージ分足す
-		//if () プレイヤーのゲージが最大になったら止める
-			SetSkillPos(pPlayer->GetSkillGauge());
+
+		SetSkillPos(pPlayer->GetSkillGauge());
+		float gaugeRatio =  pPlayer->GetSkillGauge() / MAX_GAUGE;
+		SetUV(0.0f, gaugeRatio,0.0f, 1.0f);
 	}
 }
 

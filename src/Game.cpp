@@ -78,10 +78,12 @@ HRESULT CGame::Init()
 	{
 		CBlock* spawnBlock = m_pMap->GetPlayerSpawnBlock(nCnt);
 		m_pPlayer[nCnt] = CPlayer::Create(spawnBlock->GetPos(), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		m_pPlayer[nCnt]->SetController(new CComputerController);
+		//m_pPlayer[nCnt]->SetController(new CComputerController);
+		m_pPlayer[nCnt]->SetController(new CPlayerController(nCnt));
 
 		//ステータス表示の生成
-		m_apStatusUI[nCnt] = CStatusUI::Create(nCnt);
+		D3DXVECTOR3 pos((CGauge::SPACE_SIZE * (nCnt + 1 + 1)) + (CGauge::MAX_SIZE * nCnt + 1), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y * 0.5f) - 10.0f, 0.0f);
+		m_apStatusUI[nCnt] = CStatusUI::Create(pos,nCnt);
 	}
 	
 	//デバッグ用カメラ操作モード
