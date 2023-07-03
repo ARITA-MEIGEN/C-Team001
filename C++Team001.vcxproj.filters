@@ -354,7 +354,7 @@
       <Filter>ソース ファイル\06_Game</Filter>
     </ClInclude>
     <ClInclude Include="src\StatusUI.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\MapSelect.h">
       <Filter>ソース ファイル\01_Mode</Filter>

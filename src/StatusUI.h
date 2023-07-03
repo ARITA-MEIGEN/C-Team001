@@ -23,12 +23,15 @@ class CObject2D;
 //***************************
 class CStatusUI : public CObject
 {
+private: /* 定数 */
+	static const D3DXVECTOR3 GAUGE_LOCAL_POS;
+	static const D3DXVECTOR2 GAUGE_SIZE;
+	static const D3DXVECTOR3 CHARACTER_BG_LOCAL_POS;
+	static const D3DXVECTOR2 CHARACTER_BG_SIZE;
+	static const D3DXVECTOR3 SKILL_ICON_BG_LOCAL_POS;
+	static const D3DXVECTOR2 SKILL_ICON_BG_SIZE;
 public: /* 静的メンバ関数 */
-	/*
-		生成
-		int nPlayerNum ---> プレイヤー番号
-	*/
-	static CStatusUI *Create(int nPlayerNum);
+	static CStatusUI *Create(const D3DXVECTOR3& inPos, int nPlayerNum);
 
 public: /* コンストラクタ・デストラクタ */
 	explicit CStatusUI(int nPriority = 4);
@@ -40,14 +43,12 @@ public: /* オーバーライド関数 */
 	void Update() override;		//更新
 	void Draw() override;		//描画
 
+	void SetPos(const D3DXVECTOR3& inPos);
 private: /* メンバ関数 */
-	/*
-		プレイヤー番号の設定
-		int nPlayerNum ---> プレイヤー番号
-	*/
 	void SetPlayerNum(int nPlayerNum);
 
 private: /* メンバ変数 */
+	D3DXVECTOR3 m_pos;
 	CGauge* m_pGauge;			//ゲージ
 	CObject2D* m_pCharaBg;		//キャラクター背景
 	CObject2D* m_pSkillIconBg;	//スキルアイコン背景
