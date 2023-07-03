@@ -48,6 +48,7 @@ private: /* メンバ関数 */
 	void SetPlayerNum(int nPlayerNum);
 
 private: /* メンバ変数 */
+	D3DXVECTOR3 m_pos;
 	CGauge* m_pGauge;			//ゲージ
 	CObject2D* m_pCharaBg;		//キャラクター背景
 	CObject2D* m_pSkillIconBg;	//スキルアイコン背景

@@ -36,11 +36,12 @@ CStatusUI *CStatusUI::Create(int nPlayerNum)
 //======================================================
 //コンストラクタ
 //======================================================
-CStatusUI::CStatusUI(int nPriority) : CObject(nPriority),
-m_pGauge(nullptr),
-m_pCharaBg(nullptr),
-m_pSkillIconBg(nullptr),
-m_nPlayerNum(0)
+CStatusUI::CStatusUI(int nPriority) :
+	CObject(nPriority),
+	m_pGauge(nullptr),
+	m_pCharaBg(nullptr),
+	m_pSkillIconBg(nullptr),
+	m_nPlayerNum(0)
 {
 }
 
