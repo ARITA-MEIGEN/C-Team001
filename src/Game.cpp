@@ -22,6 +22,8 @@
 #include"Map.h"
 #include"Item_Speed.h"
 #include"SkillGauge.h"
+#include "PlayerController.h"
+#include "computerController.h"
 #include"StatusUI.h"
 
 #include "File.h"
@@ -76,6 +78,7 @@ HRESULT CGame::Init()
 	{
 		CBlock* spawnBlock = m_pMap->GetPlayerSpawnBlock(nCnt);
 		m_pPlayer[nCnt] = CPlayer::Create(spawnBlock->GetPos(), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		m_pPlayer[nCnt]->SetController(new CComputerController);
 
 		//ステータス表示の生成
 		m_apStatusUI[nCnt] = CStatusUI::Create(nCnt);

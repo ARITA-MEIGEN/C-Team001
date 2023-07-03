@@ -168,6 +168,7 @@
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CameraGame.cpp" />
+    <ClCompile Include="src\computerController.cpp" />
     <ClCompile Include="src\Controller.cpp" />
     <ClCompile Include="src\DebugProc.cpp" />
     <ClCompile Include="src\effect.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\MapSelect.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Mode.cpp" />
     <ClCompile Include="src\Motion.cpp" />
@@ -224,6 +226,7 @@
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CameraGame.h" />
     <ClInclude Include="src\Command.h" />
+    <ClInclude Include="src\computerController.h" />
     <ClInclude Include="src\Controller.h" />
     <ClInclude Include="src\DebugProc.h" />
     <ClInclude Include="src\Easing.h" />
@@ -245,6 +248,7 @@
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\Map.h" />
+    <ClInclude Include="src\MapSelect.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Mode.h" />
     <ClInclude Include="src\Motion.h" />
