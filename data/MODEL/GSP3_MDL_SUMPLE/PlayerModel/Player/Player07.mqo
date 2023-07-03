@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos -6.7480 11.3500 9442.5596
 	lookat 0.0000 0.0000 0.0000
-	head 219.5793
-	pich 0.0092
+	head 220.0285
+	pich 0.0792
 	bank -0.0100
 	ortho 0
 	zoom2 0.7943
@@ -15310,7 +15310,7 @@ Object "‰ß‹Ž–¢—ˆƒAƒ“ƒeƒi1" {
 	}
 }
 Object "‹|—p˜r" {
-	visible 15
+	visible 0
 	locking 1
 	shading 1
 	facet 59.5
@@ -15434,7 +15434,7 @@ Object "‹|—p˜r" {
 	}
 }
 Object "‹|—pŽè" {
-	visible 15
+	visible 0
 	locking 1
 	shading 1
 	facet 59.5
@@ -15646,7 +15646,7 @@ Object "‹|—pŽè" {
 	}
 }
 Object "‹|" {
-	visible 15
+	visible 0
 	locking 1
 	shading 1
 	facet 59.5
@@ -16202,7 +16202,7 @@ Object "‹|" {
 	}
 }
 Object "–î“›" {
-	visible 15
+	visible 0
 	locking 1
 	shading 1
 	facet 59.5
@@ -16400,7 +16400,7 @@ Object "–î“›" {
 	}
 }
 Object "–î" {
-	visible 15
+	visible 0
 	locking 1
 	shading 1
 	facet 59.5
