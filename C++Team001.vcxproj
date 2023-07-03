@@ -210,6 +210,7 @@
     <ClCompile Include="src\SkillGauge.cpp" />
     <ClCompile Include="src\SkillSelect.cpp" />
     <ClCompile Include="src\sound.cpp" />
+    <ClCompile Include="src\StatusUI.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\Title.cpp" />
@@ -265,6 +266,7 @@
     <ClInclude Include="src\SkillGauge.h" />
     <ClInclude Include="src\SkillSelect.h" />
     <ClInclude Include="src\sound.h" />
+    <ClInclude Include="src\StatusUI.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Time.h" />
     <ClInclude Include="src\Title.h" />
