@@ -22,6 +22,8 @@
 #include"Map.h"
 #include"Item_Speed.h"
 #include"SkillGauge.h"
+#include "PlayerController.h"
+#include "computerController.h"
 
 #include "File.h"
 
@@ -74,6 +76,7 @@ HRESULT CGame::Init()
 	{
 		CBlock* spawnBlock = m_pMap->GetPlayerSpawnBlock(nCnt);
 		m_pPlayer[nCnt] = CPlayer::Create(spawnBlock->GetPos(), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		m_pPlayer[nCnt]->SetController(new CComputerController);
 		int number = m_pPlayer[nCnt]->GetPlayerNumber();
 		//スキルゲージの座標の算出(X:間隔に1つ分のゲージサイズを足している,Y:画面の下端に合わせている)
 		D3DXVECTOR3 SkillPos = D3DXVECTOR3((CGauge::SPACE_SIZE * (nCnt+1 + 1)) + (CGauge::MAX_SIZE * nCnt + 1), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f);

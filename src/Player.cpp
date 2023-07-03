@@ -116,9 +116,6 @@ HRESULT CPlayer::Init()
 	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
 	m_bKnockBack = false;
 
-	//“®“IŠm•Û
-	m_controller = new CPlayerController(m_nPlayerNumber);
-
 	InitStateFunc(mUpdateFunc, STATE_MAX);
 
 	m_funcSkill = m_SkillFunc;
