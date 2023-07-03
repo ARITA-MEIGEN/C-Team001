@@ -18,6 +18,9 @@
     [ "RESULET_000", "data\/TEXTURE\/Result\/Rank\/Result_rank_1st.png" ],
     [ "RESULET_001", "data\/TEXTURE\/Result\/Rank\/Result_rank_2nd.png" ],
     [ "RESULET_002", "data\/TEXTURE\/Result\/Rank\/Result_rank_3rd.png" ],
-    [ "RESULET_003", "data\/TEXTURE\/Result\/Rank\/Result_rank_4th.png" ]
+    [ "RESULET_003", "data\/TEXTURE\/Result\/Rank\/Result_rank_4th.png" ],
+    [ "SKILL_GAUGE", "data\/TEXTURE\/Game\/PlayerStatus\/PlayerStatus_SkillGauge.png" ],
+    [ "SKILL_ICON_BG", "data\/TEXTURE\/Game\/PlayerStatus\/PlayerStatus_SkillBg.png" ],
+    [ "CHARACTER_BG", "data\/TEXTURE\/Game\/PlayerStatus\/PlayerStatus_CharaBG_Square.png"]
   ]
 }
