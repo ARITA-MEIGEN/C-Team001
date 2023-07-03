@@ -23,6 +23,7 @@
 #include "Map.h"
 #include "SkillGauge.h"
 #include "SkillSelect.h"
+#include "MapSelect.h"
 #include "motion.h"
 
 //-----------------------------------------------------------------------------
@@ -107,13 +108,14 @@ HRESULT CPlayer::Init()
 	}
 
 	//初期化
-	m_nSkillLv = 0;
-	m_fSkillGauge = 0.0f;
-	m_fSubGauge = 0.0f;
-	m_SkillState = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
-
-	//動的確保
-	m_controller = new CPlayerController(m_nPlayerNumber);
+	m_nSkillLv = 0;			//スキルレベル
+	m_nStunTime = 0;		//
+	m_nItemBuffTime = 0;	//アイテムの効果時間
+	m_nSkillBuffTime = 0;	//スキルの効果時間
+	m_fSkillGauge = 0.0f;	//スキルゲージ
+	m_fSubGauge = 0.0f;		//スキルゲージの減算量
+	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
+	m_bKnockBack = false;
 
 	InitStateFunc(mUpdateFunc, STATE_MAX);
 
@@ -164,9 +166,9 @@ void CPlayer::Update(void)
 		return;
 	}
 
-	CObject::Update();
+	/* ↓GAME状態の場合↓ */
 
-	CInput* pInput = CInput::GetKey();
+	CObject::Update();
 
 	Skill();
 
@@ -180,20 +182,28 @@ void CPlayer::Update(void)
 		m_ItemState = ITEM_NONE;
 	}
 
+	if (m_nStunTime > 0)
+	{// スタンしていたらスタン時間を減算させる
+		m_nStunTime--;
+	}
+
 	// 座標更新
 	Updatepos();
 
 	// モーション
 	m_motion->Update();
 
-	// 移動
-	Move();
+	if (m_nStunTime <= 0)
+	{
+		m_nStunTime = 0;
+		// 移動
+		Move();
+	}
 
 	// 回転
 	TurnLookAtMoveing();
 
 	Normalization();		// 角度の正規化
-//	m_pShadow->SetPos({ m_pos.x, 1.0f, m_pos.z });
 
 	BlockCollision();
 
@@ -209,6 +219,8 @@ void CPlayer::Update(void)
 	CDebugProc::Print("現在のモーション:%d\n", (int)m_Motion);
 	CDebugProc::Print("現在の状態:%d\n", (int)m_State);
 	CDebugProc::Print("現在のフレーム:%d\n", m_frame);
+
+	CInput* pInput = CInput::GetKey();
 
 	if (pInput->Trigger(DIK_U))
 	{
@@ -360,8 +372,8 @@ void CPlayer::SetController(CController * inOperate)
 void CPlayer::Skill()
 {
 	// スキル処理
-	assert((m_SkillStateNow >= 0) && (m_SkillStateNow < SKILL_MAX));
-	(this->*(m_funcSkill[m_SkillStateNow]))();
+	assert((m_skillStateNow >= 0) && (m_skillStateNow < SKILL_MAX));
+	(this->*(m_funcSkill[m_skillStateNow]))();
 
 	if (m_nSkillBuffTime > 0)
 	{//スキルの効果時間があったら
@@ -417,7 +429,7 @@ void CPlayer::Skill_Idel()
 	//現在のスキルLvによって効果量を変える
 	if (m_controller->Skill() || pInput->Trigger(JOYPAD_Y,m_nPlayerNumber) || pInput->Trigger(JOYPAD_X, m_nPlayerNumber))
 	{
-		SetSkill(m_SkillState);
+		SetSkill(m_skill);
 
 		//減らすゲージの量を格納する
 		float fSubGauge = 0.0f;
@@ -486,7 +498,7 @@ void CPlayer::Skill_Paint()
 
 			if (Block != nullptr)
 			{
-				Block->SetOnPlayer(this);	//プレイヤーの
+				//Block->SetOnPlayer(this);	//プレイヤーの
 				Block->SetPlayerNumber(m_nPlayerNumber);
 			}
 		}
@@ -506,7 +518,7 @@ void CPlayer::Skill_Paint()
 
 			if (Block != nullptr)
 			{//ブロックを塗る
-				Block->SetOnPlayer(this);	//プレイヤーの
+				//Block->SetOnPlayer(this);	//プレイヤーの
 				Block->SetPlayerNumber(m_nPlayerNumber);
 			}
 		}
@@ -522,7 +534,7 @@ void CPlayer::Skill_Paint()
 
 			if (Block != nullptr)
 			{//ブロックを塗る
-				Block->SetOnPlayer(this);	//プレイヤーの
+				//Block->SetOnPlayer(this);	//プレイヤーの
 				Block->SetPlayerNumber(m_nPlayerNumber);
 			}
 		}
@@ -543,7 +555,7 @@ void CPlayer::Skill_Paint()
 
 				if (Block != nullptr)
 				{//ブロックを塗る
-					Block->SetOnPlayer(this);	//プレイヤーの
+					//Block->SetOnPlayer(this);	//プレイヤーの
 					Block->SetPlayerNumber(m_nPlayerNumber);
 				}
 			}
@@ -632,6 +644,7 @@ void CPlayer::TurnCenterBlock()
 	if (XMin && XMax && ZMin && ZMax)
 	{
 		 // 方向ベクトル掛ける移動量
+		D3DXVec3Normalize(&m_movePlanVec, &m_movePlanVec);
 		m_move = m_movePlanVec * PLAYER_SPEED;
 
 		if (m_State == PST_SPEED || m_ItemState == ITEM_SPEED)
@@ -648,8 +661,8 @@ void CPlayer::TurnCenterBlock()
 //-----------------------------------------------------------------------------
 void CPlayer::Updatepos()
 {
-	m_posold = m_pos;		//前回の位置の保存
-	m_pos += m_move;		//位置の更新
+	m_posold = m_pos;	// 前回の位置の保存
+	m_pos += m_move;	// 位置の更新
 }
 
 //-----------------------------------------------------------------------------
@@ -682,25 +695,32 @@ void CPlayer::BlockCollision()
 			continue;
 		}
 
-		if (m_pos.x <= pBlock->GetPos().x + (pBlock->GetSize().x * 0.5f) && m_pos.x >= pBlock->GetPos().x - (pBlock->GetSize().x * 0.5f))
-		{//X軸
-			if (m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f) && m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f))
-			{//Z軸
-				if (pBlock->GetNumber() != m_nPlayerNumber && m_fSkillGauge < MAX_GAUGE && m_State == PST_STAND)
-				{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックスではなく、無強化の場合)
-					m_fSkillGauge++;
-				}
+		bool XMin = m_pos.x <= pBlock->GetPos().x + (pBlock->GetSize().x * 0.5f);
+		bool XMax = m_pos.x >= pBlock->GetPos().x - (pBlock->GetSize().x * 0.5f);
+		bool ZMin = m_pos.z <= pBlock->GetPos().z + (pBlock->GetSize().z * 0.5f);
+		bool ZMax = m_pos.z >= pBlock->GetPos().z - (pBlock->GetSize().z * 0.5f);
 
-				if (m_pOnBlock != nullptr)
-				{
-					m_pOnBlock->SetOnPlayer(nullptr);
-				}
-
-				pBlock->SetOnPlayer(this);				//プレイヤーの
-				pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
-				pBlock->SetSink(2.5f);
-				m_pOnBlock = pBlock;						//乗っているブロックを設定
+		if (XMin && XMax && ZMin && ZMax)
+		{
+			if (pBlock->GetNumber() != m_nPlayerNumber && m_fSkillGauge < MAX_GAUGE && m_State == PST_STAND)
+			{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックスではなく、無強化の場合)
+				m_fSkillGauge++;
 			}
+
+			if (m_pOnBlock != nullptr && pBlock != m_pOnBlock)
+			{
+				m_pOnBlock->SetOnPlayer(nullptr);
+			}
+
+			if (pBlock->GetOnPlayer() != this && pBlock->GetOnPlayer() != nullptr)
+			{//乗ったブロックにすでにプレイヤーがいたら
+				KnockBack(pBlock->GetOnPlayer(), this);
+			}
+
+			pBlock->SetOnPlayer(this);					//プレイヤーの
+			pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
+			pBlock->SetSink(2.5f);						// ブロックを沈める
+			m_pOnBlock = pBlock;						//乗っているブロックを設定
 		}
 	}
 
@@ -760,7 +780,22 @@ void CPlayer::BlockCollision()
 //-----------------------------------------------------------------------------
 // ノックバック処理
 //-----------------------------------------------------------------------------
-void CPlayer::KnockBack()
+void CPlayer::KnockBack(CPlayer *pFastPlayer, CPlayer *pLatePlayer)
 {
+	if (pLatePlayer->m_nStunTime != 0)
+	{
+		return;
+	}
 
+	D3DXVECTOR3 moveVec;
+	D3DXVec3Normalize(&moveVec, &pLatePlayer->m_move);
+
+	//最初にブロックにいたプレイヤーを後から来たプレイヤーの進行方向に飛ばす
+	pFastPlayer->m_movePlanVec = moveVec;
+	//後から来たプレイヤーを進行方向の逆に飛ばす
+	pLatePlayer->m_movePlanVec = -moveVec;
+
+	// 触れたプレイヤー同士にスタンを付与
+	pLatePlayer->m_nStunTime = 12;
+	pFastPlayer->m_nStunTime = 12;
 }

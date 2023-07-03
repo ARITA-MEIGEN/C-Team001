@@ -16,6 +16,8 @@
 #include"Map.h"
 #include"Game.h"
 #include"Player.h"
+#include"CameraGame.h"
+#include"Light.h"
 
 //====================================
 // 定数
@@ -41,21 +43,31 @@ CSkillSelect::~CSkillSelect()
 //====================================
 HRESULT CSkillSelect::Init()
 {
+	//カメラの設定
+	m_pCamera = CCameraGame::Create();
+	m_pCamera->SetPosV(D3DXVECTOR3(0.0f, 250.0f, -400.0f));
+	m_pCamera->SetPosR(D3DXVECTOR3(0.0f, 250.0f, 200.0f));
+
+	//ライトの設定
+	m_pLight = new CLight;
+	m_pLight->Init();
+
 	//初期化
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{
 		m_nSkill[nCnt] = 1;
 		m_pObj2D[nCnt] = CObject2D::Create(D3DXVECTOR3(200.0f + (300.0f * nCnt), 600.0f, 0.0f), D3DXVECTOR2(150.0f, 80.0f), 5);
+		m_pPlayer[nCnt] = CPlayer::Create(D3DXVECTOR3(-(130.0f*1.5f) + (150.0f * nCnt), 250.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	}
 
-	//背景の生成
-	m_pBg = new CObject2D(CObject::OBJTYPE_MAP);
-	m_pBg->Init();
-	m_pBg->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
-	m_pBg->SetSiz(D3DXVECTOR2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT));
-	m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	//背景の生成(3Dオブジェクト)
+	//m_pBg = new CObject2D(CObject::OBJTYPE_MAP);
+	//m_pBg->Init();
+	//m_pBg->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
+	//m_pBg->SetSiz(D3DXVECTOR2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT));
+	//m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-	m_pBg->SetTextureKey("TEXT_TITLE");
+	//m_pBg->SetTextureKey("TEXT_TITLE");
 
 	return S_OK;
 }
@@ -66,6 +78,21 @@ HRESULT CSkillSelect::Init()
 void CSkillSelect::Uninit()
 {
 	CSound::GetInstance()->Stop();
+
+	//カメラの設定
+	if (m_pCamera != nullptr)
+	{
+		m_pCamera->Uninit();
+		delete m_pCamera;
+	}
+
+	//ライトの設定
+	if (m_pLight != nullptr)
+	{
+		m_pLight->Uninit();
+		delete m_pLight;
+	}
+
 }
 
 //====================================
@@ -73,6 +100,10 @@ void CSkillSelect::Uninit()
 //====================================
 void CSkillSelect::Update()
 {
+	//更新処理
+	m_pCamera->Update();
+	m_pLight->Update();
+
 	//入力処理
 	Input();
 
@@ -85,7 +116,7 @@ void CSkillSelect::Update()
 //====================================
 void CSkillSelect::Draw()
 {
-
+	m_pCamera->Set();
 }
 
 //====================================
@@ -138,7 +169,7 @@ void CSkillSelect::Input()
 			}
 		}
 
-		if ((pInput->Trigger(DIK_RETURN)) == true)		//ENTERキー
+		if ((pInput->Trigger(DIK_RETURN)) == true || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
 		{//エンターでゲームに
 		 //モード設定
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);

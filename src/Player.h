@@ -109,7 +109,7 @@ private:
 	void TurnLookAtMoveing();	// 移動方向を見て曲がる
 	void StopNoBlock();			// ブロックがない場所で停まる
 	void TurnCenterBlock();		// ブロックの真ん中で曲がるようになる
-	void KnockBack();			// ノックバック処理
+	void KnockBack(CPlayer *pFastPlayer, CPlayer *pLatePlayer);			// ノックバック処理
 private:	// 静的メンバー変数
 	static const UPDATE_FUNC mUpdateFunc[];
 	static int		m_nNumPlayer;			// プレイヤーの数
@@ -129,6 +129,8 @@ private:	// メンバー変数
 	PLAYER_MOTION	m_Motion;				// 現在のモーション
 	int				m_nPlayerNumber;		// 自分のプレイヤー番号
 	int				m_nItemBuffTime;		// アイテム強化効果時間
+	int				m_nStunTime;			// スタン(操作不可能)時間
+	bool			m_bKnockBack;			// ノックバックしているかどうか
 	PLAYER_STATE	m_State;				// プレイヤーの状態
 	ITEM_STATE		m_ItemState;			// アイテムの状態
 	CShadow*		m_pShadow;				// 影
@@ -152,8 +154,7 @@ private:	// スキル処理一覧
 
 	using SKILL_FUNC = void(CObject::*)();
 	static const SKILL_FUNC m_SkillFunc[];
-	void InitSkillFunc(const SKILL_FUNC *funcList, int numFunc);
-	void SetSkill(SKILL_STATE inState) { m_SkillStateNow = inState; }
+	void SetSkill(SKILL_STATE inState) { m_skillStateNow = inState; }
 
 	const SKILL_FUNC* m_funcSkill;
 
@@ -163,12 +164,12 @@ private:	// スキル処理一覧
 	void Skill_Paint();
 	void Skill_Knockback();
 
-	SKILL_STATE		m_SkillStateNow;		// 使えるスキルの状態
-	SKILL_STATE		m_SkillState;			// 使えるスキルの状態
-	int				m_nSkillLv;				// プレイヤーのスキルLｖ
-	int				m_nSkillBuffTime;		// スキル強化効果時間
-	float			m_fSkillGauge;			// スキルゲージの量
-	float			m_fSubGauge;			// スキルゲージを減算させる
+	SKILL_STATE		m_skill;			// このキャラクターが仕様するスキル
+	SKILL_STATE		m_skillStateNow;	// スキルステートの状態
+	int				m_nSkillLv;			// プレイヤーのスキルLｖ
+	int				m_nSkillBuffTime;	// スキル強化効果時間
+	float			m_fSkillGauge;		// スキルゲージの量
+	float			m_fSubGauge;		// スキルゲージを減算させる
 };
 
 #endif

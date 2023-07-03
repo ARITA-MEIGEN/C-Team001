@@ -22,6 +22,9 @@
 #include"Map.h"
 #include"Item_Speed.h"
 #include"SkillGauge.h"
+#include "PlayerController.h"
+#include "computerController.h"
+#include"StatusUI.h"
 
 #include "File.h"
 
@@ -36,6 +39,7 @@ CFloor* CGame::m_pFloor = nullptr;
 CTimer* CGame::m_pTimer = nullptr;
 CUI* CGame::m_pUI = nullptr;
 CMap* CGame::m_pMap = nullptr;
+CStatusUI* CGame::m_apStatusUI[MAX_PLAYER] = {};
 
 //====================================
 //コンストラクタ
@@ -74,28 +78,10 @@ HRESULT CGame::Init()
 	{
 		CBlock* spawnBlock = m_pMap->GetPlayerSpawnBlock(nCnt);
 		m_pPlayer[nCnt] = CPlayer::Create(spawnBlock->GetPos(), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		int number = m_pPlayer[nCnt]->GetPlayerNumber();
-		//スキルゲージの座標の算出(X:間隔に1つ分のゲージサイズを足している,Y:画面の下端に合わせている)
-		D3DXVECTOR3 SkillPos = D3DXVECTOR3((CGauge::SPACE_SIZE * (nCnt+1 + 1)) + (CGauge::MAX_SIZE * nCnt + 1), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y / 2.0f), 0.0f);
-		CGauge* gauge = CGauge::Create(SkillPos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), number);
+		m_pPlayer[nCnt]->SetController(new CComputerController);
 
-		switch (number)
-		{
-		case 0:
-			gauge->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-			break;
-		case 1:
-			gauge->SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-			break;
-		case 2:
-			gauge->SetCol(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-			break;
-		case 3:
-			gauge->SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
-			break;
-		default:
-			break;
-		}
+		//ステータス表示の生成
+		m_apStatusUI[nCnt] = CStatusUI::Create(nCnt);
 	}
 	
 	//デバッグ用カメラ操作モード
@@ -162,6 +148,18 @@ void CGame::Uninit()
 		delete m_pMap;
 	}
 
+	for (int i = 0; i < MAX_PLAYER; i++)
+	{//ステータス表示
+		if (m_apStatusUI[i] == nullptr)
+		{//NULLチェック
+			continue;
+		}
+
+		/* nullptrではない場合 */
+
+		m_apStatusUI[i] = nullptr;
+	}
+
 	// 音楽の停止
 	CSound::GetInstance()->Stop();
 }
@@ -175,6 +173,18 @@ void CGame::Update()
 	m_pLight->Update();
 
 	m_pMap->Update();
+
+	for (int i = 0; i < MAX_PLAYER; i++)
+	{//ステータス表示
+		if (m_apStatusUI[i] == nullptr)
+		{//NULLチェック
+			continue;
+		}
+
+		/* nullptrではない場合 */
+
+		m_apStatusUI[i]->Update();
+	}
 
 	CInput* pInput = CInput::GetKey();
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
@@ -207,6 +217,18 @@ void CGame::Update()
 void CGame::Draw()
 {
 	m_pCamera->Set();
+
+	for (int i = 0; i < MAX_PLAYER; i++)
+	{//ステータス表示
+		if (m_apStatusUI[i] == nullptr)
+		{//NULLチェック
+			continue;
+		}
+
+		/* nullptrではない場合 */
+
+		m_apStatusUI[i]->Draw();
+	}
 }
 
 //====================================

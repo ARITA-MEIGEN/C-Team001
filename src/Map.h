@@ -36,6 +36,8 @@ public:
 	enum STAGE
 	{
 		STAGE_01=0,
+		STAGE_02,
+		STAGE_03,
 		STAGE_MAX
 	};
 

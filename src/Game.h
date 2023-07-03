@@ -26,6 +26,7 @@ class CUI;
 class CMap;
 class CSpeed;
 class CGauge;
+class CStatusUI;
 
 class CGame : public CMode
 {
@@ -79,6 +80,7 @@ private:
 	static	CTimer*m_pTimer;			// タイマー
 	static	CUI*m_pUI;					// UI
 	static	CMap*m_pMap;				// マップ
+	static CStatusUI* m_apStatusUI[MAX_PLAYER];	// ステータス表示
 	int		m_Timer;					// フェードアウトまでのタイマー
 	ROUND	m_Round;					// 現在のラウンド
 };
