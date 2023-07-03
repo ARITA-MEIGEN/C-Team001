@@ -72,7 +72,7 @@ void CTitle::Update()
 	{
 		if (pInput->Trigger(KEY_ALL))
 		{
-			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_SELECT);
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_MAP);
 		}
 		else if (pInput->Trigger(KEY_ALL))
 		{

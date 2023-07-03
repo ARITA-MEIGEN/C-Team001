@@ -20,6 +20,7 @@
 #include "ObjectList.h"
 #include "Texture.h"
 #include "SkillSelect.h"
+#include "MapSelect.h"
 
 //====================================
 //静的メンバ変数
@@ -202,7 +203,12 @@ void CApplication::SetMode(MODE mode)
 		m_pMode->Init();
 		break;
 
-	case MODE_SELECT:	//選択画面
+	case MODE_MAP:	//マップ選択画面
+		m_pMode = new CMapSelect;
+		m_pMode->Init();
+		break;
+
+	case MODE_SKILL:	//スキル選択画面
 		m_pMode = new CSkillSelect;
 		m_pMode->Init();
 		break;

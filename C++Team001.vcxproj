@@ -187,6 +187,7 @@
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\MapSelect.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Mode.cpp" />
     <ClCompile Include="src\Motion.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\Map.h" />
+    <ClInclude Include="src\MapSelect.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Mode.h" />
     <ClInclude Include="src\Motion.h" />

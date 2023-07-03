@@ -180,6 +180,9 @@
     <ClCompile Include="src\main.cpp">
       <Filter>ソース ファイル\00_Main</Filter>
     </ClCompile>
+    <ClCompile Include="src\MapSelect.cpp">
+      <Filter>ソース ファイル\01_Mode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BgStage.h">
@@ -337,6 +340,9 @@
     </ClInclude>
     <ClInclude Include="src\main.h">
       <Filter>ソース ファイル\00_Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MapSelect.h">
+      <Filter>ソース ファイル\01_Mode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

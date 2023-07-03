@@ -1,11 +1,11 @@
 //=============================================================================
 //
-// スキル選択
+// マップ選択
 // Author : 髙野馨將
 //
 //=============================================================================
-#ifndef _SKILLSELECT_H_
-#define _SKILLSELECT_H_
+#ifndef _MAPSELECT_H_
+#define _MAPSELECT_H_
 
 //インクルード
 #include "main.h"
@@ -15,43 +15,34 @@
 #include "Game.h"
 
 //前方宣言
-class CPlayer;
+class CMap;
 class CCamera;
 class CLight;
 
-class CSkillSelect : public CMode
+class CMapSelect : public CMode
 {
 public:
 
-	enum SKILL_STATE
-	{
-		NONE,	// デフォルト
-		SPEED,	// 加速
-		PAINT,	// 塗り
-		MAX
-	};
-
-	CSkillSelect();
-	~CSkillSelect();
+	CMapSelect();
+	~CMapSelect();
 
 	HRESULT Init();			// 初期化
 	void Uninit();			// 終了
 	void Update();			// 更新
 	void Draw();			// 描画
-							  
+
 	void Input();			// 入力
 	void Select();			// 選択処理
 
-	static int GetSelectSkill(int nCntPlayer) { return m_nSkill[nCntPlayer]; }
+	//static int GetSelectSkill(int nCntPlayer) { return m_nSkill[nCntPlayer]; }
 
 private:
-	static int m_nSkill[MAX_PLAYER];	// 現在選択されているスキルの番号
-	CObject2D*m_pBg;					// 背景
+	bool m_bMapChange;					// マップを変更したかどうか
+	int m_nMapNumber;					// 現在選択されているマップの番号
 	CObject2D*m_pObj2D[MAX_PLAYER];		// スキル選択の枠
 	CCamera*m_pCamera;					// カメラ
 	CLight*m_pLight;					// 光源
-	CPlayer*m_pPlayer[MAX_PLAYER];		// プレイヤー
-	SKILL_STATE m_state;				// 状態
+	CMap*m_pMap;						// マップ
 };
 
 #endif

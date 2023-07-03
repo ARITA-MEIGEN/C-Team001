@@ -41,7 +41,6 @@ CMap::~CMap()
 //=============================================================================
 HRESULT CMap::Init()
 {
-	Load();
 
 	m_nItemPopCount = IntRandom(2 * 60, 1 * 60);
 	return S_OK;
@@ -54,8 +53,9 @@ void CMap::Uninit()
 {
 	for (int i = 0; i < GetBlockCount(); i++)
 	{
-		m_pBlock[i] = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_pBlock[i]->Uninit();
 	}
+	m_pBlock.clear();
 }
 
 //=============================================================================
@@ -76,8 +76,9 @@ CMap * CMap::Create(int stgnumber)
 
 	if (pMap!=nullptr)
 	{
-	pMap->m_StageNumber = (STAGE)stgnumber;
-	pMap->Init();
+		pMap->m_StageNumber = (STAGE)stgnumber;		//読み込むマップの番号を決める
+		pMap->Load();								//マップの読み込み
+		pMap->Init();								//初期化
 	}
 	return pMap;
 }
@@ -88,7 +89,12 @@ CMap * CMap::Create(int stgnumber)
 void CMap::Load()
 {
 	using json = nlohmann::json;
-	json map = LoadJson("data/FILE//MAP/map01.json");
+
+	//m_StageNumberの値に応じて読み込むマップを変える
+	std::string path = "data/FILE//MAP/map0";
+	std::string str = std::to_string((m_StageNumber + 1));
+	path = path + str + ".json";
+	json map = LoadJson(path);
 
 	m_pBlock.resize(map["MAP"].size() * map["MAP"][0].size());
 	m_axisSizeX = map["MAP"][0].size();
