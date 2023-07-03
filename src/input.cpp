@@ -619,46 +619,46 @@ bool CInput::KeyChackNum(STAN_DART_INPUT_KEY key, int type, int nNum)
 	switch (key)
 	{
 	case KEY_UP:
-		return (lambda(DIK_W) || lambda(DIK_UP) || lambda(JOYPAD_UP));
+		return nNum == -1 ? (lambda(DIK_W) || lambda(DIK_UP)) : lambda(JOYPAD_UP);
 		break;
 	case KEY_UP_LEFT:
-		return ((lambda(DIK_W) && lambda(DIK_A)) || (lambda(DIK_UP) && lambda(DIK_LEFT)) || lambda(JOYPAD_UP_LEFT));
+		return nNum == -1 ? ((lambda(DIK_W) && lambda(DIK_A)) || (lambda(DIK_UP) && lambda(DIK_LEFT))) : lambda(JOYPAD_UP_LEFT);
 		break;
 	case KEY_UP_RIGHT:
-		return ((lambda(DIK_W) && lambda(DIK_D)) || (lambda(DIK_UP) && lambda(DIK_RIGHT)) || lambda(JOYPAD_UP_RIGHT));
+		return nNum == -1 ? ((lambda(DIK_W) && lambda(DIK_D)) || (lambda(DIK_UP) && lambda(DIK_RIGHT))) : lambda(JOYPAD_UP_RIGHT);
 		break;
 	case KEY_DOWN:
-		return (lambda(DIK_S) || lambda(DIK_DOWN) || lambda(JOYPAD_DOWN));
+		return nNum == -1 ? (lambda(DIK_S) || lambda(DIK_DOWN)) : lambda(JOYPAD_DOWN);
 		break;
 	case KEY_DOWN_LEFT:
-		return ((lambda(DIK_S) && lambda(DIK_A)) || (lambda(DIK_DOWN) && lambda(DIK_LEFT)) || lambda(JOYPAD_DOWN_LEFT));
+		return nNum == -1 ? ((lambda(DIK_S) && lambda(DIK_A)) || (lambda(DIK_DOWN) && lambda(DIK_LEFT))) : lambda(JOYPAD_DOWN_LEFT);
 		break;
 	case KEY_DOWN_RIGHT:
-		return (lambda(DIK_S) && lambda(DIK_D)) || (lambda(DIK_DOWN) && lambda(DIK_RIGHT)) || lambda(JOYPAD_DOWN_RIGHT);
+		return nNum == -1 ? (lambda(DIK_S) && lambda(DIK_D)) || (lambda(DIK_DOWN) && lambda(DIK_RIGHT)) : lambda(JOYPAD_DOWN_RIGHT);
 		break;
 	case KEY_LEFT:
-		return lambda(DIK_A) || lambda(DIK_LEFT) || lambda(JOYPAD_LEFT);
+		return nNum == -1 ? lambda(DIK_A) || lambda(DIK_LEFT) : lambda(JOYPAD_LEFT);
 		break;
 	case KEY_RIGHT:
-		return lambda(DIK_D) || lambda(DIK_RIGHT) || lambda(JOYPAD_RIGHT);
+		return nNum == -1 ? lambda(DIK_D) || lambda(DIK_RIGHT) : lambda(JOYPAD_RIGHT);
 		break;
 	case KEY_DECISION:
-		return lambda(DIK_RETURN) || lambda(JOYPAD_A);
+		return nNum == -1 ? lambda(DIK_RETURN) : lambda(JOYPAD_A);
 		break;
 	case KEY_SHOT:
-		return lambda(DIK_SPACE) || lambda(JOYPAD_R1);
+		return nNum == -1 ? lambda(DIK_SPACE) : lambda(JOYPAD_R1);
 		break;
 	case KEY_BACK:
-		return lambda(DIK_BACKSPACE) || lambda(DIK_B) || lambda(JOYPAD_BACK) || lambda(JOYPAD_B);
+		return nNum == -1 ? lambda(DIK_BACKSPACE) || lambda(DIK_B) : lambda(JOYPAD_BACK) || lambda(JOYPAD_B);
 		break;
 	case KEY_SHIFT:
-		return lambda(DIK_RSHIFT) || lambda(DIK_LSHIFT) || lambda(JOYPAD_A);
+		return nNum == -1 ? lambda(DIK_RSHIFT) || lambda(DIK_LSHIFT) : lambda(JOYPAD_A);
 		break;
 	case KEY_MOVE:
 		return Trigger(KEY_UP) || Trigger(KEY_DOWN) || Trigger(KEY_LEFT) || Trigger(KEY_RIGHT);
 		break;
 	case KEY_PAUSE:
-		return lambda(DIK_P) || lambda(JOYPAD_START) || lambda(JOYPAD_HOME);
+		return nNum == -1 ? lambda(DIK_P) : lambda(JOYPAD_START) || lambda(JOYPAD_HOME);
 		break;
 	case KEY_ALL:
 		return lambda(-2);
