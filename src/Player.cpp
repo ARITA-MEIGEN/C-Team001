@@ -107,10 +107,14 @@ HRESULT CPlayer::Init()
 	}
 
 	//初期化
-	m_nSkillLv = 0;
-	m_fSkillGauge = 0.0f;
-	m_fSubGauge = 0.0f;
+	m_nSkillLv = 0;			//スキルレベル
+	m_nStunTime = 0;		//
+	m_nItemBuffTime = 0;	//アイテムの効果時間
+	m_nSkillBuffTime = 0;	//スキルの効果時間
+	m_fSkillGauge = 0.0f;	//スキルゲージ
+	m_fSubGauge = 0.0f;		//スキルゲージの減算量
 	m_SkillState = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
+	m_bKnockBack = false;
 
 	//動的確保
 	m_controller = new CPlayerController(m_nPlayerNumber);
@@ -180,14 +184,22 @@ void CPlayer::Update(void)
 		m_ItemState = ITEM_NONE;
 	}
 
+	if (m_nStunTime > 0)
+	{// スタンしていたらスタン時間を減算させる
+		m_nStunTime--;
+	}
+
 	// 座標更新
 	Updatepos();
 
 	// モーション
 	m_motion->Update();
 
-	// 移動
-	Move();
+	if (m_nStunTime <= 0)
+	{
+		// 移動
+		Move();
+	}
 
 	// 回転
 	TurnLookAtMoveing();
@@ -700,6 +712,7 @@ void CPlayer::BlockCollision()
 				{//乗ったブロックにすでにプレイヤーがいたら
 					KnockBack(pBlock->GetOnPlayer(),this);
 				}
+
 				pBlock->SetOnPlayer(this);				//プレイヤーの
 				pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
 				pBlock->SetSink(2.5f);
@@ -766,7 +779,12 @@ void CPlayer::BlockCollision()
 //-----------------------------------------------------------------------------
 void CPlayer::KnockBack(CPlayer *pFastPlayer, CPlayer *pLatePlayer)
 {
-	pFastPlayer->m_move;
-	pLatePlayer->m_move;
-	int a = 0;
+	//最初にブロックにいたプレイヤーを後から来たプレイヤーの進行方向に飛ばす
+	pFastPlayer->m_movePlanVec += pLatePlayer->m_move;
+	//後から来たプレイヤーを進行方向の逆に飛ばす
+	pLatePlayer->m_movePlanVec -= pLatePlayer->m_move;
+
+	// 触れたプレイヤー同士にスタンを付与
+	pLatePlayer->m_nStunTime = 2;
+	pFastPlayer->m_nStunTime = 2;
 }
