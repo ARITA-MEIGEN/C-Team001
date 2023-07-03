@@ -11,9 +11,21 @@
 #include "Player.h"
 
 //======================================================
+// 定数
+//======================================================
+const D3DXVECTOR3 CStatusUI::GAUGE_LOCAL_POS	(-10.0f,0.0f,0.0f);
+const D3DXVECTOR2 CStatusUI::GAUGE_SIZE			(0.0f,0.0f);
+
+const D3DXVECTOR3 CStatusUI::CHARACTER_BG_LOCAL_POS	(-40.0f,-30.0f,0.0f);
+const D3DXVECTOR2 CStatusUI::CHARACTER_BG_SIZE		(80.0f, 80.0f);
+
+const D3DXVECTOR3 CStatusUI::SKILL_ICON_BG_LOCAL_POS	(0.0f,0.0f,0.0f);
+const D3DXVECTOR2 CStatusUI::SKILL_ICON_BG_SIZE			(45.0f, 45.0f);
+
+//======================================================
 //生成
 //======================================================
-CStatusUI *CStatusUI::Create(int nPlayerNum)
+CStatusUI *CStatusUI::Create(const D3DXVECTOR3& inPos,int nPlayerNum)
 {
 	CStatusUI* pStatusUI = nullptr;	//ポインタ
 
@@ -29,6 +41,7 @@ CStatusUI *CStatusUI::Create(int nPlayerNum)
 	pStatusUI->SetPlayerNum(nPlayerNum);	//プレイヤー番号の設定
 
 	pStatusUI->Init();	//初期化
+	pStatusUI->SetPos(inPos);
 
 	return pStatusUI;
 }
@@ -59,14 +72,10 @@ HRESULT CStatusUI::Init()
 {
 	{//ゲージ
 		//座標の算出(X:間隔に1つ分のゲージサイズを足している,Y:画面の下端に合わせている)
-		D3DXVECTOR3 pos = D3DXVECTOR3(
-			(CGauge::SPACE_SIZE * (m_nPlayerNum + 1 + 1)) + (CGauge::MAX_SIZE * m_nPlayerNum + 1),
-			SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y * 0.5f),
-			0.0f);
-
+	
 		//生成
 		m_pGauge = CGauge::Create(
-			pos, 
+			m_pos,
 			D3DXVECTOR2(0.0f, 0.0f),
 			D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
 			m_nPlayerNum);
@@ -96,26 +105,18 @@ HRESULT CStatusUI::Init()
 
 	{//キャラクター背景
 		//生成に必要な要素
-		D3DXVECTOR3 pos = m_pGauge->GetPos() + D3DXVECTOR3(-40.0f, 0.0f, 0.0f);
-		D3DXVECTOR2 size = D3DXVECTOR2(80.0f, 80.0f);
+		D3DXVECTOR3 pos(0.0f, 0.0f, 0.0f);
 
-		//生成
-		m_pCharaBg = CObject2D::Create(pos, size, 4);
-
-		//テクスチャの設定
-		m_pCharaBg->SetTextureKey("CHARACTER_BG");
+		m_pCharaBg = CObject2D::Create(pos, CHARACTER_BG_SIZE, 4);	//生成
+		m_pCharaBg->SetTextureKey("CHARACTER_BG");					//テクスチャの設定
 	}
 
 	{//スキルアイコン背景
 		//生成に必要な要素
-		D3DXVECTOR3 pos = m_pGauge->GetPos();
-		D3DXVECTOR2 size = D3DXVECTOR2(45.0f, 45.0f);
+		D3DXVECTOR3 pos(0.0f, 0.0f, 0.0f);
 
-		//生成
-		m_pSkillIconBg = CObject2D::Create(pos, size, 4);
-
-		//テクスチャの設定
-		m_pSkillIconBg->SetTextureKey("SKILL_ICON_BG");
+		m_pSkillIconBg = CObject2D::Create(pos, SKILL_ICON_BG_SIZE, 4);	//生成
+		m_pSkillIconBg->SetTextureKey("SKILL_ICON_BG");					//テクスチャの設定
 	}
 
 	return S_OK;
@@ -170,6 +171,17 @@ void CStatusUI::Draw()
 	m_pCharaBg->Draw();	//キャラクター背景
 
 	m_pSkillIconBg->Draw();	//スキルアイコン背景
+}
+
+//======================================================
+// 位置設定
+//======================================================
+void CStatusUI::SetPos(const D3DXVECTOR3 & inPos)
+{
+	m_pos = inPos;
+	m_pGauge->SetPos(m_pos + GAUGE_LOCAL_POS);					//スキルゲージ
+	m_pCharaBg->SetPos(m_pos + CHARACTER_BG_LOCAL_POS);			//キャラクター背景
+	m_pSkillIconBg->SetPos(m_pos + SKILL_ICON_BG_LOCAL_POS);	//スキルアイコン背景
 }
 
 //======================================================

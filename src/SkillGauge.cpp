@@ -72,7 +72,6 @@ void CGauge::Update()
 
 		SetSkillPos(pPlayer->GetSkillGauge());
 		float gaugeRatio =  pPlayer->GetSkillGauge() / MAX_GAUGE;
-
 		SetUV(0.0f, gaugeRatio,0.0f, 1.0f);
 	}
 }

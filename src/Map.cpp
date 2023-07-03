@@ -54,7 +54,7 @@ void CMap::Uninit()
 {
 	for (int i = 0; i < GetBlockCount(); i++)
 	{
-		m_pBlock[i] = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_pBlock[i]->Uninit();
 	}
 }
 
