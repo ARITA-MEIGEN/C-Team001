@@ -15,6 +15,7 @@
 #include "Item_Paint.h"
 #include "area.h"
 #include "future_block.h"
+#include "teleport.h"
 
 //-----------------------------------------------------------------------------
 // Ã“Iƒƒ“ƒo[•Ï”‚ÌéŒ¾
@@ -109,25 +110,30 @@ void CMap::Load()
 			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH;
 			float x = j * BLOCK_WIDTH - map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
 
-			m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z));
 			switch ((int)map["MAP"][i][j])
 			{
 			case -1:
+				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z));
 				m_pBlock[i * map["MAP"][i].size() + j]->SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 				m_pBlock[i * map["MAP"][i].size() + j]->SetStop(true);
 				break;
 			case 0:
+				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z));
 				break;
 			case 1:
 			case 2:
 			case 3:
 			case 4:
 			{
+				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z));
 				D3DXVECTOR2 idx;
 				idx.x = (float)j;
 				idx.y = (float)i;
 				m_playerSpawnIdx[(int)map["MAP"][i][j]-1] = idx;
 			}
+				break;
+			case 5:
+				m_pBlock[i * map["MAP"][i].size() + j] = CTeleport::Create(D3DXVECTOR3(x, 0.0f, z), 5);
 				break;
 			default:
 				break;

@@ -83,12 +83,12 @@ CTeleport* CTeleport::Create(D3DXVECTOR3 pos, int nNumber)
 		pTeleport->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		pTeleport->m_nTeleportNmber = nNumber;
 
-		for (int i = 0; i < CGame::GetMap()->GetBlockCount(); i++)
-		{
-			CBlock* pBlock = CGame::GetMap()->GetBlock(i);
+		//for (int i = 0; i < CGame::GetMap()->GetBlockCount(); i++)
+		//{
+		//	CBlock* pBlock = CGame::GetMap()->GetBlock(i);
 
-			
-		}
+		//	
+		//}
 
 	}
 	return pTeleport;
