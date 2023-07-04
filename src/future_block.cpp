@@ -60,14 +60,14 @@ void  CFutureBlock::Update()
 	CObjectX::Update();
 
 	D3DXVECTOR3 sizeMag = GetSizeMag();
-	sizeMag += D3DXVECTOR3(-0.15f,-0.05f,-0.15f);
+	sizeMag -= D3DXVECTOR3(0.15f,-0.05f,0.15f);
 	SetSizeMag(sizeMag);
 
 	D3DXVECTOR3 pos = GetPos();
-	pos.y += 2.0f;
+	pos.y += 10.0f;
 	SetPos(pos);
 
-	if (sizeMag.y <= 0.0f)
+	if (sizeMag.x <= 0.0f)
 	{
 		Uninit();
 	}
