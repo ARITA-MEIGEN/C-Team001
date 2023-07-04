@@ -22,7 +22,7 @@
     [ "SKILL_GAUGE", "data\/TEXTURE\/Game\/PlayerStatus\/PlayerStatus_SkillGauge.png" ],
     [ "SKILL_ICON_BG", "data\/TEXTURE\/Game\/PlayerStatus\/PlayerStatus_SkillBg.png" ],
     [ "CHARACTER_BG", "data\/TEXTURE\/Game\/PlayerStatus\/PlayerStatus_CharaBG_Square.png" ],
-    [ "SKILL_SELECT_BG", "data\/TEXTURE\/window_bule.jpg"],
-    [ "CIRCLE", "data\/TEXTURE\/Effect\/Effect_Circle.png"]
+    [ "SKILL_SELECT_BG", "data\/TEXTURE\/SkillSelect\/SkillSelect_Bg.png"],
+    [ "CIRCLE", "data\/TEXTURE\/SkillSelect\/SkillSelect_Circle.png"]
   ]
 }
