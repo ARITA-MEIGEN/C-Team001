@@ -176,6 +176,7 @@
     <ClCompile Include="src\Fade.cpp" />
     <ClCompile Include="src\File.cpp" />
     <ClCompile Include="src\Floor.cpp" />
+    <ClCompile Include="src\future_block.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\input\DirectInput.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="src\Fade.h" />
     <ClInclude Include="src\File.h" />
     <ClInclude Include="src\Floor.h" />
+    <ClInclude Include="src\future_block.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\input\DirectInput.h" />

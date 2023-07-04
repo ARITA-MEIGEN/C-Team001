@@ -1,32 +1,34 @@
 //=============================================================================
 //
-// テレポートブロック生成
-// Author:takano keisuke
+// ブロック生成
+// Author:arita meigen
 //
 //=============================================================================
 
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
-#include "teleport.h"
+#include "future_block.h"
 #include "Item.h"
-#include "Game.h"
-#include "Map.h"
+
+//-----------------------------------------------------------------------------
+// 定数
+//-----------------------------------------------------------------------------
+const float CFutureBlock::SINK_LIMIT = -10.0f;	// 沈む下限値
+const float CFutureBlock::UP_POWER = 0.5f;		// 沈んだブロックが浮上する時間
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CTeleport::CTeleport(int priorty)
+CFutureBlock::CFutureBlock(int priorty) :CObjectX(priorty)
 {
 	m_number = 0;
-	m_isStop = false;
-	m_onPlayer = nullptr;
 }
 
 //=============================================================================
 // デストラクタ
 //=============================================================================
-CTeleport::~CTeleport()
+CFutureBlock::~CFutureBlock()
 {
 
 }
@@ -34,7 +36,7 @@ CTeleport::~CTeleport()
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT  CTeleport::Init()
+HRESULT  CFutureBlock::Init()
 {
 	CObjectX::Init();
 	m_number = -1;
@@ -45,7 +47,7 @@ HRESULT  CTeleport::Init()
 //=============================================================================
 //終了
 //=============================================================================
-void  CTeleport::Uninit()
+void  CFutureBlock::Uninit()
 {
 	CObjectX::Uninit();
 }
@@ -53,56 +55,83 @@ void  CTeleport::Uninit()
 //=============================================================================
 // 更新
 //=============================================================================
-void  CTeleport::Update()
+void  CFutureBlock::Update()
 {
 	CObjectX::Update();
-}
 
-//=============================================================================
-// 描画
-//=============================================================================
-void  CTeleport::Draw()
-{
-	//デバイスの取得
-	CObjectX::Draw();
+	D3DXVECTOR3 sizeMag = GetSizeMag();
+	sizeMag += D3DXVECTOR3(-0.15f,-0.05f,-0.15f);
+	SetSizeMag(sizeMag);
+
+	D3DXVECTOR3 pos = GetPos();
+	pos.y += 2.0f;
+	SetPos(pos);
+
+	if (sizeMag.y <= 0.0f)
+	{
+		Uninit();
+	}
 }
 
 //=============================================================================
 // 生成
 //=============================================================================
-CTeleport* CTeleport::Create(D3DXVECTOR3 pos, int nNumber)
+CFutureBlock* CFutureBlock::Create(D3DXVECTOR3 pos)
 {
-	CTeleport*pTeleport = new CTeleport(5);
+	CFutureBlock* pBlock = new CFutureBlock(5);
 
-	if (pTeleport != nullptr)
+	if (pBlock != nullptr)
 	{
-		pTeleport->Init();
-		pTeleport->BindModel(CObjectXOriginalList::GetInstance()->Load("BLOCK", "data/MODEL/box.x"));
-		pTeleport->SetCol(D3DXCOLOR(1.0f,0.0f,1.0f,1.0f));
-		pTeleport->SetPos(pos);
-		pTeleport->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		pTeleport->m_nTeleportNmber = nNumber;
-
-		//for (int i = 0; i < CGame::GetMap()->GetBlockCount(); i++)
-		//{
-		//	CBlock* pBlock = CGame::GetMap()->GetBlock(i);
-
-		//	
-		//}
-
+		pBlock->Init();
+		pBlock->BindModel(CObjectXOriginalList::GetInstance()->Load("BLOCK", "data/MODEL/box.x"));
+		pBlock->SetPos(pos);
+		pBlock->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
-	return pTeleport;
+	return pBlock;
 }
 
 //=============================================================================
 // プレイヤー設定
 //=============================================================================
-void CTeleport::TeleportPlayerNumber(int number)
+void CFutureBlock::SetPlayerNumber(int number)
 {
-	if (m_isStop)
+	m_number = number;
+
+	switch (m_number)
 	{
+	case -1:
+		SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+		break;
+	case 0:
+		SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+		break;
+	case 1:
+		SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+		break;
+	case 2:
+		SetCol(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+		break;
+	case 3:
+		SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+		break;
+	default:
+		break;
+	}
+}
+
+//=============================================================================
+// 沈む
+//=============================================================================
+void CFutureBlock::SetSink(float power)
+{
+	D3DXVECTOR3 pos = GetPos();
+	pos.y -= power;
+
+	if (SINK_LIMIT >= pos.y)
+	{
+		pos.y = SINK_LIMIT;
 		return;
 	}
 
-	m_number = number;
+	SetPos(pos);
 }

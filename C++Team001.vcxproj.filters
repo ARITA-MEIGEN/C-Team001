@@ -31,6 +31,12 @@
     <Filter Include="ソース ファイル\05_Map">
       <UniqueIdentifier>{ea0ea196-9053-404c-8e15-d526b7bedec7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\06_Game">
+      <UniqueIdentifier>{3d02e5a1-14af-4321-a536-bbe3d9c1e176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\07_Object">
+      <UniqueIdentifier>{5607d2da-08c2-404f-9789-90b1810d1cde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\effect.cpp">
@@ -43,18 +49,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\Motion.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Object.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Object2D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Object3D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ObjectX.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\Particle.cpp">
@@ -90,15 +84,6 @@
     <ClCompile Include="src\Camera.cpp">
       <Filter>ソース ファイル\02_Camera</Filter>
     </ClCompile>
-    <ClCompile Include="src\ObjectList.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Controller.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PlayerController.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\SkillGauge.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -109,9 +94,6 @@
       <Filter>ソース ファイル\01_Mode</Filter>
     </ClCompile>
     <ClCompile Include="BgStage.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ObjectXOriginalList.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\input.cpp">
@@ -192,6 +174,27 @@
     <ClCompile Include="src\teleport.cpp">
       <Filter>ソース ファイル\05_Map</Filter>
     </ClCompile>
+    <ClCompile Include="src\Object.cpp">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Object2D.cpp">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Object3D.cpp">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectList.cpp">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectX.cpp">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectXOriginalList.cpp">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\future_block.cpp">
+      <Filter>ソース ファイル\05_Map</Filter>
+    </ClCompile>
     <ClCompile Include="src\Bg.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -225,24 +228,6 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Motion.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Object.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Object2D.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Object3D.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ObjectList.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ObjectX.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ObjectXOriginalList.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Particle.h">
@@ -363,6 +348,27 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\teleport.h">
+      <Filter>ソース ファイル\05_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Object.h">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Object2D.h">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Object3D.h">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ObjectList.h">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ObjectX.h">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ObjectXOriginalList.h">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\future_block.h">
       <Filter>ソース ファイル\05_Map</Filter>
     </ClInclude>
     <ClInclude Include="src\Bg.h">
