@@ -23,12 +23,13 @@
 #include "Map.h"
 #include "SkillGauge.h"
 #include "SkillSelect.h"
+#include "MapSelect.h"
 #include "motion.h"
 
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const std::string CPlayer::MOTION_PATH = "data/TXT/Player01/Player01.txt";	// モーションデータパス
+const std::string CPlayer::MOTION_PATH = "data/TXT/Player001.txt";	// モーションデータパス
 const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
@@ -79,7 +80,7 @@ HRESULT CPlayer::Init()
 {
 	// モーションの読込み
 	m_motion = new CMotion(MOTION_PATH.data());
-	m_Motion = PM_ST_NEUTRAL;	//ニュートラルモーションに変更
+	m_Motion = PM_NEUTRAL;	//ニュートラルモーションに変更
 
 	//モデルとモーションの読み込み
 	m_apModel = m_motion->GetParts();
@@ -235,7 +236,7 @@ void CPlayer::Update(void)
 
 	if (pInput->Trigger(DIK_T))
 	{
-		m_Motion == PM_ST_NEUTRAL ? m_Motion = PM_ST_MOVE : m_Motion = PM_ST_NEUTRAL;
+		m_Motion == PM_NEUTRAL ? m_Motion = PM_WALK : m_Motion = PM_NEUTRAL;
 		m_motion->SetNumMotion(m_Motion);
 	}
 #endif // _DEBUG
@@ -269,7 +270,7 @@ void CPlayer::Draw(void)
 	//ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-	for (int i = 0; i < 14; i++)
+	for (int i = 0; i < (int)m_apModel.size(); i++)
 	{
 		if (m_apModel[i]->GetParent() == nullptr)
 		{
