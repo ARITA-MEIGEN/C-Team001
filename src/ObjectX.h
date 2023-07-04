@@ -63,7 +63,7 @@ public:
 	const LPCTSTR GetModelName() { return m_modelname; }
 	const D3DXVECTOR3 GetSize() { return m_modelData.size; }
 	const D3DXVECTOR3 GetSizeMag() { return m_sizeMag; }
-	const D3DXCOLOR GetCol() { return m_col; }
+	const D3DXCOLOR GetCol() { return m_materialColor[0]; }
 	CObjectX* GetParent() { return m_pParent; }
 	const D3DXMATRIX& GetMatrix() { return m_mtxWorld; }
 

@@ -14,6 +14,7 @@
 #include "Item_Speed.h"
 #include "Item_Paint.h"
 #include "area.h"
+#include "future_block.h"
 
 //-----------------------------------------------------------------------------
 // 静的メンバー変数の宣言
@@ -315,6 +316,12 @@ void CMap::PopFutureArea()
 				}
 
 				/* ↓block がnullではないか、壁ではない↓ */
+
+				if (block->GetNumber() != -1)
+				{
+					CFutureBlock* futureBlock = CFutureBlock::Create(block->GetPos());
+					futureBlock->SetCol(block->GetCol());
+				}
 
 				block->SetPlayerNumber(-1);
 			}
