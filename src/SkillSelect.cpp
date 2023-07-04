@@ -18,6 +18,7 @@
 #include"Player.h"
 #include"CameraGame.h"
 #include"Light.h"
+#include"Bg.h"
 
 //====================================
 // ’è”
@@ -60,14 +61,8 @@ HRESULT CSkillSelect::Init()
 		m_pPlayer[nCnt] = CPlayer::Create(D3DXVECTOR3(-(130.0f*1.5f) + (150.0f * nCnt), 250.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	}
 
-	//”wŒi‚Ì¶¬(3DƒIƒuƒWƒFƒNƒg)
-	//m_pBg = new CObject2D(CObject::OBJTYPE_MAP);
-	//m_pBg->Init();
-	//m_pBg->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
-	//m_pBg->SetSiz(D3DXVECTOR2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT));
-	//m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-
-	//m_pBg->SetTextureKey("TEXT_TITLE");
+	//”wŒi
+	m_pBg = CBg::Create();	//¶¬
 
 	return S_OK;
 }
@@ -93,6 +88,11 @@ void CSkillSelect::Uninit()
 		delete m_pLight;
 	}
 
+	//”wŒi
+	if (m_pBg != nullptr)
+	{
+		m_pBg = nullptr;
+	}
 }
 
 //====================================
@@ -103,6 +103,7 @@ void CSkillSelect::Update()
 	//XVˆ—
 	m_pCamera->Update();
 	m_pLight->Update();
+	m_pBg->Update();
 
 	//“ü—Íˆ—
 	Input();
@@ -117,6 +118,8 @@ void CSkillSelect::Update()
 void CSkillSelect::Draw()
 {
 	m_pCamera->Set();
+
+	m_pBg->Draw();
 }
 
 //====================================
