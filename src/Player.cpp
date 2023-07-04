@@ -23,6 +23,7 @@
 #include "Map.h"
 #include "SkillGauge.h"
 #include "SkillSelect.h"
+#include "MapSelect.h"
 #include "motion.h"
 
 //-----------------------------------------------------------------------------

@@ -13,9 +13,9 @@
 #include "Mode.h"
 #include "Object2D.h"
 #include "Game.h"
+#include "Map.h"
 
 //前方宣言
-class CMap;
 class CCamera;
 class CLight;
 
@@ -34,15 +34,16 @@ public:
 	void Input();			// 入力
 	void Select();			// 選択処理
 
-	//static int GetSelectSkill(int nCntPlayer) { return m_nSkill[nCntPlayer]; }
+	static int GetMapNumber() { return m_nMapNumber; }
 
 private:
-	bool m_bMapChange;					// マップを変更したかどうか
-	int m_nMapNumber;					// 現在選択されているマップの番号
-	CObject2D*m_pObj2D[MAX_PLAYER];		// スキル選択の枠
-	CCamera*m_pCamera;					// カメラ
-	CLight*m_pLight;					// 光源
-	CMap*m_pMap;						// マップ
+	bool m_bMapChange;										// マップを変更したかどうか
+	static int m_nMapNumber;								// 現在選択されているマップの番号
+	CObject2D*m_pObj2D;										// マップ選択の枠
+	CObject2D*m_pObj2DPolygon[(CMap::STAGE_MAX)];			// マップ選択
+	CCamera*m_pCamera;										// カメラ
+	CLight*m_pLight;										// 光源
+	CMap*m_pMap;											// マップ
 };
 
 #endif
