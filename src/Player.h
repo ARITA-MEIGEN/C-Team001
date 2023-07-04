@@ -38,8 +38,12 @@ public:
 	enum PLAYER_MOTION
 	{
 		//地上
-		PM_ST_NEUTRAL,		// ニュートラル
-		PM_ST_MOVE,			// 移動(しゃがみだけ無し)
+		PM_NEUTRAL,		// ニュートラル
+		PM_WALK,			// 移動(しゃがみだけ無し)
+		PM_STAN,			// 移動(しゃがみだけ無し)
+		PM_WIN,			// 移動(しゃがみだけ無し)
+		PM_LOSE,			// 移動(しゃがみだけ無し)
+		PM_SELECT,
 		PM_MAX
 	};
 
