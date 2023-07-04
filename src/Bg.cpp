@@ -8,7 +8,6 @@
 #include "Object2D.h"
 #include "Application.h"
 #include "texture.h"
-#include "input.h"
 
 //***************************
 //’è”‚Ì’è‹`
