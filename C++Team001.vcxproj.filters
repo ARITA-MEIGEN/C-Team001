@@ -54,6 +54,9 @@
     <ClCompile Include="src\Particle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="src\Shadow.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -159,23 +162,17 @@
     <ClCompile Include="src\main.cpp">
       <Filter>ソース ファイル\00_Main</Filter>
     </ClCompile>
-    <ClCompile Include="src\Controller.cpp">
-      <Filter>ソース ファイル\06_Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Player.cpp">
-      <Filter>ソース ファイル\06_Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PlayerController.cpp">
-      <Filter>ソース ファイル\06_Game</Filter>
+    <ClCompile Include="src\MapSelect.cpp">
+      <Filter>ソース ファイル\01_Mode</Filter>
     </ClCompile>
     <ClCompile Include="src\computerController.cpp">
-      <Filter>ソース ファイル\06_Game</Filter>
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\StatusUI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\MapSelect.cpp">
-      <Filter>ソース ファイル\01_Mode</Filter>
+    <ClCompile Include="src\teleport.cpp">
+      <Filter>ソース ファイル\05_Map</Filter>
     </ClCompile>
     <ClCompile Include="src\Object.cpp">
       <Filter>ソース ファイル\07_Object</Filter>
@@ -206,6 +203,9 @@
     <ClInclude Include="src\Command.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\Controller.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="src\Easing.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
@@ -228,6 +228,12 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Particle.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Player.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlayerController.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Shadow.h">
@@ -329,23 +335,17 @@
     <ClInclude Include="src\main.h">
       <Filter>ソース ファイル\00_Main</Filter>
     </ClInclude>
-    <ClInclude Include="src\Controller.h">
-      <Filter>ソース ファイル\06_Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PlayerController.h">
-      <Filter>ソース ファイル\06_Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Player.h">
-      <Filter>ソース ファイル\06_Game</Filter>
+    <ClInclude Include="src\MapSelect.h">
+      <Filter>ソース ファイル\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="src\computerController.h">
-      <Filter>ソース ファイル\06_Game</Filter>
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\StatusUI.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\MapSelect.h">
-      <Filter>ソース ファイル\01_Mode</Filter>
+    <ClInclude Include="src\teleport.h">
+      <Filter>ソース ファイル\05_Map</Filter>
     </ClInclude>
     <ClInclude Include="src\Object.h">
       <Filter>ソース ファイル\07_Object</Filter>
