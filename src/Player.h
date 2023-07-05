@@ -95,9 +95,11 @@ public:
 
 	// Setter
 	void SetController(CController* inOperate);
-	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; };				// 位置の設定
-	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };				// 向きの設定
-	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }	// スキルゲージの量の設定
+	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; };					// 位置の設定
+	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };					// 向きの設定
+	void SetMove(D3DXVECTOR3 move) { m_move = move; };					// 向きの設定
+	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }		// スキルゲージの量の設定
+	void SetTeleport(bool bTeleport) { m_bTeleport = bTeleport; }
 
 	// Getter
 	D3DXVECTOR3		GetPos() { return m_pos; };
@@ -105,6 +107,7 @@ public:
 	D3DXMATRIX		GetMtx() { return m_mtxWorld; };				//マトリックスの取得
 	float			GetSkillGauge() { return m_fSkillGauge; }		//スキルゲージの量の取得
 	int				GetPlayerNumber() { return m_nPlayerNumber; }	//プレイヤーの番号の取得
+	bool			GetTeleport() { return m_bTeleport; }
 
 private:
 	void Updatepos();			// 座標の更新
@@ -135,6 +138,7 @@ private:	// メンバー変数
 	int				m_nItemBuffTime;		// アイテム強化効果時間
 	int				m_nStunTime;			// スタン(操作不可能)時間
 	bool			m_bKnockBack;			// ノックバックしているかどうか
+	bool			m_bTeleport;			// テレポートしたかどうか
 	PLAYER_STATE	m_State;				// プレイヤーの状態
 	ITEM_STATE		m_ItemState;			// アイテムの状態
 	CShadow*		m_pShadow;				// 影

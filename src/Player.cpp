@@ -116,6 +116,7 @@ HRESULT CPlayer::Init()
 	m_fSubGauge = 0.0f;		//スキルゲージの減算量
 	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
 	m_bKnockBack = false;
+	m_bTeleport = false;
 
 	InitStateFunc(mUpdateFunc, STATE_MAX);
 

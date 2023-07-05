@@ -134,6 +134,7 @@ void CMap::Load()
 				break;
 			case 5:
 				m_pBlock[i * map["MAP"][i].size() + j] = CTeleport::Create(D3DXVECTOR3(x, 0.0f, z), 5);
+				m_pBlock[i * map["MAP"][i].size() + j]->SetTeleport(true);
 				break;
 			default:
 				break;
