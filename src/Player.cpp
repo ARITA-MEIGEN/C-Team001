@@ -712,7 +712,7 @@ void CPlayer::BlockCollision()
 				m_pOnBlock->SetOnPlayer(nullptr);
 			}
 
-			if (pBlock->GetOnPlayer() != this && pBlock->GetOnPlayer() != nullptr)
+			if (pBlock->GetOnPlayer() != this && pBlock->GetOnPlayer() != nullptr && pBlock->GetOnPlayer() != this)
 			{//乗ったブロックにすでにプレイヤーがいたら
 				KnockBack(pBlock->GetOnPlayer(), this);
 			}
@@ -738,7 +738,6 @@ void CPlayer::BlockCollision()
 
 			if (Block != nullptr)
 			{
-				Block->SetOnPlayer(this);	//プレイヤーの
 				Block->SetPlayerNumber(m_nPlayerNumber);
 			}
 		}
