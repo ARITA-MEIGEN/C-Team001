@@ -14,7 +14,8 @@
 #include "Item_Speed.h"
 #include "Item_Paint.h"
 #include "area.h"
-#include "future_block.h"
+#include "go_future_block.h"
+#include "come_future_block.h"
 #include "teleport.h"
 
 //-----------------------------------------------------------------------------
@@ -246,6 +247,9 @@ void CMap::PopItem()
 	D3DXVECTOR3 pos = popPlanBlock->GetPos();
 	pos.y += 30.0f;
 
+	D3DXVECTOR3 size(35.0f, 0.0f, 35.0f);
+	D3DXVECTOR3 rot(-D3DX_PI * 0.5f, 0.0f, 0.0f);
+
 	//アイテムの生成
 	CItem* popItem = nullptr;
 
@@ -254,10 +258,10 @@ void CMap::PopItem()
 	switch (random)
 	{
 	case 1:
-		popItem = CPaint::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300);
+		popItem = CPaint::Create(pos, size, rot, 300);
 		break;
 	case 2:
-		popItem = CSpeed::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300);
+		popItem = CSpeed::Create(pos, size, rot, 300);
 		break;
 	default:
 		break;
@@ -300,7 +304,7 @@ void CMap::PopFutureArea()
 
 	D3DXVECTOR2 popBlockIndex = GetBlockIdx(popPlanBlock);
 
-	int range = 1;
+	int range = 3;
 
 	//エリアの生成
 	CArea* area = CArea::Create(popBlockIndex, range,60,40);
@@ -325,7 +329,7 @@ void CMap::PopFutureArea()
 
 				if (block->GetNumber() != -1)
 				{
-					CFutureBlock* futureBlock = CFutureBlock::Create(block->GetPos());
+					CGoFutureBlock* futureBlock = CGoFutureBlock::Create(block->GetPos());
 					futureBlock->SetCol(block->GetCol());
 				}
 
@@ -366,13 +370,19 @@ void CMap::PopFutureArea()
 		for (int i = 0; i < size; i++)
 		{
 			areaBlock[i]->SetPlayerNumber(BlockIndex[areaBlock[i]]);
+
+			if (areaBlock[i]->GetNumber() != -1)
+			{
+				CComeFutureBlock* futureBlock = CComeFutureBlock::Create(areaBlock[i]->GetPos());
+				futureBlock->SetCol(areaBlock[i]->GetCol());
+			}
 		}
 	};
 
 	area->SetFunctionAtDied(atDead);
 
 	// 次回出現時間の設定
-	m_nAreaPopCount = IntRandom(60, 180);
+	m_nAreaPopCount = IntRandom(30, 120);
 
 }
 
