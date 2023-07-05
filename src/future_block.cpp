@@ -60,14 +60,14 @@ void  CFutureBlock::Update()
 	CObjectX::Update();
 
 	D3DXVECTOR3 sizeMag = GetSizeMag();
-	sizeMag += D3DXVECTOR3(-0.15f,-0.05f,-0.15f);
+	sizeMag -= D3DXVECTOR3(0.15f,-0.05f,0.15f);
 	SetSizeMag(sizeMag);
 
 	D3DXVECTOR3 pos = GetPos();
-	pos.y += 2.0f;
+	pos.y += 10.0f;
 	SetPos(pos);
 
-	if (sizeMag.y <= 0.0f)
+	if (sizeMag.x <= 0.0f)
 	{
 		Uninit();
 	}
@@ -109,7 +109,7 @@ void CFutureBlock::SetPlayerNumber(int number)
 		SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
 		break;
 	case 2:
-		SetCol(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+		SetCol(D3DXCOLOR(0.55f, 0.55f, 0.0f, 1.0f));
 		break;
 	case 3:
 		SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));

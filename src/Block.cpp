@@ -136,7 +136,7 @@ void CBlock::SetPlayerNumber(int number)
 		SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
 		break;
 	case 2:
-		SetCol(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+		SetCol(D3DXCOLOR(0.55f, 0.55f, 0.0f, 1.0f));
 		break;
 	case 3:
 		SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));

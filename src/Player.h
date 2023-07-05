@@ -34,19 +34,6 @@ private:
 	static const float SKILL_BUFF_TIME;	// バフの効果時間(Lv1基準)
 
 public:
-
-	enum PLAYER_MOTION
-	{
-		//地上
-		PM_NEUTRAL,		// ニュートラル
-		PM_WALK,			// 移動(しゃがみだけ無し)
-		PM_STAN,			// 移動(しゃがみだけ無し)
-		PM_WIN,			// 移動(しゃがみだけ無し)
-		PM_LOSE,			// 移動(しゃがみだけ無し)
-		PM_SELECT,
-		PM_MAX
-	};
-
 	enum PLAYER_STATE
 	{
 		PST_STAND,		// 立ち
@@ -76,6 +63,20 @@ private:
 		STATE_INVALID = -1,
 	};
 
+	enum PLAYER_MOTION
+	{
+		//地上
+		PM_NEUTRAL,		// ニュートラル
+		PM_WALK,		// 移動
+		PM_STAN,		// スタン
+		PM_WIN,			// 勝利
+		PM_LOSE,		// 敗北
+		PM_SELECT,		// スキル選択
+		PM_MAX,	
+		PM_INVALID = -1
+	};
+
+
 public:
 	explicit CPlayer(int nPriority = 3);
 	~CPlayer();
@@ -100,6 +101,7 @@ public:
 	void SetMove(D3DXVECTOR3 move) { m_move = move; };					// 向きの設定
 	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }		// スキルゲージの量の設定
 	void SetTeleport(bool bTeleport) { m_bTeleport = bTeleport; }
+	void SetResultMotion(int Rank);								// リザルト時のモーション再生
 
 	// Getter
 	D3DXVECTOR3		GetPos() { return m_pos; };
