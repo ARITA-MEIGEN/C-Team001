@@ -156,13 +156,18 @@ void CPlayer::Uninit(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Update(void)
 {
-	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
-	{
-		return;
+	if (CApplication::getInstance()->GetModeState() == CApplication::MODE_RESULT)
+	{//リザルト時モーションのみ再生
+		m_motion->Update();
 	}
 
+	if (CApplication::getInstance()->GetModeState() != CApplication::MODE_GAME)
+	{//ゲームじゃない場合return
+		return;
+	}
+	
 	if (!(CGame::GetGame() != CGame::GAME_END) && !(CGame::GetGame() != CGame::GAME_START))
-	{
+	{//ゲーム中のみ動ける
 		return;
 	}
 
@@ -240,6 +245,7 @@ void CPlayer::Update(void)
 		m_motion->SetNumMotion(m_Motion);
 	}
 #endif // _DEBUG
+
 }
 
 //-----------------------------------------------------------------------------
@@ -284,7 +290,7 @@ void CPlayer::Draw(void)
 //--------------------------------------------------
 void CPlayer::Update_Idle()
 {
-	SetState(STATE_WALK);
+	SetState(STATE_IDLE);
 }
 
 //--------------------------------------------------
@@ -292,7 +298,7 @@ void CPlayer::Update_Idle()
 //--------------------------------------------------
 void CPlayer::Update_Walk()
 {
-	SetState(STATE_JUMP);
+	SetState(STATE_WALK);
 }
 
 //--------------------------------------------------
@@ -300,7 +306,7 @@ void CPlayer::Update_Walk()
 //--------------------------------------------------
 void CPlayer::Update_Jump()
 {
-	SetState(STATE_IDLE);
+	SetState(STATE_JUMP);
 }
 
 //-----------------------------------------------------------------------------
@@ -354,6 +360,19 @@ void CPlayer::Move()
 		}
 	}
 
+	//モーション再生
+	if ((move.x != 0.0f || move.z != 0.0f) && m_Motion != PM_WALK)
+	{
+		m_Motion = PM_WALK;
+		m_motion->SetNumMotion(m_Motion);
+	}
+	else if (move.x == 0.0f && move.z == 0.0f&&m_Motion != PM_NEUTRAL)
+	{
+		m_Motion = PM_NEUTRAL;
+		m_motion->SetNumMotion(m_Motion);
+	}
+
+
 	D3DXVec3Normalize(&m_movePlanVec, &move);	// 入力ベクトルを用意する
 }
 
@@ -364,6 +383,23 @@ void CPlayer::SetController(CController * inOperate)
 {
 	m_controller = inOperate;
 	m_controller->SetToOrder(this);
+}
+
+//-----------------------------------------------------------------------------
+// リザルト時のモーション再生
+//-----------------------------------------------------------------------------
+void CPlayer::SetResultMotion(int Rank)
+{
+	if (Rank == 0 && m_Motion != PM_WIN)
+	{//一位の時
+		m_Motion = PM_WIN;						//勝利モーション再生
+		m_motion->SetNumMotion(m_Motion);
+	}
+	else if (Rank != 0&&m_Motion != PM_LOSE)
+	{//それ以外
+		m_Motion = PM_LOSE;						//敗北モーション再生
+		m_motion->SetNumMotion(m_Motion);
+	}
 }
 
 //-----------------------------------------------------------------------------
