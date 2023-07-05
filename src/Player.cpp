@@ -97,7 +97,7 @@ HRESULT CPlayer::Init()
 			m_apModel[i]->SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
 			break;
 		case 2:
-			m_apModel[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+			m_apModel[i]->SetCol(D3DXCOLOR(0.55f, 0.55f, 0.0f, 1.0f));
 			break;
 		case 3:
 			m_apModel[i]->SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
