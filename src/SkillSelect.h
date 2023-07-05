@@ -18,6 +18,7 @@
 class CPlayer;
 class CCamera;
 class CLight;
+class CBg;
 
 class CSkillSelect : public CMode
 {
@@ -46,7 +47,7 @@ public:
 
 private:
 	static int m_nSkill[MAX_PLAYER];	// 現在選択されているスキルの番号
-	CObject2D*m_pBg;					// 背景
+	CBg* m_pBg;							// 背景
 	CObject2D*m_pObj2D[MAX_PLAYER];		// スキル選択の枠
 	CCamera*m_pCamera;					// カメラ
 	CLight*m_pLight;					// 光源

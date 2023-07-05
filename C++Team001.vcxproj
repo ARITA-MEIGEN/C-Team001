@@ -165,6 +165,7 @@
     <ClCompile Include="BgStage.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\area.cpp" />
+    <ClCompile Include="src\Bg.cpp" />
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CameraGame.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="src\Fade.cpp" />
     <ClCompile Include="src\File.cpp" />
     <ClCompile Include="src\Floor.cpp" />
+    <ClCompile Include="src\future_block.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\input\DirectInput.cpp" />
@@ -212,6 +214,7 @@
     <ClCompile Include="src\SkillSelect.cpp" />
     <ClCompile Include="src\sound.cpp" />
     <ClCompile Include="src\StatusUI.cpp" />
+    <ClCompile Include="src\teleport.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\Title.cpp" />
@@ -222,6 +225,7 @@
     <ClInclude Include="BgStage.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\area.h" />
+    <ClInclude Include="src\Bg.h" />
     <ClInclude Include="src\Block.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CameraGame.h" />
@@ -234,6 +238,7 @@
     <ClInclude Include="src\Fade.h" />
     <ClInclude Include="src\File.h" />
     <ClInclude Include="src\Floor.h" />
+    <ClInclude Include="src\future_block.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\input\DirectInput.h" />
@@ -269,6 +274,7 @@
     <ClInclude Include="src\SkillSelect.h" />
     <ClInclude Include="src\sound.h" />
     <ClInclude Include="src\StatusUI.h" />
+    <ClInclude Include="src\teleport.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Time.h" />
     <ClInclude Include="src\Title.h" />

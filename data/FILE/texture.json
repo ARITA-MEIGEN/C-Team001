@@ -21,6 +21,8 @@
     [ "RESULET_003", "data\/TEXTURE\/Result\/Rank\/Result_rank_4th.png" ],
     [ "SKILL_GAUGE", "data\/TEXTURE\/Game\/PlayerStatus\/PlayerStatus_SkillGauge.png" ],
     [ "SKILL_ICON_BG", "data\/TEXTURE\/Game\/PlayerStatus\/PlayerStatus_SkillBg.png" ],
-    [ "CHARACTER_BG", "data\/TEXTURE\/Game\/PlayerStatus\/PlayerStatus_CharaBG_Square.png"]
+    [ "CHARACTER_BG", "data\/TEXTURE\/Game\/PlayerStatus\/PlayerStatus_CharaBG_Square.png" ],
+    [ "SKILL_SELECT_BG", "data\/TEXTURE\/SkillSelect\/SkillSelect_Bg.png"],
+    [ "CIRCLE", "data\/TEXTURE\/SkillSelect\/SkillSelect_Circle.png"]
   ]
 }

@@ -5,34 +5,30 @@
 //
 //=============================================================================
 
-
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
-#include "Block.h"
+#include "future_block.h"
 #include "Item.h"
 
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const float CBlock::SINK_LIMIT = -10.0f;	// 沈む下限値
-const float CBlock::UP_POWER = 0.5f;		// 沈んだブロックが浮上する時間
+const float CFutureBlock::SINK_LIMIT = -10.0f;	// 沈む下限値
+const float CFutureBlock::UP_POWER = 0.5f;		// 沈んだブロックが浮上する時間
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CBlock::CBlock(int priorty) :CObjectX(priorty)
+CFutureBlock::CFutureBlock(int priorty) :CObjectX(priorty)
 {
 	m_number = 0;
-	m_isStop = false;
-	m_onItem = nullptr;
-	m_onPlayer = nullptr;
 }
 
 //=============================================================================
 // デストラクタ
 //=============================================================================
-CBlock::~CBlock()
+CFutureBlock::~CFutureBlock()
 {
 
 }
@@ -40,7 +36,7 @@ CBlock::~CBlock()
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT  CBlock::Init()
+HRESULT  CFutureBlock::Init()
 {
 	CObjectX::Init();
 	m_number = -1;
@@ -51,7 +47,7 @@ HRESULT  CBlock::Init()
 //=============================================================================
 //終了
 //=============================================================================
-void  CBlock::Uninit()
+void  CFutureBlock::Uninit()
 {
 	CObjectX::Uninit();
 }
@@ -59,47 +55,30 @@ void  CBlock::Uninit()
 //=============================================================================
 // 更新
 //=============================================================================
-void  CBlock::Update()
+void  CFutureBlock::Update()
 {
 	CObjectX::Update();
 
-	if (m_onItem != nullptr)
+	D3DXVECTOR3 sizeMag = GetSizeMag();
+	sizeMag -= D3DXVECTOR3(0.15f,-0.05f,0.15f);
+	SetSizeMag(sizeMag);
+
+	D3DXVECTOR3 pos = GetPos();
+	pos.y += 10.0f;
+	SetPos(pos);
+
+	if (sizeMag.x <= 0.0f)
 	{
-		if (m_onItem->GetLife() <= 0)
-		{
-			m_onItem->Release();
-			m_onItem = nullptr;
-		}
+		Uninit();
 	}
-
-
-	if (m_onPlayer == nullptr)
-	{
-		D3DXVECTOR3 pos = GetPos();
-		if (0.0f >= pos.y)
-		{
-			pos.y += UP_POWER;
-
-			SetPos(pos);
-		}
-	}
-}
-
-//=============================================================================
-// 描画
-//=============================================================================
-void  CBlock::Draw()
-{
-	//デバイスの取得
-	CObjectX::Draw();
 }
 
 //=============================================================================
 // 生成
 //=============================================================================
-CBlock* CBlock::Create(D3DXVECTOR3 pos)
+CFutureBlock* CFutureBlock::Create(D3DXVECTOR3 pos)
 {
-	CBlock*pBlock = new CBlock(5);
+	CFutureBlock* pBlock = new CFutureBlock(5);
 
 	if (pBlock != nullptr)
 	{
@@ -114,13 +93,8 @@ CBlock* CBlock::Create(D3DXVECTOR3 pos)
 //=============================================================================
 // プレイヤー設定
 //=============================================================================
-void CBlock::SetPlayerNumber(int number)
+void CFutureBlock::SetPlayerNumber(int number)
 {
-	if (m_isStop)
-	{
-		return;
-	}
-
 	m_number = number;
 
 	switch (m_number)
@@ -148,7 +122,7 @@ void CBlock::SetPlayerNumber(int number)
 //=============================================================================
 // 沈む
 //=============================================================================
-void CBlock::SetSink(float power)
+void CFutureBlock::SetSink(float power)
 {
 	D3DXVECTOR3 pos = GetPos();
 	pos.y -= power;
@@ -160,16 +134,4 @@ void CBlock::SetSink(float power)
 	}
 
 	SetPos(pos);
-}
-
-//=============================================================================
-// アイテムを消す処理
-//=============================================================================
-void CBlock::DeleteItem(void)
-{
-	if (m_onItem != nullptr)
-	{
-		m_onItem->Uninit();
-		m_onItem = nullptr;
-	}
 }
