@@ -58,11 +58,11 @@ void  CComeFutureBlock::Update()
 	CObjectX::Update();
 
 	D3DXVECTOR3 sizeMag = GetSizeMag();
-	sizeMag += D3DXVECTOR3(0.075f, -0.05f, 0.075f);
+	sizeMag += D3DXVECTOR3(0.075f, -0.075f, 0.075f);
 	SetSizeMag(sizeMag);
 
 	D3DXVECTOR3 pos = GetPos();
-	pos.y -= 5.0f;
+	pos.y -= 5.5f;
 	SetPos(pos);
 
 	if (sizeMag.x >= 1.0f)
@@ -83,7 +83,7 @@ CComeFutureBlock* CComeFutureBlock::Create(D3DXVECTOR3 pos)
 		pBlock->Init();
 		pBlock->BindModel(CObjectXOriginalList::GetInstance()->Load("BLOCK", "data/MODEL/box.x"));
 		D3DXVECTOR3 inpos = pos;
-		inpos.y += 50.0f;
+		inpos.y += 80.0f;
 		pBlock->SetPos(inpos);
 		pBlock->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		pBlock->SetSizeMag(D3DXVECTOR3(0.0f, 1.5f, 0.0f));

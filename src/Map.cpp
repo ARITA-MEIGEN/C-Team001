@@ -307,7 +307,7 @@ void CMap::PopFutureArea()
 	int range = 3;
 
 	//ƒGƒŠƒA‚Ì¶¬
-	CArea* area = CArea::Create(popBlockIndex, range,60,40);
+	CArea* area = CArea::Create(popBlockIndex, range,60,180);
 
 	area->CreateWall(GetBlock(popBlockIndex.x, popBlockIndex.y)->GetPos());
 
@@ -382,7 +382,7 @@ void CMap::PopFutureArea()
 	area->SetFunctionAtDied(atDead);
 
 	// Ÿ‰ñoŒ»ŠÔ‚Ìİ’è
-	m_nAreaPopCount = IntRandom(30, 120);
+	m_nAreaPopCount = IntRandom(120, 190);
 
 }
 
