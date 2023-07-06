@@ -38,12 +38,14 @@ public:
 	// Setter
 	void SetPlayerNumber(int number);
 	void SetStop(const bool isStop) { m_isStop = isStop; }
+	void SetTeleport(const bool bTeleport) { m_bTeleport = bTeleport; }
 	void SetOnItem(CItem* onItem) { m_onItem = onItem; }
 	void SetOnPlayer(CPlayer* onPlayer) { m_onPlayer = onPlayer; }
 	void SetSink(float power);
 
 	// Getter
 	int GetNumber() { return m_number; };
+	bool GetTeleport() { return m_bTeleport; };
 	bool IsStop() { return m_isStop; };
 
 	CPlayer* GetOnPlayer() { return m_onPlayer; };
@@ -53,6 +55,7 @@ private:
 	//メンバ変数
 	int m_number;	// プレイヤーの番号
 	bool m_isStop;	// 進行不可
+	bool m_bTeleport;		// テレポーターかどうか
 	CPlayer* m_onPlayer;	// 乗ってるプレイヤー
 	CItem* m_onItem;		// 乗ってるアイテム
 };

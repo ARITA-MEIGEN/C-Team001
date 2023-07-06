@@ -43,6 +43,7 @@ CBlock::~CBlock()
 HRESULT  CBlock::Init()
 {
 	CObjectX::Init();
+	m_bTeleport = false;
 	m_number = -1;
 
 	return S_OK;
