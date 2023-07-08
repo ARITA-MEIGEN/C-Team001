@@ -780,10 +780,8 @@ void CPlayer::BlockCollision()
 		}
 	}
 
-	//乗っているブロックの番号を取得
-	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
 	//乗っているブロックの情報を取得
-	CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);
+	CBlock* Block = m_pOnBlock;
 
 	if (Block != nullptr)
 	{//アイテムの情報を取得する

@@ -107,7 +107,7 @@ CBlock* CBlock::Create(D3DXVECTOR3 pos)
 //=============================================================================
 void CBlock::SetPlayerNumber(int number)
 {
-	if (m_isStop)
+	if (m_isStop || m_bTeleport)
 	{
 		return;
 	}
