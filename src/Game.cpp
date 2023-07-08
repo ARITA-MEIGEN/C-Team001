@@ -71,7 +71,7 @@ HRESULT CGame::Init()
 	m_pLight->Init();
 
 	//ブロック生成
-	m_pMap = CMap::Create(0);
+	m_pMap = CMap::Create(3);
 
 	//プレイヤーの生成
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
