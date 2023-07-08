@@ -73,9 +73,13 @@ private:
 
 	// Item関連
 	int m_nItemPopCount;
+	int m_itemPopRandMinTime;	// アイテム再出現時間の最低値
+	int m_itemPopRandMaxTime;	// アイテム再出現時間の最大値
 
 	// Area関連
 	int m_nAreaPopCount;
+	int m_areaPopRandMinTime;	// エリア再出現時間の最低値
+	int m_areaPopRandMaxTime;	// エリア再出現時間の最大値
 
 };
 

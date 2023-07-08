@@ -73,6 +73,7 @@ void  CBlock::Update()
 		}
 	}
 
+	// プレイヤーが乗ってないなら元の位置に戻る
 	if (m_onPlayer == nullptr)
 	{
 		D3DXVECTOR3 pos = GetPos();
