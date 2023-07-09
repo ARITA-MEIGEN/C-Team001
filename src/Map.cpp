@@ -80,13 +80,16 @@ void CMap::Update()
 //=============================================================================
 CMap * CMap::Create(int stgnumber)
 {
-	CMap*pMap = new CMap();
+	CMap* pMap = new CMap;
 
 	if (pMap!=nullptr)
 	{
-		pMap->m_StageNumber = (STAGE)stgnumber;		//読み込むマップの番号を決める
-		pMap->Load();								//マップの読み込み
-		pMap->Init();								//初期化
+		if (stgnumber != -1)
+		{
+			pMap->m_StageNumber = (STAGE)stgnumber;		//読み込むマップの番号を決める
+		}
+		pMap->Load();		//マップの読み込み
+		pMap->Init();		//初期化
 	}
 	return pMap;
 }

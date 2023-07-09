@@ -44,7 +44,7 @@ CCameraGame::~CCameraGame()
 void CCameraGame::Init()
 {
 	//視点・注視点・上方向を設定
-	m_posV = D3DXVECTOR3(0.0f, 400.0f, -350.0f);
+	m_posV = D3DXVECTOR3(0.0f, 410.0f, -445.0f);
 	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
