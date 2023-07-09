@@ -18,9 +18,9 @@
 //-----------------------------------------------------------------------------
 //マクロ定義
 //-----------------------------------------------------------------------------
-#define	DISTANCE_X	((m_posV.x - m_posR.x)*(m_posV.x - m_posR.x))		//距離の計算用X
-#define	DISTANCE_Y	((m_posV.y - m_posR.y)*(m_posV.y - m_posR.y))		//距離の計算用Y
-#define DISTANCE_Z	((m_posV.z - m_posR.z)*(m_posV.z - m_posR.z))		//距離の計算用Z
+#define	DISTANCE_X	((m_posV.x - m_posR.x) * (m_posV.x - m_posR.x))		//距離の計算用X
+#define	DISTANCE_Y	((m_posV.y - m_posR.y) * (m_posV.y - m_posR.y))		//距離の計算用Y
+#define DISTANCE_Z	((m_posV.z - m_posR.z) * (m_posV.z - m_posR.z))		//距離の計算用Z
 
 //-----------------------------------------------------------------------------
 //静的変数宣言
@@ -55,7 +55,6 @@ void CCamera::Init(void)
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot.x = atan2f((m_posV.y - m_posR.y), (m_posV.z - m_posR.z));
 
-	//m_fDistance=sqrtf(m_fDistance*m_fDistance+DISTANCE_Y);
 	m_fDistance = sqrtf(DISTANCE_X + DISTANCE_Y + DISTANCE_Z);
 }
 
@@ -72,9 +71,6 @@ void  CCamera::Uninit(void)
 //===========================
 void  CCamera::Update(void)
 {
-	//ControlPos();		//視点操作
-	//RadianPosR();		//注視点の旋回
-	//RadianPosV();		//視点の旋回
 	NormalizeRadian();	//角度の正規化
 #ifdef _DEBUG
 	CInput* pInput = CInput::GetKey();
