@@ -52,8 +52,35 @@ public:
 
 	HRESULT Init() override;
 	void Uninit() override;
-	void Update() override;
 	void Draw() override;
+
+public:
+	void Update() override;
+private: // 更新処理
+	enum UPDATE_STATE
+	{
+		UPDATE_FADENOW = 0,		// フェード中
+		UPDATE_COUNTDOWN,	// カウントダウン
+		UPDATE_GAME_PLAY,	// ゲームプレイ
+		UPDATE_GAME_END,	// ゲーム終了
+		UPDATE_MAX
+	};
+
+	using UPDATE_FUNC = void(CGame::*)();
+	static const UPDATE_FUNC m_UpdateFunc[];
+	void SetUpdate(UPDATE_STATE inState) { m_stateNow = inState; }
+
+	const UPDATE_FUNC* m_funcUpdate;
+
+	//　更新のステート関数
+	void Update_FadeNow();
+	void Update_CountDown();
+	void Update_GamePlay();
+	void Update_GameEnd();
+
+	UPDATE_STATE	m_stateNow;		// スキルステートの状態
+
+public:
 	void ResetGame();	// ラウンド移行時の処理
 	void BlockCount();
 

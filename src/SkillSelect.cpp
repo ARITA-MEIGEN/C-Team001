@@ -44,6 +44,11 @@ CSkillSelect::~CSkillSelect()
 //====================================
 HRESULT CSkillSelect::Init()
 {
+	for (int i = 0; i < 4; i++)
+	{
+		m_inputNumber[i] = 99;		// 絶対に有り得ない数字を代入
+	}
+
 	//カメラの設定
 	m_pCamera = CCameraGame::Create();
 	m_pCamera->SetPosV(D3DXVECTOR3(0.0f, 250.0f, -400.0f));
@@ -62,7 +67,7 @@ HRESULT CSkillSelect::Init()
 	}
 
 	//背景
-	m_pBg = CBg::Create();	//生成
+	//m_pBg = CBg::Create();	//生成
 
 	return S_OK;
 }
@@ -103,7 +108,9 @@ void CSkillSelect::Update()
 	//更新処理
 	m_pCamera->Update();
 	m_pLight->Update();
-	m_pBg->Update();
+
+	// エントリー処理
+	Entry();
 
 	//入力処理
 	Input();
@@ -118,8 +125,6 @@ void CSkillSelect::Update()
 void CSkillSelect::Draw()
 {
 	m_pCamera->Set();
-
-	m_pBg->Draw();
 }
 
 //====================================
@@ -131,52 +136,66 @@ void CSkillSelect::Input()
 	CInput* pInput = CInput::GetKey();
 
 	//フェードしていなければ
-	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
+	if (CApplication::getInstance()->GetFade()->GetFade() != CFade::FADE_NONE)
 	{
-		//左入力で左を選択
-		for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
-		{//プレイヤーごとに分ける
-			if (m_nSkill[nCnt] >= 1)
-			{//左端ではないなら左へ
-				if (pInput->Trigger(JOYPAD_LEFT, nCnt))
-				{
-					m_nSkill[nCnt]--;
-				}
-			}
+		return;
+	}
+	
+	//左入力で左を選択
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{//プレイヤーごとに分ける
+
+		if (m_inputNumber[nCnt] == 99)
+		{
+			continue;
 		}
 
-		//右入力で右を選択
-		for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
-		{//プレイヤーごとに分ける
-			if (m_nSkill[nCnt] <= 2)
-			{//右端ではないなら右へ
-				if (pInput->Trigger(JOYPAD_RIGHT, nCnt))
-				{
-					m_nSkill[nCnt]++;
-				}
+		if (m_nSkill[nCnt] >= 1)
+		{//左端ではないなら左へ
+			if (pInput->Trigger(KEY_LEFT, m_inputNumber[nCnt]))
+			{
+				m_nSkill[nCnt]--;
 			}
+		}
+	}
+
+	//右入力で右を選択
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{//プレイヤーごとに分ける
+
+		if (m_inputNumber[nCnt] == 99)
+		{
+			continue;
 		}
 
-		if (pInput->Trigger(DIK_O))
-		{//左に動く
-			if (m_nSkill[0] >= 1)
-			{//左端ではないなら左へ
-				m_nSkill[0]--;
+		if (m_nSkill[nCnt] <= 2)
+		{//右端ではないなら右へ
+			if (pInput->Trigger(KEY_RIGHT, m_inputNumber[nCnt]))
+			{
+				m_nSkill[nCnt]++;
 			}
 		}
-		else if (pInput->Trigger(DIK_P))
-		{//右に動く
-			if (m_nSkill[0] <= 2)
-			{//右端ではないなら右へ
-				m_nSkill[0]++;
-			}
-		}
+	}
 
-		if ((pInput->Trigger(DIK_RETURN)) == true || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
-		{//エンターでゲームに
-		 //モード設定
-			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
+	if (pInput->Trigger(DIK_O))
+	{//左に動く
+		if (m_nSkill[0] >= 1)
+		{//左端ではないなら左へ
+			m_nSkill[0]--;
 		}
+	}
+	else if (pInput->Trigger(DIK_P))
+	{//右に動く
+		if (m_nSkill[0] <= 2)
+		{//右端ではないなら右へ
+			m_nSkill[0]++;
+		}
+	}
+
+	if ((pInput->Trigger(DIK_RETURN)) || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
+	{//エンターでゲームに
+	 //モード設定
+		CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
 	}
 }
 
@@ -204,4 +223,52 @@ void CSkillSelect::Select()
 			m_pObj2D[nCnt]->SetTextureKey("RESULET_003");
 		}
 	}
+}
+
+//====================================
+//エントリー
+//====================================
+void CSkillSelect::Entry()
+{
+	CInput* pInput = CInput::GetKey();
+	std::vector<int> inputNumber = pInput->TriggerDevice(KEY_UP);
+
+	for (auto it = inputNumber.begin(); it != inputNumber.end();)
+	{
+		bool isErase = false;
+
+		for (int j = 0; j < 4; j++)
+		{
+			if (m_inputNumber[j] == *it)
+			{
+				isErase = true;
+				break;
+			}
+		}
+
+		// 条件一致した要素を削除する
+		if (isErase)
+		{
+			// 削除された要素の次を指すイテレータが返される。
+			it = inputNumber.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (size_t i = 0; i < inputNumber.size(); i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (m_inputNumber[j] == 99)
+			{
+				m_inputNumber[j] = inputNumber[i];
+				break;
+			}
+		}
+	}
+
+	CDebugProc::Print("Number : %d %d %d %d", m_inputNumber[0], m_inputNumber[1], m_inputNumber[2], m_inputNumber[3]);
 }

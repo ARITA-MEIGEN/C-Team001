@@ -27,20 +27,15 @@ const D3DXVECTOR2 CStatusUI::SKILL_ICON_BG_SIZE			(45.0f, 45.0f);
 //======================================================
 CStatusUI *CStatusUI::Create(const D3DXVECTOR3& inPos,int nPlayerNum)
 {
-	CStatusUI* pStatusUI = nullptr;	//ポインタ
+	CStatusUI* pStatusUI = new CStatusUI;	// 生成
 
-	if (pStatusUI != nullptr)
+	if (pStatusUI == nullptr)
 	{//NULLチェック
 		assert(false);
 	}
 
-	/* nullptrの場合 */
-
-	pStatusUI = new CStatusUI;	//動的確保
-
-	pStatusUI->SetPlayerNum(nPlayerNum);	//プレイヤー番号の設定
-
-	pStatusUI->Init();	//初期化
+	pStatusUI->SetPlayerNum(nPlayerNum);	// プレイヤー番号の設定
+	pStatusUI->Init();	// 初期化
 	pStatusUI->SetPos(inPos);
 
 	return pStatusUI;
@@ -104,17 +99,13 @@ HRESULT CStatusUI::Init()
 	}
 
 	{//キャラクター背景
-		//生成に必要な要素
 		D3DXVECTOR3 pos(0.0f, 0.0f, 0.0f);
-
 		m_pCharaBg = CObject2D::Create(pos, CHARACTER_BG_SIZE, 4);	//生成
 		m_pCharaBg->SetTextureKey("CHARACTER_BG");					//テクスチャの設定
 	}
 
 	{//スキルアイコン背景
-		//生成に必要な要素
 		D3DXVECTOR3 pos(0.0f, 0.0f, 0.0f);
-
 		m_pSkillIconBg = CObject2D::Create(pos, SKILL_ICON_BG_SIZE, 4);	//生成
 		m_pSkillIconBg->SetTextureKey("SKILL_ICON_BG");					//テクスチャの設定
 	}
@@ -147,30 +138,6 @@ void CStatusUI::Uninit()
 		m_pSkillIconBg->Uninit();
 		m_pSkillIconBg = nullptr;
 	}
-}
-
-//======================================================
-//更新
-//======================================================
-void CStatusUI::Update()
-{
-	m_pGauge->Update();	//ゲージ
-
-	m_pCharaBg->Update();	//キャラクター背景
-
-	m_pSkillIconBg->Update();	//スキルアイコン背景
-}
-
-//======================================================
-//描画
-//======================================================
-void CStatusUI::Draw()
-{
-	m_pGauge->Draw();	//ゲージ
-
-	m_pCharaBg->Draw();	//キャラクター背景
-
-	m_pSkillIconBg->Draw();	//スキルアイコン背景
 }
 
 //======================================================
