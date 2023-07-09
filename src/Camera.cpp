@@ -10,7 +10,6 @@
 #include "renderer.h"
 #include "Application.h"
 #include "DebugProc.h"
-#include "Game.h"
 #include "Player.h"
 #include "input.h"
 #include "utility.h"
