@@ -1,6 +1,6 @@
 {
   "MODEL": [
-    [ "BOX", "data\/MODEL\/box.x" ],
+    [ "BOX", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile.x" ],
     [ "KYUU2", "data\/MODEL\/kyuu2.x" ],
     [ "ENVIRONMENT_FUTURE1", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building00.x" ],
     [ "ENVIRONMENT_FUTURE2", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building01.x" ],
