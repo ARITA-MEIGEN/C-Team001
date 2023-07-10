@@ -8,19 +8,17 @@
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
-#include "future_block.h"
+#include "come_future_block.h"
 #include "Item.h"
 
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const float CFutureBlock::SINK_LIMIT = -10.0f;	// 沈む下限値
-const float CFutureBlock::UP_POWER = 0.5f;		// 沈んだブロックが浮上する時間
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CFutureBlock::CFutureBlock(int priorty) :CObjectX(priorty)
+CComeFutureBlock::CComeFutureBlock(int priorty) :CObjectX(priorty)
 {
 	m_number = 0;
 }
@@ -28,7 +26,7 @@ CFutureBlock::CFutureBlock(int priorty) :CObjectX(priorty)
 //=============================================================================
 // デストラクタ
 //=============================================================================
-CFutureBlock::~CFutureBlock()
+CComeFutureBlock::~CComeFutureBlock()
 {
 
 }
@@ -36,7 +34,7 @@ CFutureBlock::~CFutureBlock()
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT  CFutureBlock::Init()
+HRESULT  CComeFutureBlock::Init()
 {
 	CObjectX::Init();
 	m_number = -1;
@@ -47,7 +45,7 @@ HRESULT  CFutureBlock::Init()
 //=============================================================================
 //終了
 //=============================================================================
-void  CFutureBlock::Uninit()
+void  CComeFutureBlock::Uninit()
 {
 	CObjectX::Uninit();
 }
@@ -55,19 +53,19 @@ void  CFutureBlock::Uninit()
 //=============================================================================
 // 更新
 //=============================================================================
-void  CFutureBlock::Update()
+void  CComeFutureBlock::Update()
 {
 	CObjectX::Update();
 
 	D3DXVECTOR3 sizeMag = GetSizeMag();
-	sizeMag -= D3DXVECTOR3(0.15f,-0.05f,0.15f);
+	sizeMag += D3DXVECTOR3(0.075f, -0.075f, 0.075f);
 	SetSizeMag(sizeMag);
 
 	D3DXVECTOR3 pos = GetPos();
-	pos.y += 10.0f;
+	pos.y -= 5.5f;
 	SetPos(pos);
 
-	if (sizeMag.x <= 0.0f)
+	if (sizeMag.x >= 1.0f)
 	{
 		Uninit();
 	}
@@ -76,16 +74,20 @@ void  CFutureBlock::Update()
 //=============================================================================
 // 生成
 //=============================================================================
-CFutureBlock* CFutureBlock::Create(D3DXVECTOR3 pos)
+CComeFutureBlock* CComeFutureBlock::Create(D3DXVECTOR3 pos)
 {
-	CFutureBlock* pBlock = new CFutureBlock(5);
+	CComeFutureBlock* pBlock = new CComeFutureBlock(5);
 
 	if (pBlock != nullptr)
 	{
 		pBlock->Init();
 		pBlock->BindModel(CObjectXOriginalList::GetInstance()->Load("BLOCK", "data/MODEL/box.x"));
-		pBlock->SetPos(pos);
+		D3DXVECTOR3 inpos = pos;
+		inpos.y += 80.0f;
+		pBlock->SetPos(inpos);
 		pBlock->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		pBlock->SetSizeMag(D3DXVECTOR3(0.0f, 1.5f, 0.0f));
+
 	}
 	return pBlock;
 }
@@ -93,7 +95,7 @@ CFutureBlock* CFutureBlock::Create(D3DXVECTOR3 pos)
 //=============================================================================
 // プレイヤー設定
 //=============================================================================
-void CFutureBlock::SetPlayerNumber(int number)
+void CComeFutureBlock::SetPlayerNumber(int number)
 {
 	m_number = number;
 
@@ -117,21 +119,4 @@ void CFutureBlock::SetPlayerNumber(int number)
 	default:
 		break;
 	}
-}
-
-//=============================================================================
-// 沈む
-//=============================================================================
-void CFutureBlock::SetSink(float power)
-{
-	D3DXVECTOR3 pos = GetPos();
-	pos.y -= power;
-
-	if (SINK_LIMIT >= pos.y)
-	{
-		pos.y = SINK_LIMIT;
-		return;
-	}
-
-	SetPos(pos);
 }

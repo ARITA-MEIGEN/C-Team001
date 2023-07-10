@@ -116,6 +116,7 @@ HRESULT CPlayer::Init()
 	m_fSubGauge = 0.0f;		//スキルゲージの減算量
 	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
 	m_bKnockBack = false;
+	m_bTeleport = false;
 
 	InitStateFunc(mUpdateFunc, STATE_MAX);
 
@@ -748,7 +749,7 @@ void CPlayer::BlockCollision()
 				m_pOnBlock->SetOnPlayer(nullptr);
 			}
 
-			if (pBlock->GetOnPlayer() != this && pBlock->GetOnPlayer() != nullptr)
+			if (pBlock->GetOnPlayer() != this && pBlock->GetOnPlayer() != nullptr && pBlock->GetOnPlayer() != this)
 			{//乗ったブロックにすでにプレイヤーがいたら
 				KnockBack(pBlock->GetOnPlayer(), this);
 			}
@@ -774,16 +775,13 @@ void CPlayer::BlockCollision()
 
 			if (Block != nullptr)
 			{
-				Block->SetOnPlayer(this);	//プレイヤーの
 				Block->SetPlayerNumber(m_nPlayerNumber);
 			}
 		}
 	}
 
-	//乗っているブロックの番号を取得
-	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
 	//乗っているブロックの情報を取得
-	CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);
+	CBlock* Block = m_pOnBlock;
 
 	if (Block != nullptr)
 	{//アイテムの情報を取得する

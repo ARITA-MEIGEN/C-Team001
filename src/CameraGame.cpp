@@ -12,9 +12,9 @@
 //-----------------------------------------------------------------------------
 //マクロ定義
 //-----------------------------------------------------------------------------
-#define	DISTANCE_X	((m_posV.x - m_posR.x)*(m_posV.x - m_posR.x))		//距離の計算用X
-#define	DISTANCE_Y	((m_posV.y - m_posR.y)*(m_posV.y - m_posR.y))		//距離の計算用Y
-#define DISTANCE_Z	((m_posV.z - m_posR.z)*(m_posV.z - m_posR.z))		//距離の計算用Z
+#define	DISTANCE_X	((m_posV.x - m_posR.x) * (m_posV.x - m_posR.x))		//距離の計算用X
+#define	DISTANCE_Y	((m_posV.y - m_posR.y) * (m_posV.y - m_posR.y))		//距離の計算用Y
+#define DISTANCE_Z	((m_posV.z - m_posR.z) * (m_posV.z - m_posR.z))		//距離の計算用Z
 
 //-----------------------------------------------------------------------------
 //静的変数宣言
@@ -43,13 +43,9 @@ CCameraGame::~CCameraGame()
 //-----------------------------------------------------------------------------
 void CCameraGame::Init()
 {
+	CCamera::Init();
 	//視点・注視点・上方向を設定
-	m_posV = D3DXVECTOR3(0.0f, 400.0f, -500.0f);
-	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_rot.x = atan2f((m_posV.y - m_posR.y), (m_posV.z - m_posR.z));
-	m_fDistance = sqrtf(DISTANCE_X + DISTANCE_Y + DISTANCE_Z);
+	m_posV = D3DXVECTOR3(0.0f, 410.0f, -445.0f);
 }
 
 //-----------------------------------------------------------------------------
@@ -57,17 +53,13 @@ void CCameraGame::Init()
 //-----------------------------------------------------------------------------
 void CCameraGame::Update()
 {
-	NormalizeRadian();	//角度の正規化
-#ifdef _DEBUG
-	CDebugProc::Print("カメラの視点の角度 x:%f y:%f z:%f", m_posV.x, m_posV.y, m_posV.z);
-#endif // _DEBUG
-
+	CCamera::Update();
 }
 
 //-----------------------------------------------------------------------------
 // 生成
 //-----------------------------------------------------------------------------
-CCameraGame * CCameraGame::Create()
+CCameraGame* CCameraGame::Create()
 {
 	CCameraGame* pCamera = new CCameraGame;
 

@@ -70,6 +70,8 @@ HRESULT CApplication::Init(HWND hWnd, bool bWindow, HINSTANCE hInstance)
 	m_pTexture = CTexture::GetInstance();
 	m_pTexture->LoadAll();
 
+	CObjectXOriginalList::GetInstance()->LoadAll();
+
 	return S_OK;
 }
 

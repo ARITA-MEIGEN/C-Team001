@@ -1,9 +1,9 @@
 //=================================================
-// Content     (ゲームの設定)(camera.h)
-// Author     : 有田明玄
+// Content	(ゲームの設定)(camera.h)
+// Author	: 有田明玄
 //=================================================
-#ifndef _CAMERA_H_		// このマクロ定義がされてなかったら
-#define _CAMERA_H_		// 二重インクルード防止のマクロ定義
+#ifndef _CAMERA_H_	// このマクロ定義がされてなかったら
+#define _CAMERA_H_	// 二重インクルード防止のマクロ定義
 
 class CCamera
 {
@@ -16,14 +16,13 @@ public:
 	~CCamera();
 
 	//プロトタイプ宣言
-	virtual void Init(void);		// 初期化
-	virtual void Uninit(void);		// 終了
-	virtual void Update(void);		// 更新
-	void Set(void);					// 設定
-	void NormalizeRadian(void);		// 角度の正規化
-	//void LeavingCamera(void);		// カメラの放置処理
+	virtual void Init();		// 初期化
+	virtual void Uninit();		// 終了
+	virtual void Update();		// 更新
+	void Set();					// 設定
+	void NormalizeRadian();		// 角度の正規化
 
-	static CCamera* Create(void);	// 生成
+	static CCamera* Create();	// 生成
 
 	void SetPosV(D3DXVECTOR3 posV) { m_posV = posV; };	//視点
 	void SetPosR(D3DXVECTOR3 posR) { m_posR = posR; };	//注視点
