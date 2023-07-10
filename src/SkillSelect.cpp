@@ -20,10 +20,13 @@
 #include"Light.h"
 #include"Bg.h"
 
+#include "Object3D.h"
+
 //====================================
 // 定数
 //====================================
 int CSkillSelect::m_nSkill[MAX_PLAYER] = {};
+int CSkillSelect::m_inputNumber[MAX_PLAYER] = {};
 
 //====================================
 //コンストラクタ
@@ -44,9 +47,10 @@ CSkillSelect::~CSkillSelect()
 //====================================
 HRESULT CSkillSelect::Init()
 {
-	for (int i = 0; i < 4; i++)
 	{
-		m_inputNumber[i] = 99;		// 絶対に有り得ない数字を代入
+		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, 0.0f, 500.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
+		pori->SetTextureKey("TEST_FLOOR");
+		pori->SetRot(D3DXVECTOR3(-1.5f,0.0f,0.0f));
 	}
 
 	//カメラの設定
@@ -61,9 +65,10 @@ HRESULT CSkillSelect::Init()
 	//初期化
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{
+		m_inputNumber[nCnt] = 99;		// 絶対に有り得ない数字を代入
 		m_nSkill[nCnt] = 1;
 		m_pObj2D[nCnt] = CObject2D::Create(D3DXVECTOR3(200.0f + (300.0f * nCnt), 600.0f, 0.0f), D3DXVECTOR2(150.0f, 80.0f), 5);
-		m_pPlayer[nCnt] = CPlayer::Create(D3DXVECTOR3(-(130.0f*1.5f) + (150.0f * nCnt), 250.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		m_pPlayer[nCnt] = CPlayer::Create(D3DXVECTOR3(-(130.0f * 1.5f) + (150.0f * nCnt), 250.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	}
 
 	//背景
@@ -233,6 +238,7 @@ void CSkillSelect::Entry()
 	CInput* pInput = CInput::GetKey();
 	std::vector<int> inputNumber = pInput->TriggerDevice(KEY_UP);
 
+	// 入力デバイスが設定したデバイスか否か検出。既に設定されていたらコンテナから削除
 	for (auto it = inputNumber.begin(); it != inputNumber.end();)
 	{
 		bool isErase = false;
@@ -258,6 +264,7 @@ void CSkillSelect::Entry()
 		}
 	}
 
+	// 値を代入。
 	for (size_t i = 0; i < inputNumber.size(); i++)
 	{
 		for (int j = 0; j < 4; j++)
@@ -270,5 +277,5 @@ void CSkillSelect::Entry()
 		}
 	}
 
-	CDebugProc::Print("Number : %d %d %d %d", m_inputNumber[0], m_inputNumber[1], m_inputNumber[2], m_inputNumber[3]);
+	CDebugProc::Print("\nNumber : %d %d %d %d", m_inputNumber[0], m_inputNumber[1], m_inputNumber[2], m_inputNumber[3]);
 }

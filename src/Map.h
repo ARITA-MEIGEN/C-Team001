@@ -38,6 +38,8 @@ public:
 		STAGE_01=0,
 		STAGE_02,
 		STAGE_03,
+		STAGE_04,
+		STAGE_05,
 		STAGE_MAX
 	};
 
