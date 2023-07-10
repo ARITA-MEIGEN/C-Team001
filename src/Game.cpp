@@ -73,8 +73,6 @@ CGame::~CGame()
 //====================================
 HRESULT CGame::Init()
 {
-	CObjectXOriginalList::GetInstance()->LoadAll();
-
 	//ƒJƒƒ‰‚Ìİ’è
 	m_pCamera = CCameraGame::Create();
 

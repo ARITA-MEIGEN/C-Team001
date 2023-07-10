@@ -96,7 +96,7 @@ CBlock* CBlock::Create(D3DXVECTOR3 pos)
 	if (pBlock != nullptr)
 	{
 		pBlock->Init();
-		pBlock->BindModel(CObjectXOriginalList::GetInstance()->Load("BLOCK", "data/MODEL/box.x"));
+		pBlock->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("BOX"));
 		pBlock->SetPos(pos);
 		pBlock->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
