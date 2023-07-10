@@ -43,6 +43,17 @@ CMap* CGame::m_pMap = nullptr;
 CStatusUI* CGame::m_apStatusUI[MAX_PLAYER] = {};
 
 //====================================
+// ステートマシンの宣言
+//====================================
+const CGame::UPDATE_FUNC CGame::m_UpdateFunc[] =
+{
+	static_cast<void(CGame::*)()>(&(Update_FadeNow)),
+	static_cast<void(CGame::*)()>(&(Update_CountDown)),
+	static_cast<void(CGame::*)()>(&(Update_GamePlay)),
+	static_cast<void(CGame::*)()>(&(Update_GameEnd)),
+};
+
+//====================================
 //コンストラクタ
 //====================================
 CGame::CGame()
@@ -62,8 +73,6 @@ CGame::~CGame()
 //====================================
 HRESULT CGame::Init()
 {
-	CObjectXOriginalList::GetInstance()->LoadAll();
-
 	//カメラの設定
 	m_pCamera = CCameraGame::Create();
 
@@ -120,6 +129,9 @@ HRESULT CGame::Init()
 		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
 		pori->SetTextureKey("TEST_FLOOR");
 	}
+
+	m_funcUpdate = m_UpdateFunc;
+	SetUpdate(UPDATE_FADENOW);
 
 	return S_OK;
 }
@@ -180,43 +192,71 @@ void CGame::Update()
 	m_pCamera->Update();
 	m_pLight->Update();
 
-	m_pMap->Update();
-
-	for (int i = 0; i < MAX_PLAYER; i++)
-	{//ステータス表示
-		if (m_apStatusUI[i] == nullptr)
-		{//NULLチェック
-			continue;
-		}
-
-		/* nullptrではない場合 */
-
-		m_apStatusUI[i]->Update();
-	}
-
-	CInput* pInput = CInput::GetKey();
-	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
-	{
-		m_pTimer->Update();
-
-		if (m_pTimer->GetTimer() <= 0)
-		{
-			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
-			m_pMap->Ranking();
-		}
+	// 更新処理
+	assert((m_stateNow >= 0) && (m_stateNow < UPDATE_MAX));
+	(this->*(m_funcUpdate[m_stateNow]))();
 
 #ifdef _DEBUG
-		//指定のキーが押されたかどうか
-		if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
+
+	// 遷移デバッグ
+	{
+		CFade* fade = CApplication::getInstance()->GetFade();
+		if (fade->GetFade() == CFade::FADE_NONE)
 		{
+			CInput* pInput = CInput::GetKey();
+
 			if (pInput->Trigger(DIK_RETURN))
 			{
-				CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
+				fade->SetFade(CApplication::MODE_RESULT);
 				m_pMap->Ranking();
 			}
 		}
-#endif // !_DEBUG
 	}
+#endif // !_DEBUG
+}
+
+
+//====================================
+// フェード中何も処理を通さない
+//====================================
+void CGame::Update_FadeNow()
+{
+	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
+	{
+		SetUpdate(UPDATE_COUNTDOWN);
+	}
+}
+
+//====================================
+// カウントダウン中
+//====================================
+void CGame::Update_CountDown()
+{
+	SetUpdate(UPDATE_GAME_PLAY);
+}
+
+//====================================
+// ゲーム本編
+//====================================
+void CGame::Update_GamePlay()
+{
+	m_pMap->Update();
+
+	m_pTimer->Update();
+
+	if (m_pTimer->GetTimer() <= 0)
+	{
+		SetUpdate(UPDATE_GAME_END);
+	}
+}
+
+//====================================
+// ゲームエンド時
+//====================================
+void CGame::Update_GameEnd()
+{
+	CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
+	m_pMap->Ranking();
 }
 
 //====================================
@@ -225,18 +265,6 @@ void CGame::Update()
 void CGame::Draw()
 {
 	m_pCamera->Set();
-
-	for (int i = 0; i < MAX_PLAYER; i++)
-	{//ステータス表示
-		if (m_apStatusUI[i] == nullptr)
-		{//NULLチェック
-			continue;
-		}
-
-		/* nullptrではない場合 */
-
-		m_apStatusUI[i]->Draw();
-	}
 }
 
 //====================================
