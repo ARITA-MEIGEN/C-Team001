@@ -17,11 +17,8 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CTeleport::CTeleport(int priorty)
+CTeleport::CTeleport(int priorty) : CBlock(priorty)
 {
-	m_number = 0;
-	m_isStop = false;
-	m_onPlayer = nullptr;
 }
 
 //=============================================================================
@@ -38,7 +35,6 @@ CTeleport::~CTeleport()
 HRESULT  CTeleport::Init()
 {
 	CBlock::Init();
-	m_number = -1;
 
 	return S_OK;
 }
@@ -115,10 +111,10 @@ CTeleport* CTeleport::Create(D3DXVECTOR3 pos, int nNumber)
 //=============================================================================
 void CTeleport::TeleportPlayerNumber(int number)
 {
-	if (m_isStop)
+	if (IsStop())
 	{
 		return;
 	}
 
-	m_number = number;
+	SetNumber(number);
 }

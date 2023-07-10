@@ -35,22 +35,11 @@ public:
 
 	// Setter
 	void TeleportPlayerNumber(int number);
-	void SetStop(const bool isStop) { m_isStop = isStop; }
-	void SetOnPlayer(CPlayer* onPlayer) { m_onPlayer = onPlayer; }
-
-	// Getter
-	int GetNumber() { return m_number; };
-	bool IsStop() { return m_isStop; };
-
-	CPlayer* GetOnPlayer() { return m_onPlayer; };
 
 private:
 	//メンバ変数
-	int m_number;			// プレイヤーの番号
 	int m_nTeleportNmber;	// テレポーターの番号
 	bool m_bTeleport;		// テレポートしたかどうか
-	bool m_isStop;			// 進行不可
-	CPlayer* m_onPlayer;	// 乗ってるプレイヤー
 };
 
 #endif
