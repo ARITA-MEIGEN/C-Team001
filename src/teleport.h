@@ -42,7 +42,7 @@ public:
 	int GetNumber() { return m_number; };
 	bool IsStop() { return m_isStop; };
 
-	CPlayer* GetOnPlayer() { return m_onPlayer; };
+	//CPlayer* GetOnPlayer() { return m_onPlayer; };
 
 private:
 	//ƒƒ“ƒo•Ï”
