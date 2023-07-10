@@ -40,8 +40,7 @@ public: /* コンストラクタ・デストラクタ */
 public: /* オーバーライド関数 */
 	HRESULT Init() override;	//初期化
 	void Uninit() override;		//終了
-	void Update() override;		//更新
-	void Draw() override;		//描画
+	void Draw() {};		//描画
 
 	void SetPos(const D3DXVECTOR3& inPos);
 private: /* メンバ関数 */

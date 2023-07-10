@@ -12,6 +12,7 @@
 #include "Item.h"
 #include "Game.h"
 #include "Map.h"
+#include "Player.h"
 
 //=============================================================================
 // コンストラクタ
@@ -36,7 +37,7 @@ CTeleport::~CTeleport()
 //=============================================================================
 HRESULT  CTeleport::Init()
 {
-	CObjectX::Init();
+	CBlock::Init();
 	m_number = -1;
 
 	return S_OK;
@@ -47,7 +48,7 @@ HRESULT  CTeleport::Init()
 //=============================================================================
 void  CTeleport::Uninit()
 {
-	CObjectX::Uninit();
+	CBlock::Uninit();
 }
 
 //=============================================================================
@@ -56,6 +57,29 @@ void  CTeleport::Uninit()
 void  CTeleport::Update()
 {
 	CObjectX::Update();
+
+	if (CGame::GetMap() != nullptr)
+	{
+		for (int i = 0; i < CGame::GetMap()->GetBlockCount(); i++)
+		{
+			CBlock* pBlock = CGame::GetMap()->GetBlock(i);
+			CPlayer* pPlayer = pBlock->GetOnPlayer();
+
+			if (pPlayer != nullptr && pBlock != nullptr)
+			{
+				if (pBlock->GetTeleport() && pBlock != this && pBlock->GetOnPlayer() && !pPlayer->GetTeleport())
+				{//テレポーターブロックにテレポートしていないプレイヤーが乗ったら
+					pPlayer->SetPos(this->GetPos());
+					pPlayer->SetTeleport(true);
+					pPlayer->SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
+				}
+				if(!pBlock->GetTeleport() && pBlock->GetOnPlayer() && pPlayer->GetTeleport())
+				{//普通のブロックにテレポートした後のプレイヤーが乗ったら
+					pPlayer->SetTeleport(false);
+				}
+			}
+		}
+	}
 }
 
 //=============================================================================
@@ -64,7 +88,7 @@ void  CTeleport::Update()
 void  CTeleport::Draw()
 {
 	//デバイスの取得
-	CObjectX::Draw();
+	CBlock::Draw();
 }
 
 //=============================================================================
@@ -82,14 +106,6 @@ CTeleport* CTeleport::Create(D3DXVECTOR3 pos, int nNumber)
 		pTeleport->SetPos(pos);
 		pTeleport->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		pTeleport->m_nTeleportNmber = nNumber;
-
-		//for (int i = 0; i < CGame::GetMap()->GetBlockCount(); i++)
-		//{
-		//	CBlock* pBlock = CGame::GetMap()->GetBlock(i);
-
-		//	
-		//}
-
 	}
 	return pTeleport;
 }

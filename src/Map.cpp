@@ -14,13 +14,14 @@
 #include "Item_Speed.h"
 #include "Item_Paint.h"
 #include "area.h"
-#include "future_block.h"
+#include "go_future_block.h"
+#include "come_future_block.h"
 #include "teleport.h"
 
 //-----------------------------------------------------------------------------
 // 静的メンバー変数の宣言
 //-----------------------------------------------------------------------------
-const float CMap::BLOCK_WIDTH = 30.0f;	// ブロック同士の幅
+const float CMap::BLOCK_WIDTH = 25.0f;	// ブロック同士の幅
 int CMap::m_anRanking[MAX_PLAYER];	//	ランキング順位
 
 //=============================================================================
@@ -43,8 +44,13 @@ CMap::~CMap()
 //=============================================================================
 HRESULT CMap::Init()
 {
+	m_itemPopRandMinTime = 120;
+	m_itemPopRandMaxTime = 190;
+	m_nItemPopCount = IntRandom(m_itemPopRandMaxTime, m_itemPopRandMinTime);
 
-	m_nItemPopCount = IntRandom(2 * 60, 1 * 60);
+	m_areaPopRandMinTime = 60;
+	m_areaPopRandMaxTime = 180;
+	m_nAreaPopCount = IntRandom(m_areaPopRandMaxTime, m_areaPopRandMinTime);
 	return S_OK;
 }
 
@@ -74,13 +80,16 @@ void CMap::Update()
 //=============================================================================
 CMap * CMap::Create(int stgnumber)
 {
-	CMap*pMap = new CMap();
+	CMap* pMap = new CMap;
 
 	if (pMap!=nullptr)
 	{
-		pMap->m_StageNumber = (STAGE)stgnumber;		//読み込むマップの番号を決める
-		pMap->Load();								//マップの読み込み
-		pMap->Init();								//初期化
+		if (stgnumber != -1)
+		{
+			pMap->m_StageNumber = (STAGE)stgnumber;		//読み込むマップの番号を決める
+		}
+		pMap->Load();		//マップの読み込み
+		pMap->Init();		//初期化
 	}
 	return pMap;
 }
@@ -93,7 +102,7 @@ void CMap::Load()
 	using json = nlohmann::json;
 
 	//m_StageNumberの値に応じて読み込むマップを変える
-	std::string path = "data/FILE//MAP/map0";
+	std::string path = "data/FILE//MAP/map";
 	std::string str = std::to_string((m_StageNumber + 1));
 	path = path + str + ".json";
 	json map = LoadJson(path);
@@ -109,23 +118,26 @@ void CMap::Load()
 		{
 			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH;
 			float x = j * BLOCK_WIDTH - map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
+			D3DXVECTOR3 createPos(x, 0.0f, z);
+
+			CBlock* blockCreate = nullptr;
 
 			switch ((int)map["MAP"][i][j])
 			{
 			case -1:
-				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z));
-				m_pBlock[i * map["MAP"][i].size() + j]->SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-				m_pBlock[i * map["MAP"][i].size() + j]->SetStop(true);
+				blockCreate = CBlock::Create(createPos);
+				blockCreate->SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
+				blockCreate->SetStop(true);
 				break;
 			case 0:
-				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z));
+				blockCreate = CBlock::Create(createPos);
 				break;
 			case 1:
 			case 2:
 			case 3:
 			case 4:
 			{
-				m_pBlock[i * map["MAP"][i].size() + j] = CBlock::Create(D3DXVECTOR3(x, 0.0f, z));
+				blockCreate = CBlock::Create(createPos);
 				D3DXVECTOR2 idx;
 				idx.x = (float)j;
 				idx.y = (float)i;
@@ -133,11 +145,14 @@ void CMap::Load()
 			}
 				break;
 			case 5:
-				m_pBlock[i * map["MAP"][i].size() + j] = CTeleport::Create(D3DXVECTOR3(x, 0.0f, z), 5);
+				blockCreate = CTeleport::Create(createPos, 5);
+				blockCreate->SetTeleport(true);
 				break;
 			default:
 				break;
 			}
+
+			m_pBlock[i * map["MAP"][i].size() + j] = blockCreate;
 		}
 	}
 }
@@ -190,7 +205,7 @@ void CMap::Ranking()
 }
 
 //=============================================================================
-// 読み込み
+// プレイヤーが塗ったブロックの数を数える
 //=============================================================================
 int CMap::GetCountBlockType(int nType)
 {
@@ -228,13 +243,12 @@ void CMap::PopItem()
 
 	CBlock* popPlanBlock = m_pBlock[IntRandom(m_pBlock.size() - 1, 0)];
 
-	if (popPlanBlock->IsStop())
+	if (popPlanBlock->IsStop() || popPlanBlock->GetTeleport())
 	{
 		return;
 	}
 
 	/* ↓ランダム指定のブロックが侵入不可ブロックではない↓ */
-
 
 	if (popPlanBlock->GetOnItem() != nullptr)
 	{
@@ -246,18 +260,21 @@ void CMap::PopItem()
 	D3DXVECTOR3 pos = popPlanBlock->GetPos();
 	pos.y += 30.0f;
 
+	D3DXVECTOR3 size(35.0f, 0.0f, 35.0f);
+	D3DXVECTOR3 rot(-D3DX_PI * 0.5f, 0.0f, 0.0f);
+
 	//アイテムの生成
 	CItem* popItem = nullptr;
 
-	int random = IntRandom(0, 2);
+	int random = IntRandom(2, 1);
 
 	switch (random)
 	{
 	case 1:
-		popItem = CPaint::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300);
+		popItem = CPaint::Create(pos, size, rot, 300);
 		break;
 	case 2:
-		popItem = CSpeed::Create(pos, D3DXVECTOR3(35.0f, 0.0f, 35.0f), D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f), 300);
+		popItem = CSpeed::Create(pos, size, rot, 300);
 		break;
 	default:
 		break;
@@ -266,7 +283,7 @@ void CMap::PopItem()
 	popPlanBlock->SetOnItem(popItem);
 
 	// 次回出現時間の設定
-	m_nItemPopCount = IntRandom(60, 180);
+	m_nItemPopCount = IntRandom(m_itemPopRandMaxTime, m_itemPopRandMinTime);
 }
 
 //=============================================================================
@@ -300,10 +317,10 @@ void CMap::PopFutureArea()
 
 	D3DXVECTOR2 popBlockIndex = GetBlockIdx(popPlanBlock);
 
-	int range = 1;
+	int range = 3;
 
 	//エリアの生成
-	CArea* area = CArea::Create(popBlockIndex, range,60,40);
+	CArea* area = CArea::Create(popBlockIndex, range,60,180);
 
 	area->CreateWall(GetBlock(popBlockIndex.x, popBlockIndex.y)->GetPos());
 
@@ -325,7 +342,7 @@ void CMap::PopFutureArea()
 
 				if (block->GetNumber() != -1)
 				{
-					CFutureBlock* futureBlock = CFutureBlock::Create(block->GetPos());
+					CGoFutureBlock* futureBlock = CGoFutureBlock::Create(block->GetPos());
 					futureBlock->SetCol(block->GetCol());
 				}
 
@@ -366,13 +383,19 @@ void CMap::PopFutureArea()
 		for (int i = 0; i < size; i++)
 		{
 			areaBlock[i]->SetPlayerNumber(BlockIndex[areaBlock[i]]);
+
+			if (areaBlock[i]->GetNumber() != -1)
+			{
+				CComeFutureBlock* futureBlock = CComeFutureBlock::Create(areaBlock[i]->GetPos());
+				futureBlock->SetCol(areaBlock[i]->GetCol());
+			}
 		}
 	};
 
 	area->SetFunctionAtDied(atDead);
 
 	// 次回出現時間の設定
-	m_nAreaPopCount = IntRandom(60, 180);
+	m_nAreaPopCount = IntRandom(m_areaPopRandMaxTime, m_areaPopRandMinTime);
 
 }
 

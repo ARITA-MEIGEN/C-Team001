@@ -169,6 +169,7 @@
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CameraGame.cpp" />
+    <ClCompile Include="src\come_future_block.cpp" />
     <ClCompile Include="src\computerController.cpp" />
     <ClCompile Include="src\Controller.cpp" />
     <ClCompile Include="src\DebugProc.cpp" />
@@ -176,7 +177,7 @@
     <ClCompile Include="src\Fade.cpp" />
     <ClCompile Include="src\File.cpp" />
     <ClCompile Include="src\Floor.cpp" />
-    <ClCompile Include="src\future_block.cpp" />
+    <ClCompile Include="src\go_future_block.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\input\DirectInput.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="src\Block.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CameraGame.h" />
+    <ClInclude Include="src\come_future_block.h" />
     <ClInclude Include="src\Command.h" />
     <ClInclude Include="src\computerController.h" />
     <ClInclude Include="src\Controller.h" />
@@ -238,7 +240,7 @@
     <ClInclude Include="src\Fade.h" />
     <ClInclude Include="src\File.h" />
     <ClInclude Include="src\Floor.h" />
-    <ClInclude Include="src\future_block.h" />
+    <ClInclude Include="src\go_future_block.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\input\DirectInput.h" />

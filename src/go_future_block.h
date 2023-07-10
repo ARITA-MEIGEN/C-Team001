@@ -4,8 +4,8 @@
 // Author:arita meigen
 //
 //=============================================================================
-#ifndef _FUTURE_BLOCK_H_			// このマクロ定義がされてなかったら
-#define _FUTURE_BLOCK_H_			// 二重インクルード防止のマクロ定義
+#ifndef _GO_FUTURE_BLOCK_H_			// このマクロ定義がされてなかったら
+#define _GO_FUTURE_BLOCK_H_			// 二重インクルード防止のマクロ定義
 
 //-----------------------------------------------------------------------------
 // include
@@ -15,18 +15,18 @@
 //=============================================================================
 // 構造体定義
 //=============================================================================
-class CFutureBlock : public CObjectX
+class CGoFutureBlock : public CObjectX
 {
 private:
 	static const float SINK_LIMIT;	// 沈む制限
 	static const float UP_POWER;	// 沈む制限
 public:
-	explicit CFutureBlock(int nPriority = 2);
-	~CFutureBlock() override;
+	explicit CGoFutureBlock(int nPriority = 2);
+	~CGoFutureBlock() override;
 	HRESULT Init() override;
 	void Uninit() override;
 	void Update() override;
-	static CFutureBlock *Create(D3DXVECTOR3 pos);
+	static CGoFutureBlock *Create(D3DXVECTOR3 pos);
 
 	// Setter
 	void SetPlayerNumber(int number);

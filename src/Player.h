@@ -34,19 +34,6 @@ private:
 	static const float SKILL_BUFF_TIME;	// バフの効果時間(Lv1基準)
 
 public:
-
-	enum PLAYER_MOTION
-	{
-		//地上
-		PM_NEUTRAL,		// ニュートラル
-		PM_WALK,			// 移動(しゃがみだけ無し)
-		PM_STAN,			// 移動(しゃがみだけ無し)
-		PM_WIN,			// 移動(しゃがみだけ無し)
-		PM_LOSE,			// 移動(しゃがみだけ無し)
-		PM_SELECT,
-		PM_MAX
-	};
-
 	enum PLAYER_STATE
 	{
 		PST_STAND,		// 立ち
@@ -76,6 +63,20 @@ private:
 		STATE_INVALID = -1,
 	};
 
+	enum PLAYER_MOTION
+	{
+		//地上
+		PM_NEUTRAL,		// ニュートラル
+		PM_WALK,		// 移動
+		PM_STAN,		// スタン
+		PM_WIN,			// 勝利
+		PM_LOSE,		// 敗北
+		PM_SELECT,		// スキル選択
+		PM_MAX,	
+		PM_INVALID = -1
+	};
+
+
 public:
 	explicit CPlayer(int nPriority = 3);
 	~CPlayer();
@@ -95,9 +96,12 @@ public:
 
 	// Setter
 	void SetController(CController* inOperate);
-	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; };				// 位置の設定
-	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };				// 向きの設定
-	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }	// スキルゲージの量の設定
+	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; };					// 位置の設定
+	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };					// 向きの設定
+	void SetMove(D3DXVECTOR3 move) { m_move = move; };					// 向きの設定
+	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }		// スキルゲージの量の設定
+	void SetTeleport(bool bTeleport) { m_bTeleport = bTeleport; }
+	void SetResultMotion(int Rank);								// リザルト時のモーション再生
 
 	// Getter
 	D3DXVECTOR3		GetPos() { return m_pos; };
@@ -105,6 +109,7 @@ public:
 	D3DXMATRIX		GetMtx() { return m_mtxWorld; };				//マトリックスの取得
 	float			GetSkillGauge() { return m_fSkillGauge; }		//スキルゲージの量の取得
 	int				GetPlayerNumber() { return m_nPlayerNumber; }	//プレイヤーの番号の取得
+	bool			GetTeleport() { return m_bTeleport; }
 
 private:
 	void Updatepos();			// 座標の更新
@@ -135,6 +140,7 @@ private:	// メンバー変数
 	int				m_nItemBuffTime;		// アイテム強化効果時間
 	int				m_nStunTime;			// スタン(操作不可能)時間
 	bool			m_bKnockBack;			// ノックバックしているかどうか
+	bool			m_bTeleport;			// テレポートしたかどうか
 	PLAYER_STATE	m_State;				// プレイヤーの状態
 	ITEM_STATE		m_ItemState;			// アイテムの状態
 	CShadow*		m_pShadow;				// 影

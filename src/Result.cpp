@@ -77,7 +77,7 @@ HRESULT CResult::Init()
 		m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 	
 		//プレイヤー生成
-		m_pPlayer[i] = CPlayer::Create({ -(PLAYER_WIDTH*1.5f) + (PLAYER_WIDTH * i),0.0f,0.0f }, D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		m_pPlayer[i] = CPlayer::Create({ -(PLAYER_WIDTH*1.5f) + (PLAYER_WIDTH * i),0.0f,0.0f }, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 		//土台生成
 		m_pCylinder[i]= CObjectX::Create();
@@ -133,7 +133,6 @@ void CResult::Update()
 		}
 	}
 
-
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{
 		if (m_pCylinder[i]->GetPos().y < TOP_HEIGHT - CMap::GetRanking(i) * PLAYER_HEIGHT)//高さ
@@ -145,6 +144,7 @@ void CResult::Update()
 		{//順位表示
 			m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH / 2 - (RANK_WIDTH * 1.5f) + RANK_WIDTH * i, 150.0f + CMap::GetRanking(i) * 80.0f, 0.0f));
 			m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pPlayer[i]->SetResultMotion(CMap::GetRanking(i));
 		}
 	}
 

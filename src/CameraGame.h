@@ -21,7 +21,6 @@ public:
 	//プロトタイプ宣言
 	void Init() override;		// 初期化
 	void Update() override;		// 更新
-	void Set();					// 設定
 
 	static CCameraGame* Create();	// 生成
 

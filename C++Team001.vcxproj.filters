@@ -192,11 +192,20 @@
     <ClCompile Include="src\ObjectXOriginalList.cpp">
       <Filter>ソース ファイル\07_Object</Filter>
     </ClCompile>
-    <ClCompile Include="src\future_block.cpp">
-      <Filter>ソース ファイル\05_Map</Filter>
-    </ClCompile>
     <ClCompile Include="src\Bg.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Controller.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerController.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\go_future_block.cpp">
+      <Filter>ソース ファイル\05_Map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\come_future_block.cpp">
+      <Filter>ソース ファイル\05_Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -341,9 +350,6 @@
     <ClInclude Include="src\MapSelect.h">
       <Filter>ソース ファイル\01_Mode</Filter>
     </ClInclude>
-    <ClInclude Include="src\computerController.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\StatusUI.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
@@ -368,11 +374,17 @@
     <ClInclude Include="src\ObjectXOriginalList.h">
       <Filter>ソース ファイル\07_Object</Filter>
     </ClInclude>
-    <ClInclude Include="src\future_block.h">
+    <ClInclude Include="src\Bg.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\computerController.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\go_future_block.h">
       <Filter>ソース ファイル\05_Map</Filter>
     </ClInclude>
-    <ClInclude Include="src\Bg.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="src\come_future_block.h">
+      <Filter>ソース ファイル\05_Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
