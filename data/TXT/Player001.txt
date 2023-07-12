@@ -14,7 +14,7 @@ NUM_MODEL = 11
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data\MODEL\Player\plend.x		# 体
+MODEL_FILENAME = data\MODEL\Player\Body.x		# 体
 MODEL_FILENAME = data\MODEL\Player\Head.x		# 頭
 MODEL_FILENAME = data\MODEL\Player\Waist.x		# 腰
 MODEL_FILENAME = data\MODEL\Player\UpperArmR.x	# 右腕
@@ -38,77 +38,77 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 0					# 体
 		PARENT = -1					# (親)NULL
-		POS = 0.0 26.4 0.0
+		POS = 0.0 52.5 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 1					# 頭
 		PARENT = 0					# (親)体
-		POS = 0.0 9.6 0.0
+		POS = 0.0 15.2 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 	
 	PARTSSET
 		INDEX = 2					# 腰
 		PARENT = 0					# (親)体
-		POS = 0.0 -8.04 0.0
+		POS = 0.0 -18.9 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 3					# 右腕
 		PARENT = 0					# (親)体
-		POS = -6.6 6.36 0.0
+		POS = -13.1 9.3 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 	
 	PARTSSET
 		INDEX = 4					# 右腕
 		PARENT = 3					# (親)体
-		POS = -3.0 -8.76 0.0
+		POS = -5.8 -19.4 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 5					# 右手
 		PARENT = 4					# (親)右腕
-		POS = -0.48 -7.44 0.0
+		POS = -0.60 -13.7 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 6					# 左腕
 		PARENT = 0					# (親)体
-		POS = 6.6 6.36 0.0
+		POS = 13.1 9.3 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 7					# 左腕
 		PARENT = 6					# (親)二の腕
-		POS = 3.0 -8.76 0.0
+		POS = 5.8 -19.4 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 8					# 左手
 		PARENT = 7					# (親)左腕
-		POS = 0.48 -7.44 0.0
+		POS = 0.60 -13.7 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 9					# 右足
 		PARENT = 2					# (親)腰
-		POS = -3.0 -3.0 0.0
+		POS = -6.0 -5.3 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 10					# 左足
 		PARENT = 2					# (親)腰
-		POS = 3.0 -3.0 0.0
+		POS = 6.0 -5.3 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 END_CHARACTERSET
