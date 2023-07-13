@@ -21,6 +21,7 @@ CObject3D::CObject3D(int nPriority) :CObject(nPriority)
 {
 	m_pVtxBuff = nullptr;							// ポリゴンの頂点バッファ
 	m_isBackCulling = false;
+	m_isBillboard = false;
 	m_fLength = 0.0f;								// 対角線の長さ
 	m_fAngle = 0.0f;								// 対角線の角度
 	m_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 位置を初期化する
@@ -157,6 +158,16 @@ void  CObject3D::Draw()
 
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
+
+	if (m_isBillboard)
+	{
+		D3DXMATRIX mtxView;
+		pDevice->GetTransform(D3DTS_VIEW, &mtxView);
+
+		m_mtxWorld._11 = mtxView._11;
+		m_mtxWorld._12 = mtxView._21;
+		m_mtxWorld._13 = mtxView._31;
+	}
 
 	//向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot,m_Rot.y, m_Rot.x, m_Rot.z);

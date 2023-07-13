@@ -202,12 +202,13 @@ void CPlayer::Update(void)
 	if (m_nStunTime <= 0)
 	{
 		m_nStunTime = 0;
+		m_bKnockBack = false;
 		// 移動
 		Move();
+		// 回転
+		TurnLookAtMoveing();
 	}
 
-	// 回転
-	TurnLookAtMoveing();
 
 	Normalization();		// 角度の正規化
 
@@ -335,12 +336,13 @@ void CPlayer::Move()
 		return;
 	}
 
-	if (D3DXVec3Length(&m_controller->Move()) == 0.0f)
-	{
-		//	return;
-	}
-
+	// 移動量
 	D3DXVECTOR3 move = m_controller->Move();
+
+	if (D3DXVec3Length(&move) == 0.0f)
+	{
+		return;
+	}
 
 	// 斜め入力があった場合
 	if (move.z != 0.0f && move.x != 0.0)
@@ -367,39 +369,94 @@ void CPlayer::Move()
 		m_Motion = PM_WALK;
 		m_motion->SetNumMotion(m_Motion);
 	}
-	else if (move.x == 0.0f && move.z == 0.0f&&m_Motion != PM_NEUTRAL)
+	else if (move.x == 0.0f && move.z == 0.0f && m_Motion != PM_NEUTRAL)
 	{
 		m_Motion = PM_NEUTRAL;
 		m_motion->SetNumMotion(m_Motion);
 	}
 
-
 	D3DXVec3Normalize(&m_movePlanVec, &move);	// 入力ベクトルを用意する
 }
 
 //-----------------------------------------------------------------------------
-// コントローラーの設定
+// 移動方向を見て曲がる
 //-----------------------------------------------------------------------------
-void CPlayer::SetController(CController * inOperate)
+void CPlayer::TurnLookAtMoveing()
 {
-	m_controller = inOperate;
-	m_controller->SetToOrder(this);
+	if (m_moveVec.z > 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
+	}
+	else if (m_moveVec.z < 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	}
+
+	if (m_moveVec.x > 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.5f, 0.0f));
+	}
+	else if (m_moveVec.x < 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+	}
 }
 
 //-----------------------------------------------------------------------------
-// リザルト時のモーション再生
+// ブロックがない場所で停まる
 //-----------------------------------------------------------------------------
-void CPlayer::SetResultMotion(int Rank)
+void CPlayer::StopNoBlock()
 {
-	if (Rank == 0 && m_Motion != PM_WIN)
-	{//一位の時
-		m_Motion = PM_WIN;						//勝利モーション再生
-		m_motion->SetNumMotion(m_Motion);
+	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+	D3DXVECTOR2 moveNowVec;
+
+	moveNowVec.x = m_movePlanVec.x;
+	moveNowVec.y = -m_movePlanVec.z;
+
+	D3DXVec2Normalize(&moveNowVec, &moveNowVec);
+
+	CDebugProc::Print("moveNowVec : %.1f,%.1f\n", moveNowVec.x, moveNowVec.y);
+
+	BlockIdx += moveNowVec;
+
+	CDebugProc::Print("BlockIdx : %.1f,%.1f\n", BlockIdx.x, BlockIdx.y);
+
+	CBlock* moveBlock = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);	// 進行方向にあるブロック
+
+	if (moveBlock->IsStop())
+	{
+		m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 停止
 	}
-	else if (Rank != 0&&m_Motion != PM_LOSE)
-	{//それ以外
-		m_Motion = PM_LOSE;						//敗北モーション再生
-		m_motion->SetNumMotion(m_Motion);
+}
+
+//-----------------------------------------------------------------------------
+// ブロックの中心付近で曲がる
+//-----------------------------------------------------------------------------
+void CPlayer::TurnCenterBlock()
+{
+	bool XMin = m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f);
+	bool XMax = m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f);
+	bool ZMin = m_pos.z <= m_pOnBlock->GetPos().z + (m_pOnBlock->GetSize().z * 0.05f);
+	bool ZMax = m_pos.z >= m_pOnBlock->GetPos().z - (m_pOnBlock->GetSize().z * 0.05f);
+
+	// ブロック内に収まっているか
+	if (XMin && XMax && ZMin && ZMax)
+	{
+		// 方向ベクトル掛ける移動量
+		D3DXVec3Normalize(&m_movePlanVec, &m_movePlanVec);
+		m_move = m_movePlanVec * PLAYER_SPEED;
+
+		if (m_State == PST_SPEED || m_ItemState == ITEM_SPEED)
+		{
+			m_move *= ADD_SPEED;
+		}
+
+		if (m_bKnockBack)
+		{
+			//m_move *= 2.0f;
+		}
+
+		D3DXVec3Normalize(&m_moveVec, &m_move);
 	}
 }
 
@@ -408,6 +465,12 @@ void CPlayer::SetResultMotion(int Rank)
 //-----------------------------------------------------------------------------
 void CPlayer::Skill()
 {
+	//最大値を超えたら最大値にする
+	if (m_fSkillGauge >= MAX_GAUGE)
+	{
+		m_fSkillGauge = MAX_GAUGE;
+	}
+
 	// スキル処理
 	assert((m_skillStateNow >= 0) && (m_skillStateNow < SKILL_MAX));
 	(this->*(m_funcSkill[m_skillStateNow]))();
@@ -461,10 +524,8 @@ void CPlayer::Skill_Idel()
 
 	/* ↓スキルレベルが設定されてる↓ */
 
-	CInput* pInput = CInput::GetKey();	//インプットの取得
-
 	//現在のスキルLvによって効果量を変える
-	if (m_controller->Skill() || pInput->Trigger(JOYPAD_Y,m_nPlayerNumber) || pInput->Trigger(JOYPAD_X, m_nPlayerNumber))
+	if (m_controller->Skill())
 	{
 		SetSkill(m_skill);
 
@@ -618,82 +679,6 @@ void CPlayer::Skill_Knockback()
 }
 
 //-----------------------------------------------------------------------------
-// 移動方向を見て曲がる
-//-----------------------------------------------------------------------------
-void CPlayer::TurnLookAtMoveing()
-{
-	if (m_moveVec.z > 0.0f)
-	{
-		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
-	}
-	if (m_moveVec.z < 0.0f)
-	{
-		SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	}
-	if (m_moveVec.x > 0.0f)
-	{
-		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.5f, 0.0f));
-	}
-	if (m_moveVec.x < 0.0f)
-	{
-		SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-	}
-}
-
-//-----------------------------------------------------------------------------
-// ブロックがない場所で停まる
-//-----------------------------------------------------------------------------
-void CPlayer::StopNoBlock()
-{
-	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-	D3DXVECTOR2 moveNowVec;
-
-	moveNowVec.x = m_movePlanVec.x;
-	moveNowVec.y = -m_movePlanVec.z;
-
-	D3DXVec2Normalize(&moveNowVec, &moveNowVec);
-
-	CDebugProc::Print("moveNowVec : %.1f,%.1f\n", moveNowVec.x, moveNowVec.y);
-
-	BlockIdx += moveNowVec;
-
-	CDebugProc::Print("BlockIdx : %.1f,%.1f\n", BlockIdx.x, BlockIdx.y);
-
-	CBlock* moveBlock = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);	// 進行方向にあるブロック
-
-	if (moveBlock->IsStop())
-	{
-		m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 停止
-	}
-}
-
-//-----------------------------------------------------------------------------
-// ブロックの中心付近で曲がる
-//-----------------------------------------------------------------------------
-void CPlayer::TurnCenterBlock()
-{
-	bool XMin = m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f);
-	bool XMax = m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f);
-	bool ZMin = m_pos.z <= m_pOnBlock->GetPos().z + (m_pOnBlock->GetSize().z * 0.05f);
-	bool ZMax = m_pos.z >= m_pOnBlock->GetPos().z - (m_pOnBlock->GetSize().z * 0.05f);
-
-	// ブロック内に収まっているか
-	if (XMin && XMax && ZMin && ZMax)
-	{
-		 // 方向ベクトル掛ける移動量
-		D3DXVec3Normalize(&m_movePlanVec, &m_movePlanVec);
-		m_move = m_movePlanVec * PLAYER_SPEED;
-
-		if (m_State == PST_SPEED || m_ItemState == ITEM_SPEED)
-		{
-			m_move *= ADD_SPEED;
-		}
-
-		D3DXVec3Normalize(&m_moveVec, &m_move);
-	}
-}
-
-//-----------------------------------------------------------------------------
 // 座標の更新
 //-----------------------------------------------------------------------------
 void CPlayer::Updatepos()
@@ -747,6 +732,7 @@ void CPlayer::BlockCollision()
 			if (m_pOnBlock != nullptr && pBlock != m_pOnBlock)
 			{
 				m_pOnBlock->SetOnPlayer(nullptr);
+				m_pOnBlock->SetStop(false);
 			}
 
 			if (pBlock->GetOnPlayer() != this && pBlock->GetOnPlayer() != nullptr && pBlock->GetOnPlayer() != this)
@@ -757,6 +743,7 @@ void CPlayer::BlockCollision()
 			pBlock->SetOnPlayer(this);					//プレイヤーの
 			pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
 			pBlock->SetSink(2.5f);						// ブロックを沈める
+			pBlock->SetStop(true);					//プレイヤーの
 			m_pOnBlock = pBlock;						//乗っているブロックを設定
 		}
 	}
@@ -780,6 +767,14 @@ void CPlayer::BlockCollision()
 		}
 	}
 
+	TakeItem();
+}
+
+//-----------------------------------------------------------------------------
+// アイテムを拾う処理
+//-----------------------------------------------------------------------------
+void CPlayer::TakeItem()
+{
 	//乗っているブロックの情報を取得
 	CBlock* Block = m_pOnBlock;
 
@@ -804,11 +799,6 @@ void CPlayer::BlockCollision()
 			Block->DeleteItem();
 		}
 	}
-
-	if (m_fSkillGauge >= MAX_GAUGE)
-	{//最大値を超えたら最大値にする
-		m_fSkillGauge = MAX_GAUGE;
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -832,4 +822,34 @@ void CPlayer::KnockBack(CPlayer *pFastPlayer, CPlayer *pLatePlayer)
 	// 触れたプレイヤー同士にスタンを付与
 	pLatePlayer->m_nStunTime = 12;
 	pFastPlayer->m_nStunTime = 12;
+
+	// ノックバック状態を取得
+	pFastPlayer->m_bKnockBack = true;
+	pLatePlayer->m_bKnockBack = true;
+}
+
+//-----------------------------------------------------------------------------
+// コントローラーの設定
+//-----------------------------------------------------------------------------
+void CPlayer::SetController(CController * inOperate)
+{
+	m_controller = inOperate;
+	m_controller->SetToOrder(this);
+}
+
+//-----------------------------------------------------------------------------
+// リザルト時のモーション再生
+//-----------------------------------------------------------------------------
+void CPlayer::SetResultMotion(int Rank)
+{
+	if (Rank == 0 && m_Motion != PM_WIN)
+	{//一位の時
+		m_Motion = PM_WIN;						// 勝利モーション再生
+		m_motion->SetNumMotion(m_Motion);
+	}
+	else if (Rank != 0 && m_Motion != PM_LOSE)
+	{//それ以外
+		m_Motion = PM_LOSE;						// 敗北モーション再生
+		m_motion->SetNumMotion(m_Motion);
+	}
 }

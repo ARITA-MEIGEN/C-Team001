@@ -6,6 +6,8 @@
 //======================================================
 #include "Item.h"
 #include "Texture.h"
+#include "Application.h"
+#include "renderer.h"
 
 //======================================================
 // íËã`
@@ -32,6 +34,8 @@ CItem::~CItem()
 //======================================================
 HRESULT CItem::Init(void)
 {
+	OnBillboard();
+
 	//èâä˙âª
 	m_effect = NONE;
 	m_nLife = 0;
