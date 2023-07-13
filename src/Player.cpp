@@ -47,6 +47,8 @@ const CPlayer::SKILL_FUNC CPlayer::m_SkillFunc[] =
 	UPDATE_FUNC_CAST(Skill_Speed),
 	UPDATE_FUNC_CAST(Skill_Paint),
 	UPDATE_FUNC_CAST(Skill_Knockback),
+	UPDATE_FUNC_CAST(Skill_Bom),
+
 };
 
 //-----------------------------------------------------------------------------
@@ -244,6 +246,10 @@ void CPlayer::Update(void)
 	{
 		m_Motion == PM_NEUTRAL ? m_Motion = PM_WALK : m_Motion = PM_NEUTRAL;
 		m_motion->SetNumMotion(m_Motion);
+	}
+	if (pInput->Trigger(DIK_P))
+	{
+		Skill_Wave();
 	}
 #endif // _DEBUG
 
@@ -614,6 +620,56 @@ void CPlayer::Skill_Knockback()
 	{
 		SetSkill(SKILL_IDLE);
 		return;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// 爆弾攻撃スキル
+//-----------------------------------------------------------------------------
+void CPlayer::Skill_Bom()
+{
+}
+
+//-----------------------------------------------------------------------------
+// 衝撃波スキル
+//-----------------------------------------------------------------------------
+void CPlayer::Skill_Wave()
+{
+	D3DXVECTOR2 range = { 0.0f,0.0f };	//攻撃範囲
+
+	if (m_rot.y == D3DX_PI*0.0f)
+	{//どっちを向いているか調べる
+		range.y = 1.0f;			//下
+	}
+	else if (m_rot.y == D3DX_PI*1.0f)
+	{
+		range.y = -1.0f;		//上
+	}
+	else if (m_rot.y == D3DX_PI*0.5f)
+	{
+		range.x = -1.0f;
+
+	}
+	else if (m_rot.y == D3DX_PI*-0.5f)
+	{
+		range.x = +1.0f;
+	}
+
+	//範囲を塗る
+	for (int nCntX = 0; nCntX < 3; nCntX++)
+	{
+		//乗っているブロックの番号を取得
+		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+		//範囲内のブロックを塗る
+		BlockIdx = D3DXVECTOR2(BlockIdx.x + range.x, BlockIdx.y + range.y);			//中央左に設定する
+		D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX* range.x, BlockIdx.y+ nCntX* range.y);
+		CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+		if (Block != nullptr)
+		{//ブロックを塗る
+		 //Block->SetOnPlayer(this);	//プレイヤーの
+			Block->SetPlayerNumber(m_nPlayerNumber);
+		}
 	}
 }
 

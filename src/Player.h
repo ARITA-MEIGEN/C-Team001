@@ -159,6 +159,8 @@ private:	// スキル処理一覧
 		SKILL_PAINT,		// 塗範囲拡大
 		SKILL_KNOCKBACK,	// ノックバック
 		SKILL_AREA,			// エリア生成
+		SKILL_BOM,			// ボム(遠距離攻撃)
+		SKILL_WAVE,			// 衝撃波
 		SKILL_MAX
 	};
 
@@ -173,6 +175,9 @@ private:	// スキル処理一覧
 	void Skill_Speed();
 	void Skill_Paint();
 	void Skill_Knockback();
+	void Skill_Bom();
+	void Skill_Wave();
+
 
 	SKILL_STATE		m_skill;			// このキャラクターが仕様するスキル
 	SKILL_STATE		m_skillStateNow;	// スキルステートの状態
