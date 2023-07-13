@@ -47,6 +47,8 @@ const CPlayer::SKILL_FUNC CPlayer::m_SkillFunc[] =
 	UPDATE_FUNC_CAST(Skill_Speed),
 	UPDATE_FUNC_CAST(Skill_Paint),
 	UPDATE_FUNC_CAST(Skill_Knockback),
+	UPDATE_FUNC_CAST(Skill_Bom),
+
 };
 
 //-----------------------------------------------------------------------------
@@ -245,6 +247,10 @@ void CPlayer::Update(void)
 	{
 		m_Motion == PM_NEUTRAL ? m_Motion = PM_WALK : m_Motion = PM_NEUTRAL;
 		m_motion->SetNumMotion(m_Motion);
+	}
+	if (pInput->Trigger(DIK_P))
+	{
+		Skill_Wave();
 	}
 #endif // _DEBUG
 
@@ -675,6 +681,132 @@ void CPlayer::Skill_Knockback()
 	{
 		SetSkill(SKILL_IDLE);
 		return;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// 爆弾攻撃スキル
+//-----------------------------------------------------------------------------
+void CPlayer::Skill_Bom()
+{
+}
+
+//-----------------------------------------------------------------------------
+// 衝撃波スキル
+//-----------------------------------------------------------------------------
+void CPlayer::Skill_Wave()
+{
+	D3DXVECTOR2 range = { 0.0f,0.0f };	//攻撃範囲
+
+	if (m_rot.y == D3DX_PI*0.0f)
+	{//どっちを向いているか調べる
+		range.y = 1.0f;			//下
+	}
+	else if (m_rot.y == D3DX_PI*1.0f)
+	{
+		range.y = -1.0f;		//上
+	}
+	else if (m_rot.y == D3DX_PI*0.5f)
+	{
+		range.x = -1.0f;
+
+	}
+	else if (m_rot.y == D3DX_PI*-0.5f)
+	{
+		range.x = +1.0f;
+	}
+
+	//範囲を塗る
+	for (int nCntX = 0; nCntX < 3; nCntX++)
+	{
+		//乗っているブロックの番号を取得
+		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+		//範囲内のブロックを塗る
+		BlockIdx = D3DXVECTOR2(BlockIdx.x + range.x, BlockIdx.y + range.y);			//中央左に設定する
+		D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX* range.x, BlockIdx.y+ nCntX* range.y);
+		CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+		if (Block != nullptr)
+		{//ブロックを塗る
+		 //Block->SetOnPlayer(this);	//プレイヤーの
+			Block->SetPlayerNumber(m_nPlayerNumber);
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// 移動方向を見て曲がる
+//-----------------------------------------------------------------------------
+void CPlayer::TurnLookAtMoveing()
+{
+	if (m_moveVec.z > 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
+	}
+	if (m_moveVec.z < 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	}
+	if (m_moveVec.x > 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.5f, 0.0f));
+	}
+	if (m_moveVec.x < 0.0f)
+	{
+		SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+	}
+}
+
+//-----------------------------------------------------------------------------
+// ブロックがない場所で停まる
+//-----------------------------------------------------------------------------
+void CPlayer::StopNoBlock()
+{
+	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+	D3DXVECTOR2 moveNowVec;
+
+	moveNowVec.x = m_movePlanVec.x;
+	moveNowVec.y = -m_movePlanVec.z;
+
+	D3DXVec2Normalize(&moveNowVec, &moveNowVec);
+
+	CDebugProc::Print("moveNowVec : %.1f,%.1f\n", moveNowVec.x, moveNowVec.y);
+
+	BlockIdx += moveNowVec;
+
+	CDebugProc::Print("BlockIdx : %.1f,%.1f\n", BlockIdx.x, BlockIdx.y);
+
+	CBlock* moveBlock = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);	// 進行方向にあるブロック
+
+	if (moveBlock->IsStop())
+	{
+		m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 停止
+	}
+}
+
+//-----------------------------------------------------------------------------
+// ブロックの中心付近で曲がる
+//-----------------------------------------------------------------------------
+void CPlayer::TurnCenterBlock()
+{
+	bool XMin = m_pos.x <= m_pOnBlock->GetPos().x + (m_pOnBlock->GetSize().x * 0.05f);
+	bool XMax = m_pos.x >= m_pOnBlock->GetPos().x - (m_pOnBlock->GetSize().x * 0.05f);
+	bool ZMin = m_pos.z <= m_pOnBlock->GetPos().z + (m_pOnBlock->GetSize().z * 0.05f);
+	bool ZMax = m_pos.z >= m_pOnBlock->GetPos().z - (m_pOnBlock->GetSize().z * 0.05f);
+
+	// ブロック内に収まっているか
+	if (XMin && XMax && ZMin && ZMax)
+	{
+		 // 方向ベクトル掛ける移動量
+		D3DXVec3Normalize(&m_movePlanVec, &m_movePlanVec);
+		m_move = m_movePlanVec * PLAYER_SPEED;
+
+		if (m_State == PST_SPEED || m_ItemState == ITEM_SPEED)
+		{
+			m_move *= ADD_SPEED;
+		}
+
+		D3DXVec3Normalize(&m_moveVec, &m_move);
 	}
 }
 
