@@ -862,6 +862,10 @@ void CPlayer::TakeItem()
 //-----------------------------------------------------------------------------
 void CPlayer::KnockBack(CPlayer *pFastPlayer, CPlayer *pLatePlayer)
 {
+	if (true)
+	{
+		return;
+	}
 	if (pLatePlayer->m_nStunTime != 0)
 	{
 		return;
