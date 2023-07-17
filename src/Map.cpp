@@ -266,14 +266,14 @@ void CMap::PopItem()
 	//ÉAÉCÉeÉÄÇÃê∂ê¨
 	CItem* popItem = nullptr;
 
-	int random = IntRandom(2, 1);
+	int random = IntRandom(2, 0);
 
 	switch (random)
 	{
-	case 1:
+	case 0:
 		popItem = CPaint::Create(pos, size, rot, 300);
 		break;
-	case 2:
+	case 1:
 		popItem = CSpeed::Create(pos, size, rot, 300);
 		break;
 	default:
