@@ -66,14 +66,12 @@ HRESULT CSkillSelect::Init()
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{
 		m_isPlayerCheck[nCnt] = false;
+		m_isDecision[nCnt] = false;
 		m_inputNumber[nCnt] = 99;		// 絶対に有り得ない数字を代入
 		m_nSkill[nCnt] = 1;
 		m_pObj2D[nCnt] = CObject2D::Create(D3DXVECTOR3(200.0f + (300.0f * nCnt), 600.0f, 0.0f), D3DXVECTOR2(150.0f, 80.0f), 5);
 		m_pPlayer[nCnt] = CPlayer::Create(D3DXVECTOR3(-(130.0f * 1.5f) + (150.0f * nCnt), 250.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	}
-
-	//背景
-	//m_pBg = CBg::Create();	//生成
 
 	return S_OK;
 }
@@ -153,7 +151,16 @@ void CSkillSelect::Input()
 
 		if (m_inputNumber[nCnt] == 99)
 		{
+			//コントローラーが登録されていなかったらtrueにしておく
+			m_isPlayerCheck[nCnt] = true;
+
 			continue;
+		}
+		else if(m_inputNumber[nCnt] != 99 && !m_isDecision[nCnt])
+		{
+			//コントローラーが登録されたら一度のみfalseに戻す
+			m_isPlayerCheck[nCnt] = false;
+			m_isDecision[nCnt] = true;
 		}
 
 		if (m_nSkill[nCnt] >= 1)
@@ -172,11 +179,11 @@ void CSkillSelect::Input()
 			}
 		}
 
-		if (m_inputNumber[nCnt] != -1 && !m_isPlayerCheck[nCnt] && pInput->Trigger(JOYPAD_B, m_inputNumber[nCnt]) || pInput->Trigger(DIK_V, m_inputNumber[nCnt]))
+		if (m_inputNumber[nCnt] != -1 && !m_isPlayerCheck[nCnt] && pInput->Trigger(JOYPAD_B, m_inputNumber[nCnt]) || !m_isPlayerCheck[nCnt] && pInput->Trigger(DIK_V, m_inputNumber[nCnt]))
 		{//パッドのBボタンで決定する(キーボードはV)
 			m_isPlayerCheck[nCnt] = true;
 		}
-		else if (m_inputNumber[nCnt] != -1 && m_isPlayerCheck[nCnt] &&  pInput->Trigger(JOYPAD_A, m_inputNumber[nCnt]) || pInput->Trigger(DIK_B, m_inputNumber[nCnt]))
+		else if (m_inputNumber[nCnt] != -1 && m_isPlayerCheck[nCnt] &&  pInput->Trigger(JOYPAD_A, m_inputNumber[nCnt]) || m_isPlayerCheck[nCnt] && pInput->Trigger(DIK_B, m_inputNumber[nCnt]))
 		{//パッドのAボタンで解除する(キーボードはB)
 			m_isPlayerCheck[nCnt] = false;
 		}
@@ -192,11 +199,11 @@ void CSkillSelect::Input()
 	}
 
 #ifdef _DEBUG
-	if ((pInput->Trigger(DIK_RETURN)))		//ENTERキー
-	{//エンターでゲームに
-	 //モード設定
-		CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
-	}
+	//if ((pInput->Trigger(DIK_RETURN)))		//ENTERキー
+	//{//エンターでゲームに
+	// //モード設定
+	//	CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
+	//}
 
 	if (pInput->Trigger(DIK_O))
 	{//左に動く
@@ -213,6 +220,7 @@ void CSkillSelect::Input()
 		}
 	}
 
+	CDebugProc::Print("\nキーボードはVで決定、Bで解除");
 	CDebugProc::Print("\nPlayerCheck : %d %d %d %d", m_isPlayerCheck[0], m_isPlayerCheck[1], m_isPlayerCheck[2], m_isPlayerCheck[3]);
 #endif // _DEBUG
 }
@@ -224,6 +232,11 @@ void CSkillSelect::Texture()
 {
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{
+		if (m_inputNumber[nCnt] == 99)
+		{
+			continue;
+		}
+
 		if (m_nSkill[nCnt] == 0)
 		{//プレイヤーの能力を表すテクスチャ1
 			m_pObj2D[nCnt]->SetTextureKey("RESULET_000");
@@ -240,11 +253,7 @@ void CSkillSelect::Texture()
 		{//プレイヤーの能力を表すテクスチャ4
 			m_pObj2D[nCnt]->SetTextureKey("RESULET_003");
 		}
-	}
-
-	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
-	{
-		if (m_isPlayerCheck[nCnt])
+		else if (m_isPlayerCheck[nCnt])
 		{//プレイヤーの能力を表すテクスチャ1
 			m_pObj2D[nCnt]->SetTextureKey("CHECK_MARK");
 		}
