@@ -207,6 +207,9 @@
     <ClCompile Include="src\come_future_block.cpp">
       <Filter>ソース ファイル\05_Map</Filter>
     </ClCompile>
+    <ClCompile Include="src\Item_Bom.cpp">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BgStage.h">
@@ -385,6 +388,9 @@
     </ClInclude>
     <ClInclude Include="src\come_future_block.h">
       <Filter>ソース ファイル\05_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Item_Bom.h">
+      <Filter>ソース ファイル\04_Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
