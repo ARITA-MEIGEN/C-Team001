@@ -199,12 +199,6 @@ void CSkillSelect::Input()
 	}
 
 #ifdef _DEBUG
-	//if ((pInput->Trigger(DIK_RETURN)))		//ENTERキー
-	//{//エンターでゲームに
-	// //モード設定
-	//	CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
-	//}
-
 	if (pInput->Trigger(DIK_O))
 	{//左に動く
 		if (m_nSkill[0] >= 1)
