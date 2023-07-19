@@ -55,6 +55,7 @@ const CGame::UPDATE_FUNC CGame::m_UpdateFunc[] =
 	static_cast<void(CGame::*)()>(&(Update_CountDown)),
 	static_cast<void(CGame::*)()>(&(Update_GamePlay)),
 	static_cast<void(CGame::*)()>(&(Update_GameEnd)),
+	static_cast<void(CGame::*)()>(&(Update_GamePouse)),
 };
 
 //====================================
@@ -286,6 +287,13 @@ void CGame::Init_GameEnd()
 //====================================
 void CGame::Init_GamePouse()
 {
+	if (isDirty)
+	{
+		return;
+	}
+	isDirty = true;
+
+	CObjectList::GetInstance()->Pause(true);
 }
 
 //====================================
@@ -341,11 +349,7 @@ void CGame::Update_GamePlay()
 
 	if (CInput::GetKey()->Trigger(DIK_5))
 	{
-		CObjectList::GetInstance()->Pause(true);
-	}
-	if (CInput::GetKey()->Trigger(DIK_4))
-	{
-		CObjectList::GetInstance()->Pause(false);
+		SetUpdate(UPDATE_GAME_POUSE);
 	}
 }
 
@@ -364,6 +368,14 @@ void CGame::Update_GameEnd()
 //====================================
 void CGame::Update_GamePouse()
 {
+	Init_GamePouse();
+
+	if (CInput::GetKey()->Trigger(DIK_5))
+	{
+		SetUpdate(UPDATE_GAME_PLAY);
+		isDirty = true;
+		CObjectList::GetInstance()->Pause(false);
+	}
 }
 
 //====================================
