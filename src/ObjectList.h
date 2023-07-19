@@ -104,5 +104,7 @@ private:
 	std::unordered_map<int, SList> m_list;	// ƒŠƒXƒgˆê——
 	unsigned int m_createNumber;			// ‡Œv¶¬”
 	int m_priorityNumber;					// •`‰æ‡”
+
+	bool m_isPouseStop;
 };
 #endif
