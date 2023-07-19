@@ -34,12 +34,19 @@ CTimer::~CTimer()
 //=============================================================================
 HRESULT CTimer::Init()
 {
-	m_pObject2D = new CObject2D(CObject::OBJTYPE_UI);
-	m_pObject2D->Init();
-	m_pObject2D->SetSiz(D3DXVECTOR2(100.0f, 100.0f));
-	m_pObject2D->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pObject2D->SetTextureKey("TIMER");
-	m_pObject2D->SetPos(D3DXVECTOR3(SCREEN_WIDTH/2, 60.0f, 0.0f));
+	m_pos = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 70.0f, 0.0f);
+
+	{
+		m_pObject2D = new CObject2D(CObject::OBJTYPE_UI);
+		m_pObject2D->Init();
+		m_pObject2D->SetSiz(D3DXVECTOR2(100.0f, 100.0f));
+		m_pObject2D->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		m_pObject2D->SetTextureKey("TIMER");
+
+		D3DXVECTOR3 pos(m_pos);
+		pos.y -= 10.0f;
+		m_pObject2D->SetPos(pos);
+	}
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -48,12 +55,14 @@ HRESULT CTimer::Init()
 		m_apNumber[i]->SetSiz(D3DXVECTOR2(40.0f, 80.0f));
 		m_apNumber[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_apNumber[i]->SetTextureKey("NUMBER");
+		D3DXVECTOR3 pos(m_pos);
+		pos.x += i * 34.0f - 34.0f * 0.5f;
+		m_apNumber[i]->SetPos(pos);
 	}
-	m_apNumber[0]->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 17.0f, 70.0f, 0.0f));
-	m_apNumber[1]->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + 17.0f, 70.0f, 0.0f));
+
 	m_nTimer = DEFAULT_TIME;
-	m_apNumber[0]->SetUV(0.1f*(m_nTimer / 10), 0.1f*((m_nTimer / 10) + 1), 0.0f, 1.0f);
-	m_apNumber[1]->SetUV(0.1f*(m_nTimer % 10), 0.1f*((m_nTimer % 10) + 1), 0.0f, 1.0f);
+	m_apNumber[0]->SetUV(0.1f*(m_nTimer / 10), 0.1f * ((m_nTimer / 10) + 1), 0.0f, 1.0f);
+	m_apNumber[1]->SetUV(0.1f*(m_nTimer % 10), 0.1f * ((m_nTimer % 10) + 1), 0.0f, 1.0f);
 
 	return S_OK;
 }
@@ -63,7 +72,11 @@ HRESULT CTimer::Init()
 //=============================================================================
 void CTimer::Uninit()
 {
-
+	m_pObject2D->Release();
+	for (int i = 0; i < 2; i++)
+	{
+		m_apNumber[i]->Release();
+	}
 }
 
 //=============================================================================
@@ -79,8 +92,8 @@ void CTimer::Update()
 		{
 			m_nTimer++;
 		}
-		m_apNumber[0]->SetUV(0.1f*(m_nTimer / 10), 0.1f*((m_nTimer / 10) + 1),0.0f, 1.0f);
-		m_apNumber[1]->SetUV(0.1f*(m_nTimer % 10), 0.1f*((m_nTimer % 10) + 1), 0.0f, 1.0f);
+		m_apNumber[0]->SetUV(0.1f * (m_nTimer / 10), 0.1f * ((m_nTimer / 10) + 1), 0.0f, 1.0f);
+		m_apNumber[1]->SetUV(0.1f * (m_nTimer % 10), 0.1f * ((m_nTimer % 10) + 1), 0.0f, 1.0f);
 	}
 }
 
@@ -95,13 +108,32 @@ void CTimer::Draw()
 //=============================================================================
 // ”wŒi¶¬
 //=============================================================================
-CTimer * CTimer::Create()
+CTimer * CTimer::Create(const int inTimer)
 {
-	CTimer*pLife;
-	pLife = new CTimer;
-	if (pLife != nullptr)
+	CTimer* pTimer;
+	pTimer = new CTimer;
+	if (pTimer != nullptr)
 	{// ƒ|ƒŠƒSƒ“‚Ì‰Šú‰»ˆ—
-		pLife->Init();
+		pTimer->Init();
+		pTimer->m_nTimer = inTimer;
 	}
-	return pLife;
+	return pTimer;
+}
+
+void CTimer::SetPos(const D3DXVECTOR3 & inPos)
+{
+	m_pos = inPos;
+
+	{
+		D3DXVECTOR3 pos(m_pos);
+		pos.y -= 10.0f;
+		m_pObject2D->SetPos(pos);
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		D3DXVECTOR3 pos(m_pos);
+		pos.x += i * 34.0f - 34.0f * 0.5f;
+		m_apNumber[i]->SetPos(pos);
+	}
 }

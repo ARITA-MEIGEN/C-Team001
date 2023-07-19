@@ -31,9 +31,6 @@
     <Filter Include="ソース ファイル\05_Map">
       <UniqueIdentifier>{ea0ea196-9053-404c-8e15-d526b7bedec7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\06_Game">
-      <UniqueIdentifier>{3d02e5a1-14af-4321-a536-bbe3d9c1e176}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\07_Object">
       <UniqueIdentifier>{5607d2da-08c2-404f-9789-90b1810d1cde}</UniqueIdentifier>
     </Filter>
@@ -92,9 +89,6 @@
     </ClCompile>
     <ClCompile Include="src\SkillSelect.cpp">
       <Filter>ソース ファイル\01_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="BgStage.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\input.cpp">
       <Filter>ソース ファイル\03_Input</Filter>
@@ -207,11 +201,14 @@
     <ClCompile Include="src\come_future_block.cpp">
       <Filter>ソース ファイル\05_Map</Filter>
     </ClCompile>
+    <ClCompile Include="src\Item_Bom.cpp">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="src\area_warning.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BgStage.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\Command.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
@@ -385,6 +382,12 @@
     </ClInclude>
     <ClInclude Include="src\come_future_block.h">
       <Filter>ソース ファイル\05_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Item_Bom.h">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="src\area_warning.h">
+      <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

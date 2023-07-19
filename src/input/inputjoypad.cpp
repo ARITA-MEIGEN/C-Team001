@@ -176,6 +176,7 @@ void CInputJoyPad::Update(void)
 
 	//デバイスロスト検知用
 	bool bLost = false;
+	m_nJoyNumCnt = 0;
 
 	//入力処理の更新
 	for (int nCnt = 0; nCnt < JOYPAD_DATA_MAX; nCnt++)
@@ -204,6 +205,8 @@ void CInputJoyPad::Update(void)
 		//コントローラーの状態を取得
 		if (SUCCEEDED(m_JoyPadData[nCnt].pInputDevice->GetDeviceState(sizeof(DIJOYSTATE), &JoyKey)))
 		{
+			m_nJoyNumCnt++;
+
 			for (int nButtons = 0; nButtons < MAX_JOY_KEY; nButtons++)
 			{
 				//トリガー情報を保存

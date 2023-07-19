@@ -50,12 +50,15 @@ public:
 	void SetRot(const D3DXVECTOR3& rot) { m_Rot = rot; };
 	void SetCol(const D3DXCOLOR& col);
 	void SetBackCulling(const bool isCulling) { m_isBackCulling = isCulling; }
+	void SetMatrixWorld(const D3DXMATRIX& inMatrixWorld) { m_mtxWorld = inMatrixWorld; }
+	void OnBillboard() { m_isBillboard = true; }
 
 	//ゲッター
 	const D3DXVECTOR3 GetPos() const { return m_Pos; }
 	const D3DXVECTOR3 GetSiz() const { return m_Siz; }
 	const D3DXVECTOR3 GetRot() const { return m_Rot; }
 	const D3DXCOLOR GetCol() const { return m_Col; }
+	const D3DXMATRIX GetMatrixWorld() const { return m_mtxWorld; }
 
 	void SetTextureKey(const std::string key) { m_textureKey = key; }
 private:
@@ -70,6 +73,7 @@ private:
 	D3DXVECTOR3 m_Siz;					//大きさ
 	D3DXCOLOR m_Col;					//色
 	bool m_isBackCulling;				// 背面カリングの使用有無
+	bool m_isBillboard;
 };
 #endif // !_OBJECT_H_
 

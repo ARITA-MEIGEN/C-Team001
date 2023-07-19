@@ -10,15 +10,10 @@
 
 //インクルード
 #include"main.h"
-#include"Object.h"
 #include"Object2D.h"
 
-//前方宣言
-class Player;
-
 //マクロ定義
-#define NUM_TEXTIME (2)
-#define	DEFAULT_TIME (60)
+#define	DEFAULT_TIME (3)
 
 class CTimer
 {
@@ -30,14 +25,18 @@ public:
 	void			Uninit();
 	void			Update();
 	void			Draw();
-	static	CTimer* Create();
+	static CTimer* Create(const int inTimer);
+
+	void SetPos(const D3DXVECTOR3& inPos);
 
 	//ゲッター
 	int GetTimer() { return m_nTimer; };
 
 private:
+
+	D3DXVECTOR3 m_pos;
 	CObject2D* m_pObject2D;
-	CObject2D* m_apNumber[NUM_TEXTIME];
+	CObject2D* m_apNumber[2];
 
 	int m_nTimer;
 	int m_nCreateTimer;

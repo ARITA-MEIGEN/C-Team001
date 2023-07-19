@@ -42,6 +42,7 @@ public:
 	void SetOnItem(CItem* onItem) { m_onItem = onItem; }
 	void SetOnPlayer(CPlayer* onPlayer) { m_onPlayer = onPlayer; }
 	void SetSink(float power);
+	void SetNumber(int inNumber) { m_number = inNumber; }
 
 	// Getter
 	int GetNumber() { return m_number; };
