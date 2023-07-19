@@ -27,6 +27,7 @@
 //====================================
 int CSkillSelect::m_nSkill[MAX_PLAYER] = {};
 int CSkillSelect::m_inputNumber[MAX_PLAYER] = {};
+bool CSkillSelect::m_isDecision[MAX_PLAYER] = {};
 
 //====================================
 //コンストラクタ
@@ -179,11 +180,11 @@ void CSkillSelect::Input()
 			}
 		}
 
-		if (m_inputNumber[nCnt] != -1 && !m_isPlayerCheck[nCnt] && pInput->Trigger(JOYPAD_B, m_inputNumber[nCnt]) || !m_isPlayerCheck[nCnt] && pInput->Trigger(DIK_V, m_inputNumber[nCnt]))
+		if (m_inputNumber[nCnt] != -1 && !m_isPlayerCheck[nCnt] && pInput->Trigger(JOYPAD_B, m_inputNumber[nCnt]) || m_inputNumber[nCnt] == -1 && !m_isPlayerCheck[nCnt] && pInput->Trigger(DIK_V, m_inputNumber[nCnt]))
 		{//パッドのBボタンで決定する(キーボードはV)
 			m_isPlayerCheck[nCnt] = true;
 		}
-		else if (m_inputNumber[nCnt] != -1 && m_isPlayerCheck[nCnt] &&  pInput->Trigger(JOYPAD_A, m_inputNumber[nCnt]) || m_isPlayerCheck[nCnt] && pInput->Trigger(DIK_B, m_inputNumber[nCnt]))
+		else if (m_inputNumber[nCnt] != -1 && m_isPlayerCheck[nCnt] &&  pInput->Trigger(JOYPAD_A, m_inputNumber[nCnt]) || m_inputNumber[nCnt] == -1 && m_isPlayerCheck[nCnt] && pInput->Trigger(DIK_B, m_inputNumber[nCnt]))
 		{//パッドのAボタンで解除する(キーボードはB)
 			m_isPlayerCheck[nCnt] = false;
 		}
@@ -191,16 +192,8 @@ void CSkillSelect::Input()
 
 	if (m_isPlayerCheck[0] && m_isPlayerCheck[1] && m_isPlayerCheck[2] && m_isPlayerCheck[3])
 	{
-		if ((pInput->Trigger(DIK_RETURN)) || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
+		if ((pInput->Trigger(DIK_RETURN)) || (pInput->Trigger(JOYPAD_START)))		//ENTERキー
 		{//エンターでゲームに
-			for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
-			{
-				if (!m_isDecision[nCnt])
-				{
-					int a = 0;
-				}
-			}
-
 			//モード設定
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
 		}
@@ -239,7 +232,11 @@ void CSkillSelect::Texture()
 			continue;
 		}
 
-		if (m_nSkill[nCnt] == 0)
+		if (m_isPlayerCheck[nCnt])
+		{//プレイヤーの能力を表すテクスチャ1
+			m_pObj2D[nCnt]->SetTextureKey("CHECK_MARK");
+		}
+		else if (m_nSkill[nCnt] == 0)
 		{//プレイヤーの能力を表すテクスチャ1
 			m_pObj2D[nCnt]->SetTextureKey("RESULET_000");
 		}
@@ -254,10 +251,6 @@ void CSkillSelect::Texture()
 		else if (m_nSkill[nCnt] == 3)
 		{//プレイヤーの能力を表すテクスチャ4
 			m_pObj2D[nCnt]->SetTextureKey("RESULET_003");
-		}
-		else if (m_isPlayerCheck[nCnt])
-		{//プレイヤーの能力を表すテクスチャ1
-			m_pObj2D[nCnt]->SetTextureKey("CHECK_MARK");
 		}
 	}
 }
