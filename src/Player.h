@@ -29,9 +29,9 @@ class CPlayer :public CObject
 {
 private:
 	static const std::string MOTION_PATH;	// モーションデータパス
-	static const float PLAYER_SPEED;	// 移動速度
-	static const float ADD_SPEED;	// アイテムで加算するスピード
-	static const float SKILL_BUFF_TIME;	// バフの効果時間(Lv1基準)
+	static const float PLAYER_SPEED;		// 移動速度
+	static const float ADD_SPEED;			// アイテムで加算するスピード
+	static const float SKILL_BUFF_TIME;		// バフの効果時間(Lv1基準)
 
 public:
 	enum PLAYER_STATE
@@ -72,6 +72,7 @@ private:
 		PM_WIN,			// 勝利
 		PM_LOSE,		// 敗北
 		PM_SELECT,		// スキル選択
+		PM_WAVE,		// ウェーブスキル発動時
 		PM_MAX,	
 		PM_INVALID = -1
 	};
@@ -81,24 +82,23 @@ public:
 	explicit CPlayer(int nPriority = 3);
 	~CPlayer();
 	//プロトタイプ宣言
-	HRESULT			Init() override;
-	void			Uninit() override;
-	void			Update() override;
-	void			Draw() override;
+	HRESULT	Init() override;
+	void	Uninit() override;
+	void	Update() override;
+	void	Draw() override;
 
 	//　プレイヤーのステート関数
 	void Update_Idle();
 	void Update_Walk();
 	void Update_Jump();
 
-	void			Move();										// 移動
 	static CPlayer*	Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);	// プレイヤー生成
 
 	// Setter
 	void SetController(CController* inOperate);
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; };					// 位置の設定
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };					// 向きの設定
-	void SetMove(D3DXVECTOR3 move) { m_move = move; };					// 向きの設定
+	void SetMove(D3DXVECTOR3 move) { m_move = move; };				// 向きの設定
 	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }		// スキルゲージの量の設定
 	void SetTeleport(bool bTeleport) { m_bTeleport = bTeleport; }
 	void SetResultMotion(int Rank);								// リザルト時のモーション再生
@@ -115,13 +115,55 @@ private:
 	void Updatepos();			// 座標の更新
 	void Normalization();		// 正規化
 	void BlockCollision();		// ブロックとの判定
+	void TakeItem();			// アイテムを拾う
+private:	// 静的メンバー変数
+	static const UPDATE_FUNC mUpdateFunc[];
+	static int		m_nNumPlayer;			// プレイヤーの数
+
+private:	// ↓移動処理一覧↓
+	void Move();	// 移動
+
 	void TurnLookAtMoveing();	// 移動方向を見て曲がる
 	void StopNoBlock();			// ブロックがない場所で停まる
 	void TurnCenterBlock();		// ブロックの真ん中で曲がるようになる
 	void KnockBack(CPlayer *pFastPlayer, CPlayer *pLatePlayer);			// ノックバック処理
-private:	// 静的メンバー変数
-	static const UPDATE_FUNC mUpdateFunc[];
-	static int		m_nNumPlayer;			// プレイヤーの数
+
+private:	// ↓スキル処理一覧↓
+	void Skill();			// スキル処理
+
+	enum SKILL_STATE
+	{
+		SKILL_IDLE = 0,
+		SKILL_SPEED,		// 加速
+		SKILL_PAINT,		// 塗範囲拡大
+		SKILL_KNOCKBACK,	// ノックバック
+		SKILL_AREA,			// エリア生成
+		SKILL_BOM,			// ボム(遠距離攻撃)
+		SKILL_WAVE,			// 衝撃波
+		SKILL_MAX
+	};
+
+	using SKILL_FUNC = void(CObject::*)();
+	static const SKILL_FUNC m_SkillFunc[];
+	void SetSkill(SKILL_STATE inState) { m_skillStateNow = inState; }
+
+	const SKILL_FUNC* m_funcSkill;
+
+	//　スキルのステート関数
+	void Skill_Idel();
+	void Skill_Speed();
+	void Skill_Paint();
+	void Skill_Knockback();
+	void Skill_Bom();
+	void Skill_Wave();
+
+
+	SKILL_STATE		m_skill;			// このキャラクターが仕様するスキル
+	SKILL_STATE		m_skillStateNow;	// スキルステートの状態
+	int				m_nSkillLv;			// プレイヤーのスキルLｖ
+	int				m_nSkillBuffTime;	// スキル強化効果時間
+	float			m_fSkillGauge;		// スキルゲージの量
+	float			m_fSubGauge;		// スキルゲージを減算させる
 
 private:	// メンバー変数
 	CController*	m_controller;			// 命令を出す人
@@ -149,37 +191,6 @@ private:	// メンバー変数
 	//押し出し判定関連
 	D3DXVECTOR3		m_aAxisSiz[PST_MAX];	// 押し出し判定の大きさ
 
-private:	// スキル処理一覧
-	void Skill();			// スキル処理
-
-	enum SKILL_STATE
-	{
-		SKILL_IDLE = 0,
-		SKILL_SPEED,		// 加速
-		SKILL_PAINT,		// 塗範囲拡大
-		SKILL_KNOCKBACK,	// ノックバック
-		SKILL_AREA,			// エリア生成
-		SKILL_MAX
-	};
-
-	using SKILL_FUNC = void(CObject::*)();
-	static const SKILL_FUNC m_SkillFunc[];
-	void SetSkill(SKILL_STATE inState) { m_skillStateNow = inState; }
-
-	const SKILL_FUNC* m_funcSkill;
-
-	//　スキルのステート関数
-	void Skill_Idel();
-	void Skill_Speed();
-	void Skill_Paint();
-	void Skill_Knockback();
-
-	SKILL_STATE		m_skill;			// このキャラクターが仕様するスキル
-	SKILL_STATE		m_skillStateNow;	// スキルステートの状態
-	int				m_nSkillLv;			// プレイヤーのスキルLｖ
-	int				m_nSkillBuffTime;	// スキル強化効果時間
-	float			m_fSkillGauge;		// スキルゲージの量
-	float			m_fSubGauge;		// スキルゲージを減算させる
 };
 
 #endif

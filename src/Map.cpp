@@ -48,8 +48,8 @@ HRESULT CMap::Init()
 	m_itemPopRandMaxTime = 190;
 	m_nItemPopCount = IntRandom(m_itemPopRandMaxTime, m_itemPopRandMinTime);
 
-	m_areaPopRandMinTime = 60;
-	m_areaPopRandMaxTime = 180;
+	m_areaPopRandMinTime = 250;
+	m_areaPopRandMaxTime = 250;
 	m_nAreaPopCount = IntRandom(m_areaPopRandMaxTime, m_areaPopRandMinTime);
 	return S_OK;
 }
@@ -266,14 +266,14 @@ void CMap::PopItem()
 	//ƒAƒCƒeƒ€‚Ì¶¬
 	CItem* popItem = nullptr;
 
-	int random = IntRandom(2, 1);
+	int random = IntRandom(2, 0);
 
 	switch (random)
 	{
-	case 1:
+	case 0:
 		popItem = CPaint::Create(pos, size, rot, 300);
 		break;
-	case 2:
+	case 1:
 		popItem = CSpeed::Create(pos, size, rot, 300);
 		break;
 	default:
@@ -291,8 +291,8 @@ void CMap::PopItem()
 //=============================================================================
 void CMap::PopFutureArea()
 {
-	m_nItemPopCount--;
-	if (m_nItemPopCount > 0)
+	m_nAreaPopCount--;
+	if (m_nAreaPopCount > 0)
 	{
 		return;
 	}

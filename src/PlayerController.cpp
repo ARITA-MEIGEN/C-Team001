@@ -112,5 +112,5 @@ D3DXVECTOR3 CPlayerController::Move()
 bool CPlayerController::Skill()
 {
 	CInput* pInput = CInput::GetKey();	//インプットの取得
-	return 	pInput->Trigger(DIK_K) || pInput->Trigger(DIK_L);
+	return 	(pInput->Trigger(DIK_K) || pInput->Trigger(DIK_L) || pInput->Trigger(JOYPAD_Y, m_nInputIdx) || pInput->Trigger(JOYPAD_X, m_nInputIdx));
 }

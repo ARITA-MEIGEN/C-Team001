@@ -40,17 +40,19 @@ public:
 	void Update();			// 更新
 	void Draw();			// 描画
 
+	static bool GetComputer(int nCntPlayer) { return m_isDecision[nCntPlayer]; }
 	static int GetSelectSkill(int nCntPlayer) { return m_nSkill[nCntPlayer]; }
 	static int GetEntryInput(int nCntPlayer) { return m_inputNumber[nCntPlayer]; }
 
 private:
 	void Input();			// 入力
-	void Select();			// 選択処理
+	void Texture();			// テクスチャを変える
 	void Entry();			// エントリー
 private:
 	static int m_nSkill[MAX_PLAYER];		// 現在選択されているスキルの番号
 	static int m_inputNumber[MAX_PLAYER];	// エントリーしたinput番号
-	bool m_isDecision[MAX_PLAYER];			// 決定中
+	static bool m_isDecision[MAX_PLAYER];	// 決定中
+	bool m_isPlayerCheck[MAX_PLAYER];		// 準備完了かどうか
 	CObject2D* m_pObj2D[MAX_PLAYER];		// スキル選択の枠
 	CPlayer* m_pPlayer[MAX_PLAYER];			// プレイヤー
 

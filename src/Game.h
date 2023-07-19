@@ -68,9 +68,17 @@ private: // 更新処理
 
 	using UPDATE_FUNC = void(CGame::*)();
 	static const UPDATE_FUNC m_UpdateFunc[];
-	void SetUpdate(UPDATE_STATE inState) { m_stateNow = inState; }
+	void SetUpdate(UPDATE_STATE inState) { m_stateNow = inState; isDirty = false; }
 
 	const UPDATE_FUNC* m_funcUpdate;
+
+	bool isDirty;
+
+	// 切り替えタイミングでの初期化
+	void Init_FadeNow();
+	void Init_CountDown();
+	void Init_GamePlay();
+	void Init_GameEnd();
 
 	//　更新のステート関数
 	void Update_FadeNow();
@@ -105,6 +113,7 @@ private:
 	static	CFloor*m_pFloor;			// 床
 	static	bool bDebugCamera;			// デバッグ用カメラのON/OFF
 	static	CTimer*m_pTimer;			// タイマー
+	static	CTimer* m_pCountDown;		// カウントダウン
 	static	CUI*m_pUI;					// UI
 	static	CMap*m_pMap;				// マップ
 	static CStatusUI* m_apStatusUI[MAX_PLAYER];	// ステータス表示

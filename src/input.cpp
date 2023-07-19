@@ -563,7 +563,7 @@ bool CInput::KeyChackAll(STAN_DART_INPUT_KEY key, int type)
 		return lambda(DIK_D) || lambda(DIK_RIGHT) || lambda(JOYPAD_RIGHT);
 		break;
 	case KEY_DECISION:
-		return lambda(DIK_RETURN) || lambda(JOYPAD_A);
+		return lambda(DIK_RETURN) || lambda(JOYPAD_B);
 		break;
 	case KEY_SHOT:
 		return lambda(DIK_SPACE) || lambda(JOYPAD_R1);
