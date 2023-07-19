@@ -23,6 +23,7 @@ public:
 		NONE,	// 無し
 		SPEED,	// 加速
 		PAINT,	// 塗り強化
+		BOM,	// ボムを持っている状態
 		MAX
 	};
 
@@ -45,7 +46,7 @@ public:
 
 private:
 	//メンバ変数
-	bool m_bDisplay;		//表示するかどうか
+	bool m_bDisplay;		// 表示するかどうか
 	int m_nLife;			// 表示時間
 	ITEM_EFFECT m_effect;	// 効果
 
