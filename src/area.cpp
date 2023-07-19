@@ -4,6 +4,7 @@
 #include "area.h"
 #include "Map.h"
 #include "Application.h"
+#include "area_warning.h"
 #include "Object3D.h"
 
 //=============================================================================
@@ -25,6 +26,7 @@ CArea::~CArea()
 //=============================================================================
 HRESULT CArea::Init()
 {
+	m_warning = CAreaWarning::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.6f,50.0f,0.0f));
 	return S_OK;
 }
 
@@ -50,6 +52,12 @@ void CArea::Update()
 	if (m_signsTime <= 0)
 	{
 		m_functionAtSignsEnd();
+
+		if (m_warning != nullptr)
+		{
+			m_warning->Release();
+			m_warning = nullptr;
+		}
 
 		for (int i = 0; i < 4; i++)
 		{

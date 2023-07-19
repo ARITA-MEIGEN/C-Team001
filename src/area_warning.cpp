@@ -10,7 +10,7 @@ CAreaWarning * CAreaWarning::Create(const D3DXVECTOR3& inPos)
 	warning->Init();
 	warning->SetPos(inPos);
 
-	return nullptr;
+	return warning;
 }
 
 CAreaWarning::CAreaWarning(int nPriority)
@@ -23,8 +23,9 @@ CAreaWarning::~CAreaWarning()
 
 HRESULT CAreaWarning::Init()
 {
-	m_bg = CObject2D::Create(m_pos, D3DXVECTOR2(100.0f, 100.0f), 4);
+	m_bg = CObject2D::Create(m_pos, D3DXVECTOR2(120.0f, 120.0f), 4);
 	m_text = CObject2D::Create(m_pos, D3DXVECTOR2(100.0f, 100.0f), 4);
+	m_text->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 	return S_OK;
 }
 
@@ -46,4 +47,7 @@ void CAreaWarning::Draw()
 
 void CAreaWarning::SetPos(const D3DXVECTOR3 & inPos)
 {
+	m_pos = inPos;
+	m_bg->SetPos(inPos);
+	m_text->SetPos(inPos);
 }

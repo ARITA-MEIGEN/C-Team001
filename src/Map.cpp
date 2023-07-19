@@ -48,8 +48,8 @@ HRESULT CMap::Init()
 	m_itemPopRandMaxTime = 190;
 	m_nItemPopCount = IntRandom(m_itemPopRandMaxTime, m_itemPopRandMinTime);
 
-	m_areaPopRandMinTime = 60;
-	m_areaPopRandMaxTime = 180;
+	m_areaPopRandMinTime = 250;
+	m_areaPopRandMaxTime = 250;
 	m_nAreaPopCount = IntRandom(m_areaPopRandMaxTime, m_areaPopRandMinTime);
 	return S_OK;
 }
