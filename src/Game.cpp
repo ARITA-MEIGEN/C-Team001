@@ -27,6 +27,7 @@
 #include "computerController.h"
 #include"StatusUI.h"
 #include "MapSelect.h"
+#include "ObjectList.h"
 
 #include "File.h"
 
@@ -336,6 +337,15 @@ void CGame::Update_GamePlay()
 	if (m_pTimer->GetTimer() <= 0)
 	{
 		SetUpdate(UPDATE_GAME_END);
+	}
+
+	if (CInput::GetKey()->Trigger(DIK_5))
+	{
+		CObjectList::GetInstance()->Pause(true);
+	}
+	if (CInput::GetKey()->Trigger(DIK_4))
+	{
+		CObjectList::GetInstance()->Pause(false);
 	}
 }
 
