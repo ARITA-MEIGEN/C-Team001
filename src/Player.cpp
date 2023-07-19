@@ -718,6 +718,9 @@ void CPlayer::Skill_Wave()
 		range.x = +1.0f;
 	}
 
+	m_Motion = PM_WAVE;
+	m_motion->SetNumMotion(m_Motion);
+
 	//”ÍˆÍ‚ð“h‚é
 	for (int nCntX = 0; nCntX < 3; nCntX++)
 	{
