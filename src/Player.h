@@ -72,6 +72,7 @@ private:
 		PM_WIN,			// 勝利
 		PM_LOSE,		// 敗北
 		PM_SELECT,		// スキル選択
+		PM_WAVE,		// ウェーブスキル発動時
 		PM_MAX,	
 		PM_INVALID = -1
 	};

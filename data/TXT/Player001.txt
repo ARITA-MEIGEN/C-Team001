@@ -130,6 +130,7 @@ MOTIONSET
 	MOTION = data\TXT\Player001\WIN.txt
 	MOTION = data\TXT\Player001\LOSE.txt
 	MOTION = data\TXT\Player001\SKILLSELECT.txt
+	MOTION = data\TXT\Player001\SKILL_WAVE.txt
 END_MOTIONSET
 
 END_SCRIPT		# この行は絶対消さないこと！
