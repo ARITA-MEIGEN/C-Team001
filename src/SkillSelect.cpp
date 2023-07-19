@@ -193,7 +193,15 @@ void CSkillSelect::Input()
 	{
 		if ((pInput->Trigger(DIK_RETURN)) || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
 		{//エンターでゲームに
-		 //モード設定
+			for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+			{
+				if (!m_isDecision[nCnt])
+				{
+					int a = 0;
+				}
+			}
+
+			//モード設定
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
 		}
 	}
