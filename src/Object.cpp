@@ -19,6 +19,7 @@
  {
 	 m_nState = -1;
 	 m_numFunc = 0;
+	 m_isActivityAtPouse = false;
 	 m_nPriority = nPriority;
 
 	 CObjectList* taskGroup = CObjectList::GetInstance();

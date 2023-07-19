@@ -50,6 +50,11 @@ public:
 	void SetNext(CObject* inTask) { m_pNext = inTask; }
 	CObject* GetNext() { return m_pNext; }
 
+
+	/* ポーズ */
+	void AttachActivityAtPouse() { m_isActivityAtPouse = true; }
+	bool IsActivityAtPouse() { return m_isActivityAtPouse; }
+
 protected:
 	using UPDATE_FUNC = void(CObject::*)();
 public:
@@ -72,6 +77,8 @@ private:	//メンバ変数
 	CObject* m_pNext;	// 次のオブジェクト
 	bool m_bDead;		// 死亡フラグ
 	EType m_type;		// タイプ
+
+	bool m_isActivityAtPouse;
 };
 
 #endif // !_OBJECT_H_

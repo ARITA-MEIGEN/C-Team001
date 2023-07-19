@@ -274,6 +274,13 @@ void CGame::Init_GameEnd()
 }
 
 //====================================
+// ゲームポーズ前に初期化
+//====================================
+void CGame::Init_GamePouse()
+{
+}
+
+//====================================
 // フェード中何も処理を通さない
 //====================================
 void CGame::Update_FadeNow()
@@ -333,6 +340,13 @@ void CGame::Update_GameEnd()
 	Init_GameEnd();
 	CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
 	m_pMap->Ranking();
+}
+
+//====================================
+// ゲームポーズ時
+//====================================
+void CGame::Update_GamePouse()
+{
 }
 
 //====================================
