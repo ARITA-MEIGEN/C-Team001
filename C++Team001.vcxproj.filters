@@ -90,9 +90,6 @@
     <ClCompile Include="src\SkillSelect.cpp">
       <Filter>ソース ファイル\01_Mode</Filter>
     </ClCompile>
-    <ClCompile Include="BgStage.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\input.cpp">
       <Filter>ソース ファイル\03_Input</Filter>
     </ClCompile>
@@ -207,11 +204,11 @@
     <ClCompile Include="src\Item_Bom.cpp">
       <Filter>ソース ファイル\04_Item</Filter>
     </ClCompile>
+    <ClCompile Include="src\area_warning.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BgStage.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\Command.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
@@ -388,6 +385,9 @@
     </ClInclude>
     <ClInclude Include="src\Item_Bom.h">
       <Filter>ソース ファイル\04_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="src\area_warning.h">
+      <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

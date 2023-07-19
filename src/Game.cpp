@@ -100,7 +100,7 @@ HRESULT CGame::Init()
 	//デバッグ用カメラ操作モード
 	bDebugCamera = false;
 
-	m_pTimer = CTimer::Create();
+	m_pTimer = CTimer::Create(60);
 	m_Timer = 0;
 
 	m_Round = ROUND_1;
@@ -238,7 +238,7 @@ void CGame::Init_CountDown()
 		return;
 	}
 
-	m_pCountDown = CTimer::Create();
+	m_pCountDown = CTimer::Create(3);
 	m_pCountDown->SetPos(D3DXVECTOR3(500.0f,500.0f,0.0f));
 	isDirty = true;
 }
