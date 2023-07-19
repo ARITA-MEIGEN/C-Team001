@@ -338,7 +338,6 @@ void CPlayer::Move()
 {
 	if (m_controller == nullptr)
 	{
-		assert(false);
 		return;
 	}
 
@@ -428,6 +427,9 @@ void CPlayer::StopNoBlock()
 	CDebugProc::Print("BlockIdx : %.1f,%.1f\n", BlockIdx.x, BlockIdx.y);
 
 	CBlock* moveBlock = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);	// 進行方向にあるブロック
+
+	// 移動先予定のブロックが存在しない場合警告を出す
+	assert(moveBlock != nullptr);
 
 	if (moveBlock->IsStop())
 	{

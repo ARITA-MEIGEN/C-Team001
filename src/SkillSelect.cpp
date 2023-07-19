@@ -197,7 +197,7 @@ void CSkillSelect::Input()
 		}
 	}
 
-	if ((pInput->Trigger(DIK_RETURN)) || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
+	if ((pInput->Trigger(KEY_DECISION)))	// ENTERキー
 	{//エンターでゲームに
 	 //モード設定
 		CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
@@ -236,7 +236,7 @@ void CSkillSelect::Select()
 void CSkillSelect::Entry()
 {
 	CInput* pInput = CInput::GetKey();
-	std::vector<int> inputNumber = pInput->TriggerDevice(KEY_UP);
+	std::vector<int> inputNumber = pInput->TriggerDevice(KEY_DECISION);
 
 	// 入力デバイスが設定したデバイスか否か検出。既に設定されていたらコンテナから削除
 	for (auto it = inputNumber.begin(); it != inputNumber.end();)

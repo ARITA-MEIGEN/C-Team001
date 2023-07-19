@@ -31,9 +31,6 @@
     <Filter Include="ソース ファイル\05_Map">
       <UniqueIdentifier>{ea0ea196-9053-404c-8e15-d526b7bedec7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\06_Game">
-      <UniqueIdentifier>{3d02e5a1-14af-4321-a536-bbe3d9c1e176}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\07_Object">
       <UniqueIdentifier>{5607d2da-08c2-404f-9789-90b1810d1cde}</UniqueIdentifier>
     </Filter>

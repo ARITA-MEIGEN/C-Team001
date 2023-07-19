@@ -291,8 +291,8 @@ void CMap::PopItem()
 //=============================================================================
 void CMap::PopFutureArea()
 {
-	m_nItemPopCount--;
-	if (m_nItemPopCount > 0)
+	m_nAreaPopCount--;
+	if (m_nAreaPopCount > 0)
 	{
 		return;
 	}

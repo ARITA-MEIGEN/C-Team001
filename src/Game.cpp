@@ -38,8 +38,10 @@ CCamera* CGame::m_pCamera = nullptr;
 CLight* CGame::m_pLight = nullptr;
 CFloor* CGame::m_pFloor = nullptr;
 CTimer* CGame::m_pTimer = nullptr;
+CTimer* CGame::m_pCountDown = nullptr;
 CUI* CGame::m_pUI = nullptr;
 CMap* CGame::m_pMap = nullptr;
+
 CStatusUI* CGame::m_apStatusUI[MAX_PLAYER] = {};
 
 //====================================
@@ -89,7 +91,6 @@ HRESULT CGame::Init()
 		CBlock* spawnBlock = m_pMap->GetPlayerSpawnBlock(nCnt);
 		m_pPlayer[nCnt] = CPlayer::Create(spawnBlock->GetPos(), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 		//m_pPlayer[nCnt]->SetController(new CComputerController);
-		m_pPlayer[nCnt]->SetController(new CPlayerController(nCnt));
 
 		//ステータス表示の生成
 		D3DXVECTOR3 pos((CGauge::SPACE_SIZE * (nCnt + 1 + 1)) + (CGauge::MAX_SIZE * nCnt + 1), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y * 0.5f) - 10.0f, 0.0f);
@@ -215,12 +216,70 @@ void CGame::Update()
 #endif // !_DEBUG
 }
 
+//====================================
+// フェード中に初期化
+//====================================
+void CGame::Init_FadeNow()
+{
+	if (isDirty)
+	{
+		return;
+	}
+	isDirty = true;
+}
+
+//====================================
+// カウントダウン前に初期化
+//====================================
+void CGame::Init_CountDown()
+{
+	if (isDirty)
+	{
+		return;
+	}
+
+	m_pCountDown = CTimer::Create();
+	m_pCountDown->SetPos(D3DXVECTOR3(500.0f,500.0f,0.0f));
+	isDirty = true;
+}
+
+//====================================
+// ゲーム開始前に初期化
+//====================================
+void CGame::Init_GamePlay()
+{
+	if (isDirty)
+	{
+		return;
+	}
+
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{
+		m_pPlayer[nCnt]->SetController(new CPlayerController(nCnt));
+	}
+
+	isDirty = true;
+}
+
+//====================================
+// ゲーム終了前に初期化
+//====================================
+void CGame::Init_GameEnd()
+{
+	if (isDirty)
+	{
+		return;
+	}
+	isDirty = true;
+}
 
 //====================================
 // フェード中何も処理を通さない
 //====================================
 void CGame::Update_FadeNow()
 {
+	Init_FadeNow();
+
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
 		SetUpdate(UPDATE_COUNTDOWN);
@@ -232,7 +291,22 @@ void CGame::Update_FadeNow()
 //====================================
 void CGame::Update_CountDown()
 {
-	SetUpdate(UPDATE_GAME_PLAY);
+	Init_CountDown();
+
+	m_pCountDown->Update();
+
+	if (m_pCountDown->GetTimer() == 0)
+	{
+		// カウントダウンの終了
+		if (m_pCountDown != nullptr)
+		{
+			m_pCountDown->Uninit();
+			delete m_pCountDown;
+			m_pCountDown = nullptr;
+		}
+
+		SetUpdate(UPDATE_GAME_PLAY);
+	}
 }
 
 //====================================
@@ -240,6 +314,7 @@ void CGame::Update_CountDown()
 //====================================
 void CGame::Update_GamePlay()
 {
+	Init_GamePlay();
 	m_pMap->Update();
 
 	m_pTimer->Update();
@@ -255,6 +330,7 @@ void CGame::Update_GamePlay()
 //====================================
 void CGame::Update_GameEnd()
 {
+	Init_GameEnd();
 	CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
 	m_pMap->Ranking();
 }
