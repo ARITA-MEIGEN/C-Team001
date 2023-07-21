@@ -18,6 +18,7 @@
 #include"Player.h"
 #include"CameraGame.h"
 #include"Light.h"
+#include"Object3D.h"
 
 //====================================
 // ’è”
@@ -47,7 +48,7 @@ HRESULT CMapSelect::Init()
 	m_bMapChange = false;
 
 	//2DObject‚Ì¶¬
-	m_pObj2D = CObject2D::Create(D3DXVECTOR3(640.0f, 600.0f, 0.0f), D3DXVECTOR2(400.0f, 100.0f), 4);
+	m_pObj2D = CObject2D::Create(D3DXVECTOR3(640.0f, 600.0f, 0.0f), D3DXVECTOR2(400.0f, 100.0f), 5);
 	m_pObj2D->SetTextureKey("RESULET_000");
 	//‰Šú‰»
 	for (int nCnt = 0; nCnt < CMap::STAGE_MAX; nCnt++)
@@ -125,6 +126,12 @@ void CMapSelect::Update()
 			m_pObj2DPolygon[nCnt]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
 		}
 	}
+
+	{
+		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
+		pori->SetTextureKey("TEST_FLOOR");
+	}
+
 }
 
 //====================================
