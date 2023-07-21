@@ -32,6 +32,8 @@ private:
 	static const float PLAYER_SPEED;		// 移動速度
 	static const float ADD_SPEED;			// アイテムで加算するスピード
 	static const float SKILL_BUFF_TIME;		// バフの効果時間(Lv1基準)
+	static const float SKILL_WAVE_TIME;		// スキルの発動時間
+
 
 public:
 	enum PLAYER_STATE
@@ -187,6 +189,7 @@ private:	// メンバー変数
 	ITEM_STATE		m_ItemState;			// アイテムの状態
 	CShadow*		m_pShadow;				// 影
 	CBlock*			m_pOnBlock;				// プレイヤーの乗っているブロックへのポインタ
+	int				m_nSkillTimer;			// モーション再生からスキル発生までの時間
 
 	//押し出し判定関連
 	D3DXVECTOR3		m_aAxisSiz[PST_MAX];	// 押し出し判定の大きさ

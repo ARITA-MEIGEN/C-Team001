@@ -33,6 +33,8 @@ const std::string CPlayer::MOTION_PATH = "data/TXT/Player001.txt";	// モーション
 const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
+const float CPlayer::SKILL_WAVE_TIME = 30.0f;	// スキルの発生時間
+
 
 const CObject::UPDATE_FUNC CPlayer::mUpdateFunc[] =
 {
@@ -250,8 +252,23 @@ void CPlayer::Update(void)
 	}
 	if (pInput->Trigger(DIK_P))
 	{
+		m_nSkillTimer = SKILL_WAVE_TIME;
+		m_Motion = PM_WAVE;
+		m_motion->SetNumMotion(m_Motion);
+	}
+
+	if (m_nSkillTimer <= 0 && m_Motion == PM_WAVE)
+	{
+		m_Motion = PM_NEUTRAL;
+		m_motion->SetNumMotion(m_Motion);
+
 		Skill_Wave();
 	}
+	else if(m_Motion == PM_WAVE)
+	{
+		m_nSkillTimer--;
+	}
+
 #endif // _DEBUG
 
 }
@@ -717,9 +734,6 @@ void CPlayer::Skill_Wave()
 	{
 		range.x = +1.0f;
 	}
-
-	m_Motion = PM_WAVE;
-	m_motion->SetNumMotion(m_Motion);
 
 	//範囲を塗る
 	for (int nCntX = 0; nCntX < 3; nCntX++)
