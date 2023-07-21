@@ -21,7 +21,8 @@ CObjectList* CObjectList::instance = nullptr;
 // Author : Yuda Kaito
 //=============================================================================
 CObjectList::CObjectList() :
-	m_priorityNumber(0)
+	m_priorityNumber(0),
+	m_isPouseStop(false)
 {
 	m_list.clear();
 }
@@ -107,11 +108,14 @@ void CObjectList::Uninit()
 //=============================================================================
 void CObjectList::Update()
 {
-	AllProcess([](CObject* object)
+	AllProcess([this](CObject* object)
 	{
 		if (!object->IsRelease())
 		{
-			object->Update();
+			if (!m_isPouseStop || object->IsActivityAtPouse())
+			{
+				object->Update();
+			}
 		}
 	});
 
@@ -407,14 +411,7 @@ CObject * CObjectList::SearchSameRolePrev(CObject * inObject)
 //=============================================================================
 void CObjectList::Pause(bool isPause)
 {
-	//if (isPause)
-	//{
-	//	AllProcess([](CObject* object) { object->PauseOn(); });
-	//}
-	//else
-	//{
-	//	AllProcess([](CObject* object) { object->PauseOff(); });
-	//}
+	m_isPouseStop = isPause;
 }
 
 //=============================================================================

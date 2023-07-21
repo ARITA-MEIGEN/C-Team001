@@ -21,17 +21,7 @@ CSound* CSound::m_pSound = nullptr;
 //--------------------------------------------------------------------
 const CSound::SParam CSound::PARAM[] =
 {// 各音素材のパラメータ
-	{ "data/BGM/BGM_02.wav", -1 },
-	{ "data/BGM/BGM_00.wav", -1 },
-	{ "data/BGM/BGM_01.wav", -1 },
-	{ "data/SE/Die001.wav", 0 },
-	{ "data/SE/pi.wav", 0 },
-	{ "data/SE/pi.wav", 0 },
-	{ "data/SE/pi.wav", 0 },
-	{ "data/SE/Select.wav", 0 },
-	{ "data/SE/Select.wav", 0 },
-	{ "data/SE/Select.wav", 0 },
-	{ "data/SE/ok.wav", 0 }
+	{ "data/BGM/BGM_02.wav", -1 }
 };
 
 static_assert(sizeof(CSound::PARAM) / sizeof(CSound::PARAM[0]) == CSound::LABEL_MAX, "soundが合わない");

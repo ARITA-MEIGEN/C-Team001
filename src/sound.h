@@ -27,16 +27,6 @@ public:
 	{
 		LABEL_NONE = -1,
 		LABEL_BGM_TITLE = 0,	// 戦闘BGM
-		LABEL_BGM_BATTLE001,	// 戦闘BGM
-		LABEL_BGM_RESULT,		// 戦闘BGM
-		LABEL_SE_LATK_HIT,		// 弱
-		LABEL_SE_MATK_HIT,		// 中
-		LABEL_SE_HATK_HIT,		// 強
-		LABEL_SE_GUARD,			// 強
-		LABEL_SE_FIRE,			// 炎SE
-		LABEL_SE_SPECIAL,		// 必殺技
-		LABEL_SE_START,			// 開始
-		LABEL_SE_BACKSTEP,		// バックステップ
 		LABEL_MAX,
 	};
 

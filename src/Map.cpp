@@ -17,6 +17,7 @@
 #include "go_future_block.h"
 #include "come_future_block.h"
 #include "teleport.h"
+#include "Player.h"
 
 //-----------------------------------------------------------------------------
 // Ã“Iƒƒ“ƒo[•Ï”‚ÌéŒ¾
@@ -333,8 +334,17 @@ void CMap::PopFutureArea()
 			{
 				CBlock* block = GetBlock((int)(x + popBlockIndex.x - range), (int)(y + popBlockIndex.y - range));
 
-				if (block == nullptr || block->IsStop())
+				if (block == nullptr)
 				{
+					continue;
+				}
+
+				if (block->IsStop())
+				{
+					if (block->GetOnPlayer() != nullptr)
+					{
+						block->GetOnPlayer()->Stun(60);
+					}
 					continue;
 				}
 

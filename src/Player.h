@@ -105,6 +105,8 @@ public:
 	void SetTeleport(bool bTeleport) { m_bTeleport = bTeleport; }
 	void SetResultMotion(int Rank);								// リザルト時のモーション再生
 
+	void Stun(int inTime);
+
 	// Getter
 	D3DXVECTOR3		GetPos() { return m_pos; };
 	PLAYER_MOTION	GetNowMotion() { return m_Motion; };
