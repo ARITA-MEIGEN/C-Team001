@@ -745,11 +745,10 @@ void CPlayer::Skill_Wave()
 		D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX* range.x, BlockIdx.y+ nCntX* range.y);
 		CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
 
-		Block->SetSink(-15.0f + -5.0f * nCntX);
-
 		if (Block != nullptr)
 		{//ブロックを塗る
 		 //Block->SetOnPlayer(this);	//プレイヤーの
+			Block->SetSink(-15.0f + 5.0f * nCntX);
 			Block->SetPlayerNumber(m_nPlayerNumber);
 		}
 	}
