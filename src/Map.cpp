@@ -117,7 +117,7 @@ void CMap::Load()
 	{
 		for (int j = 0; j < (int)map["MAP"][i].size(); j++)
 		{
-			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH;
+			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH + 25.0f;
 			float x = j * BLOCK_WIDTH - map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
 			D3DXVECTOR3 createPos(x, 0.0f, z);
 

@@ -74,12 +74,29 @@ void  CBlock::Update()
 	}
 
 	// プレイヤーが乗ってないなら元の位置に戻る
-	if (m_onPlayer == nullptr)
+	//if (m_onPlayer == nullptr)
 	{
 		D3DXVECTOR3 pos = GetPos();
-		if (0.0f >= pos.y)
+		if (0.0f > pos.y)
 		{
 			pos.y += UP_POWER;
+
+			if (pos.y > 0.0f)
+			{
+				pos.y = 0.0f;
+			}
+
+			SetPos(pos);
+		}
+
+		if (0.0f < pos.y)
+		{
+			pos.y -= UP_POWER;
+
+			if (pos.y < 0.0f)
+			{
+				pos.y = 0.0f;
+			}
 
 			SetPos(pos);
 		}
