@@ -62,7 +62,7 @@ void CMap::Uninit()
 {
 	for (int i = 0; i < GetBlockCount(); i++)
 	{
-		m_pBlock[i]->Uninit();
+		m_pBlock[i]->Release();
 	}
 	m_pBlock.clear();
 }
@@ -127,7 +127,7 @@ void CMap::Load()
 			{
 			case -1:
 				blockCreate = CBlock::Create(createPos);
-				blockCreate->SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
+				blockCreate->SetAllColorMaterial(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 				blockCreate->SetStop(true);
 				break;
 			case 0:
