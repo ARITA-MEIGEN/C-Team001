@@ -47,7 +47,7 @@ CInputMouse::~CInputMouse()
 // Author2 : KOZUNA HIROHITO
 // 概要 : マウスのアクセス権を獲得できた場合、処理を継続する
 //=============================================================================
-HRESULT CInputMouse::Init(HINSTANCE /*hInstance*/, HWND hWnd)
+HRESULT CInputMouse::Init(HINSTANCE hInstance, HWND hWnd)
 {
 
 	// 入力デバイス（マウス）の生成

@@ -60,23 +60,34 @@ private: // 更新処理
 	enum UPDATE_STATE
 	{
 		UPDATE_FADENOW = 0,		// フェード中
-		UPDATE_COUNTDOWN,	// カウントダウン
-		UPDATE_GAME_PLAY,	// ゲームプレイ
-		UPDATE_GAME_END,	// ゲーム終了
+		UPDATE_COUNTDOWN,		// カウントダウン
+		UPDATE_GAME_PLAY,		// ゲームプレイ
+		UPDATE_GAME_END,		// ゲーム終了
+		UPDATE_GAME_POUSE,		// ポーズ中
 		UPDATE_MAX
 	};
 
 	using UPDATE_FUNC = void(CGame::*)();
 	static const UPDATE_FUNC m_UpdateFunc[];
-	void SetUpdate(UPDATE_STATE inState) { m_stateNow = inState; }
+	void SetUpdate(UPDATE_STATE inState) { m_stateNow = inState; isDirty = false; }
 
 	const UPDATE_FUNC* m_funcUpdate;
+
+	bool isDirty;
+
+	// 切り替えタイミングでの初期化
+	void Init_FadeNow();
+	void Init_CountDown();
+	void Init_GamePlay();
+	void Init_GameEnd();
+	void Init_GamePouse();
 
 	//　更新のステート関数
 	void Update_FadeNow();
 	void Update_CountDown();
 	void Update_GamePlay();
 	void Update_GameEnd();
+	void Update_GamePouse();
 
 	UPDATE_STATE	m_stateNow;		// スキルステートの状態
 
@@ -105,6 +116,7 @@ private:
 	static	CFloor*m_pFloor;			// 床
 	static	bool bDebugCamera;			// デバッグ用カメラのON/OFF
 	static	CTimer*m_pTimer;			// タイマー
+	static	CTimer* m_pCountDown;		// カウントダウン
 	static	CUI*m_pUI;					// UI
 	static	CMap*m_pMap;				// マップ
 	static CStatusUI* m_apStatusUI[MAX_PLAYER];	// ステータス表示

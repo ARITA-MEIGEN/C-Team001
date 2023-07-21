@@ -22,12 +22,12 @@ class CInputJoyPad : public CDirectInput
 {
 
 private:
-	static const int MAX_JOY_KEY = 32;									//ジョイパッドの使ってないキーを含めた最大数
-	static const int JOYPAD_DATA_MAX = 4;								//同時接続可能最大数
-	static const int KEY_CONFIG_SUPPORTED_KEY_NUMBER = 13;				//キーコンフィグ対応のキー数
-	static const int LINE_MAX_READING_LENGTH = 256;						//読み込み際の1行当たりの最大文字数
-	static const int DEVICE_ADDITIONAL_INTERVAL_EXECUTING_APP = 120;	//アプリ実行中のデバイス追加間隔
-	static const int DIRECTION_COUNT_OF_STICK_AND_CROSS = 8;			//スティックと十字キーの方向数
+	static const int MAX_JOY_KEY = 32;		//ジョイパッドの使ってないキーを含めた最大数
+	static const int JOYPAD_DATA_MAX = 4;	//同時接続可能最大数
+	static const int KEY_CONFIG_SUPPORTED_KEY_NUMBER = 13; //キーコンフィグ対応のキー数
+	static const int LINE_MAX_READING_LENGTH = 256; //読み込み際の1行当たりの最大文字数
+	static const int DEVICE_ADDITIONAL_INTERVAL_EXECUTING_APP = 120; //アプリ実行中のデバイス追加間隔
+	static const int DIRECTION_COUNT_OF_STICK_AND_CROSS = 8;//スティックと十字キーの方向数
 
 	static const std::string KEYCONFIG_TXT_PATH;
 
