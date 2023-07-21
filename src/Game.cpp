@@ -394,7 +394,7 @@ void CGame::ResetGame()
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{
 		m_pPlayer[i]->Init();
-		m_pPlayer[i]->SetPos(D3DXVECTOR3(-50.0f+(100.0f*i), 0.0f, 0.0f));
+		m_pPlayer[i]->SetPos(D3DXVECTOR3(-50.0f + (100.0f*i), 0.0f, 0.0f));
 	}
 
 	m_pTimer->Init();

@@ -801,7 +801,7 @@ void CPlayer::BlockCollision()
 			pBlock->SetOnPlayer(this);					//プレイヤーの
 			pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
 			pBlock->SetSink(2.5f);						// ブロックを沈める
-			pBlock->SetStop(true);					//プレイヤーの
+			pBlock->SetStop(true);						// その場所を侵入不可にする
 			m_pOnBlock = pBlock;						//乗っているブロックを設定
 		}
 	}
@@ -914,4 +914,14 @@ void CPlayer::SetResultMotion(int Rank)
 		m_Motion = PM_LOSE;						// 敗北モーション再生
 		m_motion->SetNumMotion(m_Motion);
 	}
+}
+
+//-----------------------------------------------------------------------------
+// スタン
+//-----------------------------------------------------------------------------
+void CPlayer::Stun(int inTime)
+{
+	m_nStunTime = inTime;
+	m_Motion = PM_STAN;
+	m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }

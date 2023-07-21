@@ -134,6 +134,9 @@ void CObjectX::Draw(void)
 	//マテリアルの描画
 	for (int nCnt2 = 0; nCnt2 < (int)m_modelData.numMat; nCnt2++)
 	{
+		D3DXCOLOR emisive = pMat[nCnt2].MatD3D.Emissive;
+		D3DXCOLOR diffuse = pMat[nCnt2].MatD3D.Diffuse;
+
 		pMat[nCnt2].MatD3D.Emissive = m_materialColor[nCnt2];
 		pMat[nCnt2].MatD3D.Diffuse.a = m_materialColor[nCnt2].a;
 
@@ -142,6 +145,9 @@ void CObjectX::Draw(void)
 
 		//プレイヤーパーツの描画
 		m_modelData.pMesh->DrawSubset(nCnt2);
+
+		pMat[nCnt2].MatD3D.Emissive = emisive;
+		pMat[nCnt2].MatD3D.Diffuse = diffuse;
 	}
 	//保持していたマテリアルを戻す
 	pDevice->SetMaterial(&matDef);
@@ -175,10 +181,19 @@ void CObjectX::BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat)
 void CObjectX::BindModel(CObjectXOriginalList::SModelData model)
 {
 	m_modelData = model;
+	m_materialColor.clear();
 	m_materialColor.resize(m_modelData.numMat);
+
+	D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_modelData.pBuffMat->GetBufferPointer();
+
 	for (int i = 0; i < m_modelData.numMat; i++)
 	{
-		SetColorMaterial(i,D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+		D3DXCOLOR col;
+		col.r = pMat[i].MatD3D.Emissive.r;
+		col.g = pMat[i].MatD3D.Emissive.g;
+		col.b = pMat[i].MatD3D.Emissive.b;
+		col.a = pMat[i].MatD3D.Diffuse.a;
+		SetColorMaterial(i, col);
 	}
 }
 
