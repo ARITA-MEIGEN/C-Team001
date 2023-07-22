@@ -128,11 +128,13 @@ HRESULT CGame::Init()
 		}
 	}
 
+	// 仮背景の設置
 	{
 		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
 		pori->SetTextureKey("TEST_FLOOR");
 	}
 
+	// 更新のステート管理
 	m_funcUpdate = m_UpdateFunc;
 	SetUpdate(UPDATE_FADENOW);
 
@@ -171,18 +173,6 @@ void CGame::Uninit()
 		delete m_pMap;
 	}
 
-	for (int i = 0; i < MAX_PLAYER; i++)
-	{//ステータス表示
-		if (m_apStatusUI[i] == nullptr)
-		{//NULLチェック
-			continue;
-		}
-
-		/* nullptrではない場合 */
-
-		m_apStatusUI[i] = nullptr;
-	}
-
 	// 音楽の停止
 	CSound::GetInstance()->Stop();
 }
@@ -208,7 +198,7 @@ void CGame::Update()
 		{
 			CInput* pInput = CInput::GetKey();
 
-			if (pInput->Trigger(DIK_RETURN))
+			if (pInput->Trigger(DIK_BACKSPACE))
 			{
 				fade->SetFade(CApplication::MODE_RESULT);
 				m_pMap->Ranking();
@@ -303,7 +293,7 @@ void CGame::Init_GamePouse()
 
 	{
 		m_pouse_bg = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT), 6);
-		m_pouse_bg->SetCol(D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.5f));
+		m_pouse_bg->SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.75f));
 		m_pouse_bg->AttachActivityAtPouse();
 	}
 
@@ -377,12 +367,16 @@ void CGame::Update_GamePlay()
 
 	m_pTimer->Update();
 
+	/* ↓ステート切り替え↓ */
+
+	// 制限時間が過ぎたら
 	if (m_pTimer->GetTimer() <= 0)
 	{
 		SetUpdate(UPDATE_GAME_END);
 	}
 
-	if (CInput::GetKey()->Trigger(DIK_5))
+	// ポーズ用のbuttonを押したら
+	if (CInput::GetKey()->Trigger(DIK_P))
 	{
 		SetUpdate(UPDATE_GAME_POUSE);
 	}
@@ -452,8 +446,8 @@ void CGame::Update_GamePouse()
 		}
 	}
 
-	// エンターにするとdebugの遷移が発生するためバックスペースで代用。決定button
-	if (CInput::GetKey()->Trigger(DIK_BACKSPACE))
+	// 項目の決定
+	if (CInput::GetKey()->Trigger(DIK_RETURN))
 	{
 		exit = true;
 
@@ -471,6 +465,11 @@ void CGame::Update_GamePouse()
 		default:
 			break;
 		}
+	}
+	if (CInput::GetKey()->Trigger(DIK_P))
+	{
+		exit = true;
+		SetUpdate(UPDATE_GAME_PLAY);
 	}
 
 	// 遷移する時に生成したものの破棄を行なう
