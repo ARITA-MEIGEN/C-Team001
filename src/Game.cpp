@@ -294,6 +294,41 @@ void CGame::Init_GamePouse()
 	isDirty = true;
 
 	CObjectList::GetInstance()->Pause(true);
+
+	m_pouse_bg = nullptr;
+	m_pouse_backButton = nullptr;
+	m_pouse_exitButton = nullptr;
+	m_pouse_replayButton = nullptr;
+	m_pouse_bottonIndex = 0;
+
+	{
+		m_pouse_bg = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT), 6);
+		m_pouse_bg->SetCol(D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.5f));
+		m_pouse_bg->AttachActivityAtPouse();
+	}
+
+	D3DXVECTOR3 buttonShiftPos(300.0f, 100.0f, 0.0f);
+
+	{
+		m_pouse_buttonBg = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f) + buttonShiftPos, D3DXVECTOR2(550.0f, 500.0f), 6);
+		m_pouse_buttonBg->AttachActivityAtPouse();
+	}
+	{
+		m_pouse_backButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.25f, 0.0f) + buttonShiftPos, D3DXVECTOR2(500.0f, 100.0f), 6);
+		m_pouse_backButton->SetTextureKey("TEXT_BACK");
+		m_pouse_backButton->AttachActivityAtPouse();
+	}
+	{
+		m_pouse_exitButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f) + buttonShiftPos, D3DXVECTOR2(500.0f, 100.0f), 6);
+		m_pouse_exitButton->SetTextureKey("TEXT_TITLE");
+		m_pouse_exitButton->AttachActivityAtPouse();
+	}
+	{
+		m_pouse_replayButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.75f, 0.0f) + buttonShiftPos, D3DXVECTOR2(500.0f, 100.0f), 6);
+		m_pouse_replayButton->SetTextureKey("TEXT_RETRY");
+		m_pouse_replayButton->AttachActivityAtPouse();
+	}
+
 }
 
 //====================================
@@ -370,9 +405,99 @@ void CGame::Update_GamePouse()
 {
 	Init_GamePouse();
 
-	if (CInput::GetKey()->Trigger(DIK_5))
+	bool exit = false;
+
+	if (CInput::GetKey()->Trigger(DIK_UP))
 	{
-		SetUpdate(UPDATE_GAME_PLAY);
+		m_pouse_bottonIndex--;
+
+		if (m_pouse_bottonIndex < 0)
+		{
+			m_pouse_bottonIndex = 0;
+		}
+	}
+	if (CInput::GetKey()->Trigger(DIK_DOWN))
+	{
+		m_pouse_bottonIndex++;
+
+		if (m_pouse_bottonIndex > 2)
+		{
+			m_pouse_bottonIndex = 2;
+		}
+	}
+
+	if (m_pouse_bg != nullptr)
+	{
+		switch (m_pouse_bottonIndex)
+		{
+		case 0:
+			m_pouse_backButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pouse_exitButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
+			m_pouse_replayButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
+			break;
+		case 1:
+			m_pouse_backButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
+			m_pouse_exitButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pouse_replayButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
+			break;
+		case 2:
+			m_pouse_backButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
+			m_pouse_exitButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
+			m_pouse_replayButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (CInput::GetKey()->Trigger(DIK_BACKSPACE))
+	{
+		exit = true;
+
+		switch (m_pouse_bottonIndex)
+		{
+		case 0:
+			SetUpdate(UPDATE_GAME_PLAY);
+			break;
+		case 1:
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
+			break;
+		case 2:
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (exit)
+	{
+		if (m_pouse_bg != nullptr)
+		{
+			m_pouse_bg->Release();
+			m_pouse_bg = nullptr;
+		}
+		if (m_pouse_backButton != nullptr)
+		{
+			m_pouse_backButton->Release();
+			m_pouse_backButton = nullptr;
+		}
+		if (m_pouse_exitButton != nullptr)
+		{
+			m_pouse_exitButton->Release();
+			m_pouse_exitButton = nullptr;
+		}
+		if (m_pouse_replayButton != nullptr)
+		{
+			m_pouse_replayButton->Release();
+			m_pouse_replayButton = nullptr;
+		}
+		if (m_pouse_buttonBg != nullptr)
+		{
+			m_pouse_buttonBg->Release();
+			m_pouse_buttonBg = nullptr;
+		}
+
 		isDirty = true;
 		CObjectList::GetInstance()->Pause(false);
 	}
