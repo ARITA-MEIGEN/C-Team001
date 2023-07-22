@@ -161,7 +161,6 @@ private:	// ↓スキル処理一覧↓
 	void Skill_Bom();
 	void Skill_Wave();
 
-
 	SKILL_STATE		m_skill;			// このキャラクターが仕様するスキル
 	SKILL_STATE		m_skillStateNow;	// スキルステートの状態
 	int				m_nSkillLv;			// プレイヤーのスキルLｖ

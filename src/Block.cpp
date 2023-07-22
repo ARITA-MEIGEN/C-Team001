@@ -17,6 +17,7 @@
 //-----------------------------------------------------------------------------
 const float CBlock::SINK_LIMIT = -10.0f;	// 沈む下限値
 const float CBlock::UP_POWER = 0.5f;		// 沈んだブロックが浮上する時間
+const float CBlock::DOWN_POWER = 1.25f;		// 沈んだブロックが浮上する時間
 
 //=============================================================================
 // コンストラクタ
@@ -91,7 +92,7 @@ void  CBlock::Update()
 
 		if (0.0f < pos.y)
 		{
-			pos.y -= UP_POWER;
+			pos.y -= DOWN_POWER;
 
 			if (pos.y < 0.0f)
 			{
