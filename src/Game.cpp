@@ -407,13 +407,14 @@ void CGame::Update_GamePouse()
 
 	bool exit = false;
 
+	// 上下移動で項目の選択
 	if (CInput::GetKey()->Trigger(DIK_UP))
 	{
 		m_pouse_bottonIndex--;
 
 		if (m_pouse_bottonIndex < 0)
 		{
-			m_pouse_bottonIndex = 0;
+			m_pouse_bottonIndex = 2;
 		}
 	}
 	if (CInput::GetKey()->Trigger(DIK_DOWN))
@@ -422,10 +423,11 @@ void CGame::Update_GamePouse()
 
 		if (m_pouse_bottonIndex > 2)
 		{
-			m_pouse_bottonIndex = 2;
+			m_pouse_bottonIndex = 0;
 		}
 	}
 
+	// 選択してない項目のα値を下げる。
 	if (m_pouse_bg != nullptr)
 	{
 		switch (m_pouse_bottonIndex)
@@ -450,6 +452,7 @@ void CGame::Update_GamePouse()
 		}
 	}
 
+	// エンターにするとdebugの遷移が発生するためバックスペースで代用。決定button
 	if (CInput::GetKey()->Trigger(DIK_BACKSPACE))
 	{
 		exit = true;
@@ -470,6 +473,7 @@ void CGame::Update_GamePouse()
 		}
 	}
 
+	// 遷移する時に生成したものの破棄を行なう
 	if (exit)
 	{
 		if (m_pouse_bg != nullptr)
