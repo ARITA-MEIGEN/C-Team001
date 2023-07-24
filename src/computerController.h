@@ -29,6 +29,7 @@ public:
 
 	D3DXVECTOR3 Move() override;
 	bool Skill() override;
+	bool Throw() override;
 private:
 
 private:
