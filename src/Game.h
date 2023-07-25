@@ -60,9 +60,10 @@ private: // 更新処理
 	enum UPDATE_STATE
 	{
 		UPDATE_FADENOW = 0,		// フェード中
-		UPDATE_COUNTDOWN,	// カウントダウン
-		UPDATE_GAME_PLAY,	// ゲームプレイ
-		UPDATE_GAME_END,	// ゲーム終了
+		UPDATE_COUNTDOWN,		// カウントダウン
+		UPDATE_GAME_PLAY,		// ゲームプレイ
+		UPDATE_GAME_END,		// ゲーム終了
+		UPDATE_GAME_POUSE,		// ポーズ中
 		UPDATE_MAX
 	};
 
@@ -79,12 +80,14 @@ private: // 更新処理
 	void Init_CountDown();
 	void Init_GamePlay();
 	void Init_GameEnd();
+	void Init_GamePouse();
 
 	//　更新のステート関数
 	void Update_FadeNow();
 	void Update_CountDown();
 	void Update_GamePlay();
 	void Update_GameEnd();
+	void Update_GamePouse();
 
 	UPDATE_STATE	m_stateNow;		// スキルステートの状態
 

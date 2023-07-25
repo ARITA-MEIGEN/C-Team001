@@ -34,7 +34,9 @@ const std::string CPlayer::MOTION_PATH = "data/TXT/Player001.txt";	// モーション
 const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
+const float CPlayer::SKILL_WAVE_TIME = 30.0f;	// スキルの発生時間
 const float CPlayer::THROW_DISTANCE = 4.0f;		// 投擲距離
+
 
 const CObject::UPDATE_FUNC CPlayer::mUpdateFunc[] =
 {
@@ -239,8 +241,23 @@ void CPlayer::Update(void)
 	}
 	if (pInput->Trigger(DIK_P))
 	{
+		m_nSkillTimer = SKILL_WAVE_TIME;
+		m_Motion = PM_WAVE;
+		m_motion->SetNumMotion(m_Motion);
+	}
+
+	if (m_nSkillTimer <= 0 && m_Motion == PM_WAVE)
+	{
+		m_Motion = PM_NEUTRAL;
+		m_motion->SetNumMotion(m_Motion);
+
 		Skill_Wave();
 	}
+	else if(m_Motion == PM_WAVE)
+	{
+		m_nSkillTimer--;
+	}
+
 #endif // _DEBUG
 
 }
@@ -723,6 +740,7 @@ void CPlayer::Skill_Wave()
 		if (Block != nullptr)
 		{//ブロックを塗る
 		 //Block->SetOnPlayer(this);	//プレイヤーの
+			Block->SetSink(-15.0f + 5.0f * nCntX);
 			Block->SetPlayerNumber(m_nPlayerNumber);
 		}
 	}
@@ -793,7 +811,7 @@ void CPlayer::BlockCollision()
 			pBlock->SetOnPlayer(this);					//プレイヤーの
 			pBlock->SetPlayerNumber(m_nPlayerNumber);	//プレイヤーの
 			pBlock->SetSink(2.5f);						// ブロックを沈める
-			pBlock->SetStop(true);					//プレイヤーの
+			pBlock->SetStop(true);						// その場所を侵入不可にする
 			m_pOnBlock = pBlock;						//乗っているブロックを設定
 		}
 	}
@@ -1000,4 +1018,14 @@ void CPlayer::SetResultMotion(int Rank)
 		m_Motion = PM_LOSE;						// 敗北モーション再生
 		m_motion->SetNumMotion(m_Motion);
 	}
+}
+
+//-----------------------------------------------------------------------------
+// スタン
+//-----------------------------------------------------------------------------
+void CPlayer::Stun(int inTime)
+{
+	m_nStunTime = inTime;
+	m_Motion = PM_STAN;
+	m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }

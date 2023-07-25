@@ -17,6 +17,7 @@
 #include "go_future_block.h"
 #include "come_future_block.h"
 #include "teleport.h"
+#include "Player.h"
 
 //-----------------------------------------------------------------------------
 // Ã“Iƒƒ“ƒo[•Ï”‚ÌéŒ¾
@@ -61,7 +62,7 @@ void CMap::Uninit()
 {
 	for (int i = 0; i < GetBlockCount(); i++)
 	{
-		m_pBlock[i]->Uninit();
+		m_pBlock[i]->Release();
 	}
 	m_pBlock.clear();
 }
@@ -116,7 +117,7 @@ void CMap::Load()
 	{
 		for (int j = 0; j < (int)map["MAP"][i].size(); j++)
 		{
-			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH;
+			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH + 25.0f;
 			float x = j * BLOCK_WIDTH - map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
 			D3DXVECTOR3 createPos(x, 0.0f, z);
 
@@ -126,7 +127,7 @@ void CMap::Load()
 			{
 			case -1:
 				blockCreate = CBlock::Create(createPos);
-				blockCreate->SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
+				blockCreate->SetAllColorMaterial(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 				blockCreate->SetStop(true);
 				break;
 			case 0:
@@ -333,8 +334,17 @@ void CMap::PopFutureArea()
 			{
 				CBlock* block = GetBlock((int)(x + popBlockIndex.x - range), (int)(y + popBlockIndex.y - range));
 
-				if (block == nullptr || block->IsStop())
+				if (block == nullptr)
 				{
+					continue;
+				}
+
+				if (block->IsStop())
+				{
+					if (block->GetOnPlayer() != nullptr)
+					{
+						block->GetOnPlayer()->Stun(60);
+					}
 					continue;
 				}
 

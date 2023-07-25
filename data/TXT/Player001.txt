@@ -14,7 +14,7 @@ NUM_MODEL = 11
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data\MODEL\Player\Body.x		# 体
+MODEL_FILENAME = data\MODEL\Player\body.x		# 体
 MODEL_FILENAME = data\MODEL\Player\Head.x		# 頭
 MODEL_FILENAME = data\MODEL\Player\Waist.x		# 腰
 MODEL_FILENAME = data\MODEL\Player\UpperArmR.x	# 右腕

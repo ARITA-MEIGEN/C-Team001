@@ -16,6 +16,7 @@
 #include"Player.h"
 #include"CameraGame.h"
 #include"Light.h"
+#include"Object3D.h"
 
 //-----------------------------------------------------------------------------
 //Ã“I•Ï”éŒ¾
@@ -83,6 +84,12 @@ HRESULT CResult::Init()
 		m_pCylinder[i]= CObjectX::Create();
 		m_pCylinder[i]->BindModel(CObjectXOriginalList::GetInstance()->Load("ENTYU", "data/MODEL/entyu000.x"));
 		m_pCylinder[i]->SetPos(D3DXVECTOR3{m_pPlayer[i]->GetPos().x,m_pPlayer[i]->GetPos().y - 250.0f,m_pPlayer[i]->GetPos().z });
+	}
+
+	{
+		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 300.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
+		pori->SetRot(D3DXVECTOR3(-1.57f,0.0f,0.0f));
+		pori->SetTextureKey("TEST_FLOOR");
 	}
 
 	for (int i = 0; i < MAX_PLAYER; i++)

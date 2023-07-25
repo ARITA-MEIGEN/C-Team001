@@ -27,6 +27,7 @@
 #include "computerController.h"
 #include"StatusUI.h"
 #include "MapSelect.h"
+#include "ObjectList.h"
 
 #include "File.h"
 
@@ -54,6 +55,7 @@ const CGame::UPDATE_FUNC CGame::m_UpdateFunc[] =
 	static_cast<void(CGame::*)()>(&(Update_CountDown)),
 	static_cast<void(CGame::*)()>(&(Update_GamePlay)),
 	static_cast<void(CGame::*)()>(&(Update_GameEnd)),
+	static_cast<void(CGame::*)()>(&(Update_GamePouse)),
 };
 
 //====================================
@@ -92,10 +94,6 @@ HRESULT CGame::Init()
 		CBlock* spawnBlock = m_pMap->GetPlayerSpawnBlock(nCnt);
 		m_pPlayer[nCnt] = CPlayer::Create(spawnBlock->GetPos(), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 
-		if (!CSkillSelect::GetComputer(nCnt))
-		{
-			m_pPlayer[nCnt]->SetController(new CComputerController);
-		}
 		//ステータス表示の生成
 		D3DXVECTOR3 pos((CGauge::SPACE_SIZE * (nCnt + 1 + 1)) + (CGauge::MAX_SIZE * nCnt + 1), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y * 0.5f) - 10.0f, 0.0f);
 		m_apStatusUI[nCnt] = CStatusUI::Create(pos,nCnt);
@@ -259,7 +257,14 @@ void CGame::Init_GamePlay()
 
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{
-		m_pPlayer[nCnt]->SetController(new CPlayerController(nCnt));
+		if (CSkillSelect::GetComputer(nCnt))
+		{
+			m_pPlayer[nCnt]->SetController(new CPlayerController(nCnt));
+		}
+		else
+		{
+			m_pPlayer[nCnt]->SetController(new CComputerController);
+		}
 	}
 
 	isDirty = true;
@@ -275,6 +280,20 @@ void CGame::Init_GameEnd()
 		return;
 	}
 	isDirty = true;
+}
+
+//====================================
+// ゲームポーズ前に初期化
+//====================================
+void CGame::Init_GamePouse()
+{
+	if (isDirty)
+	{
+		return;
+	}
+	isDirty = true;
+
+	CObjectList::GetInstance()->Pause(true);
 }
 
 //====================================
@@ -327,6 +346,11 @@ void CGame::Update_GamePlay()
 	{
 		SetUpdate(UPDATE_GAME_END);
 	}
+
+	if (CInput::GetKey()->Trigger(DIK_5))
+	{
+		SetUpdate(UPDATE_GAME_POUSE);
+	}
 }
 
 //====================================
@@ -337,6 +361,21 @@ void CGame::Update_GameEnd()
 	Init_GameEnd();
 	CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
 	m_pMap->Ranking();
+}
+
+//====================================
+// ゲームポーズ時
+//====================================
+void CGame::Update_GamePouse()
+{
+	Init_GamePouse();
+
+	if (CInput::GetKey()->Trigger(DIK_5))
+	{
+		SetUpdate(UPDATE_GAME_PLAY);
+		isDirty = true;
+		CObjectList::GetInstance()->Pause(false);
+	}
 }
 
 //====================================
@@ -355,7 +394,7 @@ void CGame::ResetGame()
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{
 		m_pPlayer[i]->Init();
-		m_pPlayer[i]->SetPos(D3DXVECTOR3(-50.0f+(100.0f*i), 0.0f, 0.0f));
+		m_pPlayer[i]->SetPos(D3DXVECTOR3(-50.0f + (100.0f*i), 0.0f, 0.0f));
 	}
 
 	m_pTimer->Init();

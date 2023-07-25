@@ -32,7 +32,9 @@ private:
 	static const float PLAYER_SPEED;		// 移動速度
 	static const float ADD_SPEED;			// アイテムで加算するスピード
 	static const float SKILL_BUFF_TIME;		// バフの効果時間(Lv1基準)
+	static const float SKILL_WAVE_TIME;		// スキルの発動時間
 	static const float THROW_DISTANCE;		// 投擲距離
+
 
 public:
 	enum PLAYER_STATE
@@ -104,6 +106,8 @@ public:
 	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }		// スキルゲージの量の設定
 	void SetTeleport(bool bTeleport) { m_bTeleport = bTeleport; }
 	void SetResultMotion(int Rank);								// リザルト時のモーション再生
+
+	void Stun(int inTime);
 
 	// Getter
 	D3DXVECTOR3		GetPos() { return m_pos; };
@@ -190,6 +194,7 @@ private:	// メンバー変数
 	ITEM_STATE		m_ItemState;			// アイテムの状態
 	CShadow*		m_pShadow;				// 影
 	CBlock*			m_pOnBlock;				// プレイヤーの乗っているブロックへのポインタ
+	int				m_nSkillTimer;			// モーション再生からスキル発生までの時間
 
 	//押し出し判定関連
 	D3DXVECTOR3		m_aAxisSiz[PST_MAX];	// 押し出し判定の大きさ
