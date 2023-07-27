@@ -41,6 +41,7 @@ protected:
 	D3DXMATRIX m_mtxProjection;		// プロジェクションマトリックス
 	D3DXMATRIX m_mtxView;			// ビューマトリックス
 
+	D3DVIEWPORT9 m_viewPort;
 };
 
 #endif

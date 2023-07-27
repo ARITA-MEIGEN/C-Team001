@@ -54,6 +54,14 @@ void CCamera::Init(void)
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot.x = atan2f((m_posV.y - m_posR.y), (m_posV.z - m_posR.z));
 
+	m_viewPort.MinZ = 0.0f;
+	m_viewPort.MaxZ = 1.0f;
+	//引数を代入
+	m_viewPort.X = 0;
+	m_viewPort.Y = 0;
+	m_viewPort.Width = SCREEN_WIDTH;
+	m_viewPort.Height = SCREEN_HEIGHT;
+
 	m_fDistance = sqrtf(DISTANCE_X + DISTANCE_Y + DISTANCE_Z);
 }
 
@@ -92,6 +100,9 @@ void  CCamera::Set(void)
 	LPDIRECT3DDEVICE9 pDevice;
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 
+	// ビューポートの設定
+	pDevice->SetViewport(&m_viewPort);
+
 	//ビューマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxView);
 
@@ -107,7 +118,7 @@ void  CCamera::Set(void)
 	//プロジェクションマトリックスの作成
 	D3DXMatrixPerspectiveFovLH(&m_mtxProjection,
 		FIELD_OF_VIEW,						// 視野角
-		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,	// アスペクト比
+		(float)m_viewPort.Width / (float)m_viewPort.Height,	// アスペクト比
 		CAMERA_NEAR,								// どこから
 		CAMERA_FAR);								// どこまで描画するかの設定
 

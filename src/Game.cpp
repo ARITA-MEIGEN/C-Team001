@@ -49,6 +49,15 @@ CStatusUI* CGame::m_apStatusUI[MAX_PLAYER] = {};
 //====================================
 // ステートマシンの宣言
 //====================================
+const CGame::UPDATE_FUNC CGame::m_InitFunc[] =
+{
+	static_cast<void(CGame::*)()>(&(Init_FadeNow)),
+	static_cast<void(CGame::*)()>(&(Init_CountDown)),
+	static_cast<void(CGame::*)()>(&(Init_GamePlay)),
+	static_cast<void(CGame::*)()>(&(Init_GameEnd)),
+	static_cast<void(CGame::*)()>(&(Init_GamePouse)),
+};
+
 const CGame::UPDATE_FUNC CGame::m_UpdateFunc[] =
 {
 	static_cast<void(CGame::*)()>(&(Update_FadeNow)),
@@ -135,6 +144,7 @@ HRESULT CGame::Init()
 	}
 
 	// 更新のステート管理
+	m_funcInit = m_InitFunc;
 	m_funcUpdate = m_UpdateFunc;
 	SetUpdate(UPDATE_FADENOW);
 
@@ -185,24 +195,22 @@ void CGame::Update()
 	m_pCamera->Update();
 	m_pLight->Update();
 
-	// 更新処理
+	// ステート処理
 	assert((m_stateNow >= 0) && (m_stateNow < UPDATE_MAX));
-	(this->*(m_funcUpdate[m_stateNow]))();
+	(this->*(m_funcInit[m_stateNow]))();	// 初期化処理
+	(this->*(m_funcUpdate[m_stateNow]))();	// 更新処理
 
 #ifdef _DEBUG
-
 	// 遷移デバッグ
+	CFade* fade = CApplication::getInstance()->GetFade();
+	if (fade->GetFade() == CFade::FADE_NONE)
 	{
-		CFade* fade = CApplication::getInstance()->GetFade();
-		if (fade->GetFade() == CFade::FADE_NONE)
-		{
-			CInput* pInput = CInput::GetKey();
+		CInput* pInput = CInput::GetKey();
 
-			if (pInput->Trigger(DIK_BACKSPACE))
-			{
-				fade->SetFade(CApplication::MODE_RESULT);
-				m_pMap->Ranking();
-			}
+		if (pInput->Trigger(DIK_BACKSPACE))
+		{
+			fade->SetFade(CApplication::MODE_RESULT);
+			m_pMap->Ranking();
 		}
 	}
 #endif // !_DEBUG
@@ -213,11 +221,22 @@ void CGame::Update()
 //====================================
 void CGame::Init_FadeNow()
 {
-	if (isDirty)
+	if (m_isStateDirty)
 	{
 		return;
 	}
-	isDirty = true;
+	m_isStateDirty = true;
+}
+
+//====================================
+// フェード中何も処理を通さない
+//====================================
+void CGame::Update_FadeNow()
+{
+	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
+	{
+		SetUpdate(UPDATE_COUNTDOWN);
+	}
 }
 
 //====================================
@@ -225,14 +244,35 @@ void CGame::Init_FadeNow()
 //====================================
 void CGame::Init_CountDown()
 {
-	if (isDirty)
+	if (m_isStateDirty)
 	{
 		return;
 	}
+	m_isStateDirty = true;
 
 	m_pCountDown = CTimer::Create(3);
 	m_pCountDown->SetPos(D3DXVECTOR3(500.0f,500.0f,0.0f));
-	isDirty = true;
+}
+
+//====================================
+// カウントダウン中
+//====================================
+void CGame::Update_CountDown()
+{
+	m_pCountDown->Update();
+
+	if (m_pCountDown->GetTimer() == 0)
+	{
+		// カウントダウンの終了
+		if (m_pCountDown != nullptr)
+		{
+			m_pCountDown->Uninit();
+			delete m_pCountDown;
+			m_pCountDown = nullptr;
+		}
+
+		SetUpdate(UPDATE_GAME_PLAY);
+	}
 }
 
 //====================================
@@ -240,10 +280,11 @@ void CGame::Init_CountDown()
 //====================================
 void CGame::Init_GamePlay()
 {
-	if (isDirty)
+	if (m_isStateDirty)
 	{
 		return;
 	}
+	m_isStateDirty = true;
 
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{
@@ -256,8 +297,30 @@ void CGame::Init_GamePlay()
 			m_pPlayer[nCnt]->SetController(new CComputerController);
 		}
 	}
+}
 
-	isDirty = true;
+//====================================
+// ゲーム本編
+//====================================
+void CGame::Update_GamePlay()
+{
+	m_pMap->Update();
+
+	m_pTimer->Update();
+
+	/* ↓ステート切り替え↓ */
+
+	// 制限時間が過ぎたら
+	if (m_pTimer->GetTimer() <= 0)
+	{
+		SetUpdate(UPDATE_GAME_END);
+	}
+
+	// ポーズ用のbuttonを押したら
+	if (CInput::GetKey()->Trigger(DIK_P))
+	{
+		SetUpdate(UPDATE_GAME_POUSE);
+	}
 }
 
 //====================================
@@ -265,11 +328,21 @@ void CGame::Init_GamePlay()
 //====================================
 void CGame::Init_GameEnd()
 {
-	if (isDirty)
+	if (m_isStateDirty)
 	{
 		return;
 	}
-	isDirty = true;
+	m_isStateDirty = true;
+}
+
+
+//====================================
+// ゲームエンド時
+//====================================
+void CGame::Update_GameEnd()
+{
+	CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
+	m_pMap->Ranking();
 }
 
 //====================================
@@ -277,11 +350,11 @@ void CGame::Init_GameEnd()
 //====================================
 void CGame::Init_GamePouse()
 {
-	if (isDirty)
+	if (m_isStateDirty)
 	{
 		return;
 	}
-	isDirty = true;
+	m_isStateDirty = true;
 
 	CObjectList::GetInstance()->Pause(true);
 
@@ -322,83 +395,10 @@ void CGame::Init_GamePouse()
 }
 
 //====================================
-// フェード中何も処理を通さない
-//====================================
-void CGame::Update_FadeNow()
-{
-	Init_FadeNow();
-
-	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
-	{
-		SetUpdate(UPDATE_COUNTDOWN);
-	}
-}
-
-//====================================
-// カウントダウン中
-//====================================
-void CGame::Update_CountDown()
-{
-	Init_CountDown();
-
-	m_pCountDown->Update();
-
-	if (m_pCountDown->GetTimer() == 0)
-	{
-		// カウントダウンの終了
-		if (m_pCountDown != nullptr)
-		{
-			m_pCountDown->Uninit();
-			delete m_pCountDown;
-			m_pCountDown = nullptr;
-		}
-
-		SetUpdate(UPDATE_GAME_PLAY);
-	}
-}
-
-//====================================
-// ゲーム本編
-//====================================
-void CGame::Update_GamePlay()
-{
-	Init_GamePlay();
-	m_pMap->Update();
-
-	m_pTimer->Update();
-
-	/* ↓ステート切り替え↓ */
-
-	// 制限時間が過ぎたら
-	if (m_pTimer->GetTimer() <= 0)
-	{
-		SetUpdate(UPDATE_GAME_END);
-	}
-
-	// ポーズ用のbuttonを押したら
-	if (CInput::GetKey()->Trigger(DIK_P))
-	{
-		SetUpdate(UPDATE_GAME_POUSE);
-	}
-}
-
-//====================================
-// ゲームエンド時
-//====================================
-void CGame::Update_GameEnd()
-{
-	Init_GameEnd();
-	CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_RESULT);
-	m_pMap->Ranking();
-}
-
-//====================================
 // ゲームポーズ時
 //====================================
 void CGame::Update_GamePouse()
 {
-	Init_GamePouse();
-
 	bool exit = false;
 
 	// 上下移動で項目の選択
@@ -501,7 +501,7 @@ void CGame::Update_GamePouse()
 			m_pouse_buttonBg = nullptr;
 		}
 
-		isDirty = true;
+		m_isStateDirty = true;
 		CObjectList::GetInstance()->Pause(false);
 	}
 }
@@ -529,12 +529,4 @@ void CGame::ResetGame()
 	m_gamestate = GAME_START;
 	m_Timer = 0;
 	return;
-}
-
-//====================================
-//勝敗判定(ブロック数のカウント)
-//====================================
-void CGame::BlockCount()
-{
-	
 }

@@ -69,12 +69,14 @@ private: // 更新処理
 	};
 
 	using UPDATE_FUNC = void(CGame::*)();
+	static const UPDATE_FUNC m_InitFunc[];
 	static const UPDATE_FUNC m_UpdateFunc[];
-	void SetUpdate(UPDATE_STATE inState) { m_stateNow = inState; isDirty = false; }
+	void SetUpdate(UPDATE_STATE inState) { m_stateNow = inState; m_isStateDirty = false; }
 
+	const UPDATE_FUNC* m_funcInit;
 	const UPDATE_FUNC* m_funcUpdate;
 
-	bool isDirty;
+	bool m_isStateDirty;
 
 	// 切り替えタイミングでの初期化
 	void Init_FadeNow();
@@ -94,7 +96,6 @@ private: // 更新処理
 
 public:
 	void ResetGame();	// ラウンド移行時の処理
-	void BlockCount();
 
 	// セッター
 	static void SetGame(GAME gamestate) {m_gamestate = gamestate;};

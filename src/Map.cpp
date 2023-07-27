@@ -163,8 +163,8 @@ void CMap::Load()
 //=============================================================================
 void CMap::Ranking()
 {
-	int Score[MAX_PLAYER];
-	int Rank[MAX_PLAYER];	//プレイヤーの番号を渡す
+	int Score[MAX_PLAYER] = {};
+	int Rank[MAX_PLAYER] = {};	//プレイヤーの番号を渡す
 
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{

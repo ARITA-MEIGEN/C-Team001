@@ -331,7 +331,7 @@ CObject * CObjectList::SearchRoleTop(int inRole, int inPriority)
 		{
 			return now;
 		}
-		now = next;
+		//now = next;
 	}
 	return nullptr;
 }
@@ -358,7 +358,7 @@ CObject * CObjectList::SearchRoleCurrent(int inRole, int inPriority)
 		{
 			return now;
 		}
-		now = prev;
+		//now = prev;
 	}
 	return nullptr;
 }
@@ -379,7 +379,7 @@ CObject * CObjectList::SearchSameRoleNext(CObject* inObject)
 		{
 			return now;
 		}
-		now = next;
+		//now = next;
 	}
 	return nullptr;
 }
@@ -400,7 +400,7 @@ CObject * CObjectList::SearchSameRolePrev(CObject * inObject)
 		{
 			return now;
 		}
-		now = prev;
+		//now = prev;
 	}
 	return nullptr;
 }

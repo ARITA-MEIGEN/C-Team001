@@ -60,7 +60,7 @@ BOOL CALLBACK CInputJoyPad::EnumJoysticksCallback(const DIDEVICEINSTANCE *pdidIn
 	//上記のエラー検知
 	if (FAILED(hr))
 	{
-		return E_FAIL;
+		return FALSE;
 	}
 
 	//入力デバイスへのポインタの設定
@@ -809,7 +809,7 @@ void CInputJoyPad::KeyConfigLoading()
 			int nCntKey = 0; 
 
 			//キーコンフィグデータの一時保存
-			DirectJoypad KeyConfig[KEY_CONFIG_SUPPORTED_KEY_NUMBER];
+			DirectJoypad KeyConfig[KEY_CONFIG_SUPPORTED_KEY_NUMBER] = {};
 
 			//文字列の読み取りループ処理
 			while (fgets(cBff, LINE_MAX_READING_LENGTH, pFile) != nullptr)

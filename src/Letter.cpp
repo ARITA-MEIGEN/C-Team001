@@ -118,8 +118,8 @@ std::string SjistoUTF8(std::string srcSjis)
 
 	std::string strUTF8(bufUTF8);
 
-	delete bufUnicode;
-	delete bufUTF8;
+	delete[] bufUnicode;
+	delete[] bufUTF8;
 
 	return strUTF8;
 }
