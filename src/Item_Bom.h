@@ -7,6 +7,11 @@
 #ifndef _ITEM_BOM_H_
 #define _ITEM_BOM_H_
 
+//-----------------------------------------------------------------------------
+// 前方宣言
+//-----------------------------------------------------------------------------
+class CBlock;
+
 #include "item.h"
 
 //爆弾クラス
@@ -20,11 +25,15 @@ public:
 	void Uninit(void) override;				// 終了処理
 	void Update(void) override;				// 更新処理
 
-	void Explosion(void);						// 投擲処理
+	void Explosion(void);					// 爆発処理
 
-	static CBom* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife);	// 生成処理
+	static CBom* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife);	// アイテム生成処理
+	static CBom* Create(CBlock *pOnBlock, int nPlayerNumber,const int nLife, const bool bExplosion);			// 爆弾生成処理
 
 private:
+	CBlock *m_pOnBlock;
+	int m_nPlayerNumber;
+	bool m_bExplosion;
 };
 
 #endif

@@ -33,6 +33,7 @@ private:
 	static const float ADD_SPEED;			// アイテムで加算するスピード
 	static const float SKILL_BUFF_TIME;		// バフの効果時間(Lv1基準)
 	static const float SKILL_WAVE_TIME;		// スキルの発動時間
+	static const float THROW_DISTANCE;		// 投擲距離
 
 
 public:
@@ -52,6 +53,7 @@ public:
 		ITEM_NONE,	// 無し
 		ITEM_SPEED,	// 加速
 		ITEM_PAINT,	// 塗り強化
+		ITEM_BOM,	// ボムを持っている状態
 		ITEM_MAX
 	};
 
@@ -120,6 +122,7 @@ private:
 	void Normalization();		// 正規化
 	void BlockCollision();		// ブロックとの判定
 	void TakeItem();			// アイテムを拾う
+	void Item();				// アイテム処理
 private:	// 静的メンバー変数
 	static const UPDATE_FUNC mUpdateFunc[];
 	static int		m_nNumPlayer;			// プレイヤーの数
