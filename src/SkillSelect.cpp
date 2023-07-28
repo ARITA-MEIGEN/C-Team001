@@ -151,7 +151,7 @@ void CSkillSelect::Input()
 	// プレイヤーが全員選択中だったら
 	if (m_isPlayerCheck[0] && m_isPlayerCheck[1] && m_isPlayerCheck[2] && m_isPlayerCheck[3])
 	{
-		if (pInput->Trigger(KEY_DECISION, m_isPlayerCheck[0]))		//ENTERキー
+		if (pInput->Trigger(KEY_DECISION, m_inputNumber[0]))		//ENTERキー
 		{//エンターでゲームに
 		 //モード設定
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
