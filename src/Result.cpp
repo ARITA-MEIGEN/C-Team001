@@ -60,8 +60,8 @@ HRESULT CResult::Init()
 
 	//カメラの設定
 	m_pCamera = CCameraGame::Create();
-	m_pCamera->SetPosV(D3DXVECTOR3(0.0f, 250.0f, -400.0f));
-	m_pCamera->SetPosR(D3DXVECTOR3(0.0f,250.0f, 200.0f));
+	m_pCamera->SetPosV(D3DXVECTOR3(0.0f, 250.0f, 0.0f));
+	m_pCamera->SetPosR(D3DXVECTOR3(0.0f,-500.0f, 00.0f));
 
 	//ライトの設定
 	m_pLight = new CLight;
@@ -144,7 +144,7 @@ void CResult::Update()
 	{
 		if (m_pCylinder[i]->GetPos().y < TOP_HEIGHT - CMap::GetRanking(i) * PLAYER_HEIGHT)//高さ
 		{//プレイヤーを上に移動
-			m_pCylinder[i]->SetPos(D3DXVECTOR3{ m_pCylinder[i]->GetPos().x, m_pCylinder[i]->GetPos().y + 1.0f , m_pCylinder[i]->GetPos().z });
+			m_pCylinder[i]->SetPos(D3DXVECTOR3{ m_pCylinder[i]->GetPos().x, m_pCylinder[i]->GetPos().y + 0.5f , m_pCylinder[i]->GetPos().z });
 			m_pPlayer[i]->SetPos({ m_pPlayer[i]->GetPos().x,  m_pCylinder[i]->GetPos().y + m_pCylinder[i]->GetSize().y ,m_pPlayer[i]->GetPos().z });
 		}
 		else

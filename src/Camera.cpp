@@ -54,6 +54,15 @@ void CCamera::Init(void)
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot.x = atan2f((m_posV.y - m_posR.y), (m_posV.z - m_posR.z));
 
+	m_viewPort.MinZ = 0.0f;
+	m_viewPort.MaxZ = 1.0f;
+
+	//引数を代入
+	m_viewPort.X = 0;
+	m_viewPort.Y = 0;
+	m_viewPort.Width = SCREEN_WIDTH;
+	m_viewPort.Height = SCREEN_HEIGHT;
+
 	m_fDistance = sqrtf(DISTANCE_X + DISTANCE_Y + DISTANCE_Z);
 }
 
@@ -73,11 +82,36 @@ void  CCamera::Update(void)
 	NormalizeRadian();	//角度の正規化
 #ifdef _DEBUG
 	CInput* pInput = CInput::GetKey();
+
+	if (CApplication::MODE_RESULT == CApplication::getInstance()->GetModeState())
+	{//リザルト時のみカメラを下に向ける
+		ResultCamera();
+	}
+
 	if ((pInput->Trigger(DIK_0)) == true)		//ENTERキー
 	{
 		m_posV.x++;
 	}
-	CDebugProc::Print("カメラの視点の角度 x:%f y:%f z:%f",m_posV.x,m_posV.y,m_posV.z);
+	if ((pInput->Press(DIK_1)) == true)		//ENTERキー
+	{
+		m_posV.y++;
+	}
+	if ((pInput->Press(DIK_2)) == true)		//ENTERキー
+	{
+		m_posV.y--;
+	}
+	if ((pInput->Press(DIK_3)) == true)		//ENTERキー
+	{
+		m_posR.y++;
+	}
+	if ((pInput->Press(DIK_4)) == true)		//ENTERキー
+	{
+		m_posR.y--;
+	}
+
+	CDebugProc::Print("カメラの視点の角度 x:%f y:%f z:%f\n",m_posV.x,m_posV.y,m_posV.z);
+	CDebugProc::Print("カメラの注視点の角度 x:%f y:%f z:%f", m_posR.x, m_posR.y, m_posR.z);
+
 
 #endif // _DEBUG
 
@@ -91,6 +125,9 @@ void  CCamera::Set(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice;
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
+
+	// ビューポートの設定
+	pDevice->SetViewport(&m_viewPort);
 
 	//ビューマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxView);
@@ -107,7 +144,7 @@ void  CCamera::Set(void)
 	//プロジェクションマトリックスの作成
 	D3DXMatrixPerspectiveFovLH(&m_mtxProjection,
 		FIELD_OF_VIEW,						// 視野角
-		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,	// アスペクト比
+		(float)m_viewPort.Width / (float)m_viewPort.Height,	// アスペクト比
 		CAMERA_NEAR,								// どこから
 		CAMERA_FAR);								// どこまで描画するかの設定
 
@@ -124,6 +161,22 @@ void CCamera::NormalizeRadian(void)
 	m_rot.x = NormalizeAngle(m_rot.x);
 	m_rot.y = NormalizeAngle(m_rot.y);
 	m_rot.z = NormalizeAngle(m_rot.z);
+}
+
+//===========================
+//リザルト演出用
+//===========================
+void CCamera::ResultCamera()
+{
+	if (m_posR.y<250.0f)
+	{
+		m_posR.y+=5;
+	}
+
+	if (m_posV.z>-400.0f)
+	{
+		m_posV.z -= 5;
+	}
 }
 
 //===========================

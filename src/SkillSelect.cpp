@@ -26,7 +26,7 @@
 // 定数
 //====================================
 int CSkillSelect::m_nSkill[MAX_PLAYER] = {};
-int CSkillSelect::m_inputNumber[MAX_PLAYER] = {};
+std::vector<int> CSkillSelect::m_inputNumber = {};
 bool CSkillSelect::m_isDecision[MAX_PLAYER] = {};
 
 //====================================
@@ -62,6 +62,8 @@ HRESULT CSkillSelect::Init()
 	//ライトの設定
 	m_pLight = new CLight;
 	m_pLight->Init();
+
+	m_inputNumber.resize(4);
 
 	//初期化
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
@@ -114,11 +116,17 @@ void CSkillSelect::Update()
 	m_pCamera->Update();
 	m_pLight->Update();
 
-	// エントリー処理
-	Entry();
+	//フェードしていなければ
+	if (CApplication::getInstance()->GetFade()->GetFade() != CFade::FADE_NONE)
+	{
+		return;
+	}
 
 	//入力処理
 	Input();
+
+	// エントリー処理
+	Entry();
 
 	//選択処理
 	Texture();
@@ -139,13 +147,17 @@ void CSkillSelect::Input()
 {
 	//インプットの情報を取得
 	CInput* pInput = CInput::GetKey();
-
-	//フェードしていなければ
-	if (CApplication::getInstance()->GetFade()->GetFade() != CFade::FADE_NONE)
-	{
-		return;
-	}
 	
+	// プレイヤーが全員選択中だったら
+	if (m_isPlayerCheck[0] && m_isPlayerCheck[1] && m_isPlayerCheck[2] && m_isPlayerCheck[3])
+	{
+		if (pInput->Trigger(KEY_DECISION, m_isPlayerCheck[0]))		//ENTERキー
+		{//エンターでゲームに
+		 //モード設定
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
+		}
+	}
+
 	//左入力で左を選択
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{//プレイヤーごとに分ける
@@ -180,7 +192,7 @@ void CSkillSelect::Input()
 			}
 		}
 
-		if (m_inputNumber[nCnt] != -1 && !m_isPlayerCheck[nCnt] && pInput->Trigger(JOYPAD_B, m_inputNumber[nCnt]) || m_inputNumber[nCnt] == -1 && !m_isPlayerCheck[nCnt] && pInput->Trigger(DIK_V, m_inputNumber[nCnt]))
+		if (m_inputNumber[nCnt] != -1 && !m_isPlayerCheck[nCnt] && pInput->Trigger(JOYPAD_B, m_inputNumber[nCnt]) || m_inputNumber[nCnt] == -1 && !m_isPlayerCheck[nCnt] && pInput->Trigger(DIK_RETURN, m_inputNumber[nCnt]))
 		{//パッドのBボタンで決定する(キーボードはV)
 			m_isPlayerCheck[nCnt] = true;
 		}
@@ -190,31 +202,7 @@ void CSkillSelect::Input()
 		}
 	}
 
-	if (m_isPlayerCheck[0] && m_isPlayerCheck[1] && m_isPlayerCheck[2] && m_isPlayerCheck[3])
-	{
-		if ((pInput->Trigger(DIK_RETURN)) || (pInput->Trigger(JOYPAD_START)))		//ENTERキー
-		{//エンターでゲームに
-			//モード設定
-			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
-		}
-	}
-
 #ifdef _DEBUG
-	if (pInput->Trigger(DIK_O))
-	{//左に動く
-		if (m_nSkill[0] >= 1)
-		{//左端ではないなら左へ
-			m_nSkill[0]--;
-		}
-	}
-	else if (pInput->Trigger(DIK_P))
-	{//右に動く
-		if (m_nSkill[0] <= 2)
-		{//右端ではないなら右へ
-			m_nSkill[0]++;
-		}
-	}
-
 	CDebugProc::Print("\nキーボードはVで決定、Bで解除");
 	CDebugProc::Print("\nPlayerCheck : %d %d %d %d", m_isPlayerCheck[0], m_isPlayerCheck[1], m_isPlayerCheck[2], m_isPlayerCheck[3]);
 #endif // _DEBUG
@@ -263,41 +251,17 @@ void CSkillSelect::Entry()
 	CInput* pInput = CInput::GetKey();
 	std::vector<int> inputNumber = pInput->TriggerDevice(KEY_DECISION);
 
-	// 入力デバイスが設定したデバイスか否か検出。既に設定されていたらコンテナから削除
-	for (auto it = inputNumber.begin(); it != inputNumber.end();)
+	for (size_t i = 0;i < inputNumber.size();i++)
 	{
-		bool isErase = false;
-
-		for (int j = 0; j < 4; j++)
+		if (std::find(m_inputNumber.begin(), m_inputNumber.end(), inputNumber[i]) == m_inputNumber.end())
 		{
-			if (m_inputNumber[j] == *it)
+			for (int j = 0; j < m_inputNumber.size(); j++)
 			{
-				isErase = true;
-				break;
-			}
-		}
-
-		// 条件一致した要素を削除する
-		if (isErase)
-		{
-			// 削除された要素の次を指すイテレータが返される。
-			it = inputNumber.erase(it);
-		}
-		else
-		{
-			++it;
-		}
-	}
-
-	// 値を代入。
-	for (size_t i = 0; i < inputNumber.size(); i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			if (m_inputNumber[j] == 99)
-			{
-				m_inputNumber[j] = inputNumber[i];
-				break;
+				if (m_inputNumber[j] == 99)
+				{
+					m_inputNumber[j] = inputNumber[i];
+					break;
+				}
 			}
 		}
 	}

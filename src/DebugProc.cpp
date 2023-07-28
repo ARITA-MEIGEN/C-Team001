@@ -87,7 +87,7 @@ void CDebugProc::Draw()
 	D3DXCOLOR col = {1.0f,0.0f,0.0f,1.0f};
 
 	// テキスト描画
-	//m_pFont->DrawText(NULL, m_aStr.c_str(), -1, &rect, DT_LEFT, col);
+	m_pFont->DrawText(NULL, m_aStr.c_str(), -1, &rect, DT_LEFT, col);
 
 	//テキストリセット
 	m_aStr.clear();

@@ -225,28 +225,12 @@ void CPlayer::Update(void)
 
 	CInput* pInput = CInput::GetKey();
 
-	if (pInput->Trigger(DIK_U))
-	{
-		m_nSkillBuffTime = 120;
-		m_State = PST_SPEED;
-	}
-
-	if (pInput->Trigger(DIK_I))
-	{
-		m_nSkillBuffTime = 120;
-		m_State = PST_PAINT;
-	}
-
-	if (pInput->Trigger(DIK_T))
-	{
-		m_Motion == PM_NEUTRAL ? m_Motion = PM_WALK : m_Motion = PM_NEUTRAL;
-		m_motion->SetNumMotion(m_Motion);
-	}
-	if (pInput->Trigger(DIK_P))
+	if (pInput->Trigger(DIK_P) && m_nSkillTimer == 0)
 	{
 		m_nSkillTimer = SKILL_WAVE_TIME;
 		m_Motion = PM_WAVE;
 		m_motion->SetNumMotion(m_Motion);
+		Stun(SKILL_WAVE_TIME - 1);
 	}
 
 	if (m_nSkillTimer <= 0 && m_Motion == PM_WAVE)
@@ -255,6 +239,7 @@ void CPlayer::Update(void)
 		m_motion->SetNumMotion(m_Motion);
 
 		Skill_Wave();
+		m_nSkillTimer = 0;
 	}
 	else if(m_Motion == PM_WAVE)
 	{
@@ -731,22 +716,34 @@ void CPlayer::Skill_Wave()
 	}
 
 	//範囲を塗る
-	for (int nCntX = 0; nCntX < 3; nCntX++)
-	{
-		//乗っているブロックの番号を取得
-		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-		//範囲内のブロックを塗る
-		BlockIdx = D3DXVECTOR2(BlockIdx.x + range.x, BlockIdx.y + range.y);			//中央左に設定する
-		D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX* range.x, BlockIdx.y+ nCntX* range.y);
-		CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+	int maxI = 3;
 
-		if (Block != nullptr)
-		{//ブロックを塗る
-		 //Block->SetOnPlayer(this);	//プレイヤーの
-			Block->SetSink(-15.0f + 5.0f * nCntX);
-			Block->SetPlayerNumber(m_nPlayerNumber);
+	for (int i = 0; i < maxI; i++)
+	{
+		for (int nCntX = 0; nCntX < 5; nCntX++)
+		{
+			//乗っているブロックの番号を取得
+			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+			//範囲内のブロックを塗る
+			BlockIdx = D3DXVECTOR2(BlockIdx.x + range.x + (i - maxI / 2) * range.y, BlockIdx.y + range.y + (i - maxI / 2) * range.x);			//中央左に設定する
+			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX * range.x, BlockIdx.y + nCntX * range.y);
+			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+			if (Block != nullptr)
+			{//ブロックを塗る
+			 //Block->SetOnPlayer(this);	//プレイヤーの
+				Block->SetSink(-25.0f - 5.0f * nCntX);
+
+				if (Block->GetOnPlayer() != nullptr)
+				{
+					Block->GetOnPlayer()->Stun(20);
+				}
+
+				Block->SetPlayerNumber(m_nPlayerNumber);
+			}
 		}
 	}
+	SetSkill(SKILL_IDLE);
 }
 
 //-----------------------------------------------------------------------------
@@ -1035,6 +1032,6 @@ void CPlayer::SetResultMotion(int Rank)
 void CPlayer::Stun(int inTime)
 {
 	m_nStunTime = inTime;
-	m_Motion = PM_STAN;
+	//m_Motion = PM_STAN;
 	m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
