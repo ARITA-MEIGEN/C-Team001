@@ -13,6 +13,7 @@
 #include "utility.h"
 #include "Item_Speed.h"
 #include "Item_Paint.h"
+#include "Item_Bom.h"
 #include "area.h"
 #include "go_future_block.h"
 #include "come_future_block.h"

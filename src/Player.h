@@ -29,6 +29,7 @@ class CPlayer :public CObject
 {
 private:
 	static const std::string MOTION_PATH;	// モーションデータパス
+	static const int   MAX_STOCK;			// 持てるアイテムの最大数
 	static const float PLAYER_SPEED;		// 移動速度
 	static const float ADD_SPEED;			// アイテムで加算するスピード
 	static const float SKILL_BUFF_TIME;		// バフの効果時間(Lv1基準)
@@ -53,8 +54,14 @@ public:
 		ITEM_NONE,	// 無し
 		ITEM_SPEED,	// 加速
 		ITEM_PAINT,	// 塗り強化
-		ITEM_BOM,	// ボムを持っている状態
 		ITEM_MAX
+	};
+
+	enum STOCK_ITEM_STATE
+	{
+		STOCK_NONE,	// 無し
+		STOCK_BOM,	// ボムを持っている状態
+		STOCK_MAX
 	};
 
 private:
@@ -164,7 +171,6 @@ private:	// ↓スキル処理一覧↓
 	void Skill_Bom();
 	void Skill_Wave();
 
-
 	SKILL_STATE		m_skill;			// このキャラクターが仕様するスキル
 	SKILL_STATE		m_skillStateNow;	// スキルステートの状態
 	int				m_nSkillLv;			// プレイヤーのスキルLｖ
@@ -188,10 +194,12 @@ private:	// メンバー変数
 	int				m_nPlayerNumber;		// 自分のプレイヤー番号
 	int				m_nItemBuffTime;		// アイテム強化効果時間
 	int				m_nStunTime;			// スタン(操作不可能)時間
+	int				m_nStockItem;			// 持っているアイテムの数
 	bool			m_bKnockBack;			// ノックバックしているかどうか
 	bool			m_bTeleport;			// テレポートしたかどうか
 	PLAYER_STATE	m_State;				// プレイヤーの状態
 	ITEM_STATE		m_ItemState;			// アイテムの状態
+	STOCK_ITEM_STATE	m_StockItemState;	// ストック式アイテムの状態
 	CShadow*		m_pShadow;				// 影
 	CBlock*			m_pOnBlock;				// プレイヤーの乗っているブロックへのポインタ
 	int				m_nSkillTimer;			// モーション再生からスキル発生までの時間

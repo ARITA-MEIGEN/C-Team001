@@ -31,6 +31,7 @@
 // 定数
 //-----------------------------------------------------------------------------
 const std::string CPlayer::MOTION_PATH = "data/TXT/Player001.txt";	// モーションデータパス
+const int	CPlayer::MAX_STOCK = 3; 			// 持てるアイテムの最大数
 const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
@@ -115,7 +116,8 @@ HRESULT CPlayer::Init()
 
 	//初期化
 	m_nSkillLv = 0;			//スキルレベル
-	m_nStunTime = 0;		//
+	m_nStunTime = 0;		//スタン(操作不可能)時間
+	m_nStockItem = 0;		//持っているアイテムの数
 	m_nItemBuffTime = 0;	//アイテムの効果時間
 	m_nSkillBuffTime = 0;	//スキルの効果時間
 	m_fSkillGauge = 0.0f;	//スキルゲージ
@@ -219,6 +221,7 @@ void CPlayer::Update(void)
 	CDebugProc::Print("現在のモーション:%d\n", (int)m_Motion);
 	CDebugProc::Print("現在の状態:%d\n", (int)m_State);
 	CDebugProc::Print("現在のフレーム:%d\n", m_frame);
+	CDebugProc::Print("現在のストック数:%d\n", m_nStockItem);
 
 	CInput* pInput = CInput::GetKey();
 
@@ -862,9 +865,10 @@ void CPlayer::TakeItem()
 			{
 				m_ItemState = ITEM_PAINT;
 			}
-			else if (pItem->GetEffect() == CItem::BOM)
+			else if (pItem->GetEffect() == CItem::BOM && m_nStockItem <= MAX_STOCK)
 			{
-				m_ItemState = ITEM_BOM;
+				m_StockItemState = STOCK_BOM;
+				m_nStockItem++;					//ストック数を増やす
 			}
 
 			//ブロックの上のアイテムを消去
@@ -892,8 +896,8 @@ void CPlayer::Item()
 	{// スタンしていたらスタン時間を減算させる
 		m_nStunTime--;
 	}
-	m_ItemState = ITEM_BOM;
-	if (m_ItemState == ITEM_BOM)
+
+	if (m_StockItemState == STOCK_BOM)
 	{// 爆弾を持っているなら
 		if (m_controller == nullptr)
 		{
@@ -902,7 +906,7 @@ void CPlayer::Item()
 
 		if (m_controller->Throw())
 		{// キー入力すると投げる
-
+			m_nStockItem--;			//ストック数を減らす
 			if (m_rot.y == D3DX_PI*0.0f)
 			{//下
 			 //乗っているブロックの番号を取得
@@ -960,6 +964,11 @@ void CPlayer::Item()
 				}
 			}
 		}
+	}
+
+	if (m_nStockItem <= 0)
+	{//ストック数が0の時
+		m_StockItemState = STOCK_NONE;		//何も持っていない状態にする
 	}
 }
 

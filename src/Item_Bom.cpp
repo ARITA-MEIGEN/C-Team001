@@ -38,8 +38,8 @@ HRESULT CBom::Init(void)
 		SetTextureKey("SPEED_UP_ITEM_ICON");
 	}
 	else if (m_bExplosion)
-	{
-		SetTextureKey("CHECK_MARK");
+	{//3DÉÇÉfÉãÇÃê∂ê¨
+		
 	}
 
 	return S_OK;
@@ -50,12 +50,6 @@ HRESULT CBom::Init(void)
 //======================================================
 void CBom::Uninit(void)
 {
-	//if (m_pOnBlock != nullptr)
-	//{
-	//	delete m_pOnBlock;
-	//	m_pOnBlock = nullptr;
-	//}
-
 	//èIóπ
 	CObject3D::Uninit();
 
