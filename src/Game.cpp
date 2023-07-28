@@ -290,7 +290,7 @@ void CGame::Init_GamePlay()
 	{
 		if (CSkillSelect::GetComputer(nCnt))
 		{
-			m_pPlayer[nCnt]->SetController(new CPlayerController(nCnt));
+			m_pPlayer[nCnt]->SetController(new CPlayerController(CSkillSelect::GetEntryInput(nCnt)));
 		}
 		else
 		{
