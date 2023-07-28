@@ -130,6 +130,8 @@ private:
 	void BlockCollision();		// ブロックとの判定
 	void TakeItem();			// アイテムを拾う
 	void Item();				// アイテム処理
+
+	CBlock* OnBlock(float X,float Y);				// ブロックの情報を取得する
 private:	// 静的メンバー変数
 	static const UPDATE_FUNC mUpdateFunc[];
 	static int		m_nNumPlayer;			// プレイヤーの数

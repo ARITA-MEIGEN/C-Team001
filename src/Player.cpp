@@ -688,6 +688,14 @@ void CPlayer::Skill_Knockback()
 //-----------------------------------------------------------------------------
 void CPlayer::Skill_Bom()
 {
+	m_nSkillBuffTime--;
+	if (m_nSkillBuffTime <= 0)
+	{
+		SetSkill(SKILL_IDLE);
+		return;
+	}
+
+
 }
 
 //-----------------------------------------------------------------------------
@@ -862,7 +870,7 @@ void CPlayer::TakeItem()
 			{
 				m_ItemState = ITEM_PAINT;
 			}
-			else if (pItem->GetEffect() == CItem::BOM && m_nStockItem <= MAX_STOCK)
+			else if (pItem->GetEffect() == CItem::BOM && m_nStockItem < MAX_STOCK)
 			{
 				m_StockItemState = STOCK_BOM;
 				m_nStockItem++;					//ストック数を増やす
@@ -879,6 +887,10 @@ void CPlayer::TakeItem()
 //-----------------------------------------------------------------------------
 void CPlayer::Item()
 {
+#ifdef _DEBUG
+	m_StockItemState = STOCK_BOM;
+#endif // _DEBUG
+
 	if (m_nItemBuffTime > 0)
 	{// アイテム強化効果の時間を減算する
 		m_nItemBuffTime--;
@@ -906,56 +918,40 @@ void CPlayer::Item()
 			m_nStockItem--;			//ストック数を減らす
 			if (m_rot.y == D3DX_PI*0.0f)
 			{//下
-			 //乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-				//2マス左に投げる
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y + THROW_DISTANCE);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
+				//指定先のブロックの情報を取得
+				CBlock* Block = OnBlock(0.0f, THROW_DISTANCE);
 				if (Block != nullptr)
-				{//ブロックを塗る
+				{//爆弾を生成する
 					Block->SetPlayerNumber(m_nPlayerNumber);
 					CBom::Create(Block, m_nPlayerNumber, 120, true);
 				}
 			}
 			else if (m_rot.y == D3DX_PI*1.0f)
 			{//上
-				//乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-				//2マス左に投げる
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y - THROW_DISTANCE);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
+				//指定先のブロックの情報を取得
+				CBlock* Block = OnBlock(0.0f, -THROW_DISTANCE);
 				if (Block != nullptr)
-				{//ブロックを塗る
+				{//爆弾を生成する
 					Block->SetPlayerNumber(m_nPlayerNumber);
 					CBom::Create(Block, m_nPlayerNumber, 120, true);
 				}
 			}
 			else if (m_rot.y == D3DX_PI*0.5f)
 			{//左
-				//乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-				//2マス左に投げる
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x - THROW_DISTANCE, BlockIdx.y);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
+				//指定先のブロックの情報を取得
+				CBlock* Block = OnBlock(-THROW_DISTANCE, 0.0f);
 				if (Block != nullptr)
-				{//ブロックを塗る
+				{//爆弾を生成する
 					Block->SetPlayerNumber(m_nPlayerNumber);
 					CBom::Create(Block, m_nPlayerNumber,120,true);
 				}
 			}
 			else if (m_rot.y == D3DX_PI*-0.5f)
 			{//右
-			 //乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-				//2マス左に投げる
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + THROW_DISTANCE, BlockIdx.y);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
+				//指定先のブロックの情報を取得
+				CBlock* Block = OnBlock(THROW_DISTANCE, 0.0f);
 				if (Block != nullptr)
-				{//ブロックを塗る
+				{//爆弾を生成する
 					Block->SetPlayerNumber(m_nPlayerNumber);
 					CBom::Create(Block, m_nPlayerNumber, 120, true);
 				}
@@ -968,7 +964,18 @@ void CPlayer::Item()
 		m_StockItemState = STOCK_NONE;		//何も持っていない状態にする
 	}
 }
+//-----------------------------------------------------------------------------
+// ブロックの情報を取得する処理
+//-----------------------------------------------------------------------------
+CBlock* CPlayer::OnBlock(float X, float Y)
+{
+	//乗っているブロックの番号を取得
+	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+	//自分の乗っている位置からXとY分加算した位置
+	D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + X, BlockIdx.y + Y);
 
+	return CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+}
 //-----------------------------------------------------------------------------
 // ノックバック処理
 //-----------------------------------------------------------------------------
