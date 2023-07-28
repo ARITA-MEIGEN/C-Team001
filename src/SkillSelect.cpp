@@ -164,6 +164,10 @@ void CSkillSelect::Input()
 	//左入力で左を選択
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{//プレイヤーごとに分ける
+		if (m_inputNumber[nCnt] == 99)
+		{
+			continue;
+		}
 
 		if (m_nSkill[nCnt] >= 1)
 		{//左端ではないなら左へ

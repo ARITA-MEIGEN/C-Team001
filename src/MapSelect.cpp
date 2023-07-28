@@ -66,6 +66,10 @@ HRESULT CMapSelect::Init()
 	m_pLight = new CLight;
 	m_pLight->Init();
 
+	//”wŒi
+	CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
+	pori->SetTextureKey("TEST_FLOOR");
+
 	//ƒ}ƒbƒv¶¬
 	m_pMap = CMap::Create(m_nMapNumber);
 
@@ -129,12 +133,6 @@ void CMapSelect::Update()
 			m_pObj2DPolygon[nCnt]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
 		}
 	}
-
-	{
-		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
-		pori->SetTextureKey("TEST_FLOOR");
-	}
-
 }
 
 //====================================
