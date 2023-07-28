@@ -114,3 +114,12 @@ bool CPlayerController::Skill()
 	CInput* pInput = CInput::GetKey();	//インプットの取得
 	return 	(pInput->Trigger(DIK_K) || pInput->Trigger(DIK_L) || pInput->Trigger(JOYPAD_Y, m_nInputIdx) || pInput->Trigger(JOYPAD_X, m_nInputIdx));
 }
+
+//-----------------------------------------
+// 投擲
+//-----------------------------------------
+bool CPlayerController::Throw()
+{
+	CInput* pInput = CInput::GetKey();	//インプットの取得
+	return 	(pInput->Trigger(DIK_G) || pInput->Trigger(JOYPAD_A, m_nInputIdx) || pInput->Trigger(JOYPAD_B, m_nInputIdx));
+}

@@ -50,7 +50,8 @@ public:
 	void SetSizeMag(const D3DXVECTOR3& size) { m_sizeMag = size; }
 	void SetChildren(CObjectX* pModel) { m_childrens.push_back(pModel); }
 	void SetCol(const D3DXCOLOR& col) { m_materialColor[0] = col; };
-	void SetColorMaterial(const int index ,const D3DXCOLOR& col) { m_materialColor[index] = col; };
+	void SetColorMaterial(const int index, const D3DXCOLOR& col) { m_materialColor[index] = col; };
+	void SetAllColorMaterial(const D3DXCOLOR& col) { for (size_t i = 0; i < m_materialColor.size(); i++) { m_materialColor[i] = col; } };
 
 	// Getter
 	const D3DXVECTOR3 GetPos() { return m_pos; };
@@ -66,6 +67,7 @@ public:
 	const D3DXCOLOR GetCol() { return m_materialColor[0]; }
 	CObjectX* GetParent() { return m_pParent; }
 	const D3DXMATRIX& GetMatrix() { return m_mtxWorld; }
+	const int GetColorMaterialSize() { return m_materialColor.size(); }
 
 private:
 	std::string m_modelTag;	// モデルデータのタグ

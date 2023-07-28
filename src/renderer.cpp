@@ -171,10 +171,10 @@ void  CRenderer::Draw()
 		//デバッグ情報の描画
 		CApplication::getInstance()->GetDebugProc()->Draw();
 
+		DrawFPS();
+
 		// Direct3Dによる描画の終了
 		g_pD3DDevice->EndScene();
-
-		DrawFPS();
 	}
 
 	// バックバッファとフロントバッファの入れ替え
@@ -198,12 +198,7 @@ void  CRenderer::DrawFPS()
 {
 #ifdef _DEBUG
 	int nCntFPS = GetFPS();
-	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	TCHAR str[256];
 
-	wsprintf(str, _T("FPS : %d\n"), nCntFPS);
-
-	// テキスト描画
-	g_pFont->DrawText(NULL, str, -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff));
+	CDebugProc::Print("FPS : %d\n", nCntFPS);
 #endif // _DEBUG
 }

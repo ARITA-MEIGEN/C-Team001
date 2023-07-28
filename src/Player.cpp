@@ -14,6 +14,7 @@
 #include "input.h"
 
 #include "Item.h"
+#include "Item_Bom.h"
 #include "Shadow.h"
 #include "Mesh.h"
 #include "Game.h"
@@ -34,6 +35,7 @@ const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
 const float CPlayer::SKILL_WAVE_TIME = 30.0f;	// スキルの発生時間
+const float CPlayer::THROW_DISTANCE = 4.0f;		// 投擲距離
 
 
 const CObject::UPDATE_FUNC CPlayer::mUpdateFunc[] =
@@ -182,20 +184,7 @@ void CPlayer::Update(void)
 
 	Skill();
 
-	if (m_nItemBuffTime > 0)
-	{// アイテム強化効果の時間を減算する
-		m_nItemBuffTime--;
-	}
-
-	if (m_nItemBuffTime <= 0 && m_ItemState != ITEM_NONE)
-	{// アイテムを拾った後に効果時間が切れたらデフォルトに戻す
-		m_ItemState = ITEM_NONE;
-	}
-
-	if (m_nStunTime > 0)
-	{// スタンしていたらスタン時間を減算させる
-		m_nStunTime--;
-	}
+	Item();
 
 	// 座標更新
 	Updatepos();
@@ -233,28 +222,12 @@ void CPlayer::Update(void)
 
 	CInput* pInput = CInput::GetKey();
 
-	if (pInput->Trigger(DIK_U))
-	{
-		m_nSkillBuffTime = 120;
-		m_State = PST_SPEED;
-	}
-
-	if (pInput->Trigger(DIK_I))
-	{
-		m_nSkillBuffTime = 120;
-		m_State = PST_PAINT;
-	}
-
-	if (pInput->Trigger(DIK_T))
-	{
-		m_Motion == PM_NEUTRAL ? m_Motion = PM_WALK : m_Motion = PM_NEUTRAL;
-		m_motion->SetNumMotion(m_Motion);
-	}
-	if (pInput->Trigger(DIK_P))
+	if (pInput->Trigger(DIK_P) && m_nSkillTimer == 0)
 	{
 		m_nSkillTimer = SKILL_WAVE_TIME;
 		m_Motion = PM_WAVE;
 		m_motion->SetNumMotion(m_Motion);
+		Stun(SKILL_WAVE_TIME - 1);
 	}
 
 	if (m_nSkillTimer <= 0 && m_Motion == PM_WAVE)
@@ -263,6 +236,7 @@ void CPlayer::Update(void)
 		m_motion->SetNumMotion(m_Motion);
 
 		Skill_Wave();
+		m_nSkillTimer = 0;
 	}
 	else if(m_Motion == PM_WAVE)
 	{
@@ -564,14 +538,17 @@ void CPlayer::Skill_Idel()
 		case 1:
 			fSubGauge = (MAX_GAUGE * 0.3f);
 			break;
+
 		case 2:
 			fSubGauge = (MAX_GAUGE * 0.7f);
 			m_nSkillBuffTime *= 2;
 			break;
+
 		case 3:
 			fSubGauge = MAX_GAUGE;
 			m_nSkillBuffTime *= 5;
 			break;
+
 		default:
 			break;
 		}
@@ -736,21 +713,34 @@ void CPlayer::Skill_Wave()
 	}
 
 	//範囲を塗る
-	for (int nCntX = 0; nCntX < 3; nCntX++)
-	{
-		//乗っているブロックの番号を取得
-		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-		//範囲内のブロックを塗る
-		BlockIdx = D3DXVECTOR2(BlockIdx.x + range.x, BlockIdx.y + range.y);			//中央左に設定する
-		D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX* range.x, BlockIdx.y+ nCntX* range.y);
-		CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+	int maxI = 3;
 
-		if (Block != nullptr)
-		{//ブロックを塗る
-		 //Block->SetOnPlayer(this);	//プレイヤーの
-			Block->SetPlayerNumber(m_nPlayerNumber);
+	for (int i = 0; i < maxI; i++)
+	{
+		for (int nCntX = 0; nCntX < 5; nCntX++)
+		{
+			//乗っているブロックの番号を取得
+			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+			//範囲内のブロックを塗る
+			BlockIdx = D3DXVECTOR2(BlockIdx.x + range.x + (i - maxI / 2) * range.y, BlockIdx.y + range.y + (i - maxI / 2) * range.x);			//中央左に設定する
+			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX * range.x, BlockIdx.y + nCntX * range.y);
+			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+			if (Block != nullptr)
+			{//ブロックを塗る
+			 //Block->SetOnPlayer(this);	//プレイヤーの
+				Block->SetSink(-25.0f - 5.0f * nCntX);
+
+				if (Block->GetOnPlayer() != nullptr)
+				{
+					Block->GetOnPlayer()->Stun(20);
+				}
+
+				Block->SetPlayerNumber(m_nPlayerNumber);
+			}
 		}
 	}
+	SetSkill(SKILL_IDLE);
 }
 
 //-----------------------------------------------------------------------------
@@ -869,9 +859,103 @@ void CPlayer::TakeItem()
 			{
 				m_ItemState = ITEM_PAINT;
 			}
+			else if (pItem->GetEffect() == CItem::BOM)
+			{
+				m_ItemState = ITEM_BOM;
+			}
 
 			//ブロックの上のアイテムを消去
 			Block->DeleteItem();
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// アイテム処理
+//-----------------------------------------------------------------------------
+void CPlayer::Item()
+{
+	if (m_nItemBuffTime > 0)
+	{// アイテム強化効果の時間を減算する
+		m_nItemBuffTime--;
+	}
+
+	if (m_nItemBuffTime <= 0 && m_ItemState != ITEM_NONE)
+	{// アイテムを拾った後に効果時間が切れたらデフォルトに戻す
+		m_ItemState = ITEM_NONE;
+	}
+
+	if (m_nStunTime > 0)
+	{// スタンしていたらスタン時間を減算させる
+		m_nStunTime--;
+	}
+	m_ItemState = ITEM_BOM;
+	if (m_ItemState == ITEM_BOM)
+	{// 爆弾を持っているなら
+		if (m_controller == nullptr)
+		{
+			return;
+		}
+
+		if (m_controller->Throw())
+		{// キー入力すると投げる
+
+			if (m_rot.y == D3DX_PI*0.0f)
+			{//下
+			 //乗っているブロックの番号を取得
+				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+				//2マス左に投げる
+				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y + THROW_DISTANCE);
+				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+				if (Block != nullptr)
+				{//ブロックを塗る
+					Block->SetPlayerNumber(m_nPlayerNumber);
+					CBom::Create(Block, m_nPlayerNumber, 120, true);
+				}
+			}
+			else if (m_rot.y == D3DX_PI*1.0f)
+			{//上
+				//乗っているブロックの番号を取得
+				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+				//2マス左に投げる
+				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y - THROW_DISTANCE);
+				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+				if (Block != nullptr)
+				{//ブロックを塗る
+					Block->SetPlayerNumber(m_nPlayerNumber);
+					CBom::Create(Block, m_nPlayerNumber, 120, true);
+				}
+			}
+			else if (m_rot.y == D3DX_PI*0.5f)
+			{//左
+				//乗っているブロックの番号を取得
+				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+				//2マス左に投げる
+				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x - THROW_DISTANCE, BlockIdx.y);
+				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+				if (Block != nullptr)
+				{//ブロックを塗る
+					Block->SetPlayerNumber(m_nPlayerNumber);
+					CBom::Create(Block, m_nPlayerNumber,120,true);
+				}
+			}
+			else if (m_rot.y == D3DX_PI*-0.5f)
+			{//右
+			 //乗っているブロックの番号を取得
+				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+				//2マス左に投げる
+				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + THROW_DISTANCE, BlockIdx.y);
+				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+				if (Block != nullptr)
+				{//ブロックを塗る
+					Block->SetPlayerNumber(m_nPlayerNumber);
+					CBom::Create(Block, m_nPlayerNumber, 120, true);
+				}
+			}
 		}
 	}
 }
@@ -939,6 +1023,6 @@ void CPlayer::SetResultMotion(int Rank)
 void CPlayer::Stun(int inTime)
 {
 	m_nStunTime = inTime;
-	m_Motion = PM_STAN;
+	//m_Motion = PM_STAN;
 	m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }

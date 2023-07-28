@@ -83,13 +83,11 @@ void CDebugProc::Print(const char * pFormat, ...)
 void CDebugProc::Draw()
 {
 #ifdef _DEBUG
-
-
 	RECT rect = { 0,0,SCREEN_WIDTH,SCREEN_HEIGHT };
 	D3DXCOLOR col = {1.0f,0.0f,0.0f,1.0f};
 
 	// テキスト描画
-	m_pFont->DrawText(NULL, m_aStr.c_str(), -1, &rect, DT_LEFT, col);
+	//m_pFont->DrawText(NULL, m_aStr.c_str(), -1, &rect, DT_LEFT, col);
 
 	//テキストリセット
 	m_aStr.clear();

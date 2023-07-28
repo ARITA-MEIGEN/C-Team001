@@ -27,6 +27,7 @@ class CMap;
 class CSpeed;
 class CGauge;
 class CStatusUI;
+class CObject2D;
 
 class CGame : public CMode
 {
@@ -68,12 +69,14 @@ private: // 更新処理
 	};
 
 	using UPDATE_FUNC = void(CGame::*)();
+	static const UPDATE_FUNC m_InitFunc[];
 	static const UPDATE_FUNC m_UpdateFunc[];
-	void SetUpdate(UPDATE_STATE inState) { m_stateNow = inState; isDirty = false; }
+	void SetUpdate(UPDATE_STATE inState) { m_stateNow = inState; m_isStateDirty = false; }
 
+	const UPDATE_FUNC* m_funcInit;
 	const UPDATE_FUNC* m_funcUpdate;
 
-	bool isDirty;
+	bool m_isStateDirty;
 
 	// 切り替えタイミングでの初期化
 	void Init_FadeNow();
@@ -93,7 +96,6 @@ private: // 更新処理
 
 public:
 	void ResetGame();	// ラウンド移行時の処理
-	void BlockCount();
 
 	// セッター
 	static void SetGame(GAME gamestate) {m_gamestate = gamestate;};
@@ -122,6 +124,14 @@ private:
 	static CStatusUI* m_apStatusUI[MAX_PLAYER];	// ステータス表示
 	int		m_Timer;					// フェードアウトまでのタイマー
 	ROUND	m_Round;					// 現在のラウンド
+
+	/* ポーズ機能 */
+	CObject2D* m_pouse_bg;
+	CObject2D* m_pouse_exitButton;
+	CObject2D* m_pouse_buttonBg;
+	CObject2D* m_pouse_backButton;
+	CObject2D* m_pouse_replayButton;
+	int m_pouse_bottonIndex;
 };
 
 #endif
