@@ -151,30 +151,19 @@ void CSkillSelect::Input()
 	// プレイヤーが全員選択中だったら
 	if (m_isPlayerCheck[0] && m_isPlayerCheck[1] && m_isPlayerCheck[2] && m_isPlayerCheck[3])
 	{
-		if (pInput->Trigger(KEY_DECISION, m_inputNumber[0]))		//ENTERキー
-		{//エンターでゲームに
-		 //モード設定
-			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
+		if (m_inputNumber[0] != 99)
+		{
+			if (pInput->Trigger(KEY_DECISION, m_inputNumber[0]))		//ENTERキー
+			{//エンターでゲームに
+			 //モード設定
+				CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
+			}
 		}
 	}
 
 	//左入力で左を選択
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{//プレイヤーごとに分ける
-
-		if (m_inputNumber[nCnt] == 99)
-		{
-			//コントローラーが登録されていなかったらtrueにしておく
-			m_isPlayerCheck[nCnt] = true;
-
-			continue;
-		}
-		else if(m_inputNumber[nCnt] != 99 && !m_isDecision[nCnt])
-		{
-			//コントローラーが登録されたら一度のみfalseに戻す
-			m_isPlayerCheck[nCnt] = false;
-			m_isDecision[nCnt] = true;
-		}
 
 		if (m_nSkill[nCnt] >= 1)
 		{//左端ではないなら左へ
@@ -263,6 +252,22 @@ void CSkillSelect::Entry()
 					break;
 				}
 			}
+		}
+	}
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{
+		if (m_inputNumber[nCnt] == 99)
+		{
+			//コントローラーが登録されていなかったらtrueにしておく
+			m_isPlayerCheck[nCnt] = true;
+
+			continue;
+		}
+		else if (m_inputNumber[nCnt] != 99 && !m_isDecision[nCnt])
+		{
+			//コントローラーが登録されたら一度のみfalseに戻す
+			m_isPlayerCheck[nCnt] = false;
+			m_isDecision[nCnt] = true;
 		}
 	}
 
