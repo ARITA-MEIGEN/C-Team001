@@ -82,11 +82,36 @@ void  CCamera::Update(void)
 	NormalizeRadian();	//角度の正規化
 #ifdef _DEBUG
 	CInput* pInput = CInput::GetKey();
+
+	if (CApplication::MODE_RESULT == CApplication::getInstance()->GetModeState())
+	{//リザルト時のみカメラを下に向ける
+		ResultCamera();
+	}
+
 	if ((pInput->Trigger(DIK_0)) == true)		//ENTERキー
 	{
 		m_posV.x++;
 	}
-	CDebugProc::Print("カメラの視点の角度 x:%f y:%f z:%f",m_posV.x,m_posV.y,m_posV.z);
+	if ((pInput->Press(DIK_1)) == true)		//ENTERキー
+	{
+		m_posV.y++;
+	}
+	if ((pInput->Press(DIK_2)) == true)		//ENTERキー
+	{
+		m_posV.y--;
+	}
+	if ((pInput->Press(DIK_3)) == true)		//ENTERキー
+	{
+		m_posR.y++;
+	}
+	if ((pInput->Press(DIK_4)) == true)		//ENTERキー
+	{
+		m_posR.y--;
+	}
+
+	CDebugProc::Print("カメラの視点の角度 x:%f y:%f z:%f\n",m_posV.x,m_posV.y,m_posV.z);
+	CDebugProc::Print("カメラの注視点の角度 x:%f y:%f z:%f", m_posR.x, m_posR.y, m_posR.z);
+
 
 #endif // _DEBUG
 
@@ -136,6 +161,22 @@ void CCamera::NormalizeRadian(void)
 	m_rot.x = NormalizeAngle(m_rot.x);
 	m_rot.y = NormalizeAngle(m_rot.y);
 	m_rot.z = NormalizeAngle(m_rot.z);
+}
+
+//===========================
+//リザルト演出用
+//===========================
+void CCamera::ResultCamera()
+{
+	if (m_posR.y<250.0f)
+	{
+		m_posR.y+=5;
+	}
+
+	if (m_posV.z>-400.0f)
+	{
+		m_posV.z -= 5;
+	}
 }
 
 //===========================

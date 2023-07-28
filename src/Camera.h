@@ -21,6 +21,7 @@ public:
 	virtual void Update();		// 更新
 	void Set();					// 設定
 	void NormalizeRadian();		// 角度の正規化
+	void ResultCamera();		//　リザルト用演出カメラ
 
 	static CCamera* Create();	// 生成
 
