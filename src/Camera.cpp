@@ -56,6 +56,7 @@ void CCamera::Init(void)
 
 	m_viewPort.MinZ = 0.0f;
 	m_viewPort.MaxZ = 1.0f;
+
 	//ˆø”‚ğ‘ã“ü
 	m_viewPort.X = 0;
 	m_viewPort.Y = 0;
