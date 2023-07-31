@@ -24,7 +24,6 @@ public:
 	HRESULT Init();
 	void Uninit();
 	void Update();
-	void Draw();
 	static CObject2D* GetBg();
 
 private:

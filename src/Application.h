@@ -59,7 +59,8 @@ public:
 	// Getter
 	CRenderer*GetRenderer() { return m_pRenderer; };
 	CDebugProc* GetDebugProc() { return m_pDebugProc; };
-	CFade* GetFade() { return m_pFade; };
+	CFade* GetFade() { return m_pFade; }
+	CMode* GetMode() { return m_pMode; }
 
 	// 変更予定
 	void SetWinner(int win) { m_nWinner = win; };	// 勝ったプレイヤーの番号
@@ -78,12 +79,12 @@ private:
 	CRenderer* m_pRenderer;
 	CTexture* m_pTexture;		// テクスチャ情報
 	CDebugProc* m_pDebugProc;	// デバッグ表示
-	MODE m_mode;
 	CFade* m_pFade;
 	int m_nWinner;
 	int m_nScore[2];
 
 	//画面
 	CMode* m_pMode;
+	MODE m_mode;
 };
 #endif // !_APPLICATION_H_

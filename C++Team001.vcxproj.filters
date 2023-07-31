@@ -230,9 +230,6 @@
     <ClInclude Include="src\Mesh.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mode.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\Motion.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
@@ -388,6 +385,9 @@
     </ClInclude>
     <ClInclude Include="src\area_warning.h">
       <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mode.h">
+      <Filter>ソース ファイル\01_Mode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

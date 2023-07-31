@@ -10,6 +10,8 @@
 #include"ObjectList.h"
 #include"Application.h"
 #include"DebugProc.h"
+#include "Mode.h"
+#include "Camera.h"
 
 //=============================================================================
 // コンストラクタ
@@ -157,29 +159,34 @@ void  CRenderer::Update()
 //=============================================================================
 void  CRenderer::Draw()
 {
-	// バックバッファ＆Ｚバッファのクリア
-	g_pD3DDevice->Clear(0, nullptr,
-		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
-		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
+	CMode* mode = CApplication::getInstance()->GetMode();
+	int cameraCount = mode->GetCameraCount();
 
-	// Direct3Dによる描画の開始
-	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
+	for (int i = 0; i < cameraCount; i++)
 	{
-		// ポリゴンの描画処理
-		CObjectList::GetInstance()->Draw();
+		mode->GetCamera(i)->Set();
 
-		//デバッグ情報の描画
-		CApplication::getInstance()->GetDebugProc()->Draw();
+		// バックバッファ＆Ｚバッファのクリア
+		g_pD3DDevice->Clear(0, nullptr, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
-		DrawFPS();
+		// Direct3Dによる描画の開始
+		if (SUCCEEDED(g_pD3DDevice->BeginScene()))
+		{
+			// ポリゴンの描画処理
+			CObjectList::GetInstance()->Draw();
 
-		// Direct3Dによる描画の終了
-		g_pD3DDevice->EndScene();
+			//デバッグ情報の描画
+			CApplication::getInstance()->GetDebugProc()->Draw();
+
+			DrawFPS();
+
+			// Direct3Dによる描画の終了
+			g_pD3DDevice->EndScene();
+		}
+
+		// バックバッファとフロントバッファの入れ替え
+		g_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
 	}
-
-	// バックバッファとフロントバッファの入れ替え
-	g_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
-
 }
 
 //======================================================

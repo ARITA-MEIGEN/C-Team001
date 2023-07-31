@@ -176,9 +176,6 @@ void CApplication::Update()
 void CApplication::Draw()
 {
 	m_pRenderer->Draw();
-
-	//ƒ‚[ƒh‚²‚Æ‚Ì•`‰æ
-	m_pMode->Draw();
 }
 
 //======================================================

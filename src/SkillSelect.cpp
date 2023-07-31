@@ -55,9 +55,9 @@ HRESULT CSkillSelect::Init()
 	}
 
 	//カメラの設定
-	m_pCamera = CCameraGame::Create();
-	m_pCamera->SetPosV(D3DXVECTOR3(0.0f, 250.0f, -400.0f));
-	m_pCamera->SetPosR(D3DXVECTOR3(0.0f, 250.0f, 200.0f));
+	CCamera* camera = AttachCamera(CCamera::Create());
+	camera->SetPosV(D3DXVECTOR3(0.0f, 250.0f, -400.0f));
+	camera->SetPosR(D3DXVECTOR3(0.0f, 250.0f, 200.0f));
 
 	//ライトの設定
 	m_pLight = new CLight;
@@ -86,13 +86,6 @@ void CSkillSelect::Uninit()
 {
 	CSound::GetInstance()->Stop();
 
-	//カメラの設定
-	if (m_pCamera != nullptr)
-	{
-		m_pCamera->Uninit();
-		delete m_pCamera;
-	}
-
 	//ライトの設定
 	if (m_pLight != nullptr)
 	{
@@ -113,7 +106,7 @@ void CSkillSelect::Uninit()
 void CSkillSelect::Update()
 {
 	//更新処理
-	m_pCamera->Update();
+	CMode::Update();
 	m_pLight->Update();
 
 	//フェードしていなければ
@@ -130,14 +123,6 @@ void CSkillSelect::Update()
 
 	//選択処理
 	Texture();
-}
-
-//====================================
-//描画
-//====================================
-void CSkillSelect::Draw()
-{
-	m_pCamera->Set();
 }
 
 //====================================

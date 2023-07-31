@@ -36,7 +36,6 @@ CPlayer*CGame::m_pPlayer[MAX_PLAYER] = {};
 CGame::GAME CGame::m_gamestate;
 bool CGame::bDebugCamera = nullptr;
 
-CCamera* CGame::m_pCamera = nullptr;
 CLight* CGame::m_pLight = nullptr;
 CFloor* CGame::m_pFloor = nullptr;
 CTimer* CGame::m_pTimer = nullptr;
@@ -87,13 +86,6 @@ CGame::~CGame()
 //====================================
 HRESULT CGame::Init()
 {
-	//カメラの設定
-	m_pCamera = CCameraGame::Create();
-
-	//ライトの設定
-	m_pLight = new CLight;
-	m_pLight->Init();
-
 	//ブロック生成
 	m_pMap = CMap::Create(CMapSelect::GetMapNumber());
 
@@ -105,8 +97,26 @@ HRESULT CGame::Init()
 
 		//ステータス表示の生成
 		D3DXVECTOR3 pos((CGauge::SPACE_SIZE * (nCnt + 1 + 1)) + (CGauge::MAX_SIZE * nCnt + 1), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y * 0.5f) - 10.0f, 0.0f);
-		m_apStatusUI[nCnt] = CStatusUI::Create(pos,nCnt);
+		m_apStatusUI[nCnt] = CStatusUI::Create(pos, nCnt);
 	}
+
+	//カメラの設定
+	CCamera* camera;
+	camera = AttachCamera(CCameraGame::Create(m_pPlayer[0]));
+	camera->SetViewPort(0,0,SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f);
+	camera = AttachCamera(CCameraGame::Create(m_pPlayer[1]));
+	camera->SetViewPort(SCREEN_WIDTH * 0.5f, 0, SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f);
+	camera = AttachCamera(CCameraGame::Create(m_pPlayer[2]));
+	camera->SetViewPort(0, SCREEN_HEIGHT * 0.5f, SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f);
+	camera = AttachCamera(CCameraGame::Create(m_pPlayer[3]));
+	camera->SetViewPort(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f);
+
+	CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH* 0.5f, SCREEN_HEIGHT* 0.5f, 0.0f), D3DXVECTOR2(SCREEN_WIDTH, 10.0f), 6);
+	CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH* 0.5f, SCREEN_HEIGHT* 0.5f, 0.0f), D3DXVECTOR2(10.0f, SCREEN_HEIGHT), 6);
+
+	//ライトの設定
+	m_pLight = new CLight;
+	m_pLight->Init();
 	
 	//デバッグ用カメラ操作モード
 	bDebugCamera = false;
@@ -156,13 +166,6 @@ HRESULT CGame::Init()
 //====================================
 void CGame::Uninit()
 {
-	//カメラの終了
-	if (m_pCamera != nullptr)
-	{
-		m_pCamera->Uninit();
-		delete m_pCamera;
-	}
-
 	// ライトの終了
 	if (m_pLight != nullptr)
 	{
@@ -192,7 +195,7 @@ void CGame::Uninit()
 //====================================
 void CGame::Update()
 {
-	m_pCamera->Update();
+	CMode::Update();
 	m_pLight->Update();
 
 	// ステート処理
@@ -504,14 +507,6 @@ void CGame::Update_GamePouse()
 		m_isStateDirty = true;
 		CObjectList::GetInstance()->Pause(false);
 	}
-}
-
-//====================================
-//描画
-//====================================
-void CGame::Draw()
-{
-	m_pCamera->Set();
 }
 
 //====================================

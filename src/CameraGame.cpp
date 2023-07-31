@@ -8,6 +8,7 @@
 // include
 //-----------------------------------------------------------------------------
 #include "CameraGame.h"
+#include "Player.h"
 
 //-----------------------------------------------------------------------------
 //ƒ}ƒNƒ’è‹`
@@ -54,12 +55,17 @@ void CCameraGame::Init()
 void CCameraGame::Update()
 {
 	CCamera::Update();
+
+	m_posV = m_player->GetPos();
+	m_posV.z -= 200.0f;
+	m_posV.y += 200.0f;
+	m_posR = m_player->GetPos();
 }
 
 //-----------------------------------------------------------------------------
 // ¶¬
 //-----------------------------------------------------------------------------
-CCameraGame* CCameraGame::Create()
+CCameraGame* CCameraGame::Create(CPlayer* player)
 {
 	CCameraGame* pCamera = new CCameraGame;
 
@@ -69,5 +75,6 @@ CCameraGame* CCameraGame::Create()
 	}
 
 	pCamera->Init();
+	pCamera->m_player = player;
 	return pCamera;
 }

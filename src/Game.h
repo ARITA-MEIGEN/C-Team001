@@ -18,7 +18,6 @@
 
 //前方宣言
 class CPlayer;
-class CCamera;
 class CLight;
 class CFloor;
 class CTimer;
@@ -53,7 +52,6 @@ public:
 
 	HRESULT Init() override;
 	void Uninit() override;
-	void Draw() override;
 
 public:
 	void Update() override;
@@ -102,7 +100,6 @@ public:
 
 	// ゲッター
 	static GAME GetGame() {return m_gamestate;};
-	static CCamera * GetCamera() { return m_pCamera; };
 	static CFloor*GetFloor() { return m_pFloor; };
 	static CLight*GetLight() { return m_pLight; };
 	static bool GetDebugCamera() { return bDebugCamera; };
@@ -113,7 +110,6 @@ public:
 private:
 	static	CPlayer*m_pPlayer[MAX_PLAYER];
 	static	GAME m_gamestate;			// ゲームの状態
-	static	CCamera*m_pCamera;			// カメラ
 	static	CLight*m_pLight;			// 光源
 	static	CFloor*m_pFloor;			// 床
 	static	bool bDebugCamera;			// デバッグ用カメラのON/OFF

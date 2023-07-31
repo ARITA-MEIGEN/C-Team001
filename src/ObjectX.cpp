@@ -82,11 +82,6 @@ void CObjectX::Draw(void)
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
-	D3DMATERIAL9 matDef;			// 現在のマテリアル保存用
-	D3DXMATERIAL *pMat;				// マテリアルの情報
-
-	//現在のマテリアルを維持
-	pDevice->GetMaterial(&matDef);
 
 	//パーツのワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
@@ -125,10 +120,16 @@ void CObjectX::Draw(void)
 	//影の生成
 	//Shadow()
 
+	D3DMATERIAL9 matDef;			// 現在のマテリアル保存用
+
+	//現在のマテリアルを維持
+	pDevice->GetMaterial(&matDef);
+
 	//ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
 	//マテリアルデータへのポインタを取得
+	D3DXMATERIAL *pMat;				// マテリアルの情報
 	pMat = (D3DXMATERIAL*)m_modelData.pBuffMat->GetBufferPointer();
 
 	//マテリアルの描画
@@ -265,4 +266,8 @@ void CObjectX::SetParent(CObjectX * pModel)
 {
 	m_pParent = pModel;
 	m_pParent->SetChildren(this);
+}
+
+void CObjectX::MatrixWorldCalculation()
+{
 }
