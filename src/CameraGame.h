@@ -7,8 +7,6 @@
 
 #include "Camera.h"
 
-class CPlayer;
-
 class CCameraGame : public CCamera
 {
 private:
@@ -24,10 +22,9 @@ public:
 	void Init() override;		// ‰Šú‰»
 	void Update() override;		// XV
 
-	static CCameraGame* Create(CPlayer* player);	// ¶¬
+	static CCameraGame* Create();	// ¶¬
 
 private:
-	CPlayer* m_player;
 };
 
 #endif

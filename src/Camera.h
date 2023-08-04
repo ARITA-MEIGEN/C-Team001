@@ -30,7 +30,6 @@ public:
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };		//向き
 	void SetVecU(D3DXVECTOR3 vec) { m_vecU = vec; };
 
-	void SetViewPort(DWORD x, DWORD y, DWORD Width, DWORD Height);
 protected:
 	D3DXVECTOR3 m_posV;				// 視点
 	D3DXVECTOR3 m_posVDest;			// 視点の目的地

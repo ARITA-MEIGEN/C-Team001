@@ -39,15 +39,15 @@ public:
 	void SetModel(const char* Filename);
 
 	// Setter
-	void SetPos(const D3DXVECTOR3& pos) { m_pos = pos; MatrixWorldCalculation();}
-	void SetRot(const D3DXVECTOR3& rot) { m_rot = rot; MatrixWorldCalculation();}
+	void SetPos(const D3DXVECTOR3& pos) { m_pos = pos; }
+	void SetRot(const D3DXVECTOR3& rot) { m_rot = rot; }
 	void SetPosDest(const D3DXVECTOR3& pos) { m_posDest = pos; };
 	void SetRotDest(const D3DXVECTOR3& rot) { m_rotDest = rot; };
 	void SetPosDefault(const D3DXVECTOR3& pos) { m_DefaultPos = pos; };
 	void SetRotDefault(const D3DXVECTOR3& rot) { m_DefaultRot = rot; };
 	void SetParent(CObjectX* pModel);
-	void SetParentMatrix(D3DXMATRIX* inMatrix) { m_mtxParent = inMatrix;}
-	void SetSizeMag(const D3DXVECTOR3& size) { m_sizeMag = size; MatrixWorldCalculation(); }
+	void SetParentMatrix(D3DXMATRIX* inMatrix) { m_mtxParent = inMatrix; }
+	void SetSizeMag(const D3DXVECTOR3& size) { m_sizeMag = size; }
 	void SetChildren(CObjectX* pModel) { m_childrens.push_back(pModel); }
 	void SetCol(const D3DXCOLOR& col) { m_materialColor[0] = col; };
 	void SetColorMaterial(const int index, const D3DXCOLOR& col) { m_materialColor[index] = col; };
@@ -69,9 +69,6 @@ public:
 	const D3DXMATRIX& GetMatrix() { return m_mtxWorld; }
 	const int GetColorMaterialSize() { return m_materialColor.size(); }
 
-private:
-
-	void MatrixWorldCalculation();
 private:
 	std::string m_modelTag;	// モデルデータのタグ
 	CObjectXOriginalList::SModelData m_modelData;	//モデルデータの参照
@@ -98,9 +95,9 @@ private:
 	D3DXVECTOR3 m_rotDest;		// 目的の角度
 
 	// 大きさ倍率
-	D3DXVECTOR3 m_sizeMag;		// 倍率
+	D3DXVECTOR3 m_sizeMag;			// 倍率
 
-	// 影
+	// 影	   
 	CShadow*  m_Shadow;			// 影
 	D3DXMATRIX  m_mtxShadow;	// 影用ワールドマトリックス
 

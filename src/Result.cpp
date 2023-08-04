@@ -59,9 +59,9 @@ HRESULT CResult::Init()
 
 
 	//カメラの設定
-	CCamera* camera = AttachCamera(CCamera::Create());
-	camera->SetPosV(D3DXVECTOR3(0.0f, 250.0f, 0.0f));
-	camera->SetPosR(D3DXVECTOR3(0.0f,-500.0f, 00.0f));
+	m_pCamera = CCameraGame::Create();
+	m_pCamera->SetPosV(D3DXVECTOR3(0.0f, 250.0f, 0.0f));
+	m_pCamera->SetPosR(D3DXVECTOR3(0.0f,-500.0f, 00.0f));
 
 	//ライトの設定
 	m_pLight = new CLight;
@@ -106,6 +106,12 @@ HRESULT CResult::Init()
 void CResult::Uninit()
 {
 	CSound::GetInstance()->Stop();
+	//カメラの設定
+	if (m_pCamera != nullptr)
+	{
+		m_pCamera->Uninit();
+		delete m_pCamera;
+	}
 
 	//ライトの設定
 	if (m_pLight != nullptr)
@@ -122,7 +128,7 @@ void CResult::Update()
 {
 	CInput* pInput = CInput::GetKey();
 
-	CMode::Update();
+	m_pCamera->Update();
 	m_pLight->Update();
 
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
@@ -149,4 +155,12 @@ void CResult::Update()
 		}
 	}
 
+}
+
+//====================================
+//描画
+//====================================
+void CResult::Draw()
+{
+	m_pCamera->Set();
 }

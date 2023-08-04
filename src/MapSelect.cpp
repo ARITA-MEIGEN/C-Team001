@@ -60,7 +60,7 @@ HRESULT CMapSelect::Init()
 	}
 
 	//カメラの設定
-	AttachCamera(CCamera::Create());
+	m_pCamera = CCameraGame::Create();
 
 	//ライトの設定
 	m_pLight = new CLight;
@@ -83,6 +83,13 @@ void CMapSelect::Uninit()
 {
 	CSound::GetInstance()->Stop();
 
+	//カメラの設定
+	if (m_pCamera != nullptr)
+	{
+		m_pCamera->Uninit();
+		delete m_pCamera;
+	}
+
 	//ライトの設定
 	if (m_pLight != nullptr)
 	{
@@ -103,7 +110,7 @@ void CMapSelect::Uninit()
 void CMapSelect::Update()
 {
 	//更新処理
-	CMode::Update();
+	m_pCamera->Update();
 	m_pLight->Update();
 
 	//入力処理
@@ -126,6 +133,14 @@ void CMapSelect::Update()
 			m_pObj2DPolygon[nCnt]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
 		}
 	}
+}
+
+//====================================
+//描画
+//====================================
+void CMapSelect::Draw()
+{
+	m_pCamera->Set();
 }
 
 //====================================

@@ -16,6 +16,7 @@
 #include "Map.h"
 
 //前方宣言
+class CCamera;
 class CLight;
 
 class CMapSelect : public CMode
@@ -28,6 +29,7 @@ public:
 	HRESULT Init();			// 初期化
 	void Uninit();			// 終了
 	void Update();			// 更新
+	void Draw();			// 描画
 
 	void Input();			// 入力
 	void Select();			// 選択処理
@@ -39,6 +41,7 @@ private:
 	bool m_bMapChange;										// マップを変更したかどうか
 	CObject2D*m_pObj2D;										// マップ選択の枠
 	CObject2D*m_pObj2DPolygon[(CMap::STAGE_MAX)];			// マップ選択
+	CCamera*m_pCamera;										// カメラ
 	CLight*m_pLight;										// 光源
 	CMap*m_pMap;											// マップ
 };

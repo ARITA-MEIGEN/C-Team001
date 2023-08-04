@@ -192,12 +192,3 @@ CCamera * CCamera::Create(void)
 
 	return pCamera;
 }
-
-void CCamera::SetViewPort(DWORD x, DWORD y, DWORD Width, DWORD Height)
-{
-	m_viewPort.X = x;
-	m_viewPort.Y = y;
-	m_viewPort.Width = Width;
-	m_viewPort.Height = Height;
-
-}

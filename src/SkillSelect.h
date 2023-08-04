@@ -17,6 +17,7 @@
 
 //前方宣言
 class CPlayer;
+class CCamera;
 class CLight;
 class CBg;
 
@@ -38,6 +39,7 @@ public:
 	HRESULT Init();			// 初期化
 	void Uninit();			// 終了
 	void Update();			// 更新
+	void Draw();			// 描画
 
 	static bool GetComputer(int nCntPlayer) { return m_isDecision[nCntPlayer]; }
 	static int GetSelectSkill(int nCntPlayer) { return m_nSkill[nCntPlayer]; }
@@ -56,6 +58,7 @@ private:
 	CPlayer* m_pPlayer[MAX_PLAYER];			// プレイヤー
 
 	CBg* m_pBg;				// 背景
+	CCamera* m_pCamera;		// カメラ
 	CLight* m_pLight;		// 光源
 	SKILL_STATE m_state;	// 状態
 };
