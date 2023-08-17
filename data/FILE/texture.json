@@ -24,6 +24,8 @@
     [ "CHARACTER_BG", "data\/TEXTURE\/Game\/PlayerStatus\/PlayerStatus_CharaBG_Square.png" ],
     [ "SKILL_SELECT_BG", "data\/TEXTURE\/SkillSelect\/SkillSelect_Bg.png"],
     [ "TEST_FLOOR", "data\/TEXTURE\/test.jpg"],
+    [ "AREA_EFFECT", "data\/TEXTURE\/effect.png"],
+    [ "AREA_FOG", "data\/TEXTURE\/fog.png"],
     [ "CHECK_MARK", "data\/TEXTURE\/CheckMark.png"],
     [ "CIRCLE", "data\/TEXTURE\/SkillSelect\/SkillSelect_Circle.png"]
   ]

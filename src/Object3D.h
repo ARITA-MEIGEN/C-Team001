@@ -52,6 +52,7 @@ public:
 	void SetBackCulling(const bool isCulling) { m_isBackCulling = isCulling; }
 	void SetMatrixWorld(const D3DXMATRIX& inMatrixWorld) { m_mtxWorld = inMatrixWorld; }
 	void OnBillboard() { m_isBillboard = true; }
+	void SetUV(float U1, float U2, float V1, float V2);
 
 	//ÉQÉbÉ^Å[
 	const D3DXVECTOR3 GetPos() const { return m_Pos; }

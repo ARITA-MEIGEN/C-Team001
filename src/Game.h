@@ -55,9 +55,9 @@ public:
 	void Uninit() override;
 	void Draw() override;
 
-public:
+public: // 更新処理
 	void Update() override;
-private: // 更新処理
+private:
 	enum UPDATE_STATE
 	{
 		UPDATE_FADENOW = 0,		// フェード中
@@ -76,24 +76,32 @@ private: // 更新処理
 	const UPDATE_FUNC* m_funcInit;
 	const UPDATE_FUNC* m_funcUpdate;
 
-	bool m_isStateDirty;
+	bool m_isStateDirty;	// 切り替え直後か
 
-	// 切り替えタイミングでの初期化
+	// フェード中
 	void Init_FadeNow();
-	void Init_CountDown();
-	void Init_GamePlay();
-	void Init_GameEnd();
-	void Init_GamePouse();
-
-	//　更新のステート関数
 	void Update_FadeNow();
+
+	// 開始前のカウントダウン
+	void Init_CountDown();
 	void Update_CountDown();
+
+	// プレイ時
+	void Init_GamePlay();
 	void Update_GamePlay();
+
+	// 終了時
+	void Init_GameEnd();
 	void Update_GameEnd();
+
+	// ポーズ
+	void Init_GamePouse();
 	void Update_GamePouse();
 
 	UPDATE_STATE	m_stateNow;		// スキルステートの状態
 
+private:
+	void SetupBgModel();	// 背景モデルの設置
 public:
 	void ResetGame();	// ラウンド移行時の処理
 

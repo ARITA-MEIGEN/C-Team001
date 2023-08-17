@@ -5,32 +5,32 @@
 //
 //=============================================================================
 //インクルード
-#include"main.h"
-#include"Application.h"
-#include"Game.h"
-#include"Player.h"
-#include"Player.h"
-#include"Mesh.h"
-#include"CameraGame.h"
-#include"Light.h"
-#include"Shadow.h"
-#include"Fade.h"
-#include"sound.h"
-#include"input.h"
-#include"effect.h"
-#include"Time.h"
-#include"Map.h"
-#include"Item_Speed.h"
-#include"SkillGauge.h"
-#include "SkillSelect.h"
+#include "Application.h"
+#include "ObjectList.h"
+#include "Game.h"
+#include "Player.h"
+#include "CameraGame.h"
+#include "Light.h"
+#include "Fade.h"
+#include "sound.h"
+#include "input.h"
+#include "Map.h"
 #include "PlayerController.h"
 #include "computerController.h"
-#include"StatusUI.h"
+#include "File.h"
+
+// 設定の取得
+#include "SkillSelect.h"
 #include "MapSelect.h"
-#include "ObjectList.h"
+
+// UI
+#include "SkillGauge.h"
+#include "StatusUI.h"
+#include "Time.h"
 #include "countdown_ui.h"
 
-#include "File.h"
+// ToDo : あとで消せ
+#include "Object3D.h"
 
 //静的メンバ変数
 CPlayer*CGame::m_pPlayer[MAX_PLAYER] = {};
@@ -117,31 +117,7 @@ HRESULT CGame::Init()
 	m_Round = ROUND_1;
 
 	// 背景モデルの設置
-	{
-		nlohmann::json loadData = LoadJson("test.json");
-
-		int loadDataSize = loadData["MODEL"].size();
-
-		for (int i = 0; i < loadDataSize; i++)
-		{
-			std::string tag = loadData["MODEL"][i]["TAG"];
-			D3DXVECTOR3 pos = { loadData["MODEL"][i]["POS"][0],loadData["MODEL"][i]["POS"][1] ,loadData["MODEL"][i]["POS"][2] };
-			D3DXVECTOR3 rot = { loadData["MODEL"][i]["ROT"][0],loadData["MODEL"][i]["ROT"][1] ,loadData["MODEL"][i]["ROT"][2] };
-
-			CObjectX* object = CObjectX::Create();
-			CObjectXOriginalList* original = CObjectXOriginalList::GetInstance();
-			object->BindModel(original->GetModelData(tag));
-			object->SetModelTag(tag);
-			object->SetPos(pos + D3DXVECTOR3(0.0f, -500.0f, 0.0f));
-			object->SetRot(rot);
-		}
-	}
-
-	// 仮背景の設置
-	{
-		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
-		pori->SetTextureKey("TEST_FLOOR");
-	}
+	SetupBgModel();
 
 	// 更新のステート管理
 	m_funcInit = m_InitFunc;
@@ -510,6 +486,39 @@ void CGame::Update_GamePouse()
 void CGame::Draw()
 {
 	m_pCamera->Set();
+}
+
+//====================================
+// 背景モデルの設置
+//====================================
+void CGame::SetupBgModel()
+{
+	{
+		nlohmann::json loadData = LoadJson("test.json");
+
+		int loadDataSize = loadData["MODEL"].size();
+
+		for (int i = 0; i < loadDataSize; i++)
+		{
+			std::string tag = loadData["MODEL"][i]["TAG"];
+			D3DXVECTOR3 pos = { loadData["MODEL"][i]["POS"][0],loadData["MODEL"][i]["POS"][1] ,loadData["MODEL"][i]["POS"][2] };
+			D3DXVECTOR3 rot = { loadData["MODEL"][i]["ROT"][0],loadData["MODEL"][i]["ROT"][1] ,loadData["MODEL"][i]["ROT"][2] };
+
+			CObjectX* object = CObjectX::Create();
+			CObjectXOriginalList* original = CObjectXOriginalList::GetInstance();
+			object->BindModel(original->GetModelData(tag));
+			object->SetModelTag(tag);
+			object->SetPos(pos + D3DXVECTOR3(0.0f, -500.0f, 0.0f));
+			object->SetRot(rot);
+		}
+	}
+
+	// 仮背景の設置	// ToDo : モデルが出来次第消す
+	{
+		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
+		pori->SetTextureKey("TEST_FLOOR");
+	}
+
 }
 
 //====================================

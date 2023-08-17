@@ -40,6 +40,9 @@
     <Filter Include="ソース ファイル\09_UI">
       <UniqueIdentifier>{2bb071fe-3a15-46dd-b021-4c39686af592}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\20_FILE">
+      <UniqueIdentifier>{12cc9b25-4683-442c-83bb-3d0f5e92020b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\effect.cpp">
@@ -406,5 +409,13 @@
     <Text Include="src\input\KeyConfigData.txt">
       <Filter>ソース ファイル\03_Input</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\FILE\model.json">
+      <Filter>ソース ファイル\20_FILE</Filter>
+    </None>
+    <None Include="data\FILE\texture.json">
+      <Filter>ソース ファイル\20_FILE</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -14,7 +14,7 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CCountDownUI::CCountDownUI() : CObject2D(CObjectList::LEVEL_DEBUG1)
+CCountDownUI::CCountDownUI() : CObject2D(CObjectList::LEVEL_2D_UI)
 {
 }
 
@@ -33,7 +33,7 @@ HRESULT CCountDownUI::Init()
 {
 	CObject2D::Init();
 	SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
-	SetSiz(D3DXVECTOR2(80.0f, 160.0f));
+	SetSiz(D3DXVECTOR2(120.0f, 240.0f));
 	SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	SetTextureKey("NUMBER");
 	SetUV(0.1f * (m_nTimer % 10), 0.1f * ((m_nTimer % 10) + 1), 0.0f, 1.0f);

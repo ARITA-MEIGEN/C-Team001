@@ -290,6 +290,10 @@
   <ItemGroup>
     <Text Include="src\input\KeyConfigData.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\FILE\model.json" />
+    <None Include="data\FILE\texture.json" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

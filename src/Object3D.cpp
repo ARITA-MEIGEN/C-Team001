@@ -129,18 +129,6 @@ void  CObject3D::Update()
 	pVtx[2].pos = D3DXVECTOR3(-(m_Siz.x * 0.5f), 0.0f, -(m_Siz.z * 0.5f));
 	pVtx[3].pos = D3DXVECTOR3(+(m_Siz.x * 0.5f), 0.0f, -(m_Siz.z * 0.5f));
 
-	//法線ベクトルの設定
-	pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	pVtx[1].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	pVtx[2].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-
-	//テクスチャ座標の設定
-	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
-
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
 }
@@ -263,6 +251,25 @@ void CObject3D::SetCol(const D3DXCOLOR& col)
 	{
 		pVtx[i].col = m_Col;
 	}
+
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
+}
+
+void CObject3D::SetUV(float U1, float U2, float V1, float V2)
+{
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();;
+
+	VERTEX_3D* pVtx;
+
+	//頂点バッファをロックし、頂点データへのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	pVtx[0].tex = D3DXVECTOR2(U1, V1);
+	pVtx[1].tex = D3DXVECTOR2(U2, V1);
+	pVtx[2].tex = D3DXVECTOR2(U1, V2);
+	pVtx[3].tex = D3DXVECTOR2(U2, V2);
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
