@@ -194,10 +194,16 @@ void CPlayer::Update(void)
 	// モーション
 	m_motion->Update();
 
+	if (m_nStunTime > 0)
+	{// スタンしていたらスタン時間を減算させる
+		m_nStunTime--;
+	}
+
 	if (m_nStunTime <= 0)
 	{
 		m_nStunTime = 0;
 		m_bKnockBack = false;
+
 		// 移動
 		Move();
 		// 回転
@@ -887,11 +893,6 @@ void CPlayer::Item()
 	if (m_nItemBuffTime <= 0 && m_ItemState != ITEM_NONE)
 	{// アイテムを拾った後に効果時間が切れたらデフォルトに戻す
 		m_ItemState = ITEM_NONE;
-	}
-
-	if (m_nStunTime > 0)
-	{// スタンしていたらスタン時間を減算させる
-		m_nStunTime--;
 	}
 
 	if (m_StockItemState == STOCK_BOM)

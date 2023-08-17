@@ -174,7 +174,7 @@ void CMapSelect::Input()
 			}
 		}
 
-		if ((pInput->Trigger(DIK_RETURN)) == true || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
+		if ((pInput->Trigger(DIK_RETURN)) || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
 		{//エンターでスキル選択に
 		 //モード設定
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_SKILL);
