@@ -34,6 +34,12 @@
     <Filter Include="ソース ファイル\07_Object">
       <UniqueIdentifier>{5607d2da-08c2-404f-9789-90b1810d1cde}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\08_Charctor">
+      <UniqueIdentifier>{76607235-aa88-46eb-a1d9-4492c3cd7823}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\09_UI">
+      <UniqueIdentifier>{2bb071fe-3a15-46dd-b021-4c39686af592}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\effect.cpp">
@@ -42,25 +48,7 @@
     <ClCompile Include="src\Light.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Mesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Motion.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Particle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shadow.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Time.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\File.cpp">
@@ -80,9 +68,6 @@
     </ClCompile>
     <ClCompile Include="src\Camera.cpp">
       <Filter>ソース ファイル\02_Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SkillGauge.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\CameraGame.cpp">
       <Filter>ソース ファイル\02_Camera</Filter>
@@ -159,12 +144,6 @@
     <ClCompile Include="src\MapSelect.cpp">
       <Filter>ソース ファイル\01_Mode</Filter>
     </ClCompile>
-    <ClCompile Include="src\computerController.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\StatusUI.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\teleport.cpp">
       <Filter>ソース ファイル\05_Map</Filter>
     </ClCompile>
@@ -189,12 +168,6 @@
     <ClCompile Include="src\Bg.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Controller.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PlayerController.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\go_future_block.cpp">
       <Filter>ソース ファイル\05_Map</Filter>
     </ClCompile>
@@ -204,15 +177,45 @@
     <ClCompile Include="src\Item_Bom.cpp">
       <Filter>ソース ファイル\04_Item</Filter>
     </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>ソース ファイル\08_Charctor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerController.cpp">
+      <Filter>ソース ファイル\08_Charctor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\computerController.cpp">
+      <Filter>ソース ファイル\08_Charctor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Controller.cpp">
+      <Filter>ソース ファイル\08_Charctor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shadow.cpp">
+      <Filter>ソース ファイル\08_Charctor</Filter>
+    </ClCompile>
     <ClCompile Include="src\area_warning.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SkillGauge.cpp">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StatusUI.cpp">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Motion.cpp">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI.cpp">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Time.cpp">
+      <Filter>ソース ファイル\09_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Command.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Controller.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Easing.h">
@@ -227,34 +230,10 @@
     <ClInclude Include="src\Light.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mesh.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\Mode.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\Motion.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\Particle.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Player.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PlayerController.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Shadow.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SkillGauge.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Time.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UI.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\CameraGame.h">
@@ -347,9 +326,6 @@
     <ClInclude Include="src\MapSelect.h">
       <Filter>ソース ファイル\01_Mode</Filter>
     </ClInclude>
-    <ClInclude Include="src\StatusUI.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\teleport.h">
       <Filter>ソース ファイル\05_Map</Filter>
     </ClInclude>
@@ -374,9 +350,6 @@
     <ClInclude Include="src\Bg.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\computerController.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\go_future_block.h">
       <Filter>ソース ファイル\05_Map</Filter>
     </ClInclude>
@@ -386,8 +359,41 @@
     <ClInclude Include="src\Item_Bom.h">
       <Filter>ソース ファイル\04_Item</Filter>
     </ClInclude>
+    <ClInclude Include="src\Player.h">
+      <Filter>ソース ファイル\08_Charctor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlayerController.h">
+      <Filter>ソース ファイル\08_Charctor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\computerController.h">
+      <Filter>ソース ファイル\08_Charctor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Controller.h">
+      <Filter>ソース ファイル\08_Charctor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shadow.h">
+      <Filter>ソース ファイル\08_Charctor</Filter>
+    </ClInclude>
     <ClInclude Include="src\area_warning.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StatusUI.h">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SkillGauge.h">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Motion.h">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mesh.h">
+      <Filter>ソース ファイル\07_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI.h">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Time.h">
+      <Filter>ソース ファイル\09_UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

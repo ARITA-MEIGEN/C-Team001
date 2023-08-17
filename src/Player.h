@@ -104,6 +104,7 @@ public:
 	void Update_Jump();
 
 	static CPlayer*	Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);	// プレイヤー生成
+	static CPlayer*	Create(CBlock* block, D3DXVECTOR3 rot);	// プレイヤー生成
 
 	// Setter
 	void SetController(CController* inOperate);

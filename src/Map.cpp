@@ -120,6 +120,7 @@ void CMap::Load()
 		{
 			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH + 25.0f;
 			float x = j * BLOCK_WIDTH - map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
+			D3DXVECTOR3 randomPos(FloatRandom(1000.0f,-1000.0f), 0.0f, FloatRandom(1000.0f, -1000.0f));
 			D3DXVECTOR3 createPos(x, 0.0f, z);
 
 			CBlock* blockCreate = nullptr;
@@ -127,19 +128,22 @@ void CMap::Load()
 			switch ((int)map["MAP"][i][j])
 			{
 			case -1:
-				blockCreate = CBlock::Create(createPos);
+				blockCreate = CBlock::Create(randomPos);
+				blockCreate->SetPlanPos(createPos);
 				blockCreate->SetAllColorMaterial(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 				blockCreate->SetStop(true);
 				break;
 			case 0:
-				blockCreate = CBlock::Create(createPos);
+				blockCreate = CBlock::Create(randomPos);
+				blockCreate->SetPlanPos(createPos);
 				break;
 			case 1:
 			case 2:
 			case 3:
 			case 4:
 			{
-				blockCreate = CBlock::Create(createPos);
+				blockCreate = CBlock::Create(randomPos);
+				blockCreate->SetPlanPos(createPos);
 				D3DXVECTOR2 idx;
 				idx.x = (float)j;
 				idx.y = (float)i;
@@ -147,7 +151,8 @@ void CMap::Load()
 			}
 				break;
 			case 5:
-				blockCreate = CTeleport::Create(createPos, 5);
+				blockCreate = CTeleport::Create(randomPos, 5);
+				blockCreate->SetPlanPos(createPos);
 				blockCreate->SetTeleport(true);
 				break;
 			default:
@@ -203,6 +208,18 @@ void CMap::Ranking()
 				m_anRanking[Rank[MAX_PLAYER - 1 - i]] = m_anRanking[Rank[MAX_PLAYER - 1 - i + 1]];
 			}
 		}
+	}
+}
+
+//=============================================================================
+// I—¹‚É‰æ–ÊŠO‚ÉUŠJ‚³‚¹‚éˆ—
+//=============================================================================
+void CMap::OpenMap()
+{
+	int size = m_pBlock.size();
+	for (int i = 0; i < size; i++)
+	{
+		//m_pBlock[i]->SetPlanPos(D3DXVECTOR3(FloatRandom(-1000.0f,)));
 	}
 }
 

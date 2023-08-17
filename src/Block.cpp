@@ -11,6 +11,7 @@
 //-----------------------------------------------------------------------------
 #include "Block.h"
 #include "Item.h"
+#include "Player.h"
 
 //-----------------------------------------------------------------------------
 // 定数
@@ -22,7 +23,11 @@ const float CBlock::DOWN_POWER = 1.25f;		// 沈んだブロックが浮上する時間
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CBlock::CBlock(int priorty) :CObjectX(priorty)
+CBlock::CBlock(int priorty) :
+	CObjectX(priorty),
+	m_isMovePermit(false),
+	m_posPlan(0.0f,0.0f,0.0f),
+	m_move(0.0f, 0.0f, 0.0f)
 {
 	m_number = 0;
 	m_isStop = false;
@@ -64,6 +69,8 @@ void  CBlock::Uninit()
 void  CBlock::Update()
 {
 	CObjectX::Update();
+
+	Move();
 
 	if (m_onItem != nullptr)
 	{
@@ -170,6 +177,50 @@ void CBlock::SetSink(float power)
 	}
 
 	SetPos(pos);
+}
+
+//=============================================================================
+// 移動演出
+//=============================================================================
+void CBlock::SetPlanPos(D3DXVECTOR3 inPos)
+{
+	m_isMovePermit = true;
+	m_posPlan = inPos;
+	D3DXVECTOR3 pos = GetPos();
+
+	D3DXVECTOR3 moveVec = m_posPlan - pos;
+
+	m_move = moveVec * 0.015f;
+}
+
+//=============================================================================
+// 移動
+//=============================================================================
+void CBlock::Move()
+{
+	if (!m_isMovePermit)
+	{
+		return;
+	}
+
+	AddPos(m_move);
+
+	D3DXVECTOR3 pos = GetPos();
+	pos -= m_posPlan;
+
+	float length = D3DXVec3Length(&pos);
+
+	if (length >= -10.0f && length <= 10.0f)
+	{ // 目標地点の到着
+		SetPos(m_posPlan);
+		m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		m_isMovePermit = false;
+	}
+
+	if (m_onPlayer != nullptr)
+	{
+		m_onPlayer->SetPos(GetPos());
+	}
 }
 
 //=============================================================================

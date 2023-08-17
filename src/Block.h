@@ -45,13 +45,19 @@ public:
 	void SetSink(float power);
 	void SetNumber(int inNumber) { m_number = inNumber; }
 
+	void SetPlanPos(D3DXVECTOR3 inPos);
+
 	// Getter
 	int GetNumber() { return m_number; };
 	bool GetTeleport() { return m_bTeleport; };
 	bool IsStop() { return m_isStop; };
+	bool IsMovePermit() { return m_isMovePermit; }
 
 	CPlayer* GetOnPlayer() { return m_onPlayer; };
 	CItem* GetOnItem() { return m_onItem; };
+
+private:
+	void Move();	// 移動ギミック
 
 private:
 	//メンバ変数
@@ -60,6 +66,11 @@ private:
 	bool m_bTeleport;		// テレポーターかどうか
 	CPlayer* m_onPlayer;	// 乗ってるプレイヤー
 	CItem* m_onItem;		// 乗ってるアイテム
+
+	// 移動処理
+	bool m_isMovePermit;	// 移動許可が降りてるか
+	D3DXVECTOR3 m_posPlan;	// 移動予定
+	D3DXVECTOR3 m_move;		// 移動ベクトル
 };
 
 #endif

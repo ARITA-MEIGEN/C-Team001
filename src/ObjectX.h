@@ -40,6 +40,7 @@ public:
 
 	// Setter
 	void SetPos(const D3DXVECTOR3& pos) { m_pos = pos; }
+	void AddPos(const D3DXVECTOR3& pos) { SetPos(m_pos + pos); }
 	void SetRot(const D3DXVECTOR3& rot) { m_rot = rot; }
 	void SetPosDest(const D3DXVECTOR3& pos) { m_posDest = pos; };
 	void SetRotDest(const D3DXVECTOR3& rot) { m_rotDest = rot; };

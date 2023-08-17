@@ -48,6 +48,7 @@ public:
 	static CMap *Create(int stgnumber);
 	void Load();
 	void Ranking();	//ランキング
+	void OpenMap();	// 終了時に画面外に散開させる処理
 
 	//ゲッター
 	CBlock* GetBlock(const int number) { return (int)m_pBlock.size() > number ? m_pBlock[number] : nullptr; };

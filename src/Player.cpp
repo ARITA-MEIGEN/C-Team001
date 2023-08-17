@@ -332,6 +332,24 @@ CPlayer * CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 }
 
 //-----------------------------------------------------------------------------
+// ¶¬
+//-----------------------------------------------------------------------------
+CPlayer * CPlayer::Create(CBlock* block, D3DXVECTOR3 rot)
+{
+	CPlayer*pPlayer;
+	pPlayer = new CPlayer(CObject::OBJTYPE_MODEL);
+	pPlayer->m_pos = block->GetPos();
+	pPlayer->m_rot = rot;
+
+	block->SetOnPlayer(pPlayer);
+	pPlayer->m_pOnBlock = block;
+
+	pPlayer->Init();
+
+	return pPlayer;
+}
+
+//-----------------------------------------------------------------------------
 // ˆÚ“®
 //-----------------------------------------------------------------------------
 void CPlayer::Move()
@@ -473,6 +491,11 @@ void CPlayer::TurnCenterBlock()
 //-----------------------------------------------------------------------------
 void CPlayer::Skill()
 {
+	if (m_controller == nullptr)
+	{
+		return;
+	}
+
 	//Å‘å’l‚ð’´‚¦‚½‚çÅ‘å’l‚É‚·‚é
 	if (m_fSkillGauge >= MAX_GAUGE)
 	{
@@ -789,6 +812,11 @@ void CPlayer::BlockCollision()
 		if (pBlock == nullptr)
 		{
 			continue;
+		}
+
+		if (pBlock->IsMovePermit())
+		{
+			return;
 		}
 
 		bool XMin = m_pos.x <= pBlock->GetPos().x + (pBlock->GetSize().x * 0.5f);
