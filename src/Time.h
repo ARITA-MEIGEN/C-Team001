@@ -35,7 +35,6 @@ public:
 private:
 
 	D3DXVECTOR3 m_pos;
-	CObject2D* m_pObject2D;
 	CObject2D* m_apNumber[2];
 
 	int m_nTimer;

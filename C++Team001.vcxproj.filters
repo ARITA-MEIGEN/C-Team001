@@ -213,6 +213,9 @@
     <ClCompile Include="src\Time.cpp">
       <Filter>ソース ファイル\09_UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\countdown_ui.cpp">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Command.h">
@@ -393,6 +396,9 @@
       <Filter>ソース ファイル\09_UI</Filter>
     </ClInclude>
     <ClInclude Include="src\Time.h">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\countdown_ui.h">
       <Filter>ソース ファイル\09_UI</Filter>
     </ClInclude>
   </ItemGroup>

@@ -28,6 +28,7 @@
 #include"StatusUI.h"
 #include "MapSelect.h"
 #include "ObjectList.h"
+#include "countdown_ui.h"
 
 #include "File.h"
 
@@ -38,9 +39,8 @@ bool CGame::bDebugCamera = nullptr;
 
 CCamera* CGame::m_pCamera = nullptr;
 CLight* CGame::m_pLight = nullptr;
-CFloor* CGame::m_pFloor = nullptr;
 CTimer* CGame::m_pTimer = nullptr;
-CTimer* CGame::m_pCountDown = nullptr;
+CCountDownUI* CGame::m_pCountDown = nullptr;
 CUI* CGame::m_pUI = nullptr;
 CMap* CGame::m_pMap = nullptr;
 
@@ -250,8 +250,7 @@ void CGame::Init_CountDown()
 	}
 	m_isStateDirty = true;
 
-	m_pCountDown = CTimer::Create(3);
-	m_pCountDown->SetPos(D3DXVECTOR3(500.0f,500.0f,0.0f));
+	m_pCountDown = CCountDownUI::Create(5);
 }
 
 //====================================
@@ -267,7 +266,6 @@ void CGame::Update_CountDown()
 		if (m_pCountDown != nullptr)
 		{
 			m_pCountDown->Uninit();
-			delete m_pCountDown;
 			m_pCountDown = nullptr;
 		}
 

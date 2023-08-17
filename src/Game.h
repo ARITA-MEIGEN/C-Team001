@@ -20,7 +20,6 @@
 class CPlayer;
 class CCamera;
 class CLight;
-class CFloor;
 class CTimer;
 class CUI;
 class CMap;
@@ -28,6 +27,7 @@ class CSpeed;
 class CGauge;
 class CStatusUI;
 class CObject2D;
+class CCountDownUI;
 
 class CGame : public CMode
 {
@@ -103,7 +103,6 @@ public:
 	// ゲッター
 	static GAME GetGame() {return m_gamestate;};
 	static CCamera * GetCamera() { return m_pCamera; };
-	static CFloor*GetFloor() { return m_pFloor; };
 	static CLight*GetLight() { return m_pLight; };
 	static bool GetDebugCamera() { return bDebugCamera; };
 	static CPlayer*GetPlayer(int number) { return m_pPlayer[number]; };
@@ -115,10 +114,9 @@ private:
 	static	GAME m_gamestate;			// ゲームの状態
 	static	CCamera*m_pCamera;			// カメラ
 	static	CLight*m_pLight;			// 光源
-	static	CFloor*m_pFloor;			// 床
 	static	bool bDebugCamera;			// デバッグ用カメラのON/OFF
 	static	CTimer*m_pTimer;			// タイマー
-	static	CTimer* m_pCountDown;		// カウントダウン
+	static	CCountDownUI* m_pCountDown;		// カウントダウン
 	static	CUI*m_pUI;					// UI
 	static	CMap*m_pMap;				// マップ
 	static CStatusUI* m_apStatusUI[MAX_PLAYER];	// ステータス表示

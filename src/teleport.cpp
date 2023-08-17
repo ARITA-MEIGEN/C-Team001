@@ -52,7 +52,7 @@ void  CTeleport::Uninit()
 //=============================================================================
 void  CTeleport::Update()
 {
-	CObjectX::Update();
+	CBlock::Update();
 
 	if (CGame::GetMap() != nullptr)
 	{
@@ -68,7 +68,9 @@ void  CTeleport::Update()
 					pPlayer->SetPos(this->GetPos());
 					pPlayer->SetTeleport(true);
 					pPlayer->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-				}				if (!pBlock->GetTeleport() && pBlock->GetOnPlayer() && pPlayer->GetTeleport())
+				}
+				
+				if (!pBlock->GetTeleport() && pBlock->GetOnPlayer() && pPlayer->GetTeleport())
 				{//普通のブロックにテレポートした後のプレイヤーが乗ったら
 					pPlayer->SetTeleport(false);
 				}

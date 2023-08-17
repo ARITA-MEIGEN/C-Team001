@@ -172,6 +172,7 @@
     <ClCompile Include="src\come_future_block.cpp" />
     <ClCompile Include="src\computerController.cpp" />
     <ClCompile Include="src\Controller.cpp" />
+    <ClCompile Include="src\countdown_ui.cpp" />
     <ClCompile Include="src\DebugProc.cpp" />
     <ClCompile Include="src\effect.cpp" />
     <ClCompile Include="src\Fade.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="src\Command.h" />
     <ClInclude Include="src\computerController.h" />
     <ClInclude Include="src\Controller.h" />
+    <ClInclude Include="src\countdown_ui.h" />
     <ClInclude Include="src\DebugProc.h" />
     <ClInclude Include="src\Easing.h" />
     <ClInclude Include="src\effect.h" />

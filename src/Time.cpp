@@ -36,18 +36,6 @@ HRESULT CTimer::Init()
 {
 	m_pos = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 70.0f, 0.0f);
 
-	{
-		m_pObject2D = new CObject2D(CObject::OBJTYPE_UI);
-		m_pObject2D->Init();
-		m_pObject2D->SetSiz(D3DXVECTOR2(100.0f, 100.0f));
-		m_pObject2D->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		m_pObject2D->SetTextureKey("TIMER");
-
-		D3DXVECTOR3 pos(m_pos);
-		pos.y -= 10.0f;
-		m_pObject2D->SetPos(pos);
-	}
-
 	for (int i = 0; i < 2; i++)
 	{
 		m_apNumber[i] = new CObject2D(CObject::OBJTYPE_UI);
@@ -72,7 +60,6 @@ HRESULT CTimer::Init()
 //=============================================================================
 void CTimer::Uninit()
 {
-	m_pObject2D->Release();
 	for (int i = 0; i < 2; i++)
 	{
 		m_apNumber[i]->Release();
@@ -123,12 +110,6 @@ CTimer * CTimer::Create(const int inTimer)
 void CTimer::SetPos(const D3DXVECTOR3 & inPos)
 {
 	m_pos = inPos;
-
-	{
-		D3DXVECTOR3 pos(m_pos);
-		pos.y -= 10.0f;
-		m_pObject2D->SetPos(pos);
-	}
 
 	for (int i = 0; i < 2; i++)
 	{
