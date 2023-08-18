@@ -219,6 +219,9 @@
     <ClCompile Include="src\Light.cpp">
       <Filter>ソース ファイル\02_Camera</Filter>
     </ClCompile>
+    <ClCompile Include="src\CameraResult.cpp">
+      <Filter>ソース ファイル\02_Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Command.h">
@@ -402,6 +405,9 @@
       <Filter>ソース ファイル\09_UI</Filter>
     </ClInclude>
     <ClInclude Include="src\Light.h">
+      <Filter>ソース ファイル\02_Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CameraResult.h">
       <Filter>ソース ファイル\02_Camera</Filter>
     </ClInclude>
   </ItemGroup>

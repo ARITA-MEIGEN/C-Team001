@@ -169,6 +169,7 @@
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CameraGame.cpp" />
+    <ClCompile Include="src\CameraResult.cpp" />
     <ClCompile Include="src\come_future_block.cpp" />
     <ClCompile Include="src\computerController.cpp" />
     <ClCompile Include="src\Controller.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="src\Block.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CameraGame.h" />
+    <ClInclude Include="src\CameraResult.h" />
     <ClInclude Include="src\come_future_block.h" />
     <ClInclude Include="src\Command.h" />
     <ClInclude Include="src\computerController.h" />
