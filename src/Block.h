@@ -60,6 +60,7 @@ public:
 
 private:
 	void Move();	// 移動ギミック
+	void ModifyRot();
 
 private:
 	//メンバ変数

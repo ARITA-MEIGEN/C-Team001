@@ -74,6 +74,8 @@ void  CBlock::Update()
 
 	Move();
 
+	ModifyRot();
+
 	if (m_onItem != nullptr)
 	{
 		if (m_onItem->GetLife() <= 0)
@@ -190,9 +192,16 @@ void CBlock::SetPlanPos(D3DXVECTOR3 inPos)
 	m_posPlan = inPos;
 	D3DXVECTOR3 pos = GetPos();
 
-	D3DXVECTOR3 moveVec = m_posPlan - pos;
+	D3DXVECTOR3 moveLast = m_posPlan - pos;
 
-	m_move = moveVec * 0.0175f;
+	D3DXVECTOR3 moveVec;
+	D3DXVec3Normalize(&moveVec, &moveLast);
+
+	D3DXVECTOR3 rot(moveVec.x * -1.0f, 0.0f, moveVec.z * -1.0f);
+
+	SetRot(rot);
+
+	m_move = moveLast * 0.0175f;
 }
 
 //=============================================================================
@@ -223,6 +232,42 @@ void CBlock::Move()
 	{
 		m_onPlayer->SetPos(GetPos());
 	}
+}
+
+//=============================================================================
+// å¸Ç´ÇèCê≥Ç∑ÇÈ
+//=============================================================================
+void CBlock::ModifyRot()
+{
+	D3DXVECTOR3 rot = GetRot();
+
+	auto Modefy = [](const float inRot)
+	{
+		float angle = inRot;
+		if (angle < 0.0f)
+		{
+			angle += 0.075f;
+			if (angle > 0.0f)
+			{
+				angle = 0.0f;
+			}
+		}
+		if (angle > 0.0f)
+		{
+			angle -= 0.075f;
+			if (angle < 0.0f)
+			{
+				angle = 0.0f;
+			}
+		}
+		return angle;
+	};
+
+	rot.x = Modefy(rot.x);
+	rot.y = Modefy(rot.y);
+	rot.z = Modefy(rot.z);
+
+	SetRot(rot);
 }
 
 //=============================================================================

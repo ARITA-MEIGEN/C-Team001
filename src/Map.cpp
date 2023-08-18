@@ -120,9 +120,13 @@ void CMap::Load()
 		{
 			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH + 25.0f;
 			float x = j * BLOCK_WIDTH - map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
-			D3DXVECTOR3 randomPos(FloatRandom(1000.0f,-1000.0f), 0.0f, FloatRandom(1000.0f, -1000.0f));
-			D3DXVECTOR3 randomRot(0.0f, 0.0f, 0.0f);
-			//D3DXVECTOR3 randomRot(FloatRandom(D3DX_PI, -D3DX_PI), 0.0f, FloatRandom(D3DX_PI, -D3DX_PI));
+			D3DXVECTOR3 randomPos(FloatRandom(1000.0f, -1000.0f), 0.0f, FloatRandom(1000.0f, -1000.0f));
+			D3DXVECTOR3 randomPosVec;
+
+			D3DXVec3Normalize(&randomPosVec, &randomPos);
+
+			//D3DXVECTOR3 randomRot(0.0f, 0.0f, 0.0f);
+			D3DXVECTOR3 randomRot(randomPosVec.x * -1.0f, 0.0f, randomPosVec.z * -1.0f);
 			D3DXVECTOR3 createPos(x, 0.0f, z);
 
 			CBlock* blockCreate = nullptr;
