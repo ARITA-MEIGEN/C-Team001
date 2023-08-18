@@ -19,6 +19,7 @@
 #include"CameraGame.h"
 #include"Light.h"
 #include"Bg.h"
+#include "Block.h"
 
 #include "Object3D.h"
 
@@ -56,8 +57,8 @@ HRESULT CSkillSelect::Init()
 
 	//カメラの設定
 	m_pCamera = CCameraGame::Create();
-	m_pCamera->SetPosV(D3DXVECTOR3(0.0f, 250.0f, -400.0f));
-	m_pCamera->SetPosR(D3DXVECTOR3(0.0f, 250.0f, 200.0f));
+	m_pCamera->SetPosV(D3DXVECTOR3(0.0f, 60.0f, -250.0f));
+	m_pCamera->SetPosR(D3DXVECTOR3(0.0f, 20.0f, 0.0f));
 
 	//ライトの設定
 	m_pLight = new CLight;
@@ -73,7 +74,9 @@ HRESULT CSkillSelect::Init()
 		m_inputNumber[nCnt] = 99;		// 絶対に有り得ない数字を代入
 		m_nSkill[nCnt] = 1;
 		m_pObj2D[nCnt] = CObject2D::Create(D3DXVECTOR3(200.0f + (300.0f * nCnt), 600.0f, 0.0f), D3DXVECTOR2(150.0f, 80.0f), 5);
-		m_pPlayer[nCnt] = CPlayer::Create(D3DXVECTOR3(-(130.0f * 1.5f) + (150.0f * nCnt), 250.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CBlock* block = CBlock::Create(D3DXVECTOR3(-(70.0f * 1.5f) + (70.0f * nCnt), -5.0f, 0.0f));
+		block->CancelPermitSink();
+		m_pPlayer[nCnt] = CPlayer::Create(block, D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	}
 
 	return S_OK;

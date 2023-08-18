@@ -88,6 +88,7 @@ HRESULT CPlayer::Init()
 	// モーションの読込み
 	m_motion = new CMotion(MOTION_PATH.data());
 	m_Motion = PM_NEUTRAL;	//ニュートラルモーションに変更
+	m_motion->SetSizeMag(D3DXVECTOR3(0.9f,0.9f,0.9f));
 
 	//モデルとモーションの読み込み
 	m_apModel = m_motion->GetParts();
@@ -325,6 +326,7 @@ CPlayer * CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	CPlayer*pPlayer;
 	pPlayer = new CPlayer(CObject::OBJTYPE_MODEL);
 	pPlayer->m_pos = pos;
+	pPlayer->m_pos.y -= 10.0f;
 	pPlayer->m_rot = rot;
 	pPlayer->Init();
 
@@ -339,6 +341,7 @@ CPlayer * CPlayer::Create(CBlock* block, D3DXVECTOR3 rot)
 	CPlayer*pPlayer;
 	pPlayer = new CPlayer(CObject::OBJTYPE_MODEL);
 	pPlayer->m_pos = block->GetPos();
+	pPlayer->m_pos.y -= 5.0f;
 	pPlayer->m_rot = rot;
 
 	block->SetOnPlayer(pPlayer);

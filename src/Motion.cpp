@@ -597,3 +597,12 @@ void CMotion::SetNumMotion(const unsigned int nNumMotion)
 	m_bMotionBlend = true;
 	m_bMotion = true;
 }
+
+void CMotion::SetSizeMag(const D3DXVECTOR3 & size)
+{
+	int partsSize = m_parts.size();
+	for (int i = 0; i < partsSize; i++)
+	{
+		m_parts[i]->SetSizeMag(size);
+	}
+}

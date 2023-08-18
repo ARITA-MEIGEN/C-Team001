@@ -98,8 +98,7 @@ CTeleport* CTeleport::Create(D3DXVECTOR3 pos, int nNumber)
 	if (pTeleport != nullptr)
 	{
 		pTeleport->Init();
-		pTeleport->BindModel(CObjectXOriginalList::GetInstance()->Load("BLOCK", "data/MODEL/box.x"));
-		pTeleport->SetCol(D3DXCOLOR(1.0f,0.0f,1.0f,1.0f));
+		pTeleport->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("TELEPORT_BOX"));
 		pTeleport->SetPos(pos);
 		pTeleport->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		pTeleport->m_nTeleportNmber = nNumber;

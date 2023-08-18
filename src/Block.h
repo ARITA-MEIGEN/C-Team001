@@ -47,6 +47,8 @@ public:
 
 	void SetPlanPos(D3DXVECTOR3 inPos);
 
+	void CancelPermitSink() { m_isSinkPermit = false; }
+
 	// Getter
 	int GetNumber() { return m_number; };
 	bool GetTeleport() { return m_bTeleport; };
@@ -66,6 +68,9 @@ private:
 	bool m_bTeleport;		// テレポーターかどうか
 	CPlayer* m_onPlayer;	// 乗ってるプレイヤー
 	CItem* m_onItem;		// 乗ってるアイテム
+
+	// 浮き沈み関係
+	bool m_isSinkPermit;	// 沈むことを許可するか
 
 	// 移動処理
 	bool m_isMovePermit;	// 移動許可が降りてるか

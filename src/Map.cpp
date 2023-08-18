@@ -121,6 +121,8 @@ void CMap::Load()
 			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH + 25.0f;
 			float x = j * BLOCK_WIDTH - map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
 			D3DXVECTOR3 randomPos(FloatRandom(1000.0f,-1000.0f), 0.0f, FloatRandom(1000.0f, -1000.0f));
+			D3DXVECTOR3 randomRot(0.0f, 0.0f, 0.0f);
+			//D3DXVECTOR3 randomRot(FloatRandom(D3DX_PI, -D3DX_PI), 0.0f, FloatRandom(D3DX_PI, -D3DX_PI));
 			D3DXVECTOR3 createPos(x, 0.0f, z);
 
 			CBlock* blockCreate = nullptr;
@@ -129,12 +131,14 @@ void CMap::Load()
 			{
 			case -1:
 				blockCreate = CBlock::Create(randomPos);
+				blockCreate->SetRot(randomRot);
 				blockCreate->SetPlanPos(createPos);
 				blockCreate->SetAllColorMaterial(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 				blockCreate->SetStop(true);
 				break;
 			case 0:
 				blockCreate = CBlock::Create(randomPos);
+				blockCreate->SetRot(randomRot);
 				blockCreate->SetPlanPos(createPos);
 				break;
 			case 1:
@@ -143,6 +147,7 @@ void CMap::Load()
 			case 4:
 			{
 				blockCreate = CBlock::Create(randomPos);
+				blockCreate->SetRot(randomRot);
 				blockCreate->SetPlanPos(createPos);
 				D3DXVECTOR2 idx;
 				idx.x = (float)j;
@@ -152,6 +157,7 @@ void CMap::Load()
 				break;
 			case 5:
 				blockCreate = CTeleport::Create(randomPos, 5);
+				blockCreate->SetRot(randomRot);
 				blockCreate->SetPlanPos(createPos);
 				blockCreate->SetTeleport(true);
 				break;

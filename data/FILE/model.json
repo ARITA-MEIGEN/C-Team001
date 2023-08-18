@@ -1,6 +1,7 @@
 {
   "MODEL": [
-    [ "BOX", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile.x" ],
+    [ "BOX", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile_col01.x" ],
+    [ "TELEPORT_BOX", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/TeleportTile_col01.x" ],
     [ "KYUU2", "data\/MODEL\/kyuu2.x" ],
     [ "ENVIRONMENT_FUTURE1", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building00.x" ],
     [ "ENVIRONMENT_FUTURE2", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building01.x" ],

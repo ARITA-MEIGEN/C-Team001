@@ -48,9 +48,6 @@
     <ClCompile Include="src\effect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Light.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Particle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -219,6 +216,9 @@
     <ClCompile Include="src\countdown_ui.cpp">
       <Filter>ソース ファイル\09_UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\Light.cpp">
+      <Filter>ソース ファイル\02_Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Command.h">
@@ -231,9 +231,6 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\File.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Light.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Mode.h">
@@ -403,6 +400,9 @@
     </ClInclude>
     <ClInclude Include="src\countdown_ui.h">
       <Filter>ソース ファイル\09_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Light.h">
+      <Filter>ソース ファイル\02_Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

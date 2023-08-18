@@ -95,6 +95,8 @@ public:
 	void SetParts(D3DXMATRIX mtxWorld);						// パーツの設定
 	void SetNumMotion(const unsigned int nNumMotion);		// モーション番号の設定
 
+	void SetSizeMag(const D3DXVECTOR3& size);
+
 	// Getter
 	int GetMaxParts() { return m_nMaxParts; }					// パーツの最大数の取得
 	std::vector<CObjectX*> GetParts() { return m_parts; }		// パーツモデルの取得

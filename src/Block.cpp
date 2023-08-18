@@ -27,7 +27,8 @@ CBlock::CBlock(int priorty) :
 	CObjectX(priorty),
 	m_isMovePermit(false),
 	m_posPlan(0.0f,0.0f,0.0f),
-	m_move(0.0f, 0.0f, 0.0f)
+	m_move(0.0f, 0.0f, 0.0f),
+	m_isSinkPermit(false)
 {
 	m_number = 0;
 	m_isStop = false;
@@ -50,6 +51,7 @@ HRESULT  CBlock::Init()
 {
 	CObjectX::Init();
 	m_bTeleport = false;
+	m_isSinkPermit = true;
 	m_number = -1;
 
 	return S_OK;
@@ -82,7 +84,7 @@ void  CBlock::Update()
 	}
 
 	// プレイヤーが乗ってないなら元の位置に戻る
-	//if (m_onPlayer == nullptr)
+	if(m_isSinkPermit)
 	{
 		D3DXVECTOR3 pos = GetPos();
 		if (0.0f > pos.y)
@@ -190,7 +192,7 @@ void CBlock::SetPlanPos(D3DXVECTOR3 inPos)
 
 	D3DXVECTOR3 moveVec = m_posPlan - pos;
 
-	m_move = moveVec * 0.015f;
+	m_move = moveVec * 0.0175f;
 }
 
 //=============================================================================
