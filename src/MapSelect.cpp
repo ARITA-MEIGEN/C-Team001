@@ -67,7 +67,8 @@ HRESULT CMapSelect::Init()
 	m_pLight->Init();
 
 	//îwåi
-	CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
+	CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(4000.0f, 0.0f, 2000.0f), 2);
+	pori->SetUV(0.0f,20.0f,0.0f,20.0f);
 	pori->SetTextureKey("TEST_FLOOR");
 
 	//É}ÉbÉvê∂ê¨

@@ -23,7 +23,7 @@ class CBlock;
 class CMotion;
 
 //マクロ定義
-#define MAX_GAUGE		(10)
+#define MAX_GAUGE		(100)
 
 class CPlayer :public CObject
 {
@@ -35,7 +35,6 @@ private:
 	static const float SKILL_BUFF_TIME;		// バフの効果時間(Lv1基準)
 	static const float SKILL_WAVE_TIME;		// スキルの発動時間
 	static const float THROW_DISTANCE;		// 投擲距離
-
 
 public:
 	enum PLAYER_STATE
@@ -65,14 +64,6 @@ public:
 	};
 
 private:
-	enum EState
-	{
-		STATE_IDLE = 0,
-		STATE_WALK,
-		STATE_JUMP,
-		STATE_MAX,
-		STATE_INVALID = -1,
-	};
 
 	enum PLAYER_MOTION
 	{
@@ -99,9 +90,6 @@ public:
 	void	Draw() override;
 
 	//　プレイヤーのステート関数
-	void Update_Idle();
-	void Update_Walk();
-	void Update_Jump();
 
 	static CPlayer*	Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);	// プレイヤー生成
 	static CPlayer*	Create(CBlock* block, D3DXVECTOR3 rot);	// プレイヤー生成
@@ -110,19 +98,19 @@ public:
 	void SetController(CController* inOperate);
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; };					// 位置の設定
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };					// 向きの設定
-	void SetMove(D3DXVECTOR3 move) { m_move = move; };				// 向きの設定
+	void SetMove(D3DXVECTOR3 move) { m_move = move; };				// 移動の設定
 	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }		// スキルゲージの量の設定
 	void SetTeleport(bool bTeleport) { m_bTeleport = bTeleport; }
 	void SetResultMotion(int Rank);								// リザルト時のモーション再生
 
-	void Stun(int inTime);
+	void Stun(int inTime);	// 硬直の発生
 
 	// Getter
 	D3DXVECTOR3		GetPos() { return m_pos; };
 	PLAYER_MOTION	GetNowMotion() { return m_Motion; };
-	D3DXMATRIX		GetMtx() { return m_mtxWorld; };				//マトリックスの取得
-	float			GetSkillGauge() { return m_fSkillGauge; }		//スキルゲージの量の取得
-	int				GetPlayerNumber() { return m_nPlayerNumber; }	//プレイヤーの番号の取得
+	D3DXMATRIX		GetMtx() { return m_mtxWorld; };				// マトリックスの取得
+	float			GetSkillGauge() { return m_fSkillGauge; }		// スキルゲージの量の取得
+	int				GetPlayerNumber() { return m_nPlayerNumber; }	// プレイヤーの番号の取得
 	bool			GetTeleport() { return m_bTeleport; }
 
 private:
@@ -178,36 +166,48 @@ private:	// ↓スキル処理一覧↓
 	int				m_nSkillBuffTime;	// スキル強化効果時間
 	float			m_fSkillGauge;		// スキルゲージの量
 	float			m_fSubGauge;		// スキルゲージを減算させる
+	int				m_nSkillTimer;		// モーション再生からスキル発生までの時間
 
 private:	// メンバー変数
 	CController*	m_controller;			// 命令を出す人
 	std::vector<CObjectX*>	m_apModel;		// モデルのインスタンス
-	CMotion*		m_motion;				// モーション
-	D3DXMATRIX		m_mtxWorld;				// ワールドマトリックス
-	D3DXVECTOR3		m_pos;					// 位置
-	D3DXVECTOR3		m_rot;					// 向き
-	D3DXVECTOR3		m_move;					// 移動量
-	D3DXVECTOR3		m_moveVec;				// 移動ベクトル
-	D3DXVECTOR3		m_movePlanVec;			// 移動予定ベクトル
-	D3DXVECTOR3		m_posold;				// 前回の位置
-	D3DXVECTOR3		m_rotDest;				// 目的の角度の保存
-	PLAYER_MOTION	m_Motion;				// 現在のモーション
-	int				m_nPlayerNumber;		// 自分のプレイヤー番号
+
+	D3DXMATRIX		m_mtxWorld;		// ワールドマトリックス
+
+	// 位置
+	D3DXVECTOR3		m_pos;			// 位置
+	D3DXVECTOR3		m_posold;		// 前回の位置
+
+	// 向き
+	D3DXVECTOR3		m_rot;
+	D3DXVECTOR3		m_rotDest;		// 目的の角度の保存
+
+	// 移動
+	D3DXVECTOR3		m_move;			// 移動量
+	D3DXVECTOR3		m_moveVec;		// 移動ベクトル
+	D3DXVECTOR3		m_movePlanVec;	// 移動予定ベクトル
+	D3DXVECTOR2		m_direction;	// 方向
+
+	// モーション
+	PLAYER_MOTION	m_Motion;		// 現在のモーション
+	CMotion*		m_motion;		// モーション
+
+	// アイテム
+	ITEM_STATE		m_ItemState;			// アイテムの状態
 	int				m_nItemBuffTime;		// アイテム強化効果時間
-	int				m_nStunTime;			// スタン(操作不可能)時間
 	int				m_nStockItem;			// 持っているアイテムの数
+
+	int				m_nPlayerNumber;		// 自分のプレイヤー番号
+	int				m_nStunTime;			// スタン(操作不可能)時間
 	bool			m_bKnockBack;			// ノックバックしているかどうか
 	bool			m_bTeleport;			// テレポートしたかどうか
 	PLAYER_STATE	m_State;				// プレイヤーの状態
-	ITEM_STATE		m_ItemState;			// アイテムの状態
 	STOCK_ITEM_STATE	m_StockItemState;	// ストック式アイテムの状態
 	CShadow*		m_pShadow;				// 影
 	CBlock*			m_pOnBlock;				// プレイヤーの乗っているブロックへのポインタ
-	int				m_nSkillTimer;			// モーション再生からスキル発生までの時間
 
 	//押し出し判定関連
 	D3DXVECTOR3		m_aAxisSiz[PST_MAX];	// 押し出し判定の大きさ
-
 };
 
 #endif

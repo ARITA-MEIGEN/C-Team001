@@ -117,7 +117,7 @@ HRESULT CGame::Init()
 	m_Round = ROUND_1;
 
 	// 背景モデルの設置
-	SetupBgModel();
+	//SetupBgModel();
 
 	// 更新のステート管理
 	m_funcInit = m_InitFunc;

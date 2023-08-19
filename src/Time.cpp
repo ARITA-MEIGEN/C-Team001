@@ -48,7 +48,6 @@ HRESULT CTimer::Init()
 		m_apNumber[i]->SetPos(pos);
 	}
 
-	m_nTimer = DEFAULT_TIME;
 	m_apNumber[0]->SetUV(0.1f*(m_nTimer / 10), 0.1f * ((m_nTimer / 10) + 1), 0.0f, 1.0f);
 	m_apNumber[1]->SetUV(0.1f*(m_nTimer % 10), 0.1f * ((m_nTimer % 10) + 1), 0.0f, 1.0f);
 
@@ -101,8 +100,8 @@ CTimer * CTimer::Create(const int inTimer)
 	pTimer = new CTimer;
 	if (pTimer != nullptr)
 	{// ƒ|ƒŠƒSƒ“‚Ì‰Šú‰»ˆ—
-		pTimer->Init();
 		pTimer->m_nTimer = inTimer;
+		pTimer->Init();
 	}
 	return pTimer;
 }

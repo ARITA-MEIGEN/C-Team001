@@ -38,22 +38,15 @@ const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
 const float CPlayer::SKILL_WAVE_TIME = 30.0f;	// スキルの発生時間
 const float CPlayer::THROW_DISTANCE = 4.0f;		// 投擲距離
 
-
-const CObject::UPDATE_FUNC CPlayer::mUpdateFunc[] =
-{
-	UPDATE_FUNC_CAST(Update_Idle),
-	UPDATE_FUNC_CAST(Update_Walk),
-	UPDATE_FUNC_CAST(Update_Jump),
-};
-
 const CPlayer::SKILL_FUNC CPlayer::m_SkillFunc[] =
 {
 	UPDATE_FUNC_CAST(Skill_Idel),
 	UPDATE_FUNC_CAST(Skill_Speed),
 	UPDATE_FUNC_CAST(Skill_Paint),
 	UPDATE_FUNC_CAST(Skill_Knockback),
+	UPDATE_FUNC_CAST(Skill_Idel),
 	UPDATE_FUNC_CAST(Skill_Bom),
-
+	UPDATE_FUNC_CAST(Skill_Wave),
 };
 
 //-----------------------------------------------------------------------------
@@ -64,12 +57,18 @@ int CPlayer::m_nNumPlayer = 0;					// プレイヤーの数
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-CPlayer::CPlayer(int nPriority) :CObject(nPriority)
+CPlayer::CPlayer(int nPriority) :
+	CObject(nPriority),
+	m_nSkillLv(0),
+	m_nStunTime(0),
+	m_nStockItem(0),
+	m_nItemBuffTime(0),
+	m_nSkillBuffTime(0),
+	m_fSkillGauge(0.0f),
+	m_fSubGauge(0.0f)
 {
 	m_nPlayerNumber = m_nNumPlayer;
 	m_nNumPlayer++;
-
-//	m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(80.0f, 0.0f, 80.0f));	// 影
 }
 
 //-----------------------------------------------------------------------------
@@ -85,6 +84,9 @@ CPlayer::~CPlayer()
 //-----------------------------------------------------------------------------
 HRESULT CPlayer::Init()
 {
+	// 影
+	//m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(80.0f, 0.0f, 80.0f));
+
 	// モーションの読込み
 	m_motion = new CMotion(MOTION_PATH.data());
 	m_Motion = PM_NEUTRAL;	//ニュートラルモーションに変更
@@ -116,18 +118,9 @@ HRESULT CPlayer::Init()
 	}
 
 	//初期化
-	m_nSkillLv = 0;			//スキルレベル
-	m_nStunTime = 0;		//スタン(操作不可能)時間
-	m_nStockItem = 0;		//持っているアイテムの数
-	m_nItemBuffTime = 0;	//アイテムの効果時間
-	m_nSkillBuffTime = 0;	//スキルの効果時間
-	m_fSkillGauge = 0.0f;	//スキルゲージ
-	m_fSubGauge = 0.0f;		//スキルゲージの減算量
 	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
 	m_bKnockBack = false;
 	m_bTeleport = false;
-
-	InitStateFunc(mUpdateFunc, STATE_MAX);
 
 	m_funcSkill = m_SkillFunc;
 	SetSkill(SKILL_IDLE);
@@ -183,22 +176,22 @@ void CPlayer::Update(void)
 
 	/* ↓GAME状態の場合↓ */
 
+	// 座標更新
+	Updatepos();
+
+	if (m_nStunTime > 0)
+	{// スタンしていたらスタン時間を減算させる
+		m_nStunTime--;
+	}
+
 	CObject::Update();
 
 	Skill();
 
 	Item();
 
-	// 座標更新
-	Updatepos();
-
 	// モーション
 	m_motion->Update();
-
-	if (m_nStunTime > 0)
-	{// スタンしていたらスタン時間を減算させる
-		m_nStunTime--;
-	}
 
 	if (m_nStunTime <= 0)
 	{
@@ -207,13 +200,12 @@ void CPlayer::Update(void)
 
 		// 移動
 		Move();
-		// 回転
-		TurnLookAtMoveing();
 	}
 
+	// 角度の正規化
+	Normalization();
 
-	Normalization();		// 角度の正規化
-
+	// ブロックとの当たり判定
 	BlockCollision();
 
 	// ブロックがない空間で停まる
@@ -223,36 +215,12 @@ void CPlayer::Update(void)
 	TurnCenterBlock();
 
 #ifdef _DEBUG
-	CDebugProc::Print("現在のプレイヤーの座標:%f %f %f\n", m_pos.x, m_pos.y, m_pos.z);
-	CDebugProc::Print("現在のプレイヤーの角度:%f %f %f\n", m_rot.x, m_rot.y, m_rot.z);
-	CDebugProc::Print("現在のモーション:%d\n", (int)m_Motion);
-	CDebugProc::Print("現在の状態:%d\n", (int)m_State);
-	CDebugProc::Print("現在のフレーム:%d\n", m_frame);
-	CDebugProc::Print("現在のストック数:%d\n", m_nStockItem);
-
-	CInput* pInput = CInput::GetKey();
-
-	if (pInput->Trigger(DIK_P) && m_nSkillTimer == 0)
-	{
-		m_nSkillTimer = SKILL_WAVE_TIME;
-		m_Motion = PM_WAVE;
-		m_motion->SetNumMotion(m_Motion);
-		Stun(SKILL_WAVE_TIME - 1);
-	}
-
-	if (m_nSkillTimer <= 0 && m_Motion == PM_WAVE)
-	{
-		m_Motion = PM_NEUTRAL;
-		m_motion->SetNumMotion(m_Motion);
-
-		Skill_Wave();
-		m_nSkillTimer = 0;
-	}
-	else if(m_Motion == PM_WAVE)
-	{
-		m_nSkillTimer--;
-	}
-
+	CDebugProc::Print("Player：pos(%f,%f,%f)\n", m_pos.x, m_pos.y, m_pos.z);
+	CDebugProc::Print("Player：rot(%f,%f,%f)\n", m_rot.x, m_rot.y, m_rot.z);
+	CDebugProc::Print("Player：Motion : %d\n", (int)m_Motion);
+	CDebugProc::Print("Player：State :%d\n", (int)m_State);
+	CDebugProc::Print("Player：Fream : %d\n", m_frame);
+	CDebugProc::Print("Player：ItemStock : %d\n", m_nStockItem);
 #endif // _DEBUG
 
 }
@@ -294,36 +262,12 @@ void CPlayer::Draw(void)
 	}
 }
 
-//--------------------------------------------------
-// アイドルの処理
-//--------------------------------------------------
-void CPlayer::Update_Idle()
-{
-	SetState(STATE_IDLE);
-}
-
-//--------------------------------------------------
-// 歩いてるとき
-//--------------------------------------------------
-void CPlayer::Update_Walk()
-{
-	SetState(STATE_WALK);
-}
-
-//--------------------------------------------------
-// ジャンプしたとき
-//--------------------------------------------------
-void CPlayer::Update_Jump()
-{
-	SetState(STATE_JUMP);
-}
-
 //-----------------------------------------------------------------------------
 // 生成
 //-----------------------------------------------------------------------------
 CPlayer * CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 {
-	CPlayer*pPlayer;
+	CPlayer* pPlayer;
 	pPlayer = new CPlayer(CObject::OBJTYPE_MODEL);
 	pPlayer->m_pos = pos;
 	pPlayer->m_pos.y -= 10.0f;
@@ -389,6 +333,11 @@ void CPlayer::Move()
 		}
 	}
 
+	m_direction.x = move.x;
+	m_direction.y = -move.z;
+
+	D3DXVec2Normalize(&m_direction, &m_direction);
+
 	//モーション再生
 	if ((move.x != 0.0f || move.z != 0.0f) && m_Motion != PM_WALK)
 	{
@@ -409,20 +358,20 @@ void CPlayer::Move()
 //-----------------------------------------------------------------------------
 void CPlayer::TurnLookAtMoveing()
 {
-	if (m_moveVec.z > 0.0f)
+	if (m_direction.y < 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
 	}
-	else if (m_moveVec.z < 0.0f)
+	else if (m_direction.y > 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 
-	if (m_moveVec.x > 0.0f)
+	if (m_direction.x > 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.5f, 0.0f));
 	}
-	else if (m_moveVec.x < 0.0f)
+	else if (m_direction.x < 0.0f)
 	{
 		SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 	}
@@ -486,6 +435,10 @@ void CPlayer::TurnCenterBlock()
 		}
 
 		D3DXVec3Normalize(&m_moveVec, &m_move);
+
+		// 回転
+		TurnLookAtMoveing();
+
 	}
 }
 
@@ -529,6 +482,13 @@ void CPlayer::Skill_Idel()
 	if (m_nSkillBuffTime > 0)
 	{
 		return;
+	}
+
+	CInput* pInput = CInput::GetKey();
+
+	if (pInput->Trigger(DIK_H))
+	{
+		SetSkill(SKILL_WAVE);
 	}
 
 	/* ↓スキル未使用時↓ */
@@ -727,55 +687,69 @@ void CPlayer::Skill_Bom()
 //-----------------------------------------------------------------------------
 void CPlayer::Skill_Wave()
 {
-	D3DXVECTOR2 range = { 0.0f,0.0f };	//攻撃範囲
-
-	if (m_rot.y == D3DX_PI*0.0f)
-	{//どっちを向いているか調べる
-		range.y = 1.0f;			//下
-	}
-	else if (m_rot.y == D3DX_PI*1.0f)
+	// 最初だけ通る
+	if (m_nSkillTimer == 0)
 	{
-		range.y = -1.0f;		//上
-	}
-	else if (m_rot.y == D3DX_PI*0.5f)
-	{
-		range.x = -1.0f;
-
-	}
-	else if (m_rot.y == D3DX_PI*-0.5f)
-	{
-		range.x = +1.0f;
+		m_nSkillTimer = SKILL_WAVE_TIME;
+		m_Motion = PM_WAVE;
+		m_motion->SetNumMotion(m_Motion);
+		Stun(SKILL_WAVE_TIME - 1);
 	}
 
-	//範囲を塗る
-	int maxI = 3;
+	m_nSkillTimer--;
 
-	for (int i = 0; i < maxI; i++)
+	if (m_nSkillTimer <= 0)
 	{
-		for (int nCntX = 0; nCntX < 5; nCntX++)
+		m_Motion = PM_NEUTRAL;
+		m_motion->SetNumMotion(m_Motion);
+		m_nSkillTimer = 0;
+
+		D3DXVECTOR2 range = { 0.0f,0.0f };	//攻撃範囲
+
+		range.x = m_direction.x;
+		range.y = m_direction.y;
+
+		//範囲を塗る
+		int maxI = 3;
+
+		//乗っているブロックの番号を取得
+		D3DXVECTOR2 NowBlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+
+		for (int i = 0; i < maxI; i++)
 		{
-			//乗っているブロックの番号を取得
-			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-			//範囲内のブロックを塗る
-			BlockIdx = D3DXVECTOR2(BlockIdx.x + range.x + (i - maxI / 2) * range.y, BlockIdx.y + range.y + (i - maxI / 2) * range.x);			//中央左に設定する
-			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX * range.x, BlockIdx.y + nCntX * range.y);
-			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+			int horizontal = i - maxI * 0.5f + 0.5f;
 
-			if (Block != nullptr)
-			{//ブロックを塗る
-			 //Block->SetOnPlayer(this);	//プレイヤーの
-				Block->SetSink(-25.0f - 5.0f * nCntX);
+			int aaaaaaaa = 0;
 
-				if (Block->GetOnPlayer() != nullptr)
+			for (int nCntX = 0; nCntX < 5; nCntX++)
+			{
+				//範囲内のブロックを塗る
+				D3DXVECTOR2 BlockIdx(NowBlockIdx.x + range.x + horizontal * range.y, NowBlockIdx.y + range.y + horizontal * range.x);			//中央左に設定する
+				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX * range.x, BlockIdx.y + nCntX * range.y);
+				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+				if (abs(aaaaaaaa - Idx.x) != 1.0f)
 				{
-					Block->GetOnPlayer()->Stun(20);
+					int iiiiiiii = 0;
 				}
 
-				Block->SetPlayerNumber(m_nPlayerNumber);
+				aaaaaaaa = Idx.x;
+
+				if (Block != nullptr)
+				{//ブロックを塗る
+					Block->SetSink(-25.0f - 5.0f * nCntX);
+
+					if (Block->GetOnPlayer() != nullptr)
+					{
+						Block->GetOnPlayer()->Stun(20);
+					}
+
+					Block->SetPlayerNumber(m_nPlayerNumber);
+				}
 			}
 		}
+		SetSkill(SKILL_IDLE);
 	}
-	SetSkill(SKILL_IDLE);
 }
 
 //-----------------------------------------------------------------------------
@@ -916,6 +890,11 @@ void CPlayer::TakeItem()
 //-----------------------------------------------------------------------------
 void CPlayer::Item()
 {
+	if (m_controller == nullptr)
+	{
+		return;
+	}
+
 	if (m_nItemBuffTime > 0)
 	{// アイテム強化効果の時間を減算する
 		m_nItemBuffTime--;
@@ -928,69 +907,44 @@ void CPlayer::Item()
 
 	if (m_StockItemState == STOCK_BOM)
 	{// 爆弾を持っているなら
-		if (m_controller == nullptr)
-		{
-			return;
-		}
-
 		if (m_controller->Throw())
 		{// キー入力すると投げる
 			m_nStockItem--;			//ストック数を減らす
-			if (m_rot.y == D3DX_PI*0.0f)
+	
+			//乗っているブロックの番号を取得
+			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+			D3DXVECTOR2 Idx(BlockIdx.x, BlockIdx.y);
+
+			D3DXVECTOR2 range;
+			range.x = m_direction.x;
+			range.y = m_direction.y;
+
+			if (m_rot.y == D3DX_PI * 0.0f)
 			{//下
-			 //乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
 				//2マス左に投げる
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y + THROW_DISTANCE);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-				if (Block != nullptr)
-				{//ブロックを塗る
-					Block->SetPlayerNumber(m_nPlayerNumber);
-					CBom::Create(Block, m_nPlayerNumber, 120, true);
-				}
-			}
-			else if (m_rot.y == D3DX_PI*1.0f)
+				Idx.y + THROW_DISTANCE;
+			} 
+			else if (m_rot.y == D3DX_PI * 1.0f)
 			{//上
-				//乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
 				//2マス左に投げる
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y - THROW_DISTANCE);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-				if (Block != nullptr)
-				{//ブロックを塗る
-					Block->SetPlayerNumber(m_nPlayerNumber);
-					CBom::Create(Block, m_nPlayerNumber, 120, true);
-				}
+				Idx.y - THROW_DISTANCE;
 			}
-			else if (m_rot.y == D3DX_PI*0.5f)
+			else if (m_rot.y == D3DX_PI * 0.5f)
 			{//左
-				//乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
 				//2マス左に投げる
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x - THROW_DISTANCE, BlockIdx.y);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-				if (Block != nullptr)
-				{//ブロックを塗る
-					Block->SetPlayerNumber(m_nPlayerNumber);
-					CBom::Create(Block, m_nPlayerNumber,120,true);
-				}
+				Idx.x - THROW_DISTANCE;
 			}
-			else if (m_rot.y == D3DX_PI*-0.5f)
+			else if (m_rot.y == D3DX_PI * -0.5f)
 			{//右
-			 //乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-				//2マス左に投げる
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + THROW_DISTANCE, BlockIdx.y);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+				//2マス右に投げる
+				Idx.x + THROW_DISTANCE;
+			}
 
-				if (Block != nullptr)
-				{//ブロックを塗る
-					Block->SetPlayerNumber(m_nPlayerNumber);
-					CBom::Create(Block, m_nPlayerNumber, 120, true);
-				}
+			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+			if (Block != nullptr)
+			{//ブロックを塗る
+				Block->SetPlayerNumber(m_nPlayerNumber);
+				CBom::Create(Block, m_nPlayerNumber, 120, true);
 			}
 		}
 	}

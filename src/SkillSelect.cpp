@@ -6,19 +6,19 @@
 //=============================================================================
 
 //インクルード
-#include"main.h"
-#include"SkillSelect.h"
-#include"input.h"
-#include"Fade.h"
-#include"Application.h"
-#include"renderer.h"
-#include"sound.h"
-#include"Map.h"
-#include"Game.h"
-#include"Player.h"
-#include"Camera.h"
-#include"Light.h"
-#include"Bg.h"
+#include "main.h"
+#include "SkillSelect.h"
+#include "input.h"
+#include "Fade.h"
+#include "Application.h"
+#include "renderer.h"
+#include "sound.h"
+#include "Map.h"
+#include "Game.h"
+#include "Player.h"
+#include "Camera.h"
+#include "Light.h"
+#include "Bg.h"
 #include "Block.h"
 
 #include "Object3D.h"
@@ -56,7 +56,7 @@ HRESULT CSkillSelect::Init()
 	// 地面
 	{
 		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -200.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
-		pori->SetUV(0.0f, 10.0f, 0.0f, 10.0f);
+		pori->SetUV(0.0f, 20.0f, 0.0f, 20.0f);
 		pori->SetTextureKey("FLOOR");
 	}
 
@@ -209,6 +209,10 @@ void CSkillSelect::SetUpSelectUI(int inPlayerCnt)
 		m_pPlayer[inPlayerCnt]->SetRot(m_pCamera->CalculateRotFromPos(m_pPlayer[inPlayerCnt]->GetPos()));
 		block->SetRot(m_pCamera->CalculateRotFromPos(block->GetPos()));
 	}
+
+	CObject3D* object = CObject3D::Create(D3DXVECTOR3(-(65.0f * 1.5f) + (65.0f * inPlayerCnt), 30.0f, 5.0f),D3DXVECTOR3(50.0f,0.0f,110.0),2);
+	object->SetRot(D3DXVECTOR3(-1.57f, 0.0f, 0.0f));
+	object->SetCol(D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f));
 }
 
 //====================================
