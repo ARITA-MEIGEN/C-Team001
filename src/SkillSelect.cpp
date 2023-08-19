@@ -108,24 +108,10 @@ HRESULT CSkillSelect::Init()
 		m_isDecision[nCnt] = false;
 		m_inputNumber[nCnt] = 99;		// 絶対に有り得ない数字を代入
 		m_nSkill[nCnt] = 1;
-		m_pObj2D[nCnt] = CObject2D::Create(D3DXVECTOR3(200.0f + (300.0f * nCnt), 600.0f, 0.0f), D3DXVECTOR2(150.0f, 80.0f), 5);
-		m_pSelectArrow[nCnt][0] = CObject2D::Create(D3DXVECTOR3(200.0f + (300.0f * nCnt) - 150.0f * 0.5f - 45.0f, 300.0f, 0.0f), D3DXVECTOR2(30.0f, 30.0f), 5);
-		m_pSelectArrow[nCnt][0]->SetTextureKey("SERECT_LEFT");
-		m_pSelectArrow[nCnt][0]->SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.0f));
-		m_pSelectArrow[nCnt][1] = CObject2D::Create(D3DXVECTOR3(200.0f + (300.0f * nCnt) + 150.0f * 0.5f + 45.0f, 300.0f, 0.0f), D3DXVECTOR2(30.0f, 30.0f), 5);
-		m_pSelectArrow[nCnt][1]->SetTextureKey("SERECT_RIGHT");
-		m_pSelectArrow[nCnt][1]->SetCol(D3DXCOLOR(0.0f,0.0f,1.0f,0.0f));
-		CBlock* block = CBlock::Create(D3DXVECTOR3(-(65.0f * 1.5f) + (65.0f * nCnt), -5.0f, 0.0f));
-		block->CancelPermitSink();
-		block->OnUpDownMove();
-		m_pPlayer[nCnt] = CPlayer::Create(block, D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+
+		SetUpSelectUI(nCnt);
 	}
 
-	// スキル選択画面のところに背景を用意
-	{
-		//CObject2D* object = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.8575f,0.0f),D3DXVECTOR2(SCREEN_WIDTH - 50.0f, 150.0f),1);
-		//object->SetCol(D3DXCOLOR(0.0f,0.0f,0.0f,1.0f));
-	}
 	return S_OK;
 }
 
@@ -190,6 +176,41 @@ void CSkillSelect::Draw()
 	m_pCamera->Set();
 }
 
+void CSkillSelect::SetUpSelectUI(int inPlayerCnt)
+{
+	float x = 200.0f + (300.0f * inPlayerCnt);
+	m_pObj2D[inPlayerCnt] = CObject2D::Create(D3DXVECTOR3(x, 600.0f, 0.0f), D3DXVECTOR2(150.0f, 80.0f), 5);
+
+	// 選択し易いように矢印
+	{
+		m_pSelectArrow[inPlayerCnt][0][1] = CObject2D::Create(D3DXVECTOR3(x - 150.0f * 0.5f - 45.0f - 1.0f, 300.0f, 0.0f), D3DXVECTOR2(40.0f, 40.0f), 5);
+		m_pSelectArrow[inPlayerCnt][0][1]->SetTextureKey("SERECT_LEFT");
+		m_pSelectArrow[inPlayerCnt][0][1]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+		m_pSelectArrow[inPlayerCnt][1][1] = CObject2D::Create(D3DXVECTOR3(x + 150.0f * 0.5f + 45.0f + 1.0f, 300.0f, 0.0f), D3DXVECTOR2(40.0f, 40.0f), 5);
+		m_pSelectArrow[inPlayerCnt][1][1]->SetTextureKey("SERECT_RIGHT");
+		m_pSelectArrow[inPlayerCnt][1][1]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+
+		m_pSelectArrow[inPlayerCnt][0][0] = CObject2D::Create(D3DXVECTOR3(x - 150.0f * 0.5f - 45.0f, 300.0f, 0.0f), D3DXVECTOR2(30.0f, 30.0f), 5);
+		m_pSelectArrow[inPlayerCnt][0][0]->SetTextureKey("SERECT_LEFT");
+		m_pSelectArrow[inPlayerCnt][0][0]->SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.0f));
+		m_pSelectArrow[inPlayerCnt][1][0] = CObject2D::Create(D3DXVECTOR3(x + 150.0f * 0.5f + 45.0f, 300.0f, 0.0f), D3DXVECTOR2(30.0f, 30.0f), 5);
+		m_pSelectArrow[inPlayerCnt][1][0]->SetTextureKey("SERECT_RIGHT");
+		m_pSelectArrow[inPlayerCnt][1][0]->SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.0f));
+	}
+
+	// 3Dモデルの設置
+	{
+		CBlock* block = CBlock::Create(D3DXVECTOR3(-(65.0f * 1.5f) + (65.0f * inPlayerCnt), -5.0f, 0.0f));
+		block->CancelPermitSink();
+		block->OnUpDownMove();
+		m_pPlayer[inPlayerCnt] = CPlayer::Create(block, D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+
+		// カメラを向く
+		m_pPlayer[inPlayerCnt]->SetRot(m_pCamera->CalculateRotFromPos(m_pPlayer[inPlayerCnt]->GetPos()));
+		block->SetRot(m_pCamera->CalculateRotFromPos(block->GetPos()));
+	}
+}
+
 //====================================
 //入力
 //====================================
@@ -227,11 +248,13 @@ void CSkillSelect::Input()
 				{
 					m_nSkill[nCnt]--;
 				}
-				m_pSelectArrow[nCnt][0]->SetColAlpha(1.0f);
+				m_pSelectArrow[nCnt][0][0]->SetColAlpha(1.0f);
+				m_pSelectArrow[nCnt][0][1]->SetColAlpha(1.0f);
 			}
 			else
 			{
-				m_pSelectArrow[nCnt][0]->SetColAlpha(0.25f);
+				m_pSelectArrow[nCnt][0][0]->SetColAlpha(0.25f);
+				m_pSelectArrow[nCnt][0][1]->SetColAlpha(0.25f);
 			}
 
 			if (m_nSkill[nCnt] <= 2)
@@ -240,25 +263,31 @@ void CSkillSelect::Input()
 				{
 					m_nSkill[nCnt]++;
 				}
-				m_pSelectArrow[nCnt][1]->SetColAlpha(1.0f);
+				m_pSelectArrow[nCnt][1][0]->SetColAlpha(1.0f);
+				m_pSelectArrow[nCnt][1][1]->SetColAlpha(1.0f);
 			}
 			else
 			{
-				m_pSelectArrow[nCnt][1]->SetColAlpha(0.25f);
+				m_pSelectArrow[nCnt][1][0]->SetColAlpha(0.25f);
+				m_pSelectArrow[nCnt][1][1]->SetColAlpha(0.25f);
 			}
 		}
 
 		if (m_inputNumber[nCnt] != -1 && !m_isPlayerCheck[nCnt] && pInput->Trigger(JOYPAD_B, m_inputNumber[nCnt]) || m_inputNumber[nCnt] == -1 && !m_isPlayerCheck[nCnt] && pInput->Trigger(DIK_RETURN, m_inputNumber[nCnt]))
 		{//パッドのBボタンで決定する(キーボードはV)
 			m_isPlayerCheck[nCnt] = true;
-			m_pSelectArrow[nCnt][0]->SetColAlpha(0.0f);
-			m_pSelectArrow[nCnt][1]->SetColAlpha(0.0f);
+			m_pSelectArrow[nCnt][0][0]->SetColAlpha(0.0f);
+			m_pSelectArrow[nCnt][1][0]->SetColAlpha(0.0f);
+			m_pSelectArrow[nCnt][0][1]->SetColAlpha(0.0f);
+			m_pSelectArrow[nCnt][1][1]->SetColAlpha(0.0f);
 		}
 		else if (m_inputNumber[nCnt] != -1 && m_isPlayerCheck[nCnt] &&  pInput->Trigger(JOYPAD_A, m_inputNumber[nCnt]) || m_inputNumber[nCnt] == -1 && m_isPlayerCheck[nCnt] && pInput->Trigger(DIK_B, m_inputNumber[nCnt]))
 		{//パッドのAボタンで解除する(キーボードはB)
 			m_isPlayerCheck[nCnt] = false;
-			m_pSelectArrow[nCnt][0]->SetColAlpha(1.0f);
-			m_pSelectArrow[nCnt][1]->SetColAlpha(1.0f);
+			m_pSelectArrow[nCnt][0][0]->SetColAlpha(1.0f);
+			m_pSelectArrow[nCnt][1][0]->SetColAlpha(1.0f);
+			m_pSelectArrow[nCnt][0][1]->SetColAlpha(1.0f);
+			m_pSelectArrow[nCnt][1][1]->SetColAlpha(1.0f);
 		}
 	}
 
@@ -344,8 +373,10 @@ void CSkillSelect::Entry()
 			if (m_isDecision[nCnt])
 			{
 
-				m_pSelectArrow[nCnt][0]->SetColAlpha(1.0f);
-				m_pSelectArrow[nCnt][1]->SetColAlpha(1.0f);
+				m_pSelectArrow[nCnt][0][0]->SetColAlpha(1.0f);
+				m_pSelectArrow[nCnt][1][0]->SetColAlpha(1.0f);
+				m_pSelectArrow[nCnt][0][1]->SetColAlpha(1.0f);
+				m_pSelectArrow[nCnt][1][1]->SetColAlpha(1.0f);
 			}
 		}
 	}
