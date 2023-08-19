@@ -287,7 +287,7 @@ void CMap::PopItem()
 	/* ↓ランダム指定のブロックにアイテムが乗っていない↓ */
 
 	D3DXVECTOR3 pos = popPlanBlock->GetPos();
-	pos.y += 30.0f;
+	pos.y += 20.0f;
 
 	//アイテムの生成
 	CItem* popItem = nullptr;

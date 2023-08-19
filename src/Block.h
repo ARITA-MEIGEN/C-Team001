@@ -28,7 +28,7 @@ private:
 	static const float UP_POWER;	// ã‚ª‚é—Í
 	static const float DOWN_POWER;	// ‰º‚ª‚é—Í
 public:
-	explicit CBlock(int nPriority = 2);
+	explicit CBlock();
 	~CBlock() override;
 	HRESULT Init() override;
 	void Uninit() override;

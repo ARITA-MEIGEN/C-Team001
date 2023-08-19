@@ -23,8 +23,7 @@ const float CBlock::DOWN_POWER = 1.25f;		// 沈んだブロックが浮上する時間
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CBlock::CBlock(int priorty) :
-	CObjectX(priorty),
+CBlock::CBlock() :
 	m_isMovePermit(false),
 	m_posPlan(0.0f,0.0f,0.0f),
 	m_move(0.0f, 0.0f, 0.0f),
@@ -123,7 +122,7 @@ void  CBlock::Update()
 //=============================================================================
 CBlock* CBlock::Create(D3DXVECTOR3 pos)
 {
-	CBlock*pBlock = new CBlock(5);
+	CBlock*pBlock = new CBlock;
 
 	if (pBlock != nullptr)
 	{

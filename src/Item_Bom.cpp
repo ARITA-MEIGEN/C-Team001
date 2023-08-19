@@ -82,7 +82,7 @@ void CBom::Update(void)
 //======================================================
 //アイテム生成処理
 //======================================================
-CBom *CBom::Create(const D3DXVECTOR3 pos, const int nLife)
+CBom *CBom::Create(const D3DXVECTOR3 pos)
 {
 	//動的確保
 	CBom *pBom = new CBom;

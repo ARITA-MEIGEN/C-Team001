@@ -48,7 +48,8 @@ HRESULT CItem::Init(void)
 
 	SetSizePlan(D3DXVECTOR3(25.0f,0.0f, 25.0f));
 	SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f));
-	SetLife(300);
+	SetLife(450);
+	SetCol(D3DXCOLOR(0.0f,0.0f,0.0f,1.0f));
 
 	return S_OK;
 }
@@ -70,6 +71,8 @@ void CItem::Uninit(void)
 void CItem::Update(void)
 {
 	m_box->SetPos(GetPos());
+	m_box->AddRot(D3DXVECTOR3(0.01f,0.01f,0.01f));
+	m_box->SetCol(D3DXCOLOR(1.0f,0.0f,0.0f,0.65f));
 
 	//•\Ž¦ŽžŠÔ‚ÌŽæ“¾
 	int nLife = GetLife();
@@ -108,12 +111,6 @@ void CItem::Update(void)
 	SetPos(pos);
 #endif // 0
 
-#if 0	// ‰ñ“]
-	D3DXVECTOR3 rot = GetRot();
-	rot.y += 0.01f;
-	SetRot(rot);
-#endif // 0
-
 	//XV
 	CObject3D::Update();
 }
@@ -125,9 +122,11 @@ void CItem::Draw(void)
 {
 	if (!m_bDisplay)
 	{
+		m_box->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.0f));
 		if (GetLife() % 10 <= 5)
 		{//“_–Å‚³‚¹‚é
 		 //•`‰æ
+			m_box->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.65f));
 			CObject3D::Draw();
 		}
 	}

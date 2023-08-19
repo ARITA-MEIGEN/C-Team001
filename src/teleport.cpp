@@ -17,7 +17,7 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CTeleport::CTeleport(int priorty) : CBlock(priorty)
+CTeleport::CTeleport()
 {
 }
 
@@ -93,7 +93,7 @@ void  CTeleport::Draw()
 //=============================================================================
 CTeleport* CTeleport::Create(D3DXVECTOR3 pos, int nNumber)
 {
-	CTeleport*pTeleport = new CTeleport(5);
+	CTeleport*pTeleport = new CTeleport();
 
 	if (pTeleport != nullptr)
 	{
