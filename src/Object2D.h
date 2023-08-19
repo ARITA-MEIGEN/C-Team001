@@ -54,6 +54,7 @@ public:
 
 	// êF
 	void SetCol(D3DXCOLOR col);
+	void SetColAlpha(float inAlpha) { SetCol(D3DXCOLOR(m_Col.r, m_Col.g, m_Col.b, inAlpha)); }
 	D3DXCOLOR GetCol();
 
 	// äpìx

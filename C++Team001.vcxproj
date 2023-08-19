@@ -216,6 +216,7 @@
     <ClCompile Include="src\Shadow.cpp" />
     <ClCompile Include="src\SkillGauge.cpp" />
     <ClCompile Include="src\SkillSelect.cpp" />
+    <ClCompile Include="src\sky_bg.cpp" />
     <ClCompile Include="src\sound.cpp" />
     <ClCompile Include="src\StatusUI.cpp" />
     <ClCompile Include="src\teleport.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="src\Shadow.h" />
     <ClInclude Include="src\SkillGauge.h" />
     <ClInclude Include="src\SkillSelect.h" />
+    <ClInclude Include="src\sky_bg.h" />
     <ClInclude Include="src\sound.h" />
     <ClInclude Include="src\StatusUI.h" />
     <ClInclude Include="src\teleport.h" />
@@ -299,4 +301,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

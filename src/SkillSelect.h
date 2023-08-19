@@ -55,6 +55,7 @@ private:
 	static bool m_isDecision[MAX_PLAYER];	// 決定中
 	bool m_isPlayerCheck[MAX_PLAYER];		// 準備完了かどうか
 	CObject2D* m_pObj2D[MAX_PLAYER];		// スキル選択の枠
+	CObject2D* m_pSelectArrow[MAX_PLAYER][2];		// スキル選択中の矢印
 	CPlayer* m_pPlayer[MAX_PLAYER];			// プレイヤー
 
 	CBg* m_pBg;				// 背景

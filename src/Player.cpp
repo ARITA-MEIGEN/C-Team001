@@ -341,7 +341,7 @@ CPlayer * CPlayer::Create(CBlock* block, D3DXVECTOR3 rot)
 	CPlayer*pPlayer;
 	pPlayer = new CPlayer(CObject::OBJTYPE_MODEL);
 	pPlayer->m_pos = block->GetPos();
-	pPlayer->m_pos.y -= 5.0f;
+	pPlayer->m_pos.y -= 10.0f;
 	pPlayer->m_rot = rot;
 
 	block->SetOnPlayer(pPlayer);

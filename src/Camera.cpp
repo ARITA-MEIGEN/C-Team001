@@ -25,7 +25,7 @@
 //静的変数宣言
 //-----------------------------------------------------------------------------
 const float CCamera::CAMERA_NEAR = 1.0f;	// ニア
-const float CCamera::CAMERA_FAR = 2000.0f;	// ファー
+const float CCamera::CAMERA_FAR = 3000.0f;	// ファー
 const float CCamera::FIELD_OF_VIEW = D3DXToRadian(45.0f);	// 視野角
 
 //===========================
@@ -80,6 +80,7 @@ void  CCamera::Uninit(void)
 void  CCamera::Update(void)
 {
 	NormalizeRadian();	//角度の正規化
+
 #ifdef _DEBUG
 
 	CDebugProc::Print("カメラの視点の角度 x:%f y:%f z:%f\n",m_posV.x,m_posV.y,m_posV.z);
@@ -114,6 +115,10 @@ void  CCamera::Set(void)
 	D3DXMatrixIdentity(&m_mtxProjection);
 
 	//プロジェクションマトリックスの作成
+	//float width = (float)SCREEN_WIDTH * 0.25f;
+	//float height = (float)SCREEN_HEIGHT * 0.25f;
+	//D3DXMatrixOrthoLH(&m_mtxProjection, width, height, CAMERA_NEAR, CAMERA_FAR);
+
 	D3DXMatrixPerspectiveFovLH(&m_mtxProjection,
 		FIELD_OF_VIEW,						// 視野角
 		(float)m_viewPort.Width / (float)m_viewPort.Height,	// アスペクト比

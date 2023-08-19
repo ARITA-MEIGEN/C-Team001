@@ -31,6 +31,7 @@ CBlock::CBlock(int priorty) :
 	m_isSinkPermit(false)
 {
 	m_number = 0;
+	n_countUpDown = 0;
 	m_isStop = false;
 	m_onItem = nullptr;
 	m_onPlayer = nullptr;
@@ -75,6 +76,8 @@ void  CBlock::Update()
 	Move();
 
 	ModifyRot();
+
+	UpDownMove();
 
 	if (m_onItem != nullptr)
 	{
@@ -230,7 +233,9 @@ void CBlock::Move()
 
 	if (m_onPlayer != nullptr)
 	{
-		m_onPlayer->SetPos(GetPos());
+		pos = GetPos();
+		pos.y -= 5.0f;
+		m_onPlayer->SetPos(pos);
 	}
 }
 
@@ -268,6 +273,30 @@ void CBlock::ModifyRot()
 	rot.z = Modefy(rot.z);
 
 	SetRot(rot);
+}
+
+void CBlock::UpDownMove()
+{
+	if (!m_isMoveUpDown)
+	{
+		return;
+	}
+
+	m_isMovePermit = true;
+
+	n_countUpDown++;
+
+	if (n_countUpDown % 60 == 0)
+	{
+		n_countUpDown = 0;
+
+		m_move.y *= -1.0f;
+
+		if (m_move.y == 0.0f)
+		{
+			m_move.y = 0.02f;
+		}
+	}
 }
 
 //=============================================================================

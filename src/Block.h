@@ -49,6 +49,8 @@ public:
 
 	void CancelPermitSink() { m_isSinkPermit = false; }
 
+	void OnUpDownMove() { m_isMoveUpDown = true; m_move.y = 0.02f; }
+
 	// Getter
 	int GetNumber() { return m_number; };
 	bool GetTeleport() { return m_bTeleport; };
@@ -61,6 +63,7 @@ public:
 private:
 	void Move();	// 移動ギミック
 	void ModifyRot();
+	void UpDownMove();
 
 private:
 	//メンバ変数
@@ -75,6 +78,8 @@ private:
 
 	// 移動処理
 	bool m_isMovePermit;	// 移動許可が降りてるか
+	bool m_isMoveUpDown;	// 上下移動を行なうか否か
+	int n_countUpDown;
 	D3DXVECTOR3 m_posPlan;	// 移動予定
 	D3DXVECTOR3 m_move;		// 移動ベクトル
 };
