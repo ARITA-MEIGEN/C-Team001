@@ -1,6 +1,7 @@
 {
   "MODEL": [
     [ "BOX", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile_col01.x" ],
+    [ "ITEM_BOX", "data\/MODEL\/ItemBox.x" ],
     [ "TELEPORT_BOX", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/TeleportTile_col01.x" ],
     [ "KYUU2", "data\/MODEL\/kyuu2.x" ],
     [ "AIRSHIP", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/Airship_0.3.x" ],

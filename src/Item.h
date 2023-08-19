@@ -9,6 +9,8 @@
 
 #include "Object3D.h"
 
+class CObjectX;
+
 //アイテムクラス
 class CItem : public CObject3D
 {
@@ -42,8 +44,6 @@ public:
 	int GetLife(void) { return m_nLife; }							// 表示時間の取得
 	ITEM_EFFECT GetEffect(void) { return m_effect; }				// エフェクトの取得
 
-	static CItem* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);		// 生成処理
-
 private:
 	//メンバ変数
 	bool m_bDisplay;		// 表示するかどうか
@@ -52,6 +52,7 @@ private:
 
 	// 出現演出用
 	D3DXVECTOR3 m_sizePlan;	// 大きさ予定
+	CObjectX* m_box;
 };
 
 #endif

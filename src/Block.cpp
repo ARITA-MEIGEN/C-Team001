@@ -83,7 +83,7 @@ void  CBlock::Update()
 	{
 		if (m_onItem->GetLife() <= 0)
 		{
-			m_onItem->Release();
+			m_onItem->Uninit();
 			m_onItem = nullptr;
 		}
 	}

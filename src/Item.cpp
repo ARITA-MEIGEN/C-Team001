@@ -8,6 +8,7 @@
 #include "Texture.h"
 #include "Application.h"
 #include "renderer.h"
+#include "ObjectX.h"
 
 //======================================================
 // 定義
@@ -42,6 +43,9 @@ HRESULT CItem::Init(void)
 	m_bDisplay = true;
 	CObject3D::Init();
 
+	m_box = CObjectX::Create();
+	m_box->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("ITEM_BOX"));
+
 	return S_OK;
 }
 
@@ -52,6 +56,8 @@ void CItem::Uninit(void)
 {
 	//終了
 	CObject3D::Uninit();
+
+	m_box->Uninit();
 }
 
 //======================================================
@@ -59,6 +65,8 @@ void CItem::Uninit(void)
 //======================================================
 void CItem::Update(void)
 {
+	m_box->SetPos(GetPos());
+
 	//表示時間の取得
 	int nLife = GetLife();
 
@@ -124,24 +132,4 @@ void CItem::Draw(void)
 		//描画
 		CObject3D::Draw();
 	}
-}
-
-//======================================================
-//生成処理
-//======================================================
-CItem *CItem::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
-{
-	//動的確保
-	CItem *pItem = new CItem;
-
-	if (pItem != nullptr)
-	{
-		//情報の設定
-		pItem->Init();
-		pItem->SetPos(pos);
-		pItem->m_sizePlan = size;
-		pItem->SetRot(rot);
-	}
-
-	return pItem;
 }

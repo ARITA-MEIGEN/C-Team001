@@ -12,7 +12,7 @@
     [ "TEXT_BACK", "data\/TEXTURE\/Text\/Text_Back.png" ],
     [ "TOON", "data\/TEXTURE\/toon.png" ],
     [ "CIRCLE_SHADOW", "data\/TEXTURE\/Effect\/Effect_shadow.png" ],
-    [ "SPEED_UP_ITEM_ICON", "data\/TEXTURE\/Game\/Item\/SpeedUp\/Item_SpeedUp_wing.png" ],
+    [ "SPEED_UP_ITEM_ICON", "data\/TEXTURE\/Pawer_icon.png" ],
     [ "PAINT_UP_ITEM_ICON", "data\/TEXTURE\/Game\/Item\/SpeedUp\/Item_SpeedUp_shoe.png" ],
     [ "CHECK", "data\/TEXTURE\/Icon\/Icon_check.png" ],
     [ "RESULET_000", "data\/TEXTURE\/Result\/Rank\/Result_rank_1st.png" ],

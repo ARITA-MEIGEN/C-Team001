@@ -22,7 +22,6 @@ public:
 	~CBom() override;						// デストラクタ
 
 	HRESULT Init(void) override;			// 初期化処理
-	void Uninit(void) override;				// 終了処理
 	void Update(void) override;				// 更新処理
 
 	void Explosion(void);					// 爆発処理
