@@ -47,7 +47,7 @@ void CSpeed::Update(void)
 //======================================================
 //¶¬ˆ—
 //======================================================
-CSpeed *CSpeed::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife)
+CSpeed *CSpeed::Create(const D3DXVECTOR3 pos)
 {
 	//“®“IŠm•Û
 	CSpeed *pSpeed = new CSpeed;
@@ -57,9 +57,6 @@ CSpeed *CSpeed::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 		//î•ñ‚ÌÝ’è
 		pSpeed->Init();
 		pSpeed->SetPos(pos);
-		pSpeed->SetSizePlan(size);
-		pSpeed->SetRot(rot);
-		pSpeed->SetLife(nLife);
 		pSpeed->SetEffect(SPEED);
 	}
 

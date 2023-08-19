@@ -289,9 +289,6 @@ void CMap::PopItem()
 	D3DXVECTOR3 pos = popPlanBlock->GetPos();
 	pos.y += 30.0f;
 
-	D3DXVECTOR3 size(35.0f, 0.0f, 35.0f);
-	D3DXVECTOR3 rot(-D3DX_PI * 0.5f, 0.0f, 0.0f);
-
 	//ÉAÉCÉeÉÄÇÃê∂ê¨
 	CItem* popItem = nullptr;
 
@@ -300,10 +297,10 @@ void CMap::PopItem()
 	switch (random)
 	{
 	case 0:
-		popItem = CPaint::Create(pos, size, rot, 300);
+		popItem = CPaint::Create(pos);
 		break;
 	case 1:
-		popItem = CSpeed::Create(pos, size, rot, 300);
+		popItem = CSpeed::Create(pos);
 		break;
 	default:
 		break;

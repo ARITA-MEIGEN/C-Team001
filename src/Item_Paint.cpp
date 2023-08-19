@@ -47,7 +47,7 @@ void CPaint::Update(void)
 //======================================================
 //¶¬ˆ—
 //======================================================
-CPaint *CPaint::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife)
+CPaint *CPaint::Create(const D3DXVECTOR3 pos)
 {
 	//“®“IŠm•Û
 	CPaint *pPaint = new CPaint;
@@ -57,9 +57,6 @@ CPaint *CPaint::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 		//î•ñ‚ÌÝ’è
 		pPaint->Init();
 		pPaint->SetPos(pos);
-		pPaint->SetSizePlan(size);
-		pPaint->SetRot(rot);
-		pPaint->SetLife(nLife);
 		pPaint->SetEffect(PAINT);
 	}
 

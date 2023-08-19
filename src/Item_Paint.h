@@ -19,7 +19,7 @@ public:
 	HRESULT Init(void) override;			// ‰Šú‰»ˆ—
 	void Update(void) override;				// XVˆ—
 
-	static CPaint* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife);	// ¶¬ˆ—
+	static CPaint* Create(const D3DXVECTOR3 pos);	// ¶¬ˆ—
 
 private:
 };

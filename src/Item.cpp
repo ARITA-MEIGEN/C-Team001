@@ -46,6 +46,10 @@ HRESULT CItem::Init(void)
 	m_box = CObjectX::Create();
 	m_box->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("ITEM_BOX"));
 
+	SetSizePlan(D3DXVECTOR3(25.0f,0.0f, 25.0f));
+	SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f));
+	SetLife(300);
+
 	return S_OK;
 }
 

@@ -29,13 +29,13 @@ public:
 		MAX
 	};
 
-	explicit CItem(int nPriority = 3);								// コンストラクタ
-	~CItem() override;												// デストラクタ
+	explicit CItem(int nPriority = 3);	// コンストラクタ
+	~CItem() override;					// デストラクタ
 
-	HRESULT Init(void) override;									// 初期化処理
-	void Uninit(void) override;										// 終了処理
-	void Update(void) override;										// 更新処理
-	void Draw(void) override;										// 描画処理
+	HRESULT Init(void) override;		// 初期化処理
+	void Uninit(void) override;			// 終了処理
+	void Update(void) override;			// 更新処理
+	void Draw(void) override;			// 描画処理
 
 	void SetSizePlan(const D3DXVECTOR3& inSize) { m_sizePlan = inSize; }	// 大きさ予定の設定
 	void SetLife(int nLife) { m_nLife = nLife; }							// 表示時間の設定

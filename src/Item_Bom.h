@@ -26,7 +26,7 @@ public:
 
 	void Explosion(void);					// 爆発処理
 
-	static CBom* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife);	// アイテム生成処理
+	static CBom* Create(const D3DXVECTOR3 pos, const int nLife);	// アイテム生成処理
 	static CBom* Create(CBlock *pOnBlock, int nPlayerNumber,const int nLife, const bool bExplosion);			// 爆弾生成処理
 
 private:

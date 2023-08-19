@@ -82,7 +82,7 @@ void CBom::Update(void)
 //======================================================
 //アイテム生成処理
 //======================================================
-CBom *CBom::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife)
+CBom *CBom::Create(const D3DXVECTOR3 pos, const int nLife)
 {
 	//動的確保
 	CBom *pBom = new CBom;
@@ -93,9 +93,6 @@ CBom *CBom::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECT
 		pBom->m_bExplosion = false;
 		pBom->Init();
 		pBom->SetPos(pos);
-		pBom->SetSizePlan(size);
-		pBom->SetRot(rot);
-		pBom->SetLife(nLife);
 		pBom->SetEffect(BOM);
 	}
 
