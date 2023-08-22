@@ -225,6 +225,12 @@
     <ClCompile Include="src\sky_bg.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\Item_take_effect.cpp">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="src\start_ui.cpp">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Command.h">
@@ -415,6 +421,12 @@
     </ClInclude>
     <ClInclude Include="src\sky_bg.h">
       <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Item_take_effect.h">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="src\start_ui.h">
+      <Filter>ソース ファイル\09_UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

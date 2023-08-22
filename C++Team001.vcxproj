@@ -190,6 +190,7 @@
     <ClCompile Include="src\Item_Bom.cpp" />
     <ClCompile Include="src\Item_Paint.cpp" />
     <ClCompile Include="src\Item_Speed.cpp" />
+    <ClCompile Include="src\Item_take_effect.cpp" />
     <ClCompile Include="src\Letter.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -218,6 +219,7 @@
     <ClCompile Include="src\SkillSelect.cpp" />
     <ClCompile Include="src\sky_bg.cpp" />
     <ClCompile Include="src\sound.cpp" />
+    <ClCompile Include="src\start_ui.cpp" />
     <ClCompile Include="src\StatusUI.cpp" />
     <ClCompile Include="src\teleport.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -258,6 +260,7 @@
     <ClInclude Include="src\Item_Bom.h" />
     <ClInclude Include="src\Item_Paint.h" />
     <ClInclude Include="src\Item_Speed.h" />
+    <ClInclude Include="src\Item_take_effect.h" />
     <ClInclude Include="src\Letter.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\main.h" />
@@ -283,6 +286,7 @@
     <ClInclude Include="src\SkillSelect.h" />
     <ClInclude Include="src\sky_bg.h" />
     <ClInclude Include="src\sound.h" />
+    <ClInclude Include="src\start_ui.h" />
     <ClInclude Include="src\StatusUI.h" />
     <ClInclude Include="src\teleport.h" />
     <ClInclude Include="src\Texture.h" />

@@ -28,6 +28,7 @@
 #include "StatusUI.h"
 #include "Time.h"
 #include "countdown_ui.h"
+#include "start_ui.h"
 
 // ToDo : あとで消せ
 #include "Object3D.h"
@@ -117,7 +118,7 @@ HRESULT CGame::Init()
 	m_Round = ROUND_1;
 
 	// 背景モデルの設置
-	//SetupBgModel();
+	SetupBgModel();
 
 	// 更新のステート管理
 	m_funcInit = m_InitFunc;
@@ -246,6 +247,7 @@ void CGame::Update_CountDown()
 		}
 
 		SetUpdate(UPDATE_GAME_PLAY);
+		CStartUI::Create();
 	}
 }
 
@@ -493,29 +495,30 @@ void CGame::Draw()
 //====================================
 void CGame::SetupBgModel()
 {
+	//{
+	//	nlohmann::json loadData = LoadJson("test.json");
+
+	//	int loadDataSize = loadData["MODEL"].size();
+
+	//	for (int i = 0; i < loadDataSize; i++)
+	//	{
+	//		std::string tag = loadData["MODEL"][i]["TAG"];
+	//		D3DXVECTOR3 pos = { loadData["MODEL"][i]["POS"][0],loadData["MODEL"][i]["POS"][1] ,loadData["MODEL"][i]["POS"][2] };
+	//		D3DXVECTOR3 rot = { loadData["MODEL"][i]["ROT"][0],loadData["MODEL"][i]["ROT"][1] ,loadData["MODEL"][i]["ROT"][2] };
+
+	//		CObjectX* object = CObjectX::Create();
+	//		CObjectXOriginalList* original = CObjectXOriginalList::GetInstance();
+	//		object->BindModel(original->GetModelData(tag));
+	//		object->SetModelTag(tag);
+	//		object->SetPos(pos + D3DXVECTOR3(0.0f, -500.0f, 0.0f));
+	//		object->SetRot(rot);
+	//	}
+	//}
+
+	// 仮背景の設置
 	{
-		nlohmann::json loadData = LoadJson("test.json");
-
-		int loadDataSize = loadData["MODEL"].size();
-
-		for (int i = 0; i < loadDataSize; i++)
-		{
-			std::string tag = loadData["MODEL"][i]["TAG"];
-			D3DXVECTOR3 pos = { loadData["MODEL"][i]["POS"][0],loadData["MODEL"][i]["POS"][1] ,loadData["MODEL"][i]["POS"][2] };
-			D3DXVECTOR3 rot = { loadData["MODEL"][i]["ROT"][0],loadData["MODEL"][i]["ROT"][1] ,loadData["MODEL"][i]["ROT"][2] };
-
-			CObjectX* object = CObjectX::Create();
-			CObjectXOriginalList* original = CObjectXOriginalList::GetInstance();
-			object->BindModel(original->GetModelData(tag));
-			object->SetModelTag(tag);
-			object->SetPos(pos + D3DXVECTOR3(0.0f, -500.0f, 0.0f));
-			object->SetRot(rot);
-		}
-	}
-
-	// 仮背景の設置	// ToDo : モデルが出来次第消す
-	{
-		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
+		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(4000.0f, 0.0f, 2000.0f), 2);
+		pori->SetUV(0.0f, 20.0f, 0.0f, 20.0f);
 		pori->SetTextureKey("TEST_FLOOR");
 	}
 
