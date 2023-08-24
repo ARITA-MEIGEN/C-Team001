@@ -123,46 +123,6 @@ void  CObject2D::Uninit()
 void  CObject2D::Update()
 {
 	CObject::Update();
-
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice;
-	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
-	VERTEX_2D*pVtx;
-
-	//頂点バッファをロックし、頂点データへのポインタを取得
- 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	// 頂点情報を設定
-	pVtx[0].pos.x = m_Pos.x + sinf(m_Rot - D3DX_PI + m_fAngle) * m_fLength;
-	pVtx[0].pos.y = m_Pos.y + cosf(m_Rot - D3DX_PI + m_fAngle) * m_fLength;
-	pVtx[0].pos.z = 0.0f;
-
-	pVtx[1].pos.x = m_Pos.x + sinf(m_Rot + D3DX_PI - m_fAngle) * m_fLength;
-	pVtx[1].pos.y = m_Pos.y + cosf(m_Rot + D3DX_PI - m_fAngle) * m_fLength;
-	pVtx[1].pos.z = 0.0f;
-
-	pVtx[2].pos.x = m_Pos.x + sinf(m_Rot - m_fAngle) * m_fLength;
-	pVtx[2].pos.y = m_Pos.y + cosf(m_Rot - m_fAngle) * m_fLength;
-	pVtx[2].pos.z = 0.0f;
-
-	pVtx[3].pos.x = m_Pos.x + sinf(m_Rot + m_fAngle) * m_fLength;
-	pVtx[3].pos.y = m_Pos.y + cosf(m_Rot + m_fAngle) * m_fLength;
-	pVtx[3].pos.z = 0.0f;
-
-	// rhwの設定
-	pVtx[0].rhw = 1.0f;
-	pVtx[1].rhw = 1.0f;
-	pVtx[2].rhw = 1.0f;
-	pVtx[3].rhw = 1.0f;
-
-	// 頂点カラーの設定
-	pVtx[0].col = m_Col;
-	pVtx[1].col = m_Col;
-	pVtx[2].col = m_Col;
-	pVtx[3].col = m_Col;
-
-	//頂点バッファをアンロック
-	m_pVtxBuff->Unlock();
 }
 
 //=============================================================================
@@ -258,6 +218,8 @@ void CObject2D::SetSiz(D3DXVECTOR2 Siz)
 
 	//対角線の角度を算出する
 	m_fAngle = atan2f(m_Siz.x, m_Siz.y);
+
+	VtxPos();
 }
 
 //=============================================================================
@@ -266,6 +228,23 @@ void CObject2D::SetSiz(D3DXVECTOR2 Siz)
 void CObject2D::SetCol(D3DXCOLOR col)
 {
 	m_Col = col;
+
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice;
+	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
+	VERTEX_2D*pVtx;
+
+	//頂点バッファをロックし、頂点データへのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	// 頂点カラーの設定
+	pVtx[0].col = m_Col;
+	pVtx[1].col = m_Col;
+	pVtx[2].col = m_Col;
+	pVtx[3].col = m_Col;
+
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
 }
 
 //=============================================================================
@@ -274,6 +253,8 @@ void CObject2D::SetCol(D3DXCOLOR col)
 void CObject2D::SetRot(float Rot)
 {
 	m_Rot = Rot;
+
+	VtxPos();
 }
 
 //=============================================================================
@@ -309,10 +290,41 @@ CObject2D * CObject2D::Create(D3DXVECTOR3 pos, D3DXVECTOR2 siz, int Priority)
 {
 	CObject2D*pObject2D;
 	pObject2D = new CObject2D(Priority);
-	pObject2D->SetSiz(siz);
 	pObject2D->Init();
+	pObject2D->SetSiz(siz);
 	pObject2D->SetPos(pos);
 	return pObject2D;
+}
+
+void CObject2D::VtxPos()
+{
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice;
+	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
+	VERTEX_2D*pVtx;
+
+	//頂点バッファをロックし、頂点データへのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	// 頂点情報を設定
+	pVtx[0].pos.x = m_Pos.x + sinf(m_Rot - D3DX_PI + m_fAngle) * m_fLength;
+	pVtx[0].pos.y = m_Pos.y + cosf(m_Rot - D3DX_PI + m_fAngle) * m_fLength;
+	pVtx[0].pos.z = 0.0f;
+
+	pVtx[1].pos.x = m_Pos.x + sinf(m_Rot + D3DX_PI - m_fAngle) * m_fLength;
+	pVtx[1].pos.y = m_Pos.y + cosf(m_Rot + D3DX_PI - m_fAngle) * m_fLength;
+	pVtx[1].pos.z = 0.0f;
+
+	pVtx[2].pos.x = m_Pos.x + sinf(m_Rot - m_fAngle) * m_fLength;
+	pVtx[2].pos.y = m_Pos.y + cosf(m_Rot - m_fAngle) * m_fLength;
+	pVtx[2].pos.z = 0.0f;
+
+	pVtx[3].pos.x = m_Pos.x + sinf(m_Rot + m_fAngle) * m_fLength;
+	pVtx[3].pos.y = m_Pos.y + cosf(m_Rot + m_fAngle) * m_fLength;
+	pVtx[3].pos.z = 0.0f;
+
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
 }
 
 //======================================================
@@ -332,4 +344,11 @@ void CObject2D::SetSkillPos(const float &gauge)
 
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
+}
+
+void CObject2D::SetPos(const D3DXVECTOR3& pos)
+{
+	m_Pos = pos;
+
+	VtxPos();
 }

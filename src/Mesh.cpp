@@ -8,6 +8,7 @@
 #include"Application.h"
 #include"renderer.h"
 #include"Object3D.h"
+#include<vector>
 
 //===========================
 //コンストラクタ
@@ -234,8 +235,7 @@ float CMesh::Collision(D3DXVECTOR3 pos)
 {
 	VERTEX_3D*pVtx = NULL;
 	D3DXVECTOR3 V1, V2, VecA, VecB, nor, P1, P2, P3;
-	D3DXVECTOR3	aNor[2560] = {};
-	memset(&aNor[0], 0, sizeof(aNor));
+	std::vector<D3DXVECTOR3> aNor;
 	float fVec[3];
 	bool bReturn = false;
 	float nSave;
@@ -247,6 +247,8 @@ float CMesh::Collision(D3DXVECTOR3 pos)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	int max = MESHFIELD_INDEX_NUM - 2;
+	aNor.resize(max);
+
 	//XZの外積で判定
 	for (int i = 0; i < max; i++)
 	{

@@ -24,7 +24,7 @@ class CItem;
 class CTeleport : public CBlock
 {
 public:
-	explicit CTeleport(int nPriority = 2);
+	explicit CTeleport();
 	~CTeleport();
 	HRESULT Init();
 	void Uninit();

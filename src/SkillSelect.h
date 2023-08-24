@@ -13,6 +13,7 @@
 #include "Mode.h"
 #include "Object2D.h"
 #include "Game.h"
+#include <vector>
 
 //前方宣言
 class CPlayer;
@@ -45,15 +46,18 @@ public:
 	static int GetEntryInput(int nCntPlayer) { return m_inputNumber[nCntPlayer]; }
 
 private:
+	void SetUpSelectUI(int inPlayerCnt);
+
 	void Input();			// 入力
 	void Texture();			// テクスチャを変える
 	void Entry();			// エントリー
 private:
 	static int m_nSkill[MAX_PLAYER];		// 現在選択されているスキルの番号
-	static int m_inputNumber[MAX_PLAYER];	// エントリーしたinput番号
+	static std::vector<int> m_inputNumber;	// エントリーしたinput番号
 	static bool m_isDecision[MAX_PLAYER];	// 決定中
 	bool m_isPlayerCheck[MAX_PLAYER];		// 準備完了かどうか
 	CObject2D* m_pObj2D[MAX_PLAYER];		// スキル選択の枠
+	CObject2D* m_pSelectArrow[MAX_PLAYER][2][2];		// スキル選択中の矢印
 	CPlayer* m_pPlayer[MAX_PLAYER];			// プレイヤー
 
 	CBg* m_pBg;				// 背景

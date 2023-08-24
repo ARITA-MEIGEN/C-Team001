@@ -39,8 +39,10 @@ public:
 	void SetModel(const char* Filename);
 
 	// Setter
-	void SetPos(const D3DXVECTOR3& pos) { m_pos = pos; }
-	void SetRot(const D3DXVECTOR3& rot) { m_rot = rot; }
+	void SetPos(const D3DXVECTOR3& inPos) { m_pos = inPos; }
+	void AddPos(const D3DXVECTOR3& inPos) { SetPos(m_pos + inPos); }
+	void SetRot(const D3DXVECTOR3& inRot) { m_rot = inRot; }
+	void AddRot(const D3DXVECTOR3& inRot) { SetRot(m_rot + inRot); }
 	void SetPosDest(const D3DXVECTOR3& pos) { m_posDest = pos; };
 	void SetRotDest(const D3DXVECTOR3& rot) { m_rotDest = rot; };
 	void SetPosDefault(const D3DXVECTOR3& pos) { m_DefaultPos = pos; };
@@ -50,7 +52,8 @@ public:
 	void SetSizeMag(const D3DXVECTOR3& size) { m_sizeMag = size; }
 	void SetChildren(CObjectX* pModel) { m_childrens.push_back(pModel); }
 	void SetCol(const D3DXCOLOR& col) { m_materialColor[0] = col; };
-	void SetColorMaterial(const int index ,const D3DXCOLOR& col) { m_materialColor[index] = col; };
+	void SetColorMaterial(const int index, const D3DXCOLOR& col) { m_materialColor[index] = col; };
+	void SetAllColorMaterial(const D3DXCOLOR& col) { for (size_t i = 0; i < m_materialColor.size(); i++) { m_materialColor[i] = col; } };
 
 	// Getter
 	const D3DXVECTOR3 GetPos() { return m_pos; };
@@ -66,6 +69,7 @@ public:
 	const D3DXCOLOR GetCol() { return m_materialColor[0]; }
 	CObjectX* GetParent() { return m_pParent; }
 	const D3DXMATRIX& GetMatrix() { return m_mtxWorld; }
+	const int GetColorMaterialSize() { return m_materialColor.size(); }
 
 private:
 	std::string m_modelTag;	// モデルデータのタグ

@@ -17,7 +17,7 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CTeleport::CTeleport(int priorty) : CBlock(priorty)
+CTeleport::CTeleport()
 {
 }
 
@@ -52,7 +52,7 @@ void  CTeleport::Uninit()
 //=============================================================================
 void  CTeleport::Update()
 {
-	CObjectX::Update();
+	CBlock::Update();
 
 	if (CGame::GetMap() != nullptr)
 	{
@@ -68,7 +68,9 @@ void  CTeleport::Update()
 					pPlayer->SetPos(this->GetPos());
 					pPlayer->SetTeleport(true);
 					pPlayer->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-				}				if (!pBlock->GetTeleport() && pBlock->GetOnPlayer() && pPlayer->GetTeleport())
+				}
+				
+				if (!pBlock->GetTeleport() && pBlock->GetOnPlayer() && pPlayer->GetTeleport())
 				{//普通のブロックにテレポートした後のプレイヤーが乗ったら
 					pPlayer->SetTeleport(false);
 				}
@@ -91,13 +93,12 @@ void  CTeleport::Draw()
 //=============================================================================
 CTeleport* CTeleport::Create(D3DXVECTOR3 pos, int nNumber)
 {
-	CTeleport*pTeleport = new CTeleport(5);
+	CTeleport*pTeleport = new CTeleport();
 
 	if (pTeleport != nullptr)
 	{
 		pTeleport->Init();
-		pTeleport->BindModel(CObjectXOriginalList::GetInstance()->Load("BLOCK", "data/MODEL/box.x"));
-		pTeleport->SetCol(D3DXCOLOR(1.0f,0.0f,1.0f,1.0f));
+		pTeleport->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("TELEPORT_BOX"));
 		pTeleport->SetPos(pos);
 		pTeleport->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		pTeleport->m_nTeleportNmber = nNumber;

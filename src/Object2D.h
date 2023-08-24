@@ -43,17 +43,20 @@ public:
 	static bool Hit(D3DXVECTOR3 pos, D3DXVECTOR3 TargetPos, D3DXVECTOR2 Siz, D3DXVECTOR2 TargetSiz);
 
 	// 位置
-	void SetPos(const D3DXVECTOR3& pos) { m_Pos = pos; }
+	void SetPos(const D3DXVECTOR3& pos);
 	void AddPos(const D3DXVECTOR3& add) { SetPos(m_Pos + add); }
 	void SetSkillPos(const float &gauge);					//スキルゲージの設定
 	D3DXVECTOR3 GetPos() { return m_Pos; }
 
 	// 大きさ
 	void SetSiz(D3DXVECTOR2 Siz);
+	void AddSiz(D3DXVECTOR2 Siz) { SetSiz(m_Siz + Siz); }
 	D3DXVECTOR2 GetSiz();
 
 	// 色
 	void SetCol(D3DXCOLOR col);
+	void AddCol(D3DXCOLOR col) { SetCol(m_Col + col); };
+	void SetColAlpha(float inAlpha) { SetCol(D3DXCOLOR(m_Col.r, m_Col.g, m_Col.b, inAlpha)); }
 	D3DXCOLOR GetCol();
 
 	// 角度
@@ -67,6 +70,8 @@ public:
 
 	// 生成
 	static CObject2D*Create(D3DXVECTOR3 pos, D3DXVECTOR2 siz, int Priority);
+private:
+	void VtxPos();
 private:
 	//メンバ変数
 	std::string m_textureKey;			// テクスチャにアクセスするキー

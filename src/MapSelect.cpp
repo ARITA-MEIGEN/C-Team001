@@ -18,6 +18,7 @@
 #include"Player.h"
 #include"CameraGame.h"
 #include"Light.h"
+#include"Object3D.h"
 
 //====================================
 // 定数
@@ -47,12 +48,15 @@ HRESULT CMapSelect::Init()
 	m_bMapChange = false;
 
 	//2DObjectの生成
-	m_pObj2D = CObject2D::Create(D3DXVECTOR3(640.0f, 600.0f, 0.0f), D3DXVECTOR2(400.0f, 100.0f), 4);
+	m_pObj2D = CObject2D::Create(D3DXVECTOR3(640.0f, 600.0f, 0.0f), D3DXVECTOR2(400.0f, 100.0f), 6);
 	m_pObj2D->SetTextureKey("RESULET_000");
 	//初期化
 	for (int nCnt = 0; nCnt < CMap::STAGE_MAX; nCnt++)
 	{
-		m_pObj2DPolygon[nCnt] = CObject2D::Create(D3DXVECTOR3(500.0f + (100.0f * nCnt), 550.0f, 0.0f), D3DXVECTOR2(25.0f, 25.0f), 5);
+		D3DXVECTOR3 pos(SCREEN_WIDTH * 0.5f + (100.0f * nCnt) - (100.0f * CMap::STAGE_MAX * 0.5f), 700.0f, 0.0f);
+		m_pObj2DPolygon[nCnt] = CObject2D::Create(pos, D3DXVECTOR2(25.0f, 25.0f), 6);
+		CObject2D* main = CObject2D::Create(pos, D3DXVECTOR2(20.0f, 20.0f), 6);
+		main->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	//カメラの設定
@@ -61,6 +65,11 @@ HRESULT CMapSelect::Init()
 	//ライトの設定
 	m_pLight = new CLight;
 	m_pLight->Init();
+
+	//背景
+	CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(4000.0f, 0.0f, 2000.0f), 2);
+	pori->SetUV(0.0f,20.0f,0.0f,20.0f);
+	pori->SetTextureKey("TEST_FLOOR");
 
 	//マップ生成
 	m_pMap = CMap::Create(m_nMapNumber);
@@ -118,7 +127,7 @@ void CMapSelect::Update()
 	{//今選択してるマップと同じ番号のポリゴンを白くする
 		if (nCnt == m_nMapNumber)
 		{
-			m_pObj2DPolygon[nCnt]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pObj2DPolygon[nCnt]->SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 		}
 		else
 		{
@@ -166,7 +175,7 @@ void CMapSelect::Input()
 			}
 		}
 
-		if ((pInput->Trigger(DIK_RETURN)) == true || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
+		if ((pInput->Trigger(DIK_RETURN)) || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
 		{//エンターでスキル選択に
 		 //モード設定
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_SKILL);

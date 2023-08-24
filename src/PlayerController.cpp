@@ -112,5 +112,31 @@ D3DXVECTOR3 CPlayerController::Move()
 bool CPlayerController::Skill()
 {
 	CInput* pInput = CInput::GetKey();	//インプットの取得
-	return 	(pInput->Trigger(DIK_K) || pInput->Trigger(DIK_L) || pInput->Trigger(JOYPAD_Y, m_nInputIdx) || pInput->Trigger(JOYPAD_X, m_nInputIdx));
+
+	bool k = false;
+	bool l = false;
+	bool y = false;
+	bool x = false;
+
+	if (m_nInputIdx != -1)
+	{
+		y = pInput->Trigger(JOYPAD_Y, m_nInputIdx);
+		x = pInput->Trigger(JOYPAD_X, m_nInputIdx);
+	}
+	else
+	{
+		k = pInput->Trigger(DIK_K);
+		l = pInput->Trigger(DIK_K);
+	}
+
+	return k || l || y || x;
+}
+
+//-----------------------------------------
+// 投擲
+//-----------------------------------------
+bool CPlayerController::Throw()
+{
+	CInput* pInput = CInput::GetKey();	//インプットの取得
+	return 	(pInput->Trigger(DIK_G) || pInput->Trigger(JOYPAD_A, m_nInputIdx) || pInput->Trigger(JOYPAD_B, m_nInputIdx));
 }

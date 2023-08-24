@@ -25,7 +25,7 @@
 //静的変数宣言
 //-----------------------------------------------------------------------------
 const float CCamera::CAMERA_NEAR = 1.0f;	// ニア
-const float CCamera::CAMERA_FAR = 2000.0f;	// ファー
+const float CCamera::CAMERA_FAR = 3000.0f;	// ファー
 const float CCamera::FIELD_OF_VIEW = D3DXToRadian(45.0f);	// 視野角
 
 //===========================
@@ -54,6 +54,15 @@ void CCamera::Init(void)
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot.x = atan2f((m_posV.y - m_posR.y), (m_posV.z - m_posR.z));
 
+	m_viewPort.MinZ = 0.0f;
+	m_viewPort.MaxZ = 1.0f;
+
+	//引数を代入
+	m_viewPort.X = 0;
+	m_viewPort.Y = 0;
+	m_viewPort.Width = SCREEN_WIDTH;
+	m_viewPort.Height = SCREEN_HEIGHT;
+
 	m_fDistance = sqrtf(DISTANCE_X + DISTANCE_Y + DISTANCE_Z);
 }
 
@@ -71,13 +80,11 @@ void  CCamera::Uninit(void)
 void  CCamera::Update(void)
 {
 	NormalizeRadian();	//角度の正規化
+
 #ifdef _DEBUG
-	CInput* pInput = CInput::GetKey();
-	if ((pInput->Trigger(DIK_0)) == true)		//ENTERキー
-	{
-		m_posV.x++;
-	}
-	CDebugProc::Print("カメラの視点の角度 x:%f y:%f z:%f",m_posV.x,m_posV.y,m_posV.z);
+
+	CDebugProc::Print("カメラの視点の角度 x:%f y:%f z:%f\n",m_posV.x,m_posV.y,m_posV.z);
+	CDebugProc::Print("カメラの注視点の角度 x:%f y:%f z:%f", m_posR.x, m_posR.y, m_posR.z);
 
 #endif // _DEBUG
 
@@ -92,6 +99,9 @@ void  CCamera::Set(void)
 	LPDIRECT3DDEVICE9 pDevice;
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 
+	// ビューポートの設定
+	pDevice->SetViewport(&m_viewPort);
+
 	//ビューマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxView);
 
@@ -105,9 +115,13 @@ void  CCamera::Set(void)
 	D3DXMatrixIdentity(&m_mtxProjection);
 
 	//プロジェクションマトリックスの作成
+	//float width = (float)SCREEN_WIDTH * 0.25f;
+	//float height = (float)SCREEN_HEIGHT * 0.25f;
+	//D3DXMatrixOrthoLH(&m_mtxProjection, width, height, CAMERA_NEAR, CAMERA_FAR);
+
 	D3DXMatrixPerspectiveFovLH(&m_mtxProjection,
 		FIELD_OF_VIEW,						// 視野角
-		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,	// アスペクト比
+		(float)m_viewPort.Width / (float)m_viewPort.Height,	// アスペクト比
 		CAMERA_NEAR,								// どこから
 		CAMERA_FAR);								// どこまで描画するかの設定
 
@@ -138,4 +152,19 @@ CCamera * CCamera::Create(void)
 	}
 
 	return pCamera;
+}
+
+D3DXVECTOR3 CCamera::CalculateRotFromPos(const D3DXVECTOR3 & inPos)
+{
+	D3DXVECTOR3 rot;
+
+	rot.y = atan2(inPos.x - m_posV.x, inPos.z - m_posV.z);
+	rot.x = atan2(inPos.y - m_posV.y, inPos.z - m_posV.z);
+	rot.z = 0.0f;
+
+	//D3DXVECTOR3 vec = m_posV - inPos;
+
+	//D3DXVec3Normalize(&vec,&vec);
+
+	return rot;
 }

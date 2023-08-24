@@ -7,13 +7,12 @@
 #ifndef _RESULT_H_
 #define _RESULT_H_
 
-//インクルード
+//include
 #include "main.h"
 #include "Application.h"
 #include "Mode.h"
 #include "Object2D.h"
 #include"ObjectX.h"
-
 
 #define	MAX_PLAYER	(4)		//プレイヤー人数
 
@@ -36,11 +35,11 @@ public:
 	//ゲッター
 	//static CObject2D*GetBg() { return m_pBg; };
 private:
-	CCamera*m_pCamera;					// カメラ
-	CLight*m_pLight;					// 光源
-	CObject2D*m_apRank[MAX_PLAYER];		//順位表示UI
-	CPlayer*m_pPlayer[MAX_PLAYER];		//プレイヤー
-	CObjectX*m_pCylinder[MAX_PLAYER];	//ランキング用の柱
+	CCamera* m_pCamera;					// カメラ
+	CLight* m_pLight;					// 光源
+	CObject2D* m_apRank[MAX_PLAYER];	// 順位表示UI
+	CPlayer* m_pPlayer[MAX_PLAYER];		// プレイヤー
+	CObjectX* m_pCylinder[MAX_PLAYER];	// ランキング用の柱
 
 	static const float RANK_WIDTH;		// ランキングのUIの設置間隔
 	static const float PLAYER_WIDTH;	// プレイヤーのUIの設置間隔

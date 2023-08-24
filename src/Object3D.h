@@ -14,6 +14,7 @@
 
 // 頂点フォーマット
 const DWORD FVF_VERTEX_3D = (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1);
+
 //*****************************************************************************
 //前方宣言
 //*****************************************************************************
@@ -52,6 +53,7 @@ public:
 	void SetBackCulling(const bool isCulling) { m_isBackCulling = isCulling; }
 	void SetMatrixWorld(const D3DXMATRIX& inMatrixWorld) { m_mtxWorld = inMatrixWorld; }
 	void OnBillboard() { m_isBillboard = true; }
+	void SetUV(float U1, float U2, float V1, float V2);
 
 	//ゲッター
 	const D3DXVECTOR3 GetPos() const { return m_Pos; }

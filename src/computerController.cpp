@@ -88,3 +88,11 @@ bool CComputerController::Skill()
 {
 	return false;
 }
+
+//-----------------------------------------
+// “Š±
+//-----------------------------------------
+bool CComputerController::Throw()
+{
+	return false;
+}

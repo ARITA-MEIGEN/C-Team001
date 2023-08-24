@@ -36,15 +36,6 @@ HRESULT CSpeed::Init(void)
 }
 
 //======================================================
-//終了処理
-//======================================================
-void CSpeed::Uninit(void)
-{
-	//終了
-	CObject3D::Uninit();
-}
-
-//======================================================
 //更新処理
 //======================================================
 void CSpeed::Update(void)
@@ -56,7 +47,7 @@ void CSpeed::Update(void)
 //======================================================
 //生成処理
 //======================================================
-CSpeed *CSpeed::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife)
+CSpeed *CSpeed::Create(const D3DXVECTOR3 pos)
 {
 	//動的確保
 	CSpeed *pSpeed = new CSpeed;
@@ -66,9 +57,6 @@ CSpeed *CSpeed::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 		//情報の設定
 		pSpeed->Init();
 		pSpeed->SetPos(pos);
-		pSpeed->SetSizePlan(size);
-		pSpeed->SetRot(rot);
-		pSpeed->SetLife(nLife);
 		pSpeed->SetEffect(SPEED);
 	}
 

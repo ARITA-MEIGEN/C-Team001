@@ -27,7 +27,7 @@ void CLight::Init(void)
 
 	//ライトの拡散光を設定
 	m_alight[0].Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	m_alight[1].Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	m_alight[1].Diffuse = D3DXCOLOR(0.25f, 0.25f, 0.25f, 1.0f);
 	m_alight[2].Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 	//ライト１
@@ -48,7 +48,7 @@ void CLight::Init(void)
 
 	//ライト3
 	//ライトの方向を設定
-	vecDir = D3DXVECTOR3(-0.4f, -0.5f, 0.2f);
+	vecDir = D3DXVECTOR3(0.0f, 0.5f, 0.5f);
 
 	//正規化する
 	D3DXVec3Normalize(&vecDir, &vecDir);
@@ -62,9 +62,9 @@ void CLight::Init(void)
 	//ライトを有効にする
 	pDevice->LightEnable(0, TRUE);
 	//ライトを有効にする
-	//pDevice->LightEnable(1, TRUE);
+	pDevice->LightEnable(1, TRUE);
 	//ライトを有効にする
-	//pDevice->LightEnable(2, TRUE);
+	pDevice->LightEnable(2, TRUE);
 }
 
 //===========================

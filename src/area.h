@@ -46,7 +46,10 @@ private:
 	std::function<void()> m_functionAtDied;		// €–S‚Ìˆ—
 	std::function<void()> m_functionAtSignsEnd;	// —\’›I—¹‚Ìˆ—
 
+	CObject3D* m_floar;
 	CObject3D* m_wall[4];
+	CObject3D* m_wall2[4];
+	float m_length;
 	D3DXVECTOR3 m_pos;
 
 	CAreaWarning* m_warning;
