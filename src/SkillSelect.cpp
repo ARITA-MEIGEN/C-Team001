@@ -169,7 +169,7 @@ void CSkillSelect::Input()
 			continue;
 		}
 
-		if (m_nSkill[nCnt] >= 1)
+		if (m_nSkill[nCnt] >= (MAX - 2))
 		{//左端ではないなら左へ
 			if (pInput->Trigger(KEY_LEFT, m_inputNumber[nCnt]) && !m_isPlayerCheck[nCnt])
 			{
@@ -177,7 +177,7 @@ void CSkillSelect::Input()
 			}
 		}
 
-		if (m_nSkill[nCnt] <= 2)
+		if (m_nSkill[nCnt] <= (MAX -1))
 		{//右端ではないなら右へ
 			if (pInput->Trigger(KEY_RIGHT, m_inputNumber[nCnt]) && !m_isPlayerCheck[nCnt])
 			{
@@ -196,8 +196,9 @@ void CSkillSelect::Input()
 	}
 
 #ifdef _DEBUG
-	CDebugProc::Print("\nキーボードはVで決定、Bで解除");
+	CDebugProc::Print("\nキーボードはEnterで決定、Bで解除");
 	CDebugProc::Print("\nPlayerCheck : %d %d %d %d", m_isPlayerCheck[0], m_isPlayerCheck[1], m_isPlayerCheck[2], m_isPlayerCheck[3]);
+	CDebugProc::Print("\nm_nSkill : %d %d %d %d", m_nSkill[0], m_nSkill[1], m_nSkill[2], m_nSkill[3]);
 #endif // _DEBUG
 }
 

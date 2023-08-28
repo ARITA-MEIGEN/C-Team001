@@ -276,7 +276,7 @@ void CMap::PopItem()
 		popItem = CPaint::Create(pos, size, rot, 300);
 		break;
 	case 1:
-		popItem = CBom::Create(pos, size, rot, 300);
+		popItem = CSpeed::Create(pos, size, rot, 300);
 		break;
 	default:
 		break;

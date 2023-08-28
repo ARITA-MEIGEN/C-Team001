@@ -156,6 +156,7 @@ private:	// ↓スキル処理一覧↓
 		SKILL_AREA,			// エリア生成
 		SKILL_BOM,			// ボム(遠距離攻撃)
 		SKILL_WAVE,			// 衝撃波
+		SKILL_RUSH,			// 突進
 		SKILL_MAX
 	};
 
@@ -172,6 +173,7 @@ private:	// ↓スキル処理一覧↓
 	void Skill_Knockback();
 	void Skill_Bom();
 	void Skill_Wave();
+	void Skill_Rush();
 
 	SKILL_STATE		m_skill;			// このキャラクターが仕様するスキル
 	SKILL_STATE		m_skillStateNow;	// スキルステートの状態
