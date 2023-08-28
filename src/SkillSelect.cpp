@@ -166,6 +166,14 @@ void CSkillSelect::Update()
 
 	//選択処理
 	Texture();
+
+	//インプットの情報を取得
+	CInput* pInput = CInput::GetKey();
+
+	if (pInput->Trigger(DIK_BACKSPACE))
+	{
+		CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_MAP);
+	}
 }
 
 //====================================

@@ -231,6 +231,9 @@
     <ClCompile Include="src\start_ui.cpp">
       <Filter>ソース ファイル\09_UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\pouse_ui.cpp">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Command.h">
@@ -426,6 +429,9 @@
       <Filter>ソース ファイル\04_Item</Filter>
     </ClInclude>
     <ClInclude Include="src\start_ui.h">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pouse_ui.h">
       <Filter>ソース ファイル\09_UI</Filter>
     </ClInclude>
   </ItemGroup>

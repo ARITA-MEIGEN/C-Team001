@@ -922,22 +922,22 @@ void CPlayer::Item()
 			if (m_rot.y == D3DX_PI * 0.0f)
 			{//下
 				//2マス左に投げる
-				Idx.y + THROW_DISTANCE;
+				Idx.y += THROW_DISTANCE;
 			} 
 			else if (m_rot.y == D3DX_PI * 1.0f)
 			{//上
 				//2マス左に投げる
-				Idx.y - THROW_DISTANCE;
+				Idx.y -= THROW_DISTANCE;
 			}
 			else if (m_rot.y == D3DX_PI * 0.5f)
 			{//左
 				//2マス左に投げる
-				Idx.x - THROW_DISTANCE;
+				Idx.x -= THROW_DISTANCE;
 			}
 			else if (m_rot.y == D3DX_PI * -0.5f)
 			{//右
 				//2マス右に投げる
-				Idx.x + THROW_DISTANCE;
+				Idx.x += THROW_DISTANCE;
 			}
 
 			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);

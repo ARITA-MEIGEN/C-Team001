@@ -7,8 +7,12 @@
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
 
+// include
+#include "ObjectList.h"
+
 #include <functional>
 
+// É}ÉNÉçíËã`
 #define UPDATE_FUNC_CAST(func) (static_cast<void(CObject::*)()>(&(func)))
 
 class CObject
