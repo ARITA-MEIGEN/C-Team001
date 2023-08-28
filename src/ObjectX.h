@@ -39,8 +39,10 @@ public:
 	void SetModel(const char* Filename);
 
 	// Setter
-	void SetPos(const D3DXVECTOR3& pos) { m_pos = pos; }
-	void SetRot(const D3DXVECTOR3& rot) { m_rot = rot; }
+	void SetPos(const D3DXVECTOR3& inPos) { m_pos = inPos; }
+	void AddPos(const D3DXVECTOR3& inPos) { SetPos(m_pos + inPos); }
+	void SetRot(const D3DXVECTOR3& inRot) { m_rot = inRot; }
+	void AddRot(const D3DXVECTOR3& inRot) { SetRot(m_rot + inRot); }
 	void SetPosDest(const D3DXVECTOR3& pos) { m_posDest = pos; };
 	void SetRotDest(const D3DXVECTOR3& rot) { m_rotDest = rot; };
 	void SetPosDefault(const D3DXVECTOR3& pos) { m_DefaultPos = pos; };

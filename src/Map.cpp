@@ -120,6 +120,13 @@ void CMap::Load()
 		{
 			float z = i * -BLOCK_WIDTH + map["MAP"].size() * 0.5f * BLOCK_WIDTH + 25.0f;
 			float x = j * BLOCK_WIDTH - map["MAP"][i].size() * 0.5f * BLOCK_WIDTH;
+			D3DXVECTOR3 randomPos(FloatRandom(1000.0f, -1000.0f), 0.0f, FloatRandom(1000.0f, -1000.0f));
+			D3DXVECTOR3 randomPosVec;
+
+			D3DXVec3Normalize(&randomPosVec, &randomPos);
+
+			//D3DXVECTOR3 randomRot(0.0f, 0.0f, 0.0f);
+			D3DXVECTOR3 randomRot(randomPosVec.x * -1.0f, 0.0f, randomPosVec.z * -1.0f);
 			D3DXVECTOR3 createPos(x, 0.0f, z);
 
 			CBlock* blockCreate = nullptr;
@@ -127,19 +134,25 @@ void CMap::Load()
 			switch ((int)map["MAP"][i][j])
 			{
 			case -1:
-				blockCreate = CBlock::Create(createPos);
+				blockCreate = CBlock::Create(randomPos);
+				blockCreate->SetRot(randomRot);
+				blockCreate->SetPlanPos(createPos);
 				blockCreate->SetAllColorMaterial(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 				blockCreate->SetStop(true);
 				break;
 			case 0:
-				blockCreate = CBlock::Create(createPos);
+				blockCreate = CBlock::Create(randomPos);
+				blockCreate->SetRot(randomRot);
+				blockCreate->SetPlanPos(createPos);
 				break;
 			case 1:
 			case 2:
 			case 3:
 			case 4:
 			{
-				blockCreate = CBlock::Create(createPos);
+				blockCreate = CBlock::Create(randomPos);
+				blockCreate->SetRot(randomRot);
+				blockCreate->SetPlanPos(createPos);
 				D3DXVECTOR2 idx;
 				idx.x = (float)j;
 				idx.y = (float)i;
@@ -147,7 +160,9 @@ void CMap::Load()
 			}
 				break;
 			case 5:
-				blockCreate = CTeleport::Create(createPos, 5);
+				blockCreate = CTeleport::Create(randomPos, 5);
+				blockCreate->SetRot(randomRot);
+				blockCreate->SetPlanPos(createPos);
 				blockCreate->SetTeleport(true);
 				break;
 			default:
@@ -207,6 +222,18 @@ void CMap::Ranking()
 }
 
 //=============================================================================
+// 終了時に画面外に散開させる処理
+//=============================================================================
+void CMap::OpenMap()
+{
+	int size = m_pBlock.size();
+	for (int i = 0; i < size; i++)
+	{
+		//m_pBlock[i]->SetPlanPos(D3DXVECTOR3(FloatRandom(-1000.0f,)));
+	}
+}
+
+//=============================================================================
 // プレイヤーが塗ったブロックの数を数える
 //=============================================================================
 int CMap::GetCountBlockType(int nType)
@@ -260,10 +287,7 @@ void CMap::PopItem()
 	/* ↓ランダム指定のブロックにアイテムが乗っていない↓ */
 
 	D3DXVECTOR3 pos = popPlanBlock->GetPos();
-	pos.y += 30.0f;
-
-	D3DXVECTOR3 size(35.0f, 0.0f, 35.0f);
-	D3DXVECTOR3 rot(-D3DX_PI * 0.5f, 0.0f, 0.0f);
+	pos.y += 20.0f;
 
 	//アイテムの生成
 	CItem* popItem = nullptr;
@@ -273,10 +297,10 @@ void CMap::PopItem()
 	switch (random)
 	{
 	case 0:
-		popItem = CPaint::Create(pos, size, rot, 300);
+		popItem = CPaint::Create(pos);
 		break;
 	case 1:
-		popItem = CSpeed::Create(pos, size, rot, 300);
+		popItem = CSpeed::Create(pos);
 		break;
 	default:
 		break;

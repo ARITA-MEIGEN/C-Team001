@@ -36,15 +36,6 @@ HRESULT CPaint::Init(void)
 }
 
 //======================================================
-//終了処理
-//======================================================
-void CPaint::Uninit(void)
-{
-	//終了
-	CObject3D::Uninit();
-}
-
-//======================================================
 //更新処理
 //======================================================
 void CPaint::Update(void)
@@ -56,7 +47,7 @@ void CPaint::Update(void)
 //======================================================
 //生成処理
 //======================================================
-CPaint *CPaint::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, const int nLife)
+CPaint *CPaint::Create(const D3DXVECTOR3 pos)
 {
 	//動的確保
 	CPaint *pPaint = new CPaint;
@@ -66,9 +57,6 @@ CPaint *CPaint::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 		//情報の設定
 		pPaint->Init();
 		pPaint->SetPos(pos);
-		pPaint->SetSizePlan(size);
-		pPaint->SetRot(rot);
-		pPaint->SetLife(nLife);
 		pPaint->SetEffect(PAINT);
 	}
 

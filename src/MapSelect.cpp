@@ -67,7 +67,8 @@ HRESULT CMapSelect::Init()
 	m_pLight->Init();
 
 	//背景
-	CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
+	CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(4000.0f, 0.0f, 2000.0f), 2);
+	pori->SetUV(0.0f,20.0f,0.0f,20.0f);
 	pori->SetTextureKey("TEST_FLOOR");
 
 	//マップ生成
@@ -174,7 +175,7 @@ void CMapSelect::Input()
 			}
 		}
 
-		if ((pInput->Trigger(DIK_RETURN)) == true || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
+		if ((pInput->Trigger(DIK_RETURN)) || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
 		{//エンターでスキル選択に
 		 //モード設定
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_SKILL);

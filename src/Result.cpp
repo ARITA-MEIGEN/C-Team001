@@ -14,7 +14,7 @@
 #include"sound.h"
 #include"Map.h"
 #include"Player.h"
-#include"CameraGame.h"
+#include"CameraResult.h"
 #include"Light.h"
 #include"Object3D.h"
 
@@ -59,9 +59,7 @@ HRESULT CResult::Init()
 
 
 	//ƒJƒƒ‰‚Ìİ’è
-	m_pCamera = CCameraGame::Create();
-	m_pCamera->SetPosV(D3DXVECTOR3(0.0f, 250.0f, 0.0f));
-	m_pCamera->SetPosR(D3DXVECTOR3(0.0f,-500.0f, 00.0f));
+	m_pCamera = CCameraResult::Create();
 
 	//ƒ‰ƒCƒg‚Ìİ’è
 	m_pLight = new CLight;

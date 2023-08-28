@@ -8,6 +8,7 @@
 #include "Texture.h"
 #include "Application.h"
 #include "renderer.h"
+#include "ObjectX.h"
 
 //======================================================
 // 定義
@@ -42,6 +43,14 @@ HRESULT CItem::Init(void)
 	m_bDisplay = true;
 	CObject3D::Init();
 
+	m_box = CObjectX::Create();
+	m_box->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("ITEM_BOX"));
+
+	SetSizePlan(D3DXVECTOR3(25.0f,0.0f, 25.0f));
+	SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f));
+	SetLife(450);
+	SetCol(D3DXCOLOR(0.0f,0.0f,0.0f,1.0f));
+
 	return S_OK;
 }
 
@@ -52,6 +61,8 @@ void CItem::Uninit(void)
 {
 	//終了
 	CObject3D::Uninit();
+
+	m_box->Uninit();
 }
 
 //======================================================
@@ -59,6 +70,10 @@ void CItem::Uninit(void)
 //======================================================
 void CItem::Update(void)
 {
+	m_box->SetPos(GetPos());
+	m_box->AddRot(D3DXVECTOR3(0.01f,0.01f,0.01f));
+	m_box->SetCol(D3DXCOLOR(1.0f,0.0f,0.0f,0.65f));
+
 	//表示時間の取得
 	int nLife = GetLife();
 
@@ -96,12 +111,6 @@ void CItem::Update(void)
 	SetPos(pos);
 #endif // 0
 
-#if 0	// 回転
-	D3DXVECTOR3 rot = GetRot();
-	rot.y += 0.01f;
-	SetRot(rot);
-#endif // 0
-
 	//更新
 	CObject3D::Update();
 }
@@ -113,9 +122,11 @@ void CItem::Draw(void)
 {
 	if (!m_bDisplay)
 	{
+		m_box->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.0f));
 		if (GetLife() % 10 <= 5)
 		{//点滅させる
 		 //描画
+			m_box->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.65f));
 			CObject3D::Draw();
 		}
 	}
@@ -124,24 +135,4 @@ void CItem::Draw(void)
 		//描画
 		CObject3D::Draw();
 	}
-}
-
-//======================================================
-//生成処理
-//======================================================
-CItem *CItem::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
-{
-	//動的確保
-	CItem *pItem = new CItem;
-
-	if (pItem != nullptr)
-	{
-		//情報の設定
-		pItem->Init();
-		pItem->SetPos(pos);
-		pItem->m_sizePlan = size;
-		pItem->SetRot(rot);
-	}
-
-	return pItem;
 }

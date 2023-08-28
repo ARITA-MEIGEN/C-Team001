@@ -169,9 +169,11 @@
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CameraGame.cpp" />
+    <ClCompile Include="src\CameraResult.cpp" />
     <ClCompile Include="src\come_future_block.cpp" />
     <ClCompile Include="src\computerController.cpp" />
     <ClCompile Include="src\Controller.cpp" />
+    <ClCompile Include="src\countdown_ui.cpp" />
     <ClCompile Include="src\DebugProc.cpp" />
     <ClCompile Include="src\effect.cpp" />
     <ClCompile Include="src\Fade.cpp" />
@@ -188,6 +190,7 @@
     <ClCompile Include="src\Item_Bom.cpp" />
     <ClCompile Include="src\Item_Paint.cpp" />
     <ClCompile Include="src\Item_Speed.cpp" />
+    <ClCompile Include="src\Item_take_effect.cpp" />
     <ClCompile Include="src\Letter.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -214,7 +217,9 @@
     <ClCompile Include="src\Shadow.cpp" />
     <ClCompile Include="src\SkillGauge.cpp" />
     <ClCompile Include="src\SkillSelect.cpp" />
+    <ClCompile Include="src\sky_bg.cpp" />
     <ClCompile Include="src\sound.cpp" />
+    <ClCompile Include="src\start_ui.cpp" />
     <ClCompile Include="src\StatusUI.cpp" />
     <ClCompile Include="src\teleport.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -231,10 +236,12 @@
     <ClInclude Include="src\Block.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CameraGame.h" />
+    <ClInclude Include="src\CameraResult.h" />
     <ClInclude Include="src\come_future_block.h" />
     <ClInclude Include="src\Command.h" />
     <ClInclude Include="src\computerController.h" />
     <ClInclude Include="src\Controller.h" />
+    <ClInclude Include="src\countdown_ui.h" />
     <ClInclude Include="src\DebugProc.h" />
     <ClInclude Include="src\Easing.h" />
     <ClInclude Include="src\effect.h" />
@@ -253,6 +260,7 @@
     <ClInclude Include="src\Item_Bom.h" />
     <ClInclude Include="src\Item_Paint.h" />
     <ClInclude Include="src\Item_Speed.h" />
+    <ClInclude Include="src\Item_take_effect.h" />
     <ClInclude Include="src\Letter.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\main.h" />
@@ -276,7 +284,9 @@
     <ClInclude Include="src\Shadow.h" />
     <ClInclude Include="src\SkillGauge.h" />
     <ClInclude Include="src\SkillSelect.h" />
+    <ClInclude Include="src\sky_bg.h" />
     <ClInclude Include="src\sound.h" />
+    <ClInclude Include="src\start_ui.h" />
     <ClInclude Include="src\StatusUI.h" />
     <ClInclude Include="src\teleport.h" />
     <ClInclude Include="src\Texture.h" />
@@ -288,7 +298,16 @@
   <ItemGroup>
     <Text Include="src\input\KeyConfigData.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\FILE\model.json" />
+    <None Include="data\FILE\texture.json" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

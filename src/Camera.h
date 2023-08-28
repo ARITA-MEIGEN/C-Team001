@@ -21,7 +21,6 @@ public:
 	virtual void Update();		// 更新
 	void Set();					// 設定
 	void NormalizeRadian();		// 角度の正規化
-	void ResultCamera();		//　リザルト用演出カメラ
 
 	static CCamera* Create();	// 生成
 
@@ -30,6 +29,7 @@ public:
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };		//向き
 	void SetVecU(D3DXVECTOR3 vec) { m_vecU = vec; };
 
+	D3DXVECTOR3 CalculateRotFromPos(const D3DXVECTOR3& inPos);	// 位置からカメラに向くための角度を算出
 protected:
 	D3DXVECTOR3 m_posV;				// 視点
 	D3DXVECTOR3 m_posVDest;			// 視点の目的地

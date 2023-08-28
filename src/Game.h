@@ -20,7 +20,6 @@
 class CPlayer;
 class CCamera;
 class CLight;
-class CFloor;
 class CTimer;
 class CUI;
 class CMap;
@@ -28,6 +27,7 @@ class CSpeed;
 class CGauge;
 class CStatusUI;
 class CObject2D;
+class CCountDownUI;
 
 class CGame : public CMode
 {
@@ -55,9 +55,9 @@ public:
 	void Uninit() override;
 	void Draw() override;
 
-public:
+public: // 更新処理
 	void Update() override;
-private: // 更新処理
+private:
 	enum UPDATE_STATE
 	{
 		UPDATE_FADENOW = 0,		// フェード中
@@ -76,24 +76,32 @@ private: // 更新処理
 	const UPDATE_FUNC* m_funcInit;
 	const UPDATE_FUNC* m_funcUpdate;
 
-	bool m_isStateDirty;
+	bool m_isStateDirty;	// 切り替え直後か
 
-	// 切り替えタイミングでの初期化
+	// フェード中
 	void Init_FadeNow();
-	void Init_CountDown();
-	void Init_GamePlay();
-	void Init_GameEnd();
-	void Init_GamePouse();
-
-	//　更新のステート関数
 	void Update_FadeNow();
+
+	// 開始前のカウントダウン
+	void Init_CountDown();
 	void Update_CountDown();
+
+	// プレイ時
+	void Init_GamePlay();
 	void Update_GamePlay();
+
+	// 終了時
+	void Init_GameEnd();
 	void Update_GameEnd();
+
+	// ポーズ
+	void Init_GamePouse();
 	void Update_GamePouse();
 
 	UPDATE_STATE	m_stateNow;		// スキルステートの状態
 
+private:
+	void SetupBgModel();	// 背景モデルの設置
 public:
 	void ResetGame();	// ラウンド移行時の処理
 
@@ -103,7 +111,6 @@ public:
 	// ゲッター
 	static GAME GetGame() {return m_gamestate;};
 	static CCamera * GetCamera() { return m_pCamera; };
-	static CFloor*GetFloor() { return m_pFloor; };
 	static CLight*GetLight() { return m_pLight; };
 	static bool GetDebugCamera() { return bDebugCamera; };
 	static CPlayer*GetPlayer(int number) { return m_pPlayer[number]; };
@@ -115,10 +122,9 @@ private:
 	static	GAME m_gamestate;			// ゲームの状態
 	static	CCamera*m_pCamera;			// カメラ
 	static	CLight*m_pLight;			// 光源
-	static	CFloor*m_pFloor;			// 床
 	static	bool bDebugCamera;			// デバッグ用カメラのON/OFF
 	static	CTimer*m_pTimer;			// タイマー
-	static	CTimer* m_pCountDown;		// カウントダウン
+	static	CCountDownUI* m_pCountDown;		// カウントダウン
 	static	CUI*m_pUI;					// UI
 	static	CMap*m_pMap;				// マップ
 	static CStatusUI* m_apStatusUI[MAX_PLAYER];	// ステータス表示

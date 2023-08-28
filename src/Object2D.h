@@ -50,10 +50,13 @@ public:
 
 	// ëÂÇ´Ç≥
 	void SetSiz(D3DXVECTOR2 Siz);
+	void AddSiz(D3DXVECTOR2 Siz) { SetSiz(m_Siz + Siz); }
 	D3DXVECTOR2 GetSiz();
 
 	// êF
 	void SetCol(D3DXCOLOR col);
+	void AddCol(D3DXCOLOR col) { SetCol(m_Col + col); };
+	void SetColAlpha(float inAlpha) { SetCol(D3DXCOLOR(m_Col.r, m_Col.g, m_Col.b, inAlpha)); }
 	D3DXCOLOR GetCol();
 
 	// äpìx

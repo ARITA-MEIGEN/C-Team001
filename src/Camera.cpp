@@ -25,7 +25,7 @@
 //静的変数宣言
 //-----------------------------------------------------------------------------
 const float CCamera::CAMERA_NEAR = 1.0f;	// ニア
-const float CCamera::CAMERA_FAR = 2000.0f;	// ファー
+const float CCamera::CAMERA_FAR = 3000.0f;	// ファー
 const float CCamera::FIELD_OF_VIEW = D3DXToRadian(45.0f);	// 視野角
 
 //===========================
@@ -80,38 +80,11 @@ void  CCamera::Uninit(void)
 void  CCamera::Update(void)
 {
 	NormalizeRadian();	//角度の正規化
+
 #ifdef _DEBUG
-	CInput* pInput = CInput::GetKey();
-
-	if (CApplication::MODE_RESULT == CApplication::getInstance()->GetModeState())
-	{//リザルト時のみカメラを下に向ける
-		ResultCamera();
-	}
-
-	if ((pInput->Trigger(DIK_0)) == true)		//ENTERキー
-	{
-		m_posV.x++;
-	}
-	if ((pInput->Press(DIK_1)) == true)		//ENTERキー
-	{
-		m_posV.y++;
-	}
-	if ((pInput->Press(DIK_2)) == true)		//ENTERキー
-	{
-		m_posV.y--;
-	}
-	if ((pInput->Press(DIK_3)) == true)		//ENTERキー
-	{
-		m_posR.y++;
-	}
-	if ((pInput->Press(DIK_4)) == true)		//ENTERキー
-	{
-		m_posR.y--;
-	}
 
 	CDebugProc::Print("カメラの視点の角度 x:%f y:%f z:%f\n",m_posV.x,m_posV.y,m_posV.z);
 	CDebugProc::Print("カメラの注視点の角度 x:%f y:%f z:%f", m_posR.x, m_posR.y, m_posR.z);
-
 
 #endif // _DEBUG
 
@@ -142,6 +115,10 @@ void  CCamera::Set(void)
 	D3DXMatrixIdentity(&m_mtxProjection);
 
 	//プロジェクションマトリックスの作成
+	//float width = (float)SCREEN_WIDTH * 0.25f;
+	//float height = (float)SCREEN_HEIGHT * 0.25f;
+	//D3DXMatrixOrthoLH(&m_mtxProjection, width, height, CAMERA_NEAR, CAMERA_FAR);
+
 	D3DXMatrixPerspectiveFovLH(&m_mtxProjection,
 		FIELD_OF_VIEW,						// 視野角
 		(float)m_viewPort.Width / (float)m_viewPort.Height,	// アスペクト比
@@ -164,22 +141,6 @@ void CCamera::NormalizeRadian(void)
 }
 
 //===========================
-//リザルト演出用
-//===========================
-void CCamera::ResultCamera()
-{
-	if (m_posR.y<250.0f)
-	{
-		m_posR.y+=5;
-	}
-
-	if (m_posV.z>-400.0f)
-	{
-		m_posV.z -= 5;
-	}
-}
-
-//===========================
 //生成
 //===========================
 CCamera * CCamera::Create(void)
@@ -191,4 +152,19 @@ CCamera * CCamera::Create(void)
 	}
 
 	return pCamera;
+}
+
+D3DXVECTOR3 CCamera::CalculateRotFromPos(const D3DXVECTOR3 & inPos)
+{
+	D3DXVECTOR3 rot;
+
+	rot.y = atan2(inPos.x - m_posV.x, inPos.z - m_posV.z);
+	rot.x = atan2(inPos.y - m_posV.y, inPos.z - m_posV.z);
+	rot.z = 0.0f;
+
+	//D3DXVECTOR3 vec = m_posV - inPos;
+
+	//D3DXVec3Normalize(&vec,&vec);
+
+	return rot;
 }
