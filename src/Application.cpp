@@ -56,6 +56,12 @@ HRESULT CApplication::Init(HWND hWnd, bool bWindow, HINSTANCE hInstance)
 		return E_FAIL;
 	}
 
+	// Textureの読込み
+	m_pTexture = CTexture::GetInstance();
+	m_pTexture->LoadAll();
+
+	CObjectXOriginalList::GetInstance()->LoadAll();
+
 	// モードの設定
 	m_pFade = CFade::Create();
 
@@ -65,12 +71,6 @@ HRESULT CApplication::Init(HWND hWnd, bool bWindow, HINSTANCE hInstance)
 
 	//スコアリセット
 	ResetScore();
-
-	// Textureの読込み
-	m_pTexture = CTexture::GetInstance();
-	m_pTexture->LoadAll();
-
-	CObjectXOriginalList::GetInstance()->LoadAll();
 
 	return S_OK;
 }
@@ -189,6 +189,7 @@ void CApplication::SetMode(MODE mode)
 	//新しい画面(モード)の初期化処理
 	if (m_pMode != nullptr)
 	{
+		CSound::GetInstance()->Stop();
 		m_pMode->Uninit();
 		delete m_pMode;
 		m_pMode = nullptr;
