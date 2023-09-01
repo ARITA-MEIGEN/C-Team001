@@ -2,13 +2,13 @@ Metasequoia Document
 Format Text Ver 1.0
 
 Scene {
-	pos 4.0710 24.5701 1455.1924
+	pos 10.0609 -259.4128 2328.3079
 	lookat 0.0000 0.0000 0.0000
-	head 308.5600
-	pich 0.0808
+	head 308.4501
+	pich 0.1508
 	bank -0.0100
 	ortho 0
-	zoom2 5.1541
+	zoom2 3.2213
 	amb 0.250 0.250 0.250
 	dirlights 1 {
 		light {
@@ -17651,7 +17651,7 @@ Object "Tuno" {
 	}
 }
 Object "UpperLegL4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -17713,7 +17713,7 @@ Object "UpperLegL4" {
 	}
 }
 Object "LegL4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -17963,7 +17963,7 @@ Object "LegL4" {
 	}
 }
 Object "Waist4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -18061,7 +18061,7 @@ Object "Waist4" {
 	}
 }
 Object "Body4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -18469,7 +18469,7 @@ Object "Body4" {
 	}
 }
 Object "UpperLegR4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -18531,7 +18531,7 @@ Object "UpperLegR4" {
 	}
 }
 Object "LegR4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -18781,7 +18781,7 @@ Object "LegR4" {
 	}
 }
 Object "ArmR4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -18925,7 +18925,7 @@ Object "ArmR4" {
 	}
 }
 Object "UpperArmR4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -19097,7 +19097,7 @@ Object "UpperArmR4" {
 	}
 }
 Object "HandR4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -19309,7 +19309,7 @@ Object "HandR4" {
 	}
 }
 Object "ArmL4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -19453,7 +19453,7 @@ Object "ArmL4" {
 	}
 }
 Object "UpperArmL4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -19625,7 +19625,7 @@ Object "UpperArmL4" {
 	}
 }
 Object "HandL4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -19837,7 +19837,7 @@ Object "HandL4" {
 	}
 }
 Object "Head4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
