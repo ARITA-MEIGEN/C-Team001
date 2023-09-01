@@ -166,6 +166,14 @@ void CSkillSelect::Update()
 
 	//選択処理
 	Texture();
+
+	//インプットの情報を取得
+	CInput* pInput = CInput::GetKey();
+
+	if (pInput->Trigger(DIK_BACKSPACE))
+	{
+		CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_MAP);
+	}
 }
 
 //====================================
@@ -296,8 +304,9 @@ void CSkillSelect::Input()
 	}
 
 #ifdef _DEBUG
-	CDebugProc::Print("\nキーボードはVで決定、Bで解除");
+	CDebugProc::Print("\nキーボードはEnterで決定、Bで解除");
 	CDebugProc::Print("\nPlayerCheck : %d %d %d %d", m_isPlayerCheck[0], m_isPlayerCheck[1], m_isPlayerCheck[2], m_isPlayerCheck[3]);
+	CDebugProc::Print("\nm_nSkill : %d %d %d %d", m_nSkill[0], m_nSkill[1], m_nSkill[2], m_nSkill[3]);
 #endif // _DEBUG
 }
 

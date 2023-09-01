@@ -30,6 +30,7 @@ public:
 		NONE,	// デフォルト
 		SPEED,	// 加速
 		PAINT,	// 塗り
+		RUSH,	// 突撃
 		MAX
 	};
 

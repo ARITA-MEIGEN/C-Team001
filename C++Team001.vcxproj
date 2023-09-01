@@ -190,6 +190,7 @@
     <ClCompile Include="src\Item_Bom.cpp" />
     <ClCompile Include="src\Item_Paint.cpp" />
     <ClCompile Include="src\Item_Speed.cpp" />
+    <ClCompile Include="src\Item_take_effect.cpp" />
     <ClCompile Include="src\Letter.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -207,6 +208,7 @@
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\PlayerController.cpp" />
+    <ClCompile Include="src\pouse_ui.cpp" />
     <ClCompile Include="src\Precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -218,6 +220,7 @@
     <ClCompile Include="src\SkillSelect.cpp" />
     <ClCompile Include="src\sky_bg.cpp" />
     <ClCompile Include="src\sound.cpp" />
+    <ClCompile Include="src\start_ui.cpp" />
     <ClCompile Include="src\StatusUI.cpp" />
     <ClCompile Include="src\teleport.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -258,6 +261,7 @@
     <ClInclude Include="src\Item_Bom.h" />
     <ClInclude Include="src\Item_Paint.h" />
     <ClInclude Include="src\Item_Speed.h" />
+    <ClInclude Include="src\Item_take_effect.h" />
     <ClInclude Include="src\Letter.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\main.h" />
@@ -275,6 +279,7 @@
     <ClInclude Include="src\Particle.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\PlayerController.h" />
+    <ClInclude Include="src\pouse_ui.h" />
     <ClInclude Include="src\Precompile.h" />
     <ClInclude Include="src\renderer.h" />
     <ClInclude Include="src\Result.h" />
@@ -283,6 +288,7 @@
     <ClInclude Include="src\SkillSelect.h" />
     <ClInclude Include="src\sky_bg.h" />
     <ClInclude Include="src\sound.h" />
+    <ClInclude Include="src\start_ui.h" />
     <ClInclude Include="src\StatusUI.h" />
     <ClInclude Include="src\teleport.h" />
     <ClInclude Include="src\Texture.h" />

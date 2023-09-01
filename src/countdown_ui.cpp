@@ -89,10 +89,10 @@ void CCountDownUI::ScaleMoveDecoration()
 {
 	D3DXVECTOR2 size =  GetSiz();
 
-	size.x += sinf(m_nCreateTimer % 60 * 0.1f) * 2.0f;
-	size.y -= sinf(m_nCreateTimer % 60 * 0.1f) * 2.0f;
+	size.x += cosf(m_nCreateTimer % 60 * 0.1f) * 2.0f;
+	size.y += cosf(m_nCreateTimer % 60 * 0.1f) * 2.0f;
 
-	AddPos(D3DXVECTOR3(0.0f,(sinf(m_nCreateTimer % 60 * 0.1f)) * -1.0f,0.0f));
+	AddPos(D3DXVECTOR3(0.0f,(cosf(m_nCreateTimer % 60 * 0.1f)) * -1.0f,0.0f));
 
 	SetSiz(size);
 }

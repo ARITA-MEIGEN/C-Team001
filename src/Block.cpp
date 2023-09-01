@@ -250,7 +250,7 @@ void CBlock::ModifyRot()
 		float angle = inRot;
 		if (angle < 0.0f)
 		{
-			angle += 0.075f;
+			angle += 0.065f;
 			if (angle > 0.0f)
 			{
 				angle = 0.0f;
@@ -258,7 +258,7 @@ void CBlock::ModifyRot()
 		}
 		if (angle > 0.0f)
 		{
-			angle -= 0.075f;
+			angle -= 0.065f;
 			if (angle < 0.0f)
 			{
 				angle = 0.0f;

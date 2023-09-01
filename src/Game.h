@@ -28,6 +28,7 @@ class CGauge;
 class CStatusUI;
 class CObject2D;
 class CCountDownUI;
+class CPouseUI;
 
 class CGame : public CMode
 {
@@ -132,12 +133,7 @@ private:
 	ROUND	m_Round;					// 現在のラウンド
 
 	/* ポーズ機能 */
-	CObject2D* m_pouse_bg;
-	CObject2D* m_pouse_exitButton;
-	CObject2D* m_pouse_buttonBg;
-	CObject2D* m_pouse_backButton;
-	CObject2D* m_pouse_replayButton;
-	int m_pouse_bottonIndex;
+	CPouseUI* m_pouseUI;
 };
 
 #endif

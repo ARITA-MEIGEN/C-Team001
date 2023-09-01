@@ -47,6 +47,7 @@ const CPlayer::SKILL_FUNC CPlayer::m_SkillFunc[] =
 	UPDATE_FUNC_CAST(Skill_Idel),
 	UPDATE_FUNC_CAST(Skill_Bom),
 	UPDATE_FUNC_CAST(Skill_Wave),
+	UPDATE_FUNC_CAST(Skill_Rush),
 };
 
 //-----------------------------------------------------------------------------
@@ -680,6 +681,12 @@ void CPlayer::Skill_Knockback()
 //-----------------------------------------------------------------------------
 void CPlayer::Skill_Bom()
 {
+	m_nSkillBuffTime--;
+	if (m_nSkillBuffTime <= 0)
+	{
+		SetSkill(SKILL_IDLE);
+		return;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -895,7 +902,7 @@ void CPlayer::TakeItem()
 			{
 				m_ItemState = ITEM_PAINT;
 			}
-			else if (pItem->GetEffect() == CItem::BOM && m_nStockItem <= MAX_STOCK)
+			else if (pItem->GetEffect() == CItem::BOM && m_nStockItem < MAX_STOCK)
 			{
 				m_StockItemState = STOCK_BOM;
 				m_nStockItem++;					//ストック数を増やす
@@ -944,22 +951,22 @@ void CPlayer::Item()
 			if (m_rot.y == D3DX_PI * 0.0f)
 			{//下
 				//2マス左に投げる
-				Idx.y + THROW_DISTANCE;
+				Idx.y += THROW_DISTANCE;
 			} 
 			else if (m_rot.y == D3DX_PI * 1.0f)
 			{//上
 				//2マス左に投げる
-				Idx.y - THROW_DISTANCE;
+				Idx.y -= THROW_DISTANCE;
 			}
 			else if (m_rot.y == D3DX_PI * 0.5f)
 			{//左
 				//2マス左に投げる
-				Idx.x - THROW_DISTANCE;
+				Idx.x -= THROW_DISTANCE;
 			}
 			else if (m_rot.y == D3DX_PI * -0.5f)
 			{//右
 				//2マス右に投げる
-				Idx.x + THROW_DISTANCE;
+				Idx.x += THROW_DISTANCE;
 			}
 
 			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
@@ -975,6 +982,19 @@ void CPlayer::Item()
 	{//ストック数が0の時
 		m_StockItemState = STOCK_NONE;		//何も持っていない状態にする
 	}
+}
+
+//-----------------------------------------------------------------------------
+// ブロックの情報を取得する処理
+//-----------------------------------------------------------------------------
+CBlock* CPlayer::OnBlock(float X, float Y)
+{
+	//乗っているブロックの番号を取得
+	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+	//自分の乗っている位置からXとY分加算した位置
+	D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + X, BlockIdx.y + Y);
+
+	return CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
 }
 
 //-----------------------------------------------------------------------------
@@ -1042,4 +1062,33 @@ void CPlayer::Stun(int inTime)
 	m_nStunTime = inTime;
 	//m_Motion = PM_STAN;
 	m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+}
+
+//-----------------------------------------------------------------------------
+// 突進
+//-----------------------------------------------------------------------------
+void CPlayer::Skill_Rush()
+{
+	// 移動量
+	D3DXVECTOR3 move = m_controller->Move();
+
+	if (m_controller->Skill())
+	{// キー入力すると突進する
+		if (m_rot.y == D3DX_PI*0.0f)
+		{//下
+			move.z = -1.0f;
+		}
+		else if (m_rot.y == D3DX_PI*1.0f)
+		{//上
+			move.z = 1.0f;
+		}
+		else if (m_rot.y == D3DX_PI*0.5f)
+		{//左
+			move.x = -1.0f;
+		}
+		else if (m_rot.y == D3DX_PI*-0.5f)
+		{//右
+			move.x = 1.0f;
+		}
+	}
 }

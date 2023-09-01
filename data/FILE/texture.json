@@ -3,7 +3,7 @@
     [ "TITLE_LOGO", "data\/TEXTURE\/Title\/Title_logo_AvoidBox.png" ],
     [ "TITLE_BG", "data\/TEXTURE\/Title\/Title_Bg_tentative .png" ],
     [ "GIZAGIZA", "data\/TEXTURE\/Icon\/Icon_gizagiza.png" ],
-    [ "NUMBER", "data\/TEXTURE\/Number\/Number_future.png" ],
+    [ "NUMBER", "data\/TEXTURE\/Number\/Number_White_Shadow.png" ],
     [ "STOP_LOGO", "data\/TEXTURE\/Icon\/Icon_stop.png" ],
     [ "TEXT_START", "data\/TEXTURE\/Text\/Text_GameStart.png" ],
     [ "TEXT_TITLE", "data\/TEXTURE\/Text\/Text_Title.png" ],
@@ -13,7 +13,7 @@
     [ "TOON", "data\/TEXTURE\/toon.png" ],
     [ "CIRCLE_SHADOW", "data\/TEXTURE\/Effect\/Effect_shadow.png" ],
     [ "SPEED_UP_ITEM_ICON", "data\/TEXTURE\/Pawer_icon.png" ],
-    [ "PAINT_UP_ITEM_ICON", "data\/TEXTURE\/Game\/Item\/SpeedUp\/Item_SpeedUp_shoe.png" ],
+    [ "PAINT_UP_ITEM_ICON", "data\/TEXTURE\/SpeedUP_icon.png" ],
     [ "CHECK", "data\/TEXTURE\/Icon\/Icon_check.png" ],
     [ "RESULET_000", "data\/TEXTURE\/Result\/Rank\/Result_rank_1st.png" ],
     [ "RESULET_001", "data\/TEXTURE\/Result\/Rank\/Result_rank_2nd.png" ],
@@ -32,6 +32,10 @@
     [ "SKILL_ICON_PAWER", "data\/TEXTURE\/Pawer_icon.png"],
     [ "SERECT_LEFT", "data\/TEXTURE\/yazirushi_hidari.png"],
     [ "SERECT_RIGHT", "data\/TEXTURE\/yazirushi_migi.png"],
+    [ "START", "data\/TEXTURE\/START.png"],
+    [ "START2", "data\/TEXTURE\/START_02.png"],
+    [ "START3", "data\/TEXTURE\/START_03.png"],
+    [ "START4", "data\/TEXTURE\/START_04.png"],
     [ "CIRCLE", "data\/TEXTURE\/SkillSelect\/SkillSelect_Circle.png"]
   ]
 }
