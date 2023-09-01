@@ -2,13 +2,13 @@ Metasequoia Document
 Format Text Ver 1.0
 
 Scene {
-	pos -77.6141 8.1823 909.4952
+	pos -34.5402 -382.1747 3725.2927
 	lookat 0.0000 0.0000 0.0000
-	head 352.0664
-	pich 0.1408
+	head 352.7758
+	pich 0.0308
 	bank -0.0100
 	ortho 0
-	zoom2 8.2465
+	zoom2 2.0133
 	amb 0.250 0.250 0.250
 	dirlights 1 {
 		light {
@@ -18,7 +18,7 @@ Scene {
 	}
 }
 Material 22 {
-	"ChangeColor" col(0.000 1.000 0.106 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"ChangeColor" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
 	"mat3" col(0.098 0.537 1.000 1.000) dif(0.800) amb(0.660) emi(0.120) spc(0.120) power(12.00)
 	"mat1" col(0.447 0.447 0.447 1.000) dif(0.800) amb(0.800) emi(0.000) spc(0.000) power(5.00)
 	"mat2" col(0.639 0.639 0.639 1.000) dif(0.800) amb(0.750) emi(0.000) spc(0.000) power(5.00)
@@ -17793,7 +17793,7 @@ Object "Bodyc4" {
 	}
 }
 Object "UpperLegL4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -17855,7 +17855,7 @@ Object "UpperLegL4" {
 	}
 }
 Object "LegL4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -18105,7 +18105,7 @@ Object "LegL4" {
 	}
 }
 Object "Waist4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -18203,7 +18203,7 @@ Object "Waist4" {
 	}
 }
 Object "Body4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -18615,7 +18615,7 @@ Object "Body4" {
 	}
 }
 Object "UpperArmL4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -18787,7 +18787,7 @@ Object "UpperArmL4" {
 	}
 }
 Object "ArmL4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -18931,7 +18931,7 @@ Object "ArmL4" {
 	}
 }
 Object "HandL4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -19723,7 +19723,7 @@ Object "Wa" {
 	}
 }
 Object "UpperLegR4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -19785,7 +19785,7 @@ Object "UpperLegR4" {
 	}
 }
 Object "LegR4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -20035,7 +20035,7 @@ Object "LegR4" {
 	}
 }
 Object "ArmR4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -20179,7 +20179,7 @@ Object "ArmR4" {
 	}
 }
 Object "UpperArmR4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -20351,7 +20351,7 @@ Object "UpperArmR4" {
 	}
 }
 Object "HandR4" {
-	visible 0
+	visible 15
 	locking 1
 	shading 1
 	facet 59.5
@@ -23181,7 +23181,7 @@ Object "Body6" {
 	}
 }
 Object "obj1" {
-	visible 0
+	visible 15
 	locking 0
 	shading 1
 	facet 59.5
@@ -23494,7 +23494,7 @@ Object "obj1" {
 	}
 }
 Object "obj2" {
-	visible 15
+	visible 0
 	locking 0
 	shading 1
 	facet 59.5

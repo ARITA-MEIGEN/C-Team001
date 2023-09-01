@@ -12,6 +12,7 @@ public:
 	enum Particle
 	{
 		PAR_FIREFLOWER = 0,	//火花型
+		PAR_CIRCLE,			//サークル型
 		MAX_PARTICLE
 	};
 	explicit CParticle(int nPriority = 0);
@@ -39,6 +40,9 @@ private:
 	int nMovewidthMin;		//最低値
 	int nStartRandPosX;	//初期位置の乱数
 	int nStartRandPosY;	//初期位置の乱数
+	int nStartRandPosZ;	//初期位置の乱数
+	int nRandomSpeed;	//スピード最大値
+	D3DXVECTOR3 nRandposmax;
 	Particle m_ParticleType;
 };
 

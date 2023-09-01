@@ -26,13 +26,20 @@
 class CEffect : public CObject3D
 {
 public:
+	enum EAlpha
+	{//描画方法
+		Alpha_Normal=0,
+		Alpha_Add,		//加算合成
+		Alpha_Sub		//減算合成
+	};
+
 	explicit CEffect(int nPriority = 2);
 	~CEffect()override;
 	HRESULT Init()override;
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
-	static CEffect *Create(D3DXVECTOR3 pos, D3DXVECTOR3 siz, float lot, D3DXVECTOR3 move, int nLife, D3DXCOLOR col, int texnumber, bool alpha);
+	static CEffect *Create(D3DXVECTOR3 pos, D3DXVECTOR3 siz, float lot, D3DXVECTOR3 move, int nLife, D3DXCOLOR col, int texnumber, EAlpha alpha);
 	static HRESULT Load();
 	static void Unload();
 private:
@@ -42,6 +49,6 @@ private:
 	D3DXVECTOR3 m_move;
 	D3DXMATRIX mtx;					//マトリックス
 	float fAlphagain;				//生成時のアルファ減少量
-	bool m_bAlpha;
+	EAlpha m_bAlpha;				//描画方法
 };
 #endif // !_OBJECT_H_
