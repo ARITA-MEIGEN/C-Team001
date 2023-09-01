@@ -346,11 +346,11 @@ void CGame::Update_GamePouse()
 	// ã‰ºˆÚ“®‚Å€–Ú‚Ì‘I‘ð
 	if (CInput::GetKey()->Trigger(DIK_UP))
 	{
-		m_pouseUI->NextBotton();
+		m_pouseUI->BackBotton();
 	}
 	if (CInput::GetKey()->Trigger(DIK_DOWN))
 	{
-		m_pouseUI->BackBotton();
+		m_pouseUI->NextBotton();
 	}
 
 	// €–Ú‚ÌŒˆ’è
@@ -362,10 +362,10 @@ void CGame::Update_GamePouse()
 			SetUpdate(UPDATE_GAME_PLAY);
 			break;
 		case 1:
-			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
 			break;
 		case 2:
-			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
 			break;
 		default:
 			break;
