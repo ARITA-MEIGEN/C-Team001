@@ -694,6 +694,28 @@ void CPlayer::Skill_Wave()
 		m_Motion = PM_WAVE;
 		m_motion->SetNumMotion(m_Motion);
 		Stun(SKILL_WAVE_TIME - 1);
+
+		//エフェクト生成
+		D3DXCOLOR col;
+		//色指定
+		switch (m_nPlayerNumber)
+		{
+		case 0:
+			col = (D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+			break;
+		case 1:
+			col = (D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+			break;
+		case 2:
+			col = (D3DXCOLOR(0.55f, 0.55f, 0.0f, 1.0f));
+			break;
+		case 3:
+			col = (D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+			break;
+		default:
+			break;
+		}
+		CParticle::Create(m_pos, D3DXVECTOR3(10.0f, 10.0f, 10.0f), col, CParticle::PAR_CIRCLE);
 	}
 
 	m_nSkillTimer--;
