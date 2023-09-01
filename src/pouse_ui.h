@@ -15,6 +15,9 @@ class CObject2D;
 
 class CPouseUI : public CObject
 {
+private:
+	static const D3DXVECTOR2 BUTTON_SIZE;	//ボタンのサイズ
+
 public:
 	explicit CPouseUI();
 	~CPouseUI();
