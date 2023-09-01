@@ -1,6 +1,8 @@
 {
   "MODEL": [
     [ "BOX", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile_col01.x" ],
+    [ "DEBUG_MODEL", "data\/MODEL\/Player\/ALLParts.x" ],
+    [ "DEBUG_MODEL2", "data\/MODEL\/Player\/Fullbody.x" ],
     [ "ITEM_BOX", "data\/MODEL\/ItemBox.x" ],
     [ "TELEPORT_BOX", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/TeleportTile_col01.x" ],
     [ "KYUU2", "data\/MODEL\/kyuu2.x" ],
