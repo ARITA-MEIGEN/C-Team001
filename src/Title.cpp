@@ -44,8 +44,8 @@ HRESULT CTitle::Init()
 	m_camera->SetPosV(D3DXVECTOR3(0.0f,0.0f,-250.0f));
 
 	//ƒ‰ƒCƒg‚ÌÝ’è
-	CLight* light = new CLight;
-	light->Init();
+	m_light = new CLight;
+	m_light->Init();
 
 	// L
 	{
@@ -128,6 +128,19 @@ HRESULT CTitle::Init()
 //====================================
 void CTitle::Uninit()
 {
+	if (m_camera != nullptr)
+	{
+		m_camera->Uninit();
+		delete m_camera;
+		m_camera = nullptr;
+	}
+
+	if (m_light != nullptr)
+	{
+		m_light->Uninit();
+		delete m_light;
+		m_light = nullptr;
+	}
 }
 
 //====================================

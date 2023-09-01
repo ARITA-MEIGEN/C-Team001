@@ -54,6 +54,7 @@ HRESULT CSkillSelect::Init()
 	CSkyBg::Create();
 
 	// debug
+#ifdef _DEBUG
 	{
 		CObjectX* object = CObjectX::Create();
 		object->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("DEBUG_MODEL"));
@@ -63,8 +64,9 @@ HRESULT CSkillSelect::Init()
 	{
 		CObjectX* object = CObjectX::Create();
 		object->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("DEBUG_MODEL2"));
-		object->SetPos(D3DXVECTOR3(100.0f, 0.0f, -20.0f));
+		object->SetPos(D3DXVECTOR3(100.0f, 0.0f, -40.0f));
 	}
+#endif // DEBUG
 
 	// ’n–Ê
 	{
