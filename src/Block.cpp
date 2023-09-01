@@ -199,7 +199,7 @@ void CBlock::SetPlanPos(D3DXVECTOR3 inPos)
 	D3DXVECTOR3 moveVec;
 	D3DXVec3Normalize(&moveVec, &moveLast);
 
-	D3DXVECTOR3 rot(moveVec.x * -1.0f, 0.0f, moveVec.z * -1.0f);
+	D3DXVECTOR3 rot(moveVec.z * 0.5f, 0.0f, moveVec.x * -0.5f);
 
 	SetRot(rot);
 
@@ -243,6 +243,11 @@ void CBlock::Move()
 //=============================================================================
 void CBlock::ModifyRot()
 {
+	if (D3DXVec3Length(&m_move) != 0.0f)
+	{
+		return;
+	}
+
 	D3DXVECTOR3 rot = GetRot();
 
 	auto Modefy = [](const float inRot)
