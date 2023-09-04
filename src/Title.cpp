@@ -44,15 +44,14 @@ HRESULT CTitle::Init()
 	m_camera->SetPosV(D3DXVECTOR3(0.0f,0.0f,-250.0f));
 
 	//ƒ‰ƒCƒg‚ÌÝ’è
-	CLight* light = new CLight;
-	light->Init();
+	m_light = new CLight;
+	m_light->Init();
 
 	// L
 	{
 		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
 		block->CancelPermitSink();
 		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 0), -5.0f, 0.0f));
-		block->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.5f));
 	}
 
 	// I
@@ -60,7 +59,6 @@ HRESULT CTitle::Init()
 		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
 		block->CancelPermitSink();
 		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 1), -5.0f, 0.0f));
-		block->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.5f));
 	}
 
 	// N
@@ -68,7 +66,6 @@ HRESULT CTitle::Init()
 		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
 		block->CancelPermitSink();
 		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 2), -5.0f, 0.0f));
-		block->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.5f));
 	}
 
 	// K
@@ -76,7 +73,6 @@ HRESULT CTitle::Init()
 		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
 		block->CancelPermitSink();
 		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 3), -5.0f, 0.0f));
-		block->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.5f));
 	}
 
 	// R
@@ -84,7 +80,6 @@ HRESULT CTitle::Init()
 		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
 		block->CancelPermitSink();
 		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 4), -5.0f, 0.0f));
-		block->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.5f));
 	}
 
 	// O
@@ -92,7 +87,6 @@ HRESULT CTitle::Init()
 		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
 		block->CancelPermitSink();
 		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 5), -5.0f, 0.0f));
-		block->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.5f));
 	}
 
 	// I
@@ -100,7 +94,6 @@ HRESULT CTitle::Init()
 		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
 		block->CancelPermitSink();
 		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 6), -5.0f, 0.0f));
-		block->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.5f));
 	}
 
 	// D
@@ -108,7 +101,6 @@ HRESULT CTitle::Init()
 		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
 		block->CancelPermitSink();
 		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 7), -5.0f, 0.0f));
-		block->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.5f));
 	}
 
 	//”wŒi‚Ì¶¬
@@ -128,6 +120,19 @@ HRESULT CTitle::Init()
 //====================================
 void CTitle::Uninit()
 {
+	if (m_camera != nullptr)
+	{
+		m_camera->Uninit();
+		delete m_camera;
+		m_camera = nullptr;
+	}
+
+	if (m_light != nullptr)
+	{
+		m_light->Uninit();
+		delete m_light;
+		m_light = nullptr;
+	}
 }
 
 //====================================

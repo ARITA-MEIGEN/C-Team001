@@ -29,7 +29,7 @@ HRESULT CPouseUI::Init()
 	AttachActivityAtPouse();
 
 	{
-		m_bg = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT), 6);
+		m_bg = CObject2D::Create(D3DXVECTOR3((float)SCREEN_WIDTH * 0.5f, (float)SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT), 6);
 		m_bg->SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.75f));
 		m_bg->AttachActivityAtPouse();
 	}
@@ -37,21 +37,21 @@ HRESULT CPouseUI::Init()
 	D3DXVECTOR3 buttonShiftPos(300.0f, 100.0f, 0.0f);
 
 	{
-		m_buttonBg = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f) + buttonShiftPos, D3DXVECTOR2(550.0f, 500.0f), 6);
+		m_buttonBg = CObject2D::Create(D3DXVECTOR3((float)SCREEN_WIDTH * 0.5f, (float)SCREEN_HEIGHT * 0.5f, 0.0f) + buttonShiftPos, D3DXVECTOR2(550.0f, 500.0f), 6);
 		m_buttonBg->AttachActivityAtPouse();
 	}
 	{
-		m_backButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.25f, 0.0f) + buttonShiftPos, BUTTON_SIZE, 6);
+		m_backButton = CObject2D::Create(D3DXVECTOR3((float)SCREEN_WIDTH * 0.5f, (float)SCREEN_HEIGHT * 0.25f, 0.0f) + buttonShiftPos, BUTTON_SIZE, 6);
 		m_backButton->SetTextureKey("TEXT_BACK");
 		m_backButton->AttachActivityAtPouse();
 	}
 	{
-		m_exitButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f) + buttonShiftPos, BUTTON_SIZE, 6);
+		m_exitButton = CObject2D::Create(D3DXVECTOR3((float)SCREEN_WIDTH * 0.5f, (float)SCREEN_HEIGHT * 0.5f, 0.0f) + buttonShiftPos, BUTTON_SIZE, 6);
 		m_exitButton->SetTextureKey("TEXT_TITLE");
 		m_exitButton->AttachActivityAtPouse();
 	}
 	{
-		m_replayButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.75f, 0.0f) + buttonShiftPos, BUTTON_SIZE, 6);
+		m_replayButton = CObject2D::Create(D3DXVECTOR3((float)SCREEN_WIDTH * 0.5f, (float)SCREEN_HEIGHT * 0.75f, 0.0f) + buttonShiftPos, BUTTON_SIZE, 6);
 		m_replayButton->SetTextureKey("TEXT_RETRY");
 		m_replayButton->AttachActivityAtPouse();
 	}

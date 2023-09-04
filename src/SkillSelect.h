@@ -13,6 +13,7 @@
 #include "Mode.h"
 #include "Object2D.h"
 #include "Game.h"
+#include "Player.h"
 #include <vector>
 
 //前方宣言
@@ -24,15 +25,6 @@ class CBg;
 class CSkillSelect : public CMode
 {
 public:
-
-	enum SKILL_STATE
-	{
-		NONE,	// デフォルト
-		SPEED,	// 加速
-		PAINT,	// 塗り
-		RUSH,	// 突撃
-		MAX
-	};
 
 	CSkillSelect();
 	~CSkillSelect();
@@ -64,7 +56,7 @@ private:
 	CBg* m_pBg;				// 背景
 	CCamera* m_pCamera;		// カメラ
 	CLight* m_pLight;		// 光源
-	SKILL_STATE m_state;	// 状態
+	CPlayer::SKILL_STATE m_state;	// 状態
 };
 
 #endif
