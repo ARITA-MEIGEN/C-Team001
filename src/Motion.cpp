@@ -191,6 +191,16 @@ void CMotion::PlayMotion()
 
 	for (int nCntParts = 0; nCntParts < (int)m_parts.size(); nCntParts++)
 	{
+		if (m_parts.size() <= nCntParts)
+		{
+			return;
+		}
+
+		if (nowKeySet.pKey.size() <= nCntParts)
+		{
+			return;
+		}
+
 		// •Ï”éŒ¾
 		D3DXVECTOR3 pos = m_parts[nCntParts]->GetPos();			// ˆÊ’u
 		D3DXVECTOR3 rot = m_parts[nCntParts]->GetRot();			// Œü‚«
@@ -275,6 +285,11 @@ void CMotion::MotionBlend()
 
 	for (int nCntParts = 0; nCntParts < (int)m_parts.size(); nCntParts++)
 	{
+		if (motion.pKeySet[motion.nCntKeySet].pKey.size() <= nCntParts)
+		{
+			return;
+		}
+
 		// •Ï”éŒ¾
 		D3DXVECTOR3 pos = m_parts[nCntParts]->GetPos();			// ˆÊ’u
 		D3DXVECTOR3 rot = m_parts[nCntParts]->GetRot();			// Œü‚«
