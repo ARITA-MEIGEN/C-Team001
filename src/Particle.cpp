@@ -105,8 +105,6 @@ void CParticle::Update(void)
 				m_col,										//頂点カラーの設定	
 				1,											//テクスチャ番号
 				(CEffect::EAlpha)1);						//描画方法
-
-							
 		}
 		break;
 
