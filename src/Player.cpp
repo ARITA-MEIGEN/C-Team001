@@ -37,6 +37,7 @@ const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
 const float CPlayer::SKILL_WAVE_TIME = 30.0f;	// スキルの発生時間
 const float CPlayer::THROW_DISTANCE = 4.0f;		// 投擲距離
+const float CPlayer::RUSH_SPEED = 2.0f;			// 突進速度
 
 const CPlayer::SKILL_FUNC CPlayer::m_SkillFunc[] =
 {
@@ -122,6 +123,7 @@ HRESULT CPlayer::Init()
 	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
 	m_bKnockBack = false;
 	m_bTeleport = false;
+	m_bOperate = true;
 
 	m_funcSkill = m_SkillFunc;
 	SetSkill(SKILL_IDLE);
@@ -194,7 +196,7 @@ void CPlayer::Update(void)
 	// モーション
 	m_motion->Update();
 
-	if (m_nStunTime <= 0)
+	if (m_nStunTime <= 0 && m_bOperate)
 	{
 		m_nStunTime = 0;
 		m_bKnockBack = false;
@@ -480,16 +482,16 @@ void CPlayer::Skill()
 //-----------------------------------------------------------------------------
 void CPlayer::Skill_Idel()
 {
-	if (m_nSkillBuffTime > 0)
-	{
-		return;
-	}
-
 	CInput* pInput = CInput::GetKey();
 
 	if (pInput->Trigger(DIK_H))
 	{
 		SetSkill(SKILL_WAVE);
+	}
+
+	if (m_nSkillBuffTime > 0)
+	{
+		return;
 	}
 
 	/* ↓スキル未使用時↓ */
@@ -929,22 +931,22 @@ void CPlayer::Item()
 			if (m_rot.y == D3DX_PI * 0.0f)
 			{//下
 				//2マス左に投げる
-				Idx.y + THROW_DISTANCE;
+				Idx.y += THROW_DISTANCE;
 			} 
 			else if (m_rot.y == D3DX_PI * 1.0f)
 			{//上
 				//2マス左に投げる
-				Idx.y - THROW_DISTANCE;
+				Idx.y -= THROW_DISTANCE;
 			}
 			else if (m_rot.y == D3DX_PI * 0.5f)
 			{//左
 				//2マス左に投げる
-				Idx.x - THROW_DISTANCE;
+				Idx.x -= THROW_DISTANCE;
 			}
 			else if (m_rot.y == D3DX_PI * -0.5f)
 			{//右
 				//2マス右に投げる
-				Idx.x + THROW_DISTANCE;
+				Idx.x += THROW_DISTANCE;
 			}
 
 			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
@@ -1047,26 +1049,82 @@ void CPlayer::Stun(int inTime)
 //-----------------------------------------------------------------------------
 void CPlayer::Skill_Rush()
 {
+	// 移動キーを入力出来なくする
+	m_bOperate = false;
+
+	// スキルゲージの減少量を算出
+	//m_fSubGauge = 1;
+
 	// 移動量
 	D3DXVECTOR3 move = m_controller->Move();
 
-	if (m_controller->Skill())
-	{// キー入力すると突進する
-		if (m_rot.y == D3DX_PI*0.0f)
-		{//下
-			move.z = -1.0f;
+	if (m_rot.y == D3DX_PI*0.0f)
+	{//下
+		move.z = -RUSH_SPEED;
+	}
+	else if (m_rot.y == D3DX_PI*1.0f)
+	{//上
+		move.z = RUSH_SPEED;
+	}
+	else if (m_rot.y == D3DX_PI*0.5f)
+	{//左
+		move.x = -RUSH_SPEED;
+	}
+	else if (m_rot.y == D3DX_PI*-0.5f)
+	{//右
+		move.x = RUSH_SPEED;
+	}
+
+	for (int nCnt = 0; nCnt < 3; nCnt++)
+	{
+		//乗っているブロックの番号を取得
+		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+		D3DXVECTOR2 Idx;
+
+		if (m_move.x != 0.0f)
+		{
+			//範囲内のブロックを塗る
+			BlockIdx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y - 1.0f);			//上に設定する
+			Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y + nCnt);
 		}
-		else if (m_rot.y == D3DX_PI*1.0f)
-		{//上
-			move.z = 1.0f;
+		else if (m_move.z != 0.0f)
+		{
+			//範囲内のブロックを塗る
+			BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y);			//左に設定する
+			Idx = D3DXVECTOR2(BlockIdx.x + nCnt, BlockIdx.y);
 		}
-		else if (m_rot.y == D3DX_PI*0.5f)
-		{//左
-			move.x = -1.0f;
+		CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+
+		if (Block != nullptr)
+		{
+			Block->SetPlayerNumber(m_nPlayerNumber);
 		}
-		else if (m_rot.y == D3DX_PI*-0.5f)
-		{//右
-			move.x = 1.0f;
-		}
+	}
+
+	// 乗っているブロックから進行方向のブロックを取得する
+	D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+	D3DXVECTOR2 moveNowVec;
+
+	moveNowVec.x = m_movePlanVec.x;
+	moveNowVec.y = -m_movePlanVec.z;
+
+	D3DXVec2Normalize(&moveNowVec, &moveNowVec);
+
+	BlockIdx += moveNowVec;
+
+	CBlock* moveBlock = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);	// 進行方向にあるブロック
+
+	// 移動先予定のブロックが存在しない場合警告を出す
+	assert(moveBlock != nullptr);
+
+	if (moveBlock->IsStop())
+	{
+		m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 停止
+
+		// 操作可能にして突進をやめる
+		m_bOperate = true;
+		SetSkill(SKILL_IDLE);
+
+		return;
 	}
 }
