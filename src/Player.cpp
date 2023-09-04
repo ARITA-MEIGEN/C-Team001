@@ -30,7 +30,7 @@
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const std::string CPlayer::MOTION_PATH = "data/TXT/Player001.txt";	// モーションデータパス
+const std::string CPlayer::MOTION_PATH = "data/TXT/Player001_x2.txt";	// モーションデータパス
 const int	CPlayer::MAX_STOCK = 3; 			// 持てるアイテムの最大数
 const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
