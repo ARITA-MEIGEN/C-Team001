@@ -28,7 +28,7 @@ HRESULT CParticle::Init()
 	nStartRandPosX = 20;	//初期位置の乱数
 	nStartRandPosY = 20;	//初期位置の乱数
 	nMovewidthMin = 0;
-	nRandomSpeed = 10.0f;	//ランダムの最大値
+	nRandomSpeed = 10;	//ランダムの最大値
 	nRandposmax = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//ランダム用の
 
 	return S_OK;

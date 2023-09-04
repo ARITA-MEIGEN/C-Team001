@@ -186,7 +186,7 @@ void CObjectX::BindModel(CObjectXOriginalList::SModelData model)
 
 	D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_modelData.pBuffMat->GetBufferPointer();
 
-	for (int i = 0; i < m_modelData.numMat; i++)
+	for (size_t i = 0; i < m_modelData.numMat; i++)
 	{
 		D3DXCOLOR col;
 		col.r = pMat[i].MatD3D.Emissive.r;
@@ -249,13 +249,6 @@ void CObjectX::Shadow()
 		pMat[i].MatD3D.Diffuse = col[0];
 		pMat[i].MatD3D.Emissive = col[1];
 	}
-}
-
-//-----------------------------------------------------------------------------
-// ƒ‚ƒfƒ‹‚ÌÝ’è
-//-----------------------------------------------------------------------------
-void CObjectX::SetModel(const char * Filename)
-{
 }
 
 //-----------------------------------------------------------------------------

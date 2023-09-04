@@ -26,7 +26,7 @@ public: /* 静的メンバ関数 */
 	static CAreaWarning* Create(const D3DXVECTOR3& inPos);	//生成
 
 public: /* コンストラクタ・デストラクタ */
-	explicit CAreaWarning(int nPriority = 4);
+	explicit CAreaWarning();
 	~CAreaWarning() override;
 
 public: /* オーバーライド関数 */
