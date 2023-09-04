@@ -10,12 +10,14 @@
 #include"Application.h"
 #include"input.h"
 #include"Fade.h"
-#include"Object2D.h"
+#include"Object3D.h"
 #include"renderer.h"
 #include"sound.h"
+#include "camera.h"
+#include "sky_bg.h"
 
-//Ã“Iƒƒ“ƒo•Ï”
-CObject2D* CTitle::m_pBg = nullptr;
+#include "Block.h"
+#include "Light.h"
 
 //====================================
 //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
@@ -37,17 +39,78 @@ CTitle::~CTitle()
 //====================================
 HRESULT CTitle::Init()
 {
-	LPDIRECT3DDEVICE9 pDevice;
-	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
+	m_camera = CCamera::Create();
+	m_camera->SetPosR(D3DXVECTOR3(0.0f,0.0f,0.0f));
+	m_camera->SetPosV(D3DXVECTOR3(0.0f,0.0f,-250.0f));
+
+	//ƒ‰ƒCƒg‚Ìİ’è
+	m_light = new CLight;
+	m_light->Init();
+
+	// L
+	{
+		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
+		block->CancelPermitSink();
+		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 0), -5.0f, 0.0f));
+	}
+
+	// I
+	{
+		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
+		block->CancelPermitSink();
+		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 1), -5.0f, 0.0f));
+	}
+
+	// N
+	{
+		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
+		block->CancelPermitSink();
+		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 2), -5.0f, 0.0f));
+	}
+
+	// K
+	{
+		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
+		block->CancelPermitSink();
+		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 3), -5.0f, 0.0f));
+	}
+
+	// R
+	{
+		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
+		block->CancelPermitSink();
+		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 4), -5.0f, 0.0f));
+	}
+
+	// O
+	{
+		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
+		block->CancelPermitSink();
+		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 5), -5.0f, 0.0f));
+	}
+
+	// I
+	{
+		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
+		block->CancelPermitSink();
+		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 6), -5.0f, 0.0f));
+	}
+
+	// D
+	{
+		CBlock* block = CBlock::Create(D3DXVECTOR3(150.0f, -5.0f, 0.0f));
+		block->CancelPermitSink();
+		block->SetPlanPos(D3DXVECTOR3(-(65.0f * 1.5f) + (30.0f * 7), -5.0f, 0.0f));
+	}
 
 	//”wŒi‚Ì¶¬
-	m_pBg = new CObject2D(CObject::OBJTYPE_UI);
-	m_pBg->Init();
-	m_pBg->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
-	m_pBg->SetSiz(D3DXVECTOR2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT));
-	m_pBg->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	{
+		CSkyBg::Create();
 
-	m_pBg->SetTextureKey("TITLE_BG");
+		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(4000.0f, 0.0f, 2000.0f), 2);
+		pori->SetUV(0.0f, 20.0f, 0.0f, 20.0f);
+		pori->SetTextureKey("TEST_FLOOR");
+	}
 
 	return S_OK;
 }
@@ -57,7 +120,19 @@ HRESULT CTitle::Init()
 //====================================
 void CTitle::Uninit()
 {
-	CSound::GetInstance()->Stop();
+	if (m_camera != nullptr)
+	{
+		m_camera->Uninit();
+		delete m_camera;
+		m_camera = nullptr;
+	}
+
+	if (m_light != nullptr)
+	{
+		m_light->Uninit();
+		delete m_light;
+		m_light = nullptr;
+	}
 }
 
 //====================================
@@ -82,13 +157,5 @@ void CTitle::Update()
 //====================================
 void CTitle::Draw()
 {
-
-}
-
-//====================================
-//”wŒi‚Ìæ“¾
-//====================================
-CObject2D* CTitle::GetBg()
-{
-	return m_pBg;
+	m_camera->Set();
 }

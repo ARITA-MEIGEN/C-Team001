@@ -35,7 +35,7 @@ const int	CPlayer::MAX_STOCK = 3; 			// 持てるアイテムの最大数
 const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
-const float CPlayer::SKILL_WAVE_TIME = 30.0f;	// スキルの発生時間
+const int CPlayer::SKILL_WAVE_TIME = 30;	// スキルの発生時間
 const float CPlayer::THROW_DISTANCE = 4.0f;		// 投擲距離
 const float CPlayer::RUSH_SPEED = 2.0f;			// 突進速度
 
@@ -703,6 +703,28 @@ void CPlayer::Skill_Wave()
 		m_Motion = PM_WAVE;
 		m_motion->SetNumMotion(m_Motion);
 		Stun(SKILL_WAVE_TIME - 1);
+
+		//エフェクト生成
+		D3DXCOLOR col;
+		//色指定
+		switch (m_nPlayerNumber)
+		{
+		case 0:
+			col = (D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+			break;
+		case 1:
+			col = (D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+			break;
+		case 2:
+			col = (D3DXCOLOR(0.55f, 0.55f, 0.0f, 1.0f));
+			break;
+		case 3:
+			col = (D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+			break;
+		default:
+			break;
+		}
+		CParticle::Create(m_pos, D3DXVECTOR3(10.0f, 10.0f, 10.0f), col, CParticle::PAR_CIRCLE);
 	}
 
 	m_nSkillTimer--;
@@ -726,9 +748,7 @@ void CPlayer::Skill_Wave()
 
 		for (int i = 0; i < maxI; i++)
 		{
-			int horizontal = i - maxI * 0.5f + 0.5f;
-
-			int aaaaaaaa = 0;
+			int horizontal = i - (int)((maxI * 0.5f) + 0.5f);
 
 			for (int nCntX = 0; nCntX < 5; nCntX++)
 			{
@@ -736,13 +756,6 @@ void CPlayer::Skill_Wave()
 				D3DXVECTOR2 BlockIdx(NowBlockIdx.x + range.x + horizontal * range.y, NowBlockIdx.y + range.y + horizontal * range.x);			//中央左に設定する
 				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX * range.x, BlockIdx.y + nCntX * range.y);
 				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-				if (abs(aaaaaaaa - Idx.x) != 1.0f)
-				{
-					int iiiiiiii = 0;
-				}
-
-				aaaaaaaa = Idx.x;
 
 				if (Block != nullptr)
 				{//ブロックを塗る

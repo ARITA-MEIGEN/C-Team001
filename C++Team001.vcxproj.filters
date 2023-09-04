@@ -90,9 +90,6 @@
     <ClCompile Include="src\Letter.cpp">
       <Filter>ソース ファイル\00_Main</Filter>
     </ClCompile>
-    <ClCompile Include="src\Precompile.cpp">
-      <Filter>ソース ファイル\00_Main</Filter>
-    </ClCompile>
     <ClCompile Include="src\sound.cpp">
       <Filter>ソース ファイル\00_Main</Filter>
     </ClCompile>
@@ -230,6 +227,12 @@
     </ClCompile>
     <ClCompile Include="src\start_ui.cpp">
       <Filter>ソース ファイル\09_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pouse_ui.cpp">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Precompile.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -426,6 +429,9 @@
       <Filter>ソース ファイル\04_Item</Filter>
     </ClInclude>
     <ClInclude Include="src\start_ui.h">
+      <Filter>ソース ファイル\09_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pouse_ui.h">
       <Filter>ソース ファイル\09_UI</Filter>
     </ClInclude>
   </ItemGroup>

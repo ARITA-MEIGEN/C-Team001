@@ -14,6 +14,8 @@
 
 //‘O•ûéŒ¾
 class CObject2D;
+class CCamera;
+class CLight;
 
 class CTitle : public CMode
 {
@@ -25,10 +27,11 @@ public:
 	void Uninit();
 	void Update();
 	void Draw();
-	static CObject2D* GetBg();
 
 private:
-	static CObject2D*m_pBg;
+	CObject2D*m_pBg;
+	CCamera* m_camera;
+	CLight* m_light;
 };
 
 #endif

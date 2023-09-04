@@ -9,6 +9,7 @@
 #include "texture.h"
 #include "game.h"
 #include "Player.h"
+#include "ObjectList.h"
 
 //======================================================
 // 定数
@@ -65,15 +66,17 @@ CStatusUI::~CStatusUI()
 //======================================================
 HRESULT CStatusUI::Init()
 {
+	{
+		m_pGaugeBg = CObject2D::Create(m_pos, D3DXVECTOR2(250.0f, 50.0f), CObjectList::EPriority::LEVEL_2D_UI);	//生成
+		m_pGaugeBg->SetTextureKey("SKILL_GAUGE");
+		m_pGaugeBg->SetCol(D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
+	}
+
 	{//ゲージ
 		//座標の算出(X:間隔に1つ分のゲージサイズを足している,Y:画面の下端に合わせている)
 	
 		//生成
-		m_pGauge = CGauge::Create(
-			m_pos,
-			D3DXVECTOR2(0.0f, 0.0f),
-			D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
-			m_nPlayerNum);
+		m_pGauge = CGauge::Create(m_pos, D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), m_nPlayerNum);
 
 		switch (m_nPlayerNum)
 		{//プレイヤー番号に応じたゲージの色を設定
@@ -100,13 +103,13 @@ HRESULT CStatusUI::Init()
 
 	{//キャラクター背景
 		D3DXVECTOR3 pos(0.0f, 0.0f, 0.0f);
-		m_pCharaBg = CObject2D::Create(pos, CHARACTER_BG_SIZE, 4);	//生成
+		m_pCharaBg = CObject2D::Create(pos, CHARACTER_BG_SIZE, CObjectList::EPriority::LEVEL_2D_UI);	//生成
 		m_pCharaBg->SetTextureKey("CHARACTER_BG");					//テクスチャの設定
 	}
 
 	{//スキルアイコン背景
 		D3DXVECTOR3 pos(0.0f, 0.0f, 0.0f);
-		m_pSkillIconBg = CObject2D::Create(pos, SKILL_ICON_BG_SIZE, 4);	//生成
+		m_pSkillIconBg = CObject2D::Create(pos, SKILL_ICON_BG_SIZE, CObjectList::EPriority::LEVEL_2D_UI);	//生成
 		m_pSkillIconBg->SetTextureKey("SKILL_ICON_BG");					//テクスチャの設定
 	}
 
@@ -147,6 +150,9 @@ void CStatusUI::SetPos(const D3DXVECTOR3 & inPos)
 {
 	m_pos = inPos;
 	m_pGauge->SetPos(m_pos + GAUGE_LOCAL_POS);					//スキルゲージ
+	D3DXVECTOR3 pos = GAUGE_LOCAL_POS;
+	pos.x += 250.0f * 0.5f;
+	m_pGaugeBg->SetPos(m_pos + pos);
 	m_pCharaBg->SetPos(m_pos + CHARACTER_BG_LOCAL_POS);			//キャラクター背景
 	m_pSkillIconBg->SetPos(m_pos + SKILL_ICON_BG_LOCAL_POS);	//スキルアイコン背景
 }

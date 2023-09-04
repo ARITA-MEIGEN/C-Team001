@@ -91,11 +91,22 @@ void  CEffect::Draw()
 	D3DMATRIX mtxView;
 
 	//アルファブレンディングを加算合成に設定
-	if (m_bAlpha == true)
+	switch (m_bAlpha)
 	{
+	case CEffect::Alpha_Normal:
+		break;
+
+	case CEffect::Alpha_Add://加算合成
 		pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 		pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+		break;
+
+	case CEffect::Alpha_Sub://減算合成
+		pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_SUBTRACT);
+		pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+		break;
 	}
 
 	//アルファテストを有効
@@ -160,7 +171,7 @@ void  CEffect::Draw()
 //=============================================================================
 // 生成
 //=============================================================================
-CEffect* CEffect::Create(D3DXVECTOR3 pos, D3DXVECTOR3 siz, float lot, D3DXVECTOR3 move, int nLife, D3DXCOLOR col,int texnumber,bool alpha)
+CEffect* CEffect::Create(D3DXVECTOR3 pos, D3DXVECTOR3 siz, float lot, D3DXVECTOR3 move, int nLife, D3DXCOLOR col,int /*texnumber*/, EAlpha alpha)
 {
 	CEffect*pEffect;
 	pEffect = new CEffect(5);

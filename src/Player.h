@@ -33,7 +33,7 @@ private:
 	static const float PLAYER_SPEED;		// 移動速度
 	static const float ADD_SPEED;			// アイテムで加算するスピード
 	static const float SKILL_BUFF_TIME;		// バフの効果時間(Lv1基準)
-	static const float SKILL_WAVE_TIME;		// スキルの発動時間
+	static const int SKILL_WAVE_TIME;		// スキルの発動時間
 	static const float THROW_DISTANCE;		// 投擲距離
 	static const float RUSH_SPEED;			// 突進速度
 

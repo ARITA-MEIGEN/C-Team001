@@ -29,6 +29,7 @@
 #include "Time.h"
 #include "countdown_ui.h"
 #include "start_ui.h"
+#include "pouse_ui.h"
 
 // ToDo : あとで消せ
 #include "Object3D.h"
@@ -332,42 +333,7 @@ void CGame::Init_GamePouse()
 	}
 	m_isStateDirty = true;
 
-	CObjectList::GetInstance()->Pause(true);
-
-	m_pouse_bg = nullptr;
-	m_pouse_backButton = nullptr;
-	m_pouse_exitButton = nullptr;
-	m_pouse_replayButton = nullptr;
-	m_pouse_bottonIndex = 0;
-
-	{
-		m_pouse_bg = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT), 6);
-		m_pouse_bg->SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.75f));
-		m_pouse_bg->AttachActivityAtPouse();
-	}
-
-	D3DXVECTOR3 buttonShiftPos(300.0f, 100.0f, 0.0f);
-
-	{
-		m_pouse_buttonBg = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f) + buttonShiftPos, D3DXVECTOR2(550.0f, 500.0f), 6);
-		m_pouse_buttonBg->AttachActivityAtPouse();
-	}
-	{
-		m_pouse_backButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.25f, 0.0f) + buttonShiftPos, D3DXVECTOR2(500.0f, 100.0f), 6);
-		m_pouse_backButton->SetTextureKey("TEXT_BACK");
-		m_pouse_backButton->AttachActivityAtPouse();
-	}
-	{
-		m_pouse_exitButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f) + buttonShiftPos, D3DXVECTOR2(500.0f, 100.0f), 6);
-		m_pouse_exitButton->SetTextureKey("TEXT_TITLE");
-		m_pouse_exitButton->AttachActivityAtPouse();
-	}
-	{
-		m_pouse_replayButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.75f, 0.0f) + buttonShiftPos, D3DXVECTOR2(500.0f, 100.0f), 6);
-		m_pouse_replayButton->SetTextureKey("TEXT_RETRY");
-		m_pouse_replayButton->AttachActivityAtPouse();
-	}
-
+	m_pouseUI = CPouseUI::Create();
 }
 
 //====================================
@@ -375,110 +341,40 @@ void CGame::Init_GamePouse()
 //====================================
 void CGame::Update_GamePouse()
 {
-	bool exit = false;
-
 	// 上下移動で項目の選択
 	if (CInput::GetKey()->Trigger(DIK_UP))
 	{
-		m_pouse_bottonIndex--;
-
-		if (m_pouse_bottonIndex < 0)
-		{
-			m_pouse_bottonIndex = 2;
-		}
+		m_pouseUI->BackBotton();
 	}
 	if (CInput::GetKey()->Trigger(DIK_DOWN))
 	{
-		m_pouse_bottonIndex++;
-
-		if (m_pouse_bottonIndex > 2)
-		{
-			m_pouse_bottonIndex = 0;
-		}
-	}
-
-	// 選択してない項目のα値を下げる。
-	if (m_pouse_bg != nullptr)
-	{
-		switch (m_pouse_bottonIndex)
-		{
-		case 0:
-			m_pouse_backButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			m_pouse_exitButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
-			m_pouse_replayButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
-			break;
-		case 1:
-			m_pouse_backButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
-			m_pouse_exitButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			m_pouse_replayButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
-			break;
-		case 2:
-			m_pouse_backButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
-			m_pouse_exitButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
-			m_pouse_replayButton->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			break;
-		default:
-			break;
-		}
+		m_pouseUI->NextBotton();
 	}
 
 	// 項目の決定
 	if (CInput::GetKey()->Trigger(DIK_RETURN))
 	{
-		exit = true;
-
-		switch (m_pouse_bottonIndex)
+		switch (m_pouseUI->Exit())
 		{
 		case 0:
 			SetUpdate(UPDATE_GAME_PLAY);
 			break;
 		case 1:
-			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
 			break;
 		case 2:
-			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
+			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
 			break;
 		default:
 			break;
 		}
+		m_isStateDirty = true;
 	}
 	if (CInput::GetKey()->Trigger(DIK_P))
 	{
-		exit = true;
+		m_pouseUI->Exit();
 		SetUpdate(UPDATE_GAME_PLAY);
-	}
-
-	// 遷移する時に生成したものの破棄を行なう
-	if (exit)
-	{
-		if (m_pouse_bg != nullptr)
-		{
-			m_pouse_bg->Release();
-			m_pouse_bg = nullptr;
-		}
-		if (m_pouse_backButton != nullptr)
-		{
-			m_pouse_backButton->Release();
-			m_pouse_backButton = nullptr;
-		}
-		if (m_pouse_exitButton != nullptr)
-		{
-			m_pouse_exitButton->Release();
-			m_pouse_exitButton = nullptr;
-		}
-		if (m_pouse_replayButton != nullptr)
-		{
-			m_pouse_replayButton->Release();
-			m_pouse_replayButton = nullptr;
-		}
-		if (m_pouse_buttonBg != nullptr)
-		{
-			m_pouse_buttonBg->Release();
-			m_pouse_buttonBg = nullptr;
-		}
-
 		m_isStateDirty = true;
-		CObjectList::GetInstance()->Pause(false);
 	}
 }
 

@@ -25,6 +25,7 @@ class CBlock : public CObjectX
 {
 private:
 	static const float SINK_LIMIT;	// ’¾‚Ş§ŒÀ
+	static const float UP_LIMIT;	// ’¾‚Ş§ŒÀ
 	static const float UP_POWER;	// ã‚ª‚é—Í
 	static const float DOWN_POWER;	// ‰º‚ª‚é—Í
 public:

@@ -238,9 +238,6 @@ void CObject3D::SetCol(const D3DXCOLOR& col)
 {
 	m_Col = col;
 
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();;
-
 	VERTEX_3D* pVtx;
 
 	//頂点バッファをロックし、頂点データへのポインタを取得
@@ -258,9 +255,6 @@ void CObject3D::SetCol(const D3DXCOLOR& col)
 
 void CObject3D::SetUV(float U1, float U2, float V1, float V2)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();;
-
 	VERTEX_3D* pVtx;
 
 	//頂点バッファをロックし、頂点データへのポインタを取得
