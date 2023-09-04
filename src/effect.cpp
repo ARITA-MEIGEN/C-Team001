@@ -171,7 +171,7 @@ void  CEffect::Draw()
 //=============================================================================
 // ê∂ê¨
 //=============================================================================
-CEffect* CEffect::Create(D3DXVECTOR3 pos, D3DXVECTOR3 siz, float lot, D3DXVECTOR3 move, int nLife, D3DXCOLOR col,int texnumber, EAlpha alpha)
+CEffect* CEffect::Create(D3DXVECTOR3 pos, D3DXVECTOR3 siz, float lot, D3DXVECTOR3 move, int nLife, D3DXCOLOR col,int /*texnumber*/, EAlpha alpha)
 {
 	CEffect*pEffect;
 	pEffect = new CEffect(5);
