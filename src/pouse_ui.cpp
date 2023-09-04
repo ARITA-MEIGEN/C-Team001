@@ -4,6 +4,11 @@
 #include "Application.h"
 #include "input.h"
 
+//***************************
+//定数の定義
+//***************************
+const D3DXVECTOR2 CPouseUI::BUTTON_SIZE = D3DXVECTOR2(500.0f, 150.0f);	//ボタンのサイズ
+
 CPouseUI::CPouseUI()
 {
 }
@@ -36,17 +41,17 @@ HRESULT CPouseUI::Init()
 		m_buttonBg->AttachActivityAtPouse();
 	}
 	{
-		m_backButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.25f, 0.0f) + buttonShiftPos, D3DXVECTOR2(500.0f, 100.0f), 6);
+		m_backButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.25f, 0.0f) + buttonShiftPos, BUTTON_SIZE, 6);
 		m_backButton->SetTextureKey("TEXT_BACK");
 		m_backButton->AttachActivityAtPouse();
 	}
 	{
-		m_exitButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f) + buttonShiftPos, D3DXVECTOR2(500.0f, 100.0f), 6);
+		m_exitButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f) + buttonShiftPos, BUTTON_SIZE, 6);
 		m_exitButton->SetTextureKey("TEXT_TITLE");
 		m_exitButton->AttachActivityAtPouse();
 	}
 	{
-		m_replayButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.75f, 0.0f) + buttonShiftPos, D3DXVECTOR2(500.0f, 100.0f), 6);
+		m_replayButton = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.75f, 0.0f) + buttonShiftPos, BUTTON_SIZE, 6);
 		m_replayButton->SetTextureKey("TEXT_RETRY");
 		m_replayButton->AttachActivityAtPouse();
 	}
