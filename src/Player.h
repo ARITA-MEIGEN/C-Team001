@@ -23,7 +23,7 @@ class CBlock;
 class CMotion;
 
 //マクロ定義
-#define MAX_GAUGE		(100)
+#define MAX_GAUGE		(10)
 
 class CPlayer :public CObject
 {
@@ -35,6 +35,7 @@ private:
 	static const float SKILL_BUFF_TIME;		// バフの効果時間(Lv1基準)
 	static const int SKILL_WAVE_TIME;		// スキルの発動時間
 	static const float THROW_DISTANCE;		// 投擲距離
+	static const float RUSH_SPEED;			// 突進速度
 
 public:
 	enum PLAYER_STATE
@@ -61,6 +62,19 @@ public:
 		STOCK_NONE,	// 無し
 		STOCK_BOM,	// ボムを持っている状態
 		STOCK_MAX
+	};
+
+	enum SKILL_STATE
+	{
+		SKILL_IDLE = 0,
+		SKILL_SPEED,		// 加速
+		SKILL_PAINT,		// 塗範囲拡大
+		SKILL_KNOCKBACK,	// ノックバック
+		SKILL_AREA,			// エリア生成
+		SKILL_BOM,			// ボム(遠距離攻撃)
+		SKILL_WAVE,			// 衝撃波
+		SKILL_RUSH,			// 突進
+		SKILL_MAX
 	};
 
 private:
@@ -136,19 +150,6 @@ private:	// ↓移動処理一覧↓
 private:	// ↓スキル処理一覧↓
 	void Skill();			// スキル処理
 
-	enum SKILL_STATE
-	{
-		SKILL_IDLE = 0,
-		SKILL_SPEED,		// 加速
-		SKILL_PAINT,		// 塗範囲拡大
-		SKILL_KNOCKBACK,	// ノックバック
-		SKILL_AREA,			// エリア生成
-		SKILL_BOM,			// ボム(遠距離攻撃)
-		SKILL_WAVE,			// 衝撃波
-		SKILL_RUSH,			// 突進
-		SKILL_MAX
-	};
-
 	using SKILL_FUNC = void(CObject::*)();
 	static const SKILL_FUNC m_SkillFunc[];
 	void SetSkill(SKILL_STATE inState) { m_skillStateNow = inState; }
@@ -205,6 +206,7 @@ private:	// メンバー変数
 	int				m_nStunTime;			// スタン(操作不可能)時間
 	bool			m_bKnockBack;			// ノックバックしているかどうか
 	bool			m_bTeleport;			// テレポートしたかどうか
+	bool			m_bOperate;				// 操作可能かどうか
 	PLAYER_STATE	m_State;				// プレイヤーの状態
 	STOCK_ITEM_STATE	m_StockItemState;	// ストック式アイテムの状態
 	CShadow*		m_pShadow;				// 影

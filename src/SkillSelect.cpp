@@ -269,7 +269,7 @@ void CSkillSelect::Input()
 				m_pSelectArrow[nCnt][0][1]->SetColAlpha(0.25f);
 			}
 
-			if (m_nSkill[nCnt] <= 2)
+			if (m_nSkill[nCnt] < CPlayer::SKILL_MAX - 2)
 			{//‰E’[‚Å‚Í‚È‚¢‚È‚ç‰E‚Ö
 				if (pInput->Trigger(KEY_RIGHT, m_inputNumber[nCnt]) && !m_isPlayerCheck[nCnt])
 				{
