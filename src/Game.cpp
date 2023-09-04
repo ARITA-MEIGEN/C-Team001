@@ -341,8 +341,6 @@ void CGame::Init_GamePouse()
 //====================================
 void CGame::Update_GamePouse()
 {
-	bool exit = false;
-
 	// ã‰ºˆÚ“®‚Å€–Ú‚Ì‘I‘ð
 	if (CInput::GetKey()->Trigger(DIK_UP))
 	{

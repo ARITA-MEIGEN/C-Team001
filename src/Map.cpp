@@ -348,7 +348,7 @@ void CMap::PopFutureArea()
 	//エリアの生成
 	CArea* area = CArea::Create(popBlockIndex, range,60,180);
 
-	area->CreateWall(GetBlock(popBlockIndex.x, popBlockIndex.y)->GetPos());
+	area->CreateWall(GetBlock((int)popBlockIndex.x, (int)popBlockIndex.y)->GetPos());
 
 	// 予兆終了後行なって欲しい処理
 	auto atFutrue = [this, range, popBlockIndex]()
@@ -423,6 +423,10 @@ void CMap::PopFutureArea()
 			{
 				CComeFutureBlock* futureBlock = CComeFutureBlock::Create(areaBlock[i]->GetPos());
 				futureBlock->SetCol(areaBlock[i]->GetCol());
+				if (areaBlock[i]->GetOnPlayer() != nullptr)
+				{
+					areaBlock[i]->GetOnPlayer()->Stun(60); //範囲内のプレイヤーをスタン
+				}
 			}
 		}
 	};
@@ -439,7 +443,7 @@ void CMap::PopFutureArea()
 //=============================================================================
 CBlock * CMap::GetBlock(const int x, const int y)
 {
-	int idx = (m_axisSizeX * y) + x;
+	size_t idx = (m_axisSizeX * y) + x;
 
 	if (idx < 0 || idx >= m_pBlock.size())
 	{

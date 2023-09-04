@@ -17,6 +17,7 @@
 // 定数
 //-----------------------------------------------------------------------------
 const float CBlock::SINK_LIMIT = -10.0f;	// 沈む下限値
+const float CBlock::UP_LIMIT = 100.0f;	// 沈む下限値
 const float CBlock::UP_POWER = 0.5f;		// 沈んだブロックが浮上する時間
 const float CBlock::DOWN_POWER = 1.25f;		// 沈んだブロックが浮上する時間
 
@@ -182,6 +183,11 @@ void CBlock::SetSink(float power)
 		return;
 	}
 
+	if (UP_LIMIT <= pos.y)
+	{
+		pos.y = UP_LIMIT;
+	}
+
 	SetPos(pos);
 }
 
@@ -199,7 +205,7 @@ void CBlock::SetPlanPos(D3DXVECTOR3 inPos)
 	D3DXVECTOR3 moveVec;
 	D3DXVec3Normalize(&moveVec, &moveLast);
 
-	D3DXVECTOR3 rot(moveVec.x * -1.0f, 0.0f, moveVec.z * -1.0f);
+	D3DXVECTOR3 rot(moveVec.z * 0.5f, 0.0f, moveVec.x * -0.5f);
 
 	SetRot(rot);
 
@@ -243,6 +249,11 @@ void CBlock::Move()
 //=============================================================================
 void CBlock::ModifyRot()
 {
+	if (D3DXVec3Length(&m_move) != 0.0f)
+	{
+		return;
+	}
+
 	D3DXVECTOR3 rot = GetRot();
 
 	auto Modefy = [](const float inRot)

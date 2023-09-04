@@ -15,6 +15,7 @@
 //‘O•ûéŒ¾
 class CObject2D;
 class CCamera;
+class CLight;
 
 class CTitle : public CMode
 {
@@ -30,6 +31,7 @@ public:
 private:
 	CObject2D*m_pBg;
 	CCamera* m_camera;
+	CLight* m_light;
 };
 
 #endif

@@ -357,7 +357,7 @@ void CSkillSelect::Entry()
 	{
 		if (std::find(m_inputNumber.begin(), m_inputNumber.end(), inputNumber[i]) == m_inputNumber.end())
 		{
-			for (int j = 0; j < m_inputNumber.size(); j++)
+			for (size_t j = 0; j < m_inputNumber.size(); j++)
 			{
 				if (m_inputNumber[j] == 99)
 				{

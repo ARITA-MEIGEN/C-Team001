@@ -13,7 +13,7 @@ CAreaWarning * CAreaWarning::Create(const D3DXVECTOR3& inPos)
 	return warning;
 }
 
-CAreaWarning::CAreaWarning(int nPriority)
+CAreaWarning::CAreaWarning()
 {
 }
 

@@ -28,7 +28,7 @@ HRESULT CParticle::Init()
 	nStartRandPosX = 20;	//初期位置の乱数
 	nStartRandPosY = 20;	//初期位置の乱数
 	nMovewidthMin = 0;
-	nRandomSpeed = 10.0f;	//ランダムの最大値
+	nRandomSpeed = 10;	//ランダムの最大値
 	nRandposmax = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//ランダム用の
 
 	return S_OK;
@@ -105,8 +105,6 @@ void CParticle::Update(void)
 				m_col,										//頂点カラーの設定	
 				1,											//テクスチャ番号
 				(CEffect::EAlpha)1);						//描画方法
-
-							
 		}
 		break;
 

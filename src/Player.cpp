@@ -35,7 +35,7 @@ const int	CPlayer::MAX_STOCK = 3; 			// 持てるアイテムの最大数
 const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
-const float CPlayer::SKILL_WAVE_TIME = 30.0f;	// スキルの発生時間
+const int CPlayer::SKILL_WAVE_TIME = 30;	// スキルの発生時間
 const float CPlayer::THROW_DISTANCE = 4.0f;		// 投擲距離
 
 const CPlayer::SKILL_FUNC CPlayer::m_SkillFunc[] =
@@ -746,9 +746,7 @@ void CPlayer::Skill_Wave()
 
 		for (int i = 0; i < maxI; i++)
 		{
-			int horizontal = i - maxI * 0.5f + 0.5f;
-
-			int aaaaaaaa = 0;
+			int horizontal = i - (int)((maxI * 0.5f) + 0.5f);
 
 			for (int nCntX = 0; nCntX < 5; nCntX++)
 			{
@@ -756,13 +754,6 @@ void CPlayer::Skill_Wave()
 				D3DXVECTOR2 BlockIdx(NowBlockIdx.x + range.x + horizontal * range.y, NowBlockIdx.y + range.y + horizontal * range.x);			//中央左に設定する
 				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX * range.x, BlockIdx.y + nCntX * range.y);
 				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-				if (abs(aaaaaaaa - Idx.x) != 1.0f)
-				{
-					int iiiiiiii = 0;
-				}
-
-				aaaaaaaa = Idx.x;
 
 				if (Block != nullptr)
 				{//ブロックを塗る
