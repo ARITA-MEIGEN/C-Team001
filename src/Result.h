@@ -31,6 +31,7 @@ public:
 	void Uninit();
 	void Update();
 	void Draw();
+	void ResultCamera();	//リザルト用カメラ演出
 
 	//ゲッター
 	//static CObject2D*GetBg() { return m_pBg; };

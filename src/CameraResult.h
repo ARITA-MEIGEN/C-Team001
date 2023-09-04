@@ -10,10 +10,20 @@
 class CCameraResult : public CCamera
 {
 private:
+	enum CAMSTATE
+	{
+		CAMERA_ROLL=0,	//回転
+		CAMERA_UP,		//上昇
+		CAMERA_PULL,	//引く
+		MAX_CAMERA
+	};
+
 	static const float SPEED;		// 移動速度
 	static const float FACTOR;		// 追従の係数
 	static const float ROTSPEED;	// 旋回速度
 	static const float ZPOS;		// Z座標
+	static const float ZPullCamera;	// 引いた時のカメラの座標
+	static const float YFlagCamera; // カメラが引くタイミング
 public:
 	CCameraResult();
 	~CCameraResult();
@@ -24,7 +34,9 @@ public:
 
 	static CCameraResult* Create();	// 生成
 
+
 private:
+	CAMSTATE CAMERASTATE;
 };
 
 #endif

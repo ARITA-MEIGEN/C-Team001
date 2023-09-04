@@ -16,6 +16,8 @@ const float CCameraResult::SPEED = 5.0f;		// 移動速度
 const float CCameraResult::FACTOR = 0.01f;	// 追従の係数
 const float CCameraResult::ROTSPEED = 0.05f;	// 旋回速度
 const float CCameraResult::ZPOS = -400.0f;	// Z座標
+const float CCameraResult::ZPullCamera = -280.0f;	// Z座標
+const float CCameraResult::YFlagCamera = 280.0f;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -39,8 +41,9 @@ void CCameraResult::Init()
 	CCamera::Init();
 
 	//視点・注視点を設定
-	m_posV = D3DXVECTOR3(0.0f, 250.0f, 0.0f);
-	m_posR = D3DXVECTOR3(0.0f, -500.0f, 00.0f);
+	m_posV = D3DXVECTOR3(0.0f, 200.0f, 0.0f);
+	m_posR = D3DXVECTOR3(0.0f, -500.0f, 0.0f);
+	CAMERASTATE = CAMERA_ROLL;
 }
 
 //-----------------------------------------------------------------------------
@@ -50,14 +53,45 @@ void CCameraResult::Update()
 {
 	CCamera::Update();
 
-	if (m_posR.y<250.0f)
+	switch (CAMERASTATE)
 	{
-		m_posR.y += 5.0f;
-	}
+	case CCameraResult::CAMERA_ROLL:
+		if (m_posR.y<250.0f)
+		{
+			m_posR.y += 5.0f;
+		}
+		if (m_posV.z>-400.0f)
+		{
+			m_posV.z -= 5.0f;
+		}
+		if (m_posV.z<=-400.0f&&m_posR.y>=250.0f)
+		{
+			CAMERASTATE = CAMERA_UP;
+		}
+		break;
 
-	if (m_posV.z>-400.0f)
-	{
-		m_posV.z -= 5.0f;
+	case CCameraResult::CAMERA_UP:
+		if (m_posR.y >= 250.0f&&m_posV.z <= -400.0f&&m_posR.y < YFlagCamera)
+		{
+			m_posR.y += 1.0f;
+			m_posV.y += 1.0f;
+			
+		}
+		if (m_posR.y >= YFlagCamera)
+		{
+			CAMERASTATE = CAMERA_PULL;
+		}
+		break;
+
+	case CCameraResult::CAMERA_PULL:
+		if (m_posR.z >= ZPullCamera)
+		{
+			m_posV.z -= 1.0f;
+			m_posR.z -= 1.0f;
+			m_posV.y -= 0.2f;
+			m_posR.y -= 0.2f;
+		}
+		break;
 	}
 }
 
