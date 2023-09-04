@@ -53,21 +53,6 @@ HRESULT CSkillSelect::Init()
 	// ”wŒi
 	CSkyBg::Create();
 
-	// debug
-#ifdef _DEBUG
-	{
-		CObjectX* object = CObjectX::Create();
-		object->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("DEBUG_MODEL"));
-		object->SetPos(D3DXVECTOR3(-100.0f, 0.0f, -20.0f));
-	}
-
-	{
-		CObjectX* object = CObjectX::Create();
-		object->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("DEBUG_MODEL2"));
-		object->SetPos(D3DXVECTOR3(100.0f, 0.0f, -40.0f));
-	}
-#endif // DEBUG
-
 	// ’n–Ê
 	{
 		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -200.0f, 0.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);

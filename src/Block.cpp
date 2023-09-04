@@ -17,6 +17,7 @@
 // 定数
 //-----------------------------------------------------------------------------
 const float CBlock::SINK_LIMIT = -10.0f;	// 沈む下限値
+const float CBlock::UP_LIMIT = 100.0f;	// 沈む下限値
 const float CBlock::UP_POWER = 0.5f;		// 沈んだブロックが浮上する時間
 const float CBlock::DOWN_POWER = 1.25f;		// 沈んだブロックが浮上する時間
 
@@ -180,6 +181,11 @@ void CBlock::SetSink(float power)
 	{
 		pos.y = SINK_LIMIT;
 		return;
+	}
+
+	if (UP_LIMIT <= pos.y)
+	{
+		pos.y = UP_LIMIT;
 	}
 
 	SetPos(pos);
