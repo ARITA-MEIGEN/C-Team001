@@ -423,6 +423,10 @@ void CMap::PopFutureArea()
 			{
 				CComeFutureBlock* futureBlock = CComeFutureBlock::Create(areaBlock[i]->GetPos());
 				futureBlock->SetCol(areaBlock[i]->GetCol());
+				if (areaBlock[i]->GetOnPlayer() != nullptr)
+				{
+					areaBlock[i]->GetOnPlayer()->Stun(60); //範囲内のプレイヤーをスタン
+				}
 			}
 		}
 	};
