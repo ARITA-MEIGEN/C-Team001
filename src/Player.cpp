@@ -61,7 +61,6 @@ int CPlayer::m_nNumPlayer = 0;					// プレイヤーの数
 //-----------------------------------------------------------------------------
 CPlayer::CPlayer(int nPriority) :
 	CObject(nPriority),
-	m_nSkillLv(0),
 	m_nStunTime(0),
 	m_nStockItem(0),
 	m_nItemBuffTime(0),
@@ -123,6 +122,7 @@ HRESULT CPlayer::Init()
 	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
 	m_bKnockBack = false;
 	m_bTeleport = false;
+	m_bMaxGauge = false;
 	m_bOperate = true;
 
 	m_funcSkill = m_SkillFunc;
@@ -465,10 +465,11 @@ void CPlayer::Skill()
 	assert((m_skillStateNow >= 0) && (m_skillStateNow < SKILL_MAX));
 	(this->*(m_funcSkill[m_skillStateNow]))();
 
-	if (m_nSkillBuffTime > 0)
+	if (m_nSkillBuffTime > 0 || m_bMaxGauge)
 	{//スキルの効果時間があったら
 		//現在のスキルLvによって減少量
 		m_fSkillGauge -= m_fSubGauge;
+		m_bMaxGauge = false;
 	}
 
 	if (m_nSkillBuffTime <= 0 && m_State != PST_STAND)
@@ -494,65 +495,44 @@ void CPlayer::Skill_Idel()
 		return;
 	}
 
-	/* ↓スキル未使用時↓ */
-
-	//ゲージの量によってスキルLvを決める
-	if (m_fSkillGauge >= MAX_GAUGE)
-	{
-		m_nSkillLv = 3;
-	}
-	else if (m_fSkillGauge >= MAX_GAUGE * 0.7)
-	{
-		m_nSkillLv = 2;
-	}
-	else if (m_fSkillGauge >= MAX_GAUGE * 0.3)
-	{
-		m_nSkillLv = 1;
-	}
-	else
-	{
-		m_nSkillLv = 0;
-	}
-
-	if (m_nSkillLv == 0)
-	{
-		return;
-	}
-
-	/* ↓スキルレベルが設定されてる↓ */
-
-	//現在のスキルLvによって効果量を変える
+	//キー入力でスキルを発動する
 	if (m_controller->Skill())
 	{
 		SetSkill(m_skill);
 
-		//減らすゲージの量を格納する
-		float fSubGauge = 0.0f;
-
-		m_nSkillBuffTime = (int)(SKILL_BUFF_TIME);
-
-		switch (m_nSkillLv)
+		switch (m_skill)
 		{
-		case 1:
-			fSubGauge = (MAX_GAUGE * 0.3f);
+		case CPlayer::SKILL_SPEED:
+			SlowlySubGauge();
 			break;
 
-		case 2:
-			fSubGauge = (MAX_GAUGE * 0.7f);
-			m_nSkillBuffTime *= 2;
+		case CPlayer::SKILL_PAINT:
+			SlowlySubGauge();
 			break;
 
-		case 3:
-			fSubGauge = MAX_GAUGE;
-			m_nSkillBuffTime *= 5;
+		case CPlayer::SKILL_KNOCKBACK:
+			SlowlySubGauge();
+			break;
+
+		case CPlayer::SKILL_AREA:
+			SlowlySubGauge();
+			break;
+
+		case CPlayer::SKILL_BOM:
+			SubGauge();
+			break;
+
+		case CPlayer::SKILL_WAVE:
+			SubGauge();
+			break;
+
+		case CPlayer::SKILL_RUSH:
+			SubGauge();
 			break;
 
 		default:
 			break;
 		}
-
-		//スキルゲージの減少量を算出
-		m_fSubGauge = (fSubGauge / (float)m_nSkillBuffTime);
 	}
 }
 
@@ -581,37 +561,16 @@ void CPlayer::Skill_Paint()
 		return;
 	}
 
-	switch (m_nSkillLv)
+	//3×3の範囲を塗る
+	for (int nCntY = 0; nCntY < 3; nCntY++)
 	{
-	case 1:
-		//縦の範囲を塗る
 		for (int nCntX = 0; nCntX < 3; nCntX++)
 		{
 			//乗っているブロックの番号を取得
 			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
 			//範囲内のブロックを塗る
-			BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y);			//中央左に設定する
-			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y);
-			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-			if (Block != nullptr)
-			{
-				//Block->SetOnPlayer(this);	//プレイヤーの
-				Block->SetPlayerNumber(m_nPlayerNumber);
-			}
-		}
-		break;
-
-	case 2:
-		//十字(横と縦)の範囲を塗る
-		//縦の範囲
-		for (int nCntY = 0; nCntY < 3; nCntY++)
-		{
-			//乗っているブロックの番号を取得
-			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-			//範囲内のブロックを塗る
-			BlockIdx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y - 1.0f);			//中心に設定する
-			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y + nCntY);
+			BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y - 1.0f);			//左上に設定する
+			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y + nCntY);
 			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
 
 			if (Block != nullptr)
@@ -620,48 +579,6 @@ void CPlayer::Skill_Paint()
 				Block->SetPlayerNumber(m_nPlayerNumber);
 			}
 		}
-		//横の範囲
-		for (int nCntX = 0; nCntX < 3; nCntX++)
-		{
-			//乗っているブロックの番号を取得
-			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-			//範囲内のブロックを塗る
-			BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y);			//中央左に設定する
-			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y);
-			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-			if (Block != nullptr)
-			{//ブロックを塗る
-				//Block->SetOnPlayer(this);	//プレイヤーの
-				Block->SetPlayerNumber(m_nPlayerNumber);
-			}
-		}
-		break;
-
-	case 3:
-		//3×3の範囲を塗る
-		for (int nCntY = 0; nCntY < 3; nCntY++)
-		{
-			for (int nCntX = 0; nCntX < 3; nCntX++)
-			{
-				//乗っているブロックの番号を取得
-				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-				//範囲内のブロックを塗る
-				BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y - 1.0f);			//左上に設定する
-				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y + nCntY);
-				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-				if (Block != nullptr)
-				{//ブロックを塗る
-					//Block->SetOnPlayer(this);	//プレイヤーの
-					Block->SetPlayerNumber(m_nPlayerNumber);
-				}
-			}
-		}
-		break;
-
-	default:
-		break;
 	}
 }
 
@@ -825,7 +742,7 @@ void CPlayer::BlockCollision()
 
 		if (XMin && XMax && ZMin && ZMax)
 		{
-			if (pBlock->GetNumber() != m_nPlayerNumber && m_fSkillGauge < MAX_GAUGE && m_State == PST_STAND)
+			if (pBlock->GetNumber() != m_nPlayerNumber && m_fSkillGauge < MAX_GAUGE && m_State == PST_STAND && m_skillStateNow != SKILL_RUSH)
 			{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックスではなく、無強化の場合)
 				m_fSkillGauge++;
 			}
@@ -1058,15 +975,34 @@ void CPlayer::Stun(int inTime)
 }
 
 //-----------------------------------------------------------------------------
+// 徐々にゲージの減少
+//-----------------------------------------------------------------------------
+void CPlayer::SlowlySubGauge()
+{
+	//スキルの効果時間
+	m_nSkillBuffTime = (int)(SKILL_BUFF_TIME) * 5;
+
+	//スキルゲージの減少量を算出
+	m_fSubGauge = (MAX_GAUGE / (float)m_nSkillBuffTime);
+}
+
+//-----------------------------------------------------------------------------
+// 一気にゲージの減少
+//-----------------------------------------------------------------------------
+void CPlayer::SubGauge()
+{
+	//スキルゲージの減少量を算出
+	m_fSubGauge = MAX_GAUGE;
+	m_bMaxGauge = true;
+}
+
+//-----------------------------------------------------------------------------
 // 突進
 //-----------------------------------------------------------------------------
 void CPlayer::Skill_Rush()
 {
 	// 移動キーを入力出来なくする
 	m_bOperate = false;
-
-	// スキルゲージの減少量を算出
-	//m_fSubGauge = 1;
 
 	// 移動量
 	D3DXVECTOR3 move = m_controller->Move();

@@ -133,6 +133,8 @@ private:
 	void BlockCollision();		// ブロックとの判定
 	void TakeItem();			// アイテムを拾う
 	void Item();				// アイテム処理
+	void SlowlySubGauge();		// 徐々にゲージ減少
+	void SubGauge();			// 一気にゲージ減少
 
 	CBlock* OnBlock(float X,float Y);				// ブロックの情報を取得する
 private:	// 静的メンバー変数
@@ -206,6 +208,7 @@ private:	// メンバー変数
 	int				m_nStunTime;			// スタン(操作不可能)時間
 	bool			m_bKnockBack;			// ノックバックしているかどうか
 	bool			m_bTeleport;			// テレポートしたかどうか
+	bool			m_bMaxGauge;			// ゲージが最大までたまっているかどうか
 	bool			m_bOperate;				// 操作可能かどうか
 	PLAYER_STATE	m_State;				// プレイヤーの状態
 	STOCK_ITEM_STATE	m_StockItemState;	// ストック式アイテムの状態
