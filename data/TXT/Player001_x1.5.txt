@@ -61,49 +61,49 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 3					# 右腕
 		PARENT = 0					# (親)体
-		POS = -4.1 12.0 0.0
+		POS = -6.1 18.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 	
 	PARTSSET
 		INDEX = 4					# 右腕
 		PARENT = 3					# (親)二の腕
-		POS = -4.5 -5.8 0.1
+		POS = -6.75 -6.4 0.1
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 5					# 右手
 		PARENT = 4					# (親)右腕
-		POS = -0.6 -10.7 0.0
+		POS = -0.6 -16.7 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 6					# 左腕
 		PARENT = 0					# (親)体
-		POS = 4.1 12.0 0.0
+		POS = 6.1 18.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 7					# 左腕
 		PARENT = 6					# (親)二の腕
-		POS = 4.5 -5.8 0.1
+		POS = 6.75 -6.4 0.1
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 8					# 左手
 		PARENT = 7					# (親)左腕
-		POS = 0.6 -10.7 0.0
+		POS = 0.6 -16.7 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 9					# 右脚
 		PARENT = 2					# (親)腰
-		POS = -5.5 -5.3 0.0
+		POS = -5.5 -14.3 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
@@ -117,7 +117,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 11					# 左脚
 		PARENT = 2					# (親)腰
-		POS = 5.5 -5.3 0.0
+		POS = 5.5 -14.3 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
