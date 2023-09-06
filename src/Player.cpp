@@ -32,7 +32,7 @@
 //-----------------------------------------------------------------------------
 const std::string CPlayer::MOTION_PATH = "data/TXT/Player001_x1.5.txt";	// モーションデータパス
 const int	CPlayer::MAX_STOCK = 3; 			// 持てるアイテムの最大数
-const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
+const float CPlayer::PLAYER_SPEED = 1.5f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
 const int CPlayer::SKILL_WAVE_TIME = 30;		// スキルの発生時間
@@ -1053,7 +1053,7 @@ void CPlayer::SetResultMotion(int Rank)
 void CPlayer::Stun(int inTime)
 {
 	m_nStunTime = inTime;
-	//m_Motion = PM_STAN;
+	m_Motion = PM_STAN;
 	m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 

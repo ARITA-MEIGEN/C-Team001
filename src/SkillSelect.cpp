@@ -218,9 +218,9 @@ void CSkillSelect::SetUpSelectUI(int inPlayerCnt)
 		//block->SetRot(m_pCamera->CalculateRotFromPos(block->GetPos()));
 	}
 
-	CObject3D* object = CObject3D::Create(D3DXVECTOR3(-(65.0f * 1.5f) + (65.0f * inPlayerCnt), 30.0f, 5.0f),D3DXVECTOR3(50.0f,0.0f,110.0),2);
+	CObject3D* object = CObject3D::Create(D3DXVECTOR3(-(65.0f * 1.5f) + (65.0f * inPlayerCnt), 20.0f, 5.0f),D3DXVECTOR3(50.0f,0.0f,140.0),2);
 	object->SetRot(D3DXVECTOR3(-1.57f, 0.0f, 0.0f));
-	object->SetCol(D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f));
+	object->SetCol(D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.75f));
 }
 
 //====================================

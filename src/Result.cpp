@@ -17,6 +17,7 @@
 #include"CameraResult.h"
 #include"Light.h"
 #include"Object3D.h"
+#include"sky_bg.h"
 
 //-----------------------------------------------------------------------------
 //Ã“I•Ï”éŒ¾
@@ -84,9 +85,12 @@ HRESULT CResult::Init()
 		m_pCylinder[i]->SetPos(D3DXVECTOR3{m_pPlayer[i]->GetPos().x,m_pPlayer[i]->GetPos().y - 250.0f,m_pPlayer[i]->GetPos().z });
 	}
 
+	//”wŒi‚Ì¶¬
 	{
-		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 300.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
-		pori->SetRot(D3DXVECTOR3(-1.57f,0.0f,0.0f));
+		CSkyBg::Create();
+
+		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(4000.0f, 0.0f, 2000.0f), 2);
+		pori->SetUV(0.0f, 20.0f, 0.0f, 20.0f);
 		pori->SetTextureKey("TEST_FLOOR");
 	}
 
