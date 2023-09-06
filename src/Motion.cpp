@@ -16,6 +16,7 @@
 #include "objectX.h"
 #include "texture.h"
 #include "utility.h"
+#include "renderer.h"
 
 #include <fstream>
 #include <iostream>
@@ -179,6 +180,18 @@ void CMotion::SetParts(D3DXMATRIX /*mtxWorld*/)
 }
 
 //=============================================================================
+// モデルの切り替え
+// Author : Yuda Kaito
+// 概要 : 使用しているモデルの切り替え
+//=============================================================================
+void CMotion::ChangeModel(int index, std::string path)
+{
+	assert(!(index < 0 || index >= m_parts.size()));
+
+	m_parts[index]->BindModel(path);
+}
+
+//=============================================================================
 // モーションの再生
 // Author : 唐﨑結斗
 // 概要 : 目的の位置まで特定のフレーム数で到着する処理をパーツごとに行う
@@ -191,6 +204,16 @@ void CMotion::PlayMotion()
 
 	for (int nCntParts = 0; nCntParts < (int)m_parts.size(); nCntParts++)
 	{
+		if (m_parts.size() <= nCntParts)
+		{
+			return;
+		}
+
+		if (nowKeySet.pKey.size() <= nCntParts)
+		{
+			return;
+		}
+
 		// 変数宣言
 		D3DXVECTOR3 pos = m_parts[nCntParts]->GetPos();			// 位置
 		D3DXVECTOR3 rot = m_parts[nCntParts]->GetRot();			// 向き
@@ -275,6 +298,11 @@ void CMotion::MotionBlend()
 
 	for (int nCntParts = 0; nCntParts < (int)m_parts.size(); nCntParts++)
 	{
+		if (motion.pKeySet[motion.nCntKeySet].pKey.size() <= nCntParts)
+		{
+			return;
+		}
+
 		// 変数宣言
 		D3DXVECTOR3 pos = m_parts[nCntParts]->GetPos();			// 位置
 		D3DXVECTOR3 rot = m_parts[nCntParts]->GetRot();			// 向き
@@ -397,7 +425,6 @@ void CMotion::LoodSetMotion(const char *pFileName)
 				std::string modelKey = "MODEL" + std::to_string(modelnumber);
 				m_parts[modelnumber] = CObjectX::Create();
 				m_parts[modelnumber]->BindModel(CObjectXOriginalList::GetInstance()->Load(modelKey, pass));
-				m_parts[modelnumber]->SetModelTag(modelKey);
 				modelnumber++;
 			}
 			else if (StringMatched("CHARACTERSET"))

@@ -30,12 +30,12 @@
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const std::string CPlayer::MOTION_PATH = "data/TXT/Player001.txt";	// モーションデータパス
+const std::string CPlayer::MOTION_PATH = "data/TXT/Player001_x1.5.txt";	// モーションデータパス
 const int	CPlayer::MAX_STOCK = 3; 			// 持てるアイテムの最大数
 const float CPlayer::PLAYER_SPEED = 2.0f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
-const int CPlayer::SKILL_WAVE_TIME = 30;	// スキルの発生時間
+const int CPlayer::SKILL_WAVE_TIME = 30;		// スキルの発生時間
 const float CPlayer::THROW_DISTANCE = 4.0f;		// 投擲距離
 const float CPlayer::RUSH_SPEED = 2.0f;			// 突進速度
 
@@ -397,7 +397,7 @@ void CPlayer::StopNoBlock()
 
 	BlockIdx += moveNowVec;
 
-	CDebugProc::Print("BlockIdx : %.1f,%.1f\n", BlockIdx.x, BlockIdx.y);
+	CDebugProc::Print("Player：BlockIdx : %.1f,%.1f\n", BlockIdx.x, BlockIdx.y);
 
 	CBlock* moveBlock = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);	// 進行方向にあるブロック
 

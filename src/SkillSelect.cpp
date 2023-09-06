@@ -211,11 +211,11 @@ void CSkillSelect::SetUpSelectUI(int inPlayerCnt)
 		CBlock* block = CBlock::Create(D3DXVECTOR3(-(65.0f * 1.5f) + (65.0f * inPlayerCnt), -5.0f, 0.0f));
 		block->CancelPermitSink();
 		block->OnUpDownMove();
-		m_pPlayer[inPlayerCnt] = CPlayer::Create(block, D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		m_pPlayer[inPlayerCnt] = CPlayer::Create(block, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 		// カメラを向く
-		m_pPlayer[inPlayerCnt]->SetRot(m_pCamera->CalculateRotFromPos(m_pPlayer[inPlayerCnt]->GetPos()));
-		block->SetRot(m_pCamera->CalculateRotFromPos(block->GetPos()));
+		//m_pPlayer[inPlayerCnt]->SetRot(m_pCamera->CalculateRotFromPos(m_pPlayer[inPlayerCnt]->GetPos()));
+		//block->SetRot(m_pCamera->CalculateRotFromPos(block->GetPos()));
 	}
 
 	CObject3D* object = CObject3D::Create(D3DXVECTOR3(-(65.0f * 1.5f) + (65.0f * inPlayerCnt), 30.0f, 5.0f),D3DXVECTOR3(50.0f,0.0f,110.0),2);
@@ -320,6 +320,37 @@ void CSkillSelect::Texture()
 		if (m_inputNumber[nCnt] == 99)
 		{
 			continue;
+		}
+
+		if (m_isPlayerCheck[nCnt])
+		{//プレイヤーの能力を表すテクスチャ1
+			m_pObj2D[nCnt]->SetTextureKey("CHECK_MARK");
+		}
+		else
+		{
+			switch (m_state)
+			{
+			case CPlayer::SKILL_IDLE:
+				break;
+			case CPlayer::SKILL_SPEED:
+				break;
+			case CPlayer::SKILL_PAINT:
+				break;
+			case CPlayer::SKILL_KNOCKBACK:
+				break;
+			case CPlayer::SKILL_AREA:
+				break;
+			case CPlayer::SKILL_BOM:
+				break;
+			case CPlayer::SKILL_WAVE:
+				break;
+			case CPlayer::SKILL_RUSH:
+				break;
+			case CPlayer::SKILL_MAX:
+				break;
+			default:
+				break;
+			}
 		}
 
 		if (m_isPlayerCheck[nCnt])
