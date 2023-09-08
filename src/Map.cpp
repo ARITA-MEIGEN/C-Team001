@@ -381,7 +381,7 @@ void CMap::PopFutureArea()
 					futureBlock->SetCol(block->GetCol());
 				}
 
-				block->SetPlayerNumber(-1);
+				block->SetPlayerNumber(-2);
 			}
 		}
 	};

@@ -33,46 +33,52 @@ public:
 
 	void BindModel(LPD3DXMESH pMesh, LPD3DXBUFFER pBuff, DWORD pNumMat);
 	void BindModel(CObjectXOriginalList::SModelData  model);
-	void SetModelTag(std::string inTag) { m_modelTag = inTag; }
-	std::string GetModelTag() { return m_modelTag; }
+	void BindModel(std::string modelTag) { BindModel(CObjectXOriginalList::GetInstance()->GetModelData(modelTag)); }
 	void Shadow();
 	void SetModel(const char* Filename);
 
 	// Setter
 	void SetPos(const D3DXVECTOR3& inPos) { m_pos = inPos; }
 	void AddPos(const D3DXVECTOR3& inPos) { SetPos(m_pos + inPos); }
+	void SetPosDest(const D3DXVECTOR3& pos) { m_posDest = pos; };
+	void SetPosDefault(const D3DXVECTOR3& pos) { m_DefaultPos = pos; };
+	const D3DXVECTOR3 GetPos() { return m_pos; };
+	const D3DXVECTOR3 GetPosDest() { return m_posDest; };
+	const D3DXVECTOR3 GetPosDefault() { return m_DefaultPos; };
+
+	// 向き
 	void SetRot(const D3DXVECTOR3& inRot) { m_rot = inRot; }
 	void AddRot(const D3DXVECTOR3& inRot) { SetRot(m_rot + inRot); }
-	void SetPosDest(const D3DXVECTOR3& pos) { m_posDest = pos; };
 	void SetRotDest(const D3DXVECTOR3& rot) { m_rotDest = rot; };
-	void SetPosDefault(const D3DXVECTOR3& pos) { m_DefaultPos = pos; };
 	void SetRotDefault(const D3DXVECTOR3& rot) { m_DefaultRot = rot; };
-	void SetParent(CObjectX* pModel);
-	void SetParentMatrix(D3DXMATRIX* inMatrix) { m_mtxParent = inMatrix; }
+	const D3DXVECTOR3 GetRot() { return m_rot; };
+	const D3DXVECTOR3 GetRotDest() { return m_rotDest; };
+	const D3DXVECTOR3 GetRotDefault() { return m_DefaultRot; };
+
+	// 大きさ
 	void SetSizeMag(const D3DXVECTOR3& size) { m_sizeMag = size; }
-	void SetChildren(CObjectX* pModel) { m_childrens.push_back(pModel); }
+	const D3DXVECTOR3 GetSize() { return m_modelData.size; }
+	const D3DXVECTOR3 GetSizeMag() { return m_sizeMag; }
+
+	// 色
 	void SetCol(const D3DXCOLOR& col) { m_materialColor[0] = col; };
 	void SetColorMaterial(const int index, const D3DXCOLOR& col) { m_materialColor[index] = col; };
 	void SetAllColorMaterial(const D3DXCOLOR& col) { for (size_t i = 0; i < m_materialColor.size(); i++) { m_materialColor[i] = col; } };
-
-	// Getter
-	const D3DXVECTOR3 GetPos() { return m_pos; };
-	const D3DXVECTOR3 GetRot() { return m_rot; };
-	const D3DXVECTOR3 GetPosDest() { return m_posDest; };
-	const D3DXVECTOR3 GetRotDest() { return m_rotDest; };
-	const D3DXVECTOR3 GetPosDefault() { return m_DefaultPos; };
-	const D3DXVECTOR3 GetRotDefault() { return m_DefaultRot; };
-	const CObjectXOriginalList::SModelData GetModelData() { return m_modelData; };
-	const LPCTSTR GetModelName() { return m_modelname; }
-	const D3DXVECTOR3 GetSize() { return m_modelData.size; }
-	const D3DXVECTOR3 GetSizeMag() { return m_sizeMag; }
 	const D3DXCOLOR GetCol() { return m_materialColor[0]; }
-	CObjectX* GetParent() { return m_pParent; }
-	const D3DXMATRIX& GetMatrix() { return m_mtxWorld; }
 	const int GetColorMaterialSize() { return m_materialColor.size(); }
 
+	// 親子関係
+	void SetParent(CObjectX* pModel);
+	void SetParentMatrix(D3DXMATRIX* inMatrix) { m_mtxParent = inMatrix; }
+	void SetChildren(CObjectX* pModel) { m_childrens.push_back(pModel); }
+	CObjectX* GetParent() { return m_pParent; }
+
+	// Getter
+	const CObjectXOriginalList::SModelData GetModelData() { return m_modelData; };
+	const LPCTSTR GetModelName() { return m_modelname; }
+	const D3DXMATRIX& GetMatrix() { return m_mtxWorld; }
+
 private:
-	std::string m_modelTag;	// モデルデータのタグ
 	CObjectXOriginalList::SModelData m_modelData;	//モデルデータの参照
 	D3DXMATRIX		m_mtxWorld;			// ワールドマトリックス
 	int				m_nIdxModelParent;	// 親モデルのインデックスaModelの番号
@@ -97,7 +103,7 @@ private:
 	D3DXVECTOR3 m_rotDest;		// 目的の角度
 
 	// 大きさ倍率
-	D3DXVECTOR3 m_sizeMag;			// 倍率
+	D3DXVECTOR3 m_sizeMag;		// 倍率
 
 	// 影	   
 	CShadow*  m_Shadow;			// 影

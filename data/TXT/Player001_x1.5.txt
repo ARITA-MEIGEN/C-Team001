@@ -14,19 +14,19 @@ NUM_MODEL = 13
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data\MODEL\Player\x2\Body.x		# 体
-MODEL_FILENAME = data\MODEL\Player\x2\Head.x		# 頭
-MODEL_FILENAME = data\MODEL\Player\x2\Waist.x		# 腰
-MODEL_FILENAME = data\MODEL\Player\x2\UpperArmR.x	# 右腕
-MODEL_FILENAME = data\MODEL\Player\x2\ArmR.x		# 右腕
-MODEL_FILENAME = data\MODEL\Player\x2\HandR.x		# 右手
-MODEL_FILENAME = data\MODEL\Player\x2\UpperArmL.x	# 左腕
-MODEL_FILENAME = data\MODEL\Player\x2\ArmL.x		# 左腕
-MODEL_FILENAME = data\MODEL\Player\x2\HandL.x		# 左手
-MODEL_FILENAME = data\MODEL\Player\x2\UpperLegR.x	# 右脚
-MODEL_FILENAME = data\MODEL\Player\x2\LegR.x		# 右足
-MODEL_FILENAME = data\MODEL\Player\x2\UpperLegL.x	# 右脚
-MODEL_FILENAME = data\MODEL\Player\x2\LegL.x		# 左足
+MODEL_FILENAME = data\MODEL\Player\x1.5\Body.x		# 体
+MODEL_FILENAME = data\MODEL\Player\x1.5\Head.x		# 頭
+MODEL_FILENAME = data\MODEL\Player\x1.5\Waist.x		# 腰
+MODEL_FILENAME = data\MODEL\Player\x1.5\UpperArmR.x	# 右腕
+MODEL_FILENAME = data\MODEL\Player\x1.5\ArmR.x		# 右腕
+MODEL_FILENAME = data\MODEL\Player\x1.5\HandR.x		# 右手
+MODEL_FILENAME = data\MODEL\Player\x1.5\UpperArmL.x	# 左腕
+MODEL_FILENAME = data\MODEL\Player\x1.5\ArmL.x		# 左腕
+MODEL_FILENAME = data\MODEL\Player\x1.5\HandL.x		# 左手
+MODEL_FILENAME = data\MODEL\Player\x1.5\UpperLegR.x	# 右脚
+MODEL_FILENAME = data\MODEL\Player\x1.5\LegR.x		# 右足
+MODEL_FILENAME = data\MODEL\Player\x1.5\UpperLegL.x	# 右脚
+MODEL_FILENAME = data\MODEL\Player\x1.5\LegL.x		# 左足
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -40,14 +40,14 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 0					# 体
 		PARENT = -1					# (親)NULL
-		POS = 0.0 54.5 0.0
+		POS = 0.0 44.5 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 1					# 頭
 		PARENT = 0					# (親)体
-		POS = 0.0 39.0 -0.2
+		POS = 0.0 21.0 -0.2
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 	
@@ -61,70 +61,70 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 3					# 右腕
 		PARENT = 0					# (親)体
-		POS = -4.1 24.0 0.0
+		POS = -6.1 18.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 	
 	PARTSSET
 		INDEX = 4					# 右腕
 		PARENT = 3					# (親)二の腕
-		POS = -9 -21. 0.1
+		POS = -6.75 -6.4 0.1
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 5					# 右手
 		PARENT = 4					# (親)右腕
-		POS = -0.6 -10.7 0.0
+		POS = -0.6 -16.7 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 6					# 左腕
 		PARENT = 0					# (親)体
-		POS = 4.1 24.0 0.0
+		POS = 6.1 18.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 7					# 左腕
 		PARENT = 6					# (親)二の腕
-		POS = 9 -21.0 0.1
+		POS = 6.75 -6.4 0.1
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 8					# 左手
 		PARENT = 7					# (親)左腕
-		POS = 0.6 -10.7 0.0
+		POS = 0.6 -16.7 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 9					# 右脚
 		PARENT = 2					# (親)腰
-		POS = -11.0 -10.6 0.0
+		POS = -5.5 -14.3 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 10					# 右足
 		PARENT = 9					# (親)右脚
-		POS = 0.0 -15.0 0.0
+		POS = 0.0 -7.5 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 11					# 左脚
 		PARENT = 2					# (親)腰
-		POS = 11.0 -10.6 0.0
+		POS = 5.5 -14.3 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 12					# 左足
 		PARENT = 11					# (親)左脚
-		POS = 0.0 -15.0 0.0
+		POS = 0.0 -7.5 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 END_CHARACTERSET

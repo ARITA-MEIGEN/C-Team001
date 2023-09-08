@@ -81,8 +81,8 @@ void CArea::Update()
 	{
 		for (int i = 0; i < 4; i++)
 		{
-			m_wall[i]->SetCol(D3DXCOLOR(0.5f, 0.5f, 1.0f, 1.0f));
-			m_wall2[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_wall[i]->SetCol(D3DXCOLOR(0.5f, 0.5f, 1.0f, 0.4f));
+			m_wall2[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
 			m_length += 0.02f;
 		}
 	}
