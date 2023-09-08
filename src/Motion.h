@@ -12,9 +12,6 @@
 //***************************************************************************
 // インクルード
 //***************************************************************************
-#include "main.h"
-#include "objectX.h"
-#include "renderer.h"
 #include <vector>
 
 //*****************************************************************************
@@ -101,6 +98,8 @@ public:
 	int GetMaxParts() { return m_nMaxParts; }					// パーツの最大数の取得
 	std::vector<CObjectX*> GetParts() { return m_parts; }		// パーツモデルの取得
 	CObjectX* GetParts(int index) { return m_parts[index]; }	// パーツのオブジェクトを取得
+
+	void ChangeModel(int index, std::string path);
 
 private:
 	//--------------------------------------------------------------------

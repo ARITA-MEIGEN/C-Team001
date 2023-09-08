@@ -25,7 +25,7 @@ class CAreaWarning;
 class CArea : public CObject
 {
 public:
-	explicit CArea(int nPriority = 2);
+	explicit CArea(int nPriority = 3);
 	~CArea();
 	HRESULT Init();
 	void Uninit();

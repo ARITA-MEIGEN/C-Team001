@@ -16,6 +16,7 @@
 #include "objectX.h"
 #include "texture.h"
 #include "utility.h"
+#include "renderer.h"
 
 #include <fstream>
 #include <iostream>
@@ -176,6 +177,18 @@ void CMotion::SetParts(D3DXMATRIX /*mtxWorld*/)
 
 	// 新規深度値とZバッファの深度値が同じ値ならテスト成功にする
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+}
+
+//=============================================================================
+// モデルの切り替え
+// Author : Yuda Kaito
+// 概要 : 使用しているモデルの切り替え
+//=============================================================================
+void CMotion::ChangeModel(int index, std::string path)
+{
+	assert(!(index < 0 || index >= m_parts.size()));
+
+	m_parts[index]->BindModel(path);
 }
 
 //=============================================================================
@@ -412,7 +425,6 @@ void CMotion::LoodSetMotion(const char *pFileName)
 				std::string modelKey = "MODEL" + std::to_string(modelnumber);
 				m_parts[modelnumber] = CObjectX::Create();
 				m_parts[modelnumber]->BindModel(CObjectXOriginalList::GetInstance()->Load(modelKey, pass));
-				m_parts[modelnumber]->SetModelTag(modelKey);
 				modelnumber++;
 			}
 			else if (StringMatched("CHARACTERSET"))
