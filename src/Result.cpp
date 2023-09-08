@@ -17,14 +17,15 @@
 #include"CameraResult.h"
 #include"Light.h"
 #include"Object3D.h"
+#include"sky_bg.h"
 
 //-----------------------------------------------------------------------------
 //静的変数宣言
 //-----------------------------------------------------------------------------
 const float CResult::RANK_WIDTH = 270.0f;		// ランキングの設置間隔
 const float CResult::PLAYER_WIDTH = 120.0f;		// プレイヤーの設置間隔
-const float CResult::TOP_HEIGHT = -40.0f;		// 1位の高さ
-const float CResult::PLAYER_HEIGHT = 40.0f;	//  プレイヤー間の順位ごとの高さの間隔
+const float CResult::TOP_HEIGHT = 350.0f;			// 1位の高さ
+const float CResult::PLAYER_HEIGHT = 80.0f;	//  プレイヤー間の順位ごとの高さの間隔
 
 
 
@@ -81,12 +82,15 @@ HRESULT CResult::Init()
 		//土台生成
 		m_pCylinder[i]= CObjectX::Create();
 		m_pCylinder[i]->BindModel(CObjectXOriginalList::GetInstance()->Load("ENTYU", "data/MODEL/entyu000.x"));
-		m_pCylinder[i]->SetPos(D3DXVECTOR3{m_pPlayer[i]->GetPos().x,m_pPlayer[i]->GetPos().y - 250.0f,m_pPlayer[i]->GetPos().z });
+		m_pCylinder[i]->SetPos(D3DXVECTOR3{m_pPlayer[i]->GetPos().x,m_pPlayer[i]->GetPos().y - 1500.0f,m_pPlayer[i]->GetPos().z });
 	}
 
+	//背景の生成
 	{
-		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 300.0f), D3DXVECTOR3(5000.0f, 0.0f, 5000.0f), 2);
-		pori->SetRot(D3DXVECTOR3(-1.57f,0.0f,0.0f));
+		CSkyBg::Create();
+
+		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(4000.0f, 0.0f, 2000.0f), 2);
+		pori->SetUV(0.0f, 20.0f, 0.0f, 20.0f);
 		pori->SetTextureKey("TEST_FLOOR");
 	}
 
@@ -137,22 +141,7 @@ void CResult::Update()
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
 		}
 	}
-
-	for (int i = 0; i < MAX_PLAYER; i++)
-	{
-		if (m_pCylinder[i]->GetPos().y < TOP_HEIGHT - CMap::GetRanking(i) * PLAYER_HEIGHT)//高さ
-		{//プレイヤーを上に移動
-			m_pCylinder[i]->SetPos(D3DXVECTOR3{ m_pCylinder[i]->GetPos().x, m_pCylinder[i]->GetPos().y + 0.5f , m_pCylinder[i]->GetPos().z });
-			m_pPlayer[i]->SetPos({ m_pPlayer[i]->GetPos().x,  m_pCylinder[i]->GetPos().y + m_pCylinder[i]->GetSize().y ,m_pPlayer[i]->GetPos().z });
-		}
-		else
-		{//順位表示
-			m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH / 2 - (RANK_WIDTH * 1.5f) + RANK_WIDTH * i, 150.0f + CMap::GetRanking(i) * 80.0f, 0.0f));
-			m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			m_pPlayer[i]->SetResultMotion(CMap::GetRanking(i));
-		}
-	}
-
+	ResultCamera();
 }
 
 //====================================
@@ -161,4 +150,25 @@ void CResult::Update()
 void CResult::Draw()
 {
 	m_pCamera->Set();
+}
+
+//====================================
+//リザルトカメラ
+//====================================
+void CResult::ResultCamera()
+{
+	for (int i = 0; i < MAX_PLAYER; i++)
+	{
+		if (m_pPlayer[i]->GetPos().y < TOP_HEIGHT - CMap::GetRanking(i) * PLAYER_HEIGHT)//高さ
+		{//プレイヤーを上に移動
+			m_pCylinder[i]->SetPos(D3DXVECTOR3{ m_pCylinder[i]->GetPos().x, m_pCylinder[i]->GetPos().y + 1.0f , m_pCylinder[i]->GetPos().z });
+			m_pPlayer[i]->SetPos({ m_pPlayer[i]->GetPos().x,  m_pCylinder[i]->GetPos().y + m_pCylinder[i]->GetSize().y ,m_pPlayer[i]->GetPos().z });
+		}
+		else
+		{//順位表示
+			/*m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH / 2 - (RANK_WIDTH * 1.5f) + RANK_WIDTH * i, 150.0f + CMap::GetRanking(i) * 80.0f, 0.0f));
+			m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));*/
+			m_pPlayer[i]->SetResultMotion(CMap::GetRanking(i));
+		}
+	}
 }
