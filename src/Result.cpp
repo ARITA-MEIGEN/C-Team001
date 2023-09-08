@@ -23,8 +23,8 @@
 //-----------------------------------------------------------------------------
 const float CResult::RANK_WIDTH = 270.0f;		// ランキングの設置間隔
 const float CResult::PLAYER_WIDTH = 120.0f;		// プレイヤーの設置間隔
-const float CResult::TOP_HEIGHT = 30.0f;			// 1位の高さ
-const float CResult::PLAYER_HEIGHT = 150.0f;	//  プレイヤー間の順位ごとの高さの間隔
+const float CResult::TOP_HEIGHT = 350.0f;			// 1位の高さ
+const float CResult::PLAYER_HEIGHT = 80.0f;	//  プレイヤー間の順位ごとの高さの間隔
 
 
 
@@ -81,7 +81,7 @@ HRESULT CResult::Init()
 		//土台生成
 		m_pCylinder[i]= CObjectX::Create();
 		m_pCylinder[i]->BindModel(CObjectXOriginalList::GetInstance()->Load("ENTYU", "data/MODEL/entyu000.x"));
-		m_pCylinder[i]->SetPos(D3DXVECTOR3{m_pPlayer[i]->GetPos().x,m_pPlayer[i]->GetPos().y - 250.0f,m_pPlayer[i]->GetPos().z });
+		m_pCylinder[i]->SetPos(D3DXVECTOR3{m_pPlayer[i]->GetPos().x,m_pPlayer[i]->GetPos().y - 1500.0f,m_pPlayer[i]->GetPos().z });
 	}
 
 	{
@@ -155,7 +155,7 @@ void CResult::ResultCamera()
 {
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{
-		if (m_pCylinder[i]->GetPos().y < TOP_HEIGHT - CMap::GetRanking(i) * PLAYER_HEIGHT)//高さ
+		if (m_pPlayer[i]->GetPos().y < TOP_HEIGHT - CMap::GetRanking(i) * PLAYER_HEIGHT)//高さ
 		{//プレイヤーを上に移動
 			m_pCylinder[i]->SetPos(D3DXVECTOR3{ m_pCylinder[i]->GetPos().x, m_pCylinder[i]->GetPos().y + 1.0f , m_pCylinder[i]->GetPos().z });
 			m_pPlayer[i]->SetPos({ m_pPlayer[i]->GetPos().x,  m_pCylinder[i]->GetPos().y + m_pCylinder[i]->GetSize().y ,m_pPlayer[i]->GetPos().z });

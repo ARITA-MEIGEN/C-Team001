@@ -56,15 +56,15 @@ void CCameraResult::Update()
 	switch (CAMERASTATE)
 	{
 	case CCameraResult::CAMERA_ROLL:
-		if (m_posR.y<250.0f)
+		if (m_posR.y < 250.0f)
 		{
 			m_posR.y += 5.0f;
 		}
-		if (m_posV.z>-400.0f)
+		if (m_posV.z > -400.0f)
 		{
 			m_posV.z -= 5.0f;
 		}
-		if (m_posV.z<=-400.0f&&m_posR.y>=250.0f)
+		if (m_posV.z <= -400.0f&&m_posR.y >= 250.0f)
 		{
 			CAMERASTATE = CAMERA_UP;
 		}
