@@ -15,6 +15,7 @@
 
 #include "Item.h"
 #include "Item_Bom.h"
+#include "Bom.h"
 #include "Shadow.h"
 #include "Mesh.h"
 #include "Game.h"
@@ -829,6 +830,16 @@ void CPlayer::TakeItem()
 //-----------------------------------------------------------------------------
 void CPlayer::Item()
 {
+#ifdef _DEBUG
+	CInput* pInput = CInput::GetKey();
+
+	if (pInput->Trigger(DIK_Q))
+	{
+		m_nStockItem++;
+		m_StockItemState = STOCK_BOM;
+	}
+#endif // _DEBUG
+
 	if (m_controller == nullptr)
 	{
 		return;
@@ -849,7 +860,7 @@ void CPlayer::Item()
 		if (m_controller->Throw())
 		{// キー入力すると投げる
 			m_nStockItem--;			//ストック数を減らす
-	
+			
 			//乗っているブロックの番号を取得
 			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
 			D3DXVECTOR2 Idx(BlockIdx.x, BlockIdx.y);
@@ -883,7 +894,8 @@ void CPlayer::Item()
 			if (Block != nullptr)
 			{//ブロックを塗る
 				Block->SetPlayerNumber(m_nPlayerNumber);
-				CBom::Create(Block, m_nPlayerNumber, 120, true);
+				//CBom::Create(Block, m_nPlayerNumber, 120, true);
+				CCreateBom::Create(Block, Block->GetPos(), m_nPlayerNumber, 120);
 			}
 		}
 	}
