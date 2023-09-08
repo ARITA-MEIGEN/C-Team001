@@ -894,7 +894,6 @@ void CPlayer::Item()
 			if (Block != nullptr)
 			{//ƒuƒƒbƒN‚ð“h‚é
 				Block->SetPlayerNumber(m_nPlayerNumber);
-				//CBom::Create(Block, m_nPlayerNumber, 120, true);
 				CCreateBom::Create(Block, Block->GetPos(), m_nPlayerNumber, 120);
 			}
 		}
