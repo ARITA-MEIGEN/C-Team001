@@ -15,6 +15,7 @@ private:
 		CAMERA_ROLL=0,	//‰ñ“]
 		CAMERA_UP,		//ã¸
 		CAMERA_PULL,	//ˆø‚­
+		CAMERA_END,	//ˆø‚­
 		MAX_CAMERA
 	};
 
@@ -33,6 +34,7 @@ public:
 	void Update() override;		// XV
 
 	static CCameraResult* Create();	// ¶¬
+	CAMSTATE GetCameraState() {return CAMERASTATE; }		//ƒJƒƒ‰‚Ìó‘Ô
 
 
 private:
