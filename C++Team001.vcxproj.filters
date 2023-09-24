@@ -234,6 +234,9 @@
     <ClCompile Include="src\Precompile.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\Bom.cpp">
+      <Filter>ソース ファイル\04_Item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Command.h">
@@ -433,6 +436,9 @@
     </ClInclude>
     <ClInclude Include="src\pouse_ui.h">
       <Filter>ソース ファイル\09_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bom.h">
+      <Filter>ソース ファイル\04_Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

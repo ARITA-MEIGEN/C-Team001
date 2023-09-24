@@ -24,15 +24,10 @@ public:
 	HRESULT Init() override;		// 初期化処理
 	void Update() override;			// 更新処理
 
-	void Explosion();				// 爆発処理
-
 	static CBom* Create(const D3DXVECTOR3 pos);	// アイテム生成処理
-	static CBom* Create(CBlock *pOnBlock, int nPlayerNumber,const int nLife, const bool bExplosion);			// 爆弾生成処理
 
 private:
 	CBlock *m_pOnBlock;
-	int m_nPlayerNumber;
-	bool m_bExplosion;
 };
 
 #endif
