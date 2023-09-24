@@ -33,6 +33,7 @@
     [ "TILE_8", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile07_test.x" ],
     [ "TILE_7", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile06_test.x" ],
     [ "TILE_8", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/Tile07_test.x" ],
+    [ "BLOCK", "data/MODEL/box.x" ],
     [ "CUBOID", "data\/MODEL\/cuboid.x" ]
   ]
 }

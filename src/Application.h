@@ -59,7 +59,7 @@ public:
 	// Getter
 	CRenderer*GetRenderer() { return m_pRenderer; };
 	CDebugProc* GetDebugProc() { return m_pDebugProc; };
-	CFade* GetFade() { return m_pFade; };
+	CFade* GetFade() { return m_pFade; }
 
 	// 変更予定
 	void SetWinner(int win) { m_nWinner = win; };	// 勝ったプレイヤーの番号

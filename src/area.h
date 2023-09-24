@@ -32,10 +32,10 @@ public:
 	void Update();
 	void Draw() {}
 	static CArea* Create(D3DXVECTOR2 index, const unsigned int inRange, const unsigned int inSignsTime, const unsigned int inDiedTime);
-	void CreateWall(D3DXVECTOR3 inPos);
 
-	void SetFunctionAtDied(std::function<void()> inFunction) { m_functionAtDied = inFunction; }
+	void SetFunctionAtSignsBegin(std::function<void()> inFunction) { m_functionAtSignsBegin = inFunction; }
 	void SetFunctionAtSignsEnd(std::function<void()> inFunction) { m_functionAtSignsEnd = inFunction; }
+	void SetFunctionAtDied(std::function<void()> inFunction) { m_functionAtDied = inFunction; }
 
 private:
 	//ƒƒ“ƒo•Ï”
@@ -43,16 +43,17 @@ private:
 	unsigned int m_range;		// ”ÍˆÍ
 	unsigned int m_time;		// ŠÔ
 	unsigned int m_signsTime;	// —\’›ŠÔ
-	std::function<void()> m_functionAtDied;		// €–S‚Ìˆ—
-	std::function<void()> m_functionAtSignsEnd;	// —\’›I—¹‚Ìˆ—
+
+	std::function<void()> m_functionAtDied;			// €–S‚Ìˆ—
+	std::function<void()> m_functionAtSignsBegin;	// —\’›n“®‚Ìˆ—
+	std::function<void()> m_functionAtSignsEnd;		// —\’›I—¹‚Ìˆ—
 
 	CObject3D* m_floar;
-	CObject3D* m_wall[4];
-	CObject3D* m_wall2[4];
 	float m_length;
 	D3DXVECTOR3 m_pos;
 
 	CAreaWarning* m_warning;
+	bool isBeginUpdate;
 };
 
 #endif

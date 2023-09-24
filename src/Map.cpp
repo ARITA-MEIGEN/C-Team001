@@ -17,6 +17,7 @@
 #include "area.h"
 #include "go_future_block.h"
 #include "come_future_block.h"
+#include "future_signs.h"
 #include "teleport.h"
 #include "Player.h"
 
@@ -24,7 +25,7 @@
 // 静的メンバー変数の宣言
 //-----------------------------------------------------------------------------
 const float CMap::BLOCK_WIDTH = 25.0f;	// ブロック同士の幅
-int CMap::m_anRanking[MAX_PLAYER];	//	ランキング順位
+int CMap::m_anRanking[MAX_PLAYER];		//	ランキング順位
 
 //=============================================================================
 // コンストラクタ
@@ -84,15 +85,17 @@ CMap * CMap::Create(int stgnumber)
 {
 	CMap* pMap = new CMap;
 
-	if (pMap!=nullptr)
+	if (pMap != nullptr)
 	{
 		if (stgnumber != -1)
 		{
-			pMap->m_StageNumber = (STAGE)stgnumber;		//読み込むマップの番号を決める
+			pMap->m_StageNumber = (STAGE)stgnumber;	// 読み込むマップの番号を決める
 		}
-		pMap->Load();		//マップの読み込み
-		pMap->Init();		//初期化
+
+		pMap->Load();	// マップの読み込み
+		pMap->Init();	// 初期化
 	}
+
 	return pMap;
 }
 
@@ -348,7 +351,36 @@ void CMap::PopFutureArea()
 	//エリアの生成
 	CArea* area = CArea::Create(popBlockIndex, range,60,180);
 
-	area->CreateWall(GetBlock((int)popBlockIndex.x, (int)popBlockIndex.y)->GetPos());
+	auto atBigenFutrue = [this, range, popBlockIndex]()
+	{
+		for (int y = 0; y < range * 2 + 1; y++)
+		{
+			for (int x = 0; x < range * 2 + 1; x++)
+			{
+				CBlock* block = GetBlock((int)(x + popBlockIndex.x - range), (int)(y + popBlockIndex.y - range));
+
+				if (block == nullptr)
+				{
+					continue;
+				}
+
+				if (block->IsStop())
+				{
+					continue;
+				}
+
+				/* ↓block がnullではないか、壁ではない↓ */
+
+				//if (!(block->GetNumber() < 0))
+				{
+					CFutureSigns* futureBlock = CFutureSigns::Create(block->GetPos());
+					futureBlock->SetCol(block->GetCol());
+				}
+			}
+		}
+	};
+
+	area->SetFunctionAtSignsBegin(atBigenFutrue);
 
 	// 予兆終了後行なって欲しい処理
 	auto atFutrue = [this, range, popBlockIndex]()
@@ -375,7 +407,7 @@ void CMap::PopFutureArea()
 
 				/* ↓block がnullではないか、壁ではない↓ */
 
-				if (block->GetNumber() != -1)
+				//if (!(block->GetNumber() < 0))
 				{
 					CGoFutureBlock* futureBlock = CGoFutureBlock::Create(block->GetPos());
 					futureBlock->SetCol(block->GetCol());
@@ -410,7 +442,7 @@ void CMap::PopFutureArea()
 		}
 	}
 
-	// エリア死亡時行なって欲しい処理
+	// エリア死亡時(未来エリアに行ったブロックを元に戻す時)行なって欲しい処理
 	auto atDead = [this, areaBlock, areaBlockIndex]()
 	{
 		std::map<CBlock*, int> BlockIndex = areaBlockIndex;
@@ -419,10 +451,11 @@ void CMap::PopFutureArea()
 		{
 			areaBlock[i]->SetPlayerNumber(BlockIndex[areaBlock[i]]);
 
-			if (areaBlock[i]->GetNumber() != -1)
+			//if (!(areaBlock[i]->GetNumber() < 0))
 			{
 				CComeFutureBlock* futureBlock = CComeFutureBlock::Create(areaBlock[i]->GetPos());
 				futureBlock->SetCol(areaBlock[i]->GetCol());
+
 				if (areaBlock[i]->GetOnPlayer() != nullptr)
 				{
 					areaBlock[i]->GetOnPlayer()->Stun(60); //範囲内のプレイヤーをスタン
