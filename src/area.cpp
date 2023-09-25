@@ -26,6 +26,7 @@ CArea::~CArea()
 //=============================================================================
 HRESULT CArea::Init()
 {
+	isBeginUpdate = true;
 	m_warning = CAreaWarning::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.6f,50.0f,0.0f));
 	return S_OK;
 }
@@ -35,14 +36,6 @@ HRESULT CArea::Init()
 //=============================================================================
 void CArea::Uninit()
 {
-	m_wall[0]->Release();
-	m_wall[1]->Release();
-	m_wall[2]->Release();
-	m_wall[3]->Release();
-	m_wall2[0]->Release();
-	m_wall2[1]->Release();
-	m_wall2[2]->Release();
-	m_wall2[3]->Release();
 }
 
 //=============================================================================
@@ -50,15 +43,14 @@ void CArea::Uninit()
 //=============================================================================
 void CArea::Update()
 {
-	for (int i = 0; i < 4; i++)
+	if (isBeginUpdate)
 	{
-		m_wall[i]->SetUV(0.0f, 5.0f, m_length, m_length + -1.0f);
-		m_wall2[i]->SetUV(0.5f, 5.5f, m_length * 0.9f + -0.5f, m_length * 0.9f + -1.5f);
+		m_functionAtSignsBegin();
+		isBeginUpdate = false;
 	}
 
 	m_time--;
 	m_signsTime--;
-	m_length -= 0.01f;
 	
 	if (m_signsTime <= 0)
 	{
@@ -68,22 +60,6 @@ void CArea::Update()
 		{
 			m_warning->Release();
 			m_warning = nullptr;
-		}
-
-		for (int i = 0; i < 4; i++)
-		{
-			m_wall[i]->SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.0f));
-			m_wall2[i]->SetCol(D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.0f));
-		}
-	}
-
-	if (m_time <= 20)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			m_wall[i]->SetCol(D3DXCOLOR(0.5f, 0.5f, 1.0f, 0.4f));
-			m_wall2[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
-			m_length += 0.02f;
 		}
 	}
 
@@ -97,7 +73,6 @@ void CArea::Update()
 		Release();		// ”jŠü—\’è
 		return;
 	}
-
 }
 
 //=============================================================================
@@ -116,62 +91,4 @@ CArea * CArea::Create(D3DXVECTOR2 index, const unsigned int inRange, const unsig
 	area->m_signsTime = inSignsTime;
 	area->m_range = inRange;
 	return area;
-}
-
-//=============================================================================
-// •Ç‚Ì¶¬
-//=============================================================================
-void CArea::CreateWall(D3DXVECTOR3 inPos)
-{
-	D3DXVECTOR3 pos(inPos);
-
-	float width = m_range * CMap::BLOCK_WIDTH + CMap::BLOCK_WIDTH * 0.5f;
-
-	pos.y += 50.0f;
-
-
-	{
-		D3DXVECTOR3 wallpos = pos;
-		wallpos.z -= width;
-		m_wall[0] = CObject3D::Create(wallpos, D3DXVECTOR3(width * 2.0f, 0.0f, 105.0f), 0);
-		m_wall[0]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f));
-		m_wall2[0] = CObject3D::Create(wallpos, D3DXVECTOR3(width * 2.0f, 0.0f, 105.0f), 0);
-		m_wall2[0]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f));
-	}
-	{
-		D3DXVECTOR3 wallpos = pos;
-		wallpos.z += width;
-		m_wall[1] = CObject3D::Create(wallpos, D3DXVECTOR3(width * 2.0f, 0.0f, 105.0f), 0);
-		m_wall[1]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f));
-		m_wall2[1] = CObject3D::Create(wallpos, D3DXVECTOR3(width * 2.0f, 0.0f, 105.0f), 0);
-		m_wall2[1]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, 0.0f, 0.0f));
-	}
-	{
-		D3DXVECTOR3 wallpos = pos;
-		wallpos.x -= width;
-		m_wall[2] = CObject3D::Create(wallpos, D3DXVECTOR3(width * 2.0f, 0.0f, 105.0f), 0);
-		m_wall[2]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, D3DX_PI * 0.5f, 0.0f));
-		m_wall2[2] = CObject3D::Create(wallpos, D3DXVECTOR3(width * 2.0f, 0.0f, 105.0f), 0);
-		m_wall2[2]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, D3DX_PI * 0.5f, 0.0f));
-	}
-	{
-		D3DXVECTOR3 wallpos = pos;
-		wallpos.x += width;
-		m_wall[3] = CObject3D::Create(wallpos, D3DXVECTOR3(width * 2.0f, 0.0f, 105.0f), 0);
-		m_wall[3]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, D3DX_PI * 0.5f, 0.0f));
-		m_wall2[3] = CObject3D::Create(wallpos, D3DXVECTOR3(width * 2.0f, 0.0f, 105.0f), 0);
-		m_wall2[3]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f, D3DX_PI * 0.5f, 0.0f));
-	}
-
-	for (int i = 0; i < 4; i++)
-	{
-		m_wall[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		m_wall[i]->SetBackCulling(true);
-		m_wall[i]->SetTextureKey("AREA_EFFECT");
-		m_wall[i]->SetUV(0.0f, 5.0f, 0.0f, 1.0f);
-		m_wall2[i]->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.9f, 1.0f));
-		m_wall2[i]->SetBackCulling(true);
-		m_wall2[i]->SetTextureKey("AREA_EFFECT");
-		m_wall2[i]->SetUV(0.5f, 5.5f, 0.25f, 1.25f);
-	}
 }

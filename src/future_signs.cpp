@@ -8,13 +8,13 @@
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
-#include "go_future_block.h"
+#include "future_signs.h"
 #include "Item.h"
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CGoFutureBlock::CGoFutureBlock(int priorty) :CObjectX(priorty)
+CFutureSigns::CFutureSigns(int priorty) :CObjectX(priorty)
 {
 	m_number = 0;
 }
@@ -22,7 +22,7 @@ CGoFutureBlock::CGoFutureBlock(int priorty) :CObjectX(priorty)
 //=============================================================================
 // デストラクタ
 //=============================================================================
-CGoFutureBlock::~CGoFutureBlock()
+CFutureSigns::~CFutureSigns()
 {
 
 }
@@ -30,18 +30,20 @@ CGoFutureBlock::~CGoFutureBlock()
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT  CGoFutureBlock::Init()
+HRESULT CFutureSigns::Init()
 {
 	CObjectX::Init();
+	BindModel("BLOCK");
+	SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_number = -1;
-
+	m_time = 0;
 	return S_OK;
 }
 
 //=============================================================================
 //終了
 //=============================================================================
-void  CGoFutureBlock::Uninit()
+void  CFutureSigns::Uninit()
 {
 	CObjectX::Uninit();
 }
@@ -49,19 +51,26 @@ void  CGoFutureBlock::Uninit()
 //=============================================================================
 // 更新
 //=============================================================================
-void  CGoFutureBlock::Update()
+void  CFutureSigns::Update()
 {
+	m_time++;
+
 	CObjectX::Update();
 
 	D3DXVECTOR3 sizeMag = GetSizeMag();
-	sizeMag -= D3DXVECTOR3(0.15f,-0.05f,0.15f);
+	sizeMag += D3DXVECTOR3(-0.000f, 0.005f, -0.000f);
 	SetSizeMag(sizeMag);
 
-	D3DXVECTOR3 pos = GetPos();
-	pos.y += 10.0f;
-	SetPos(pos);
+	if (m_time % 10 == 0)
+	{
+	SetCol(D3DXCOLOR(0.5f, 0.0f, 0.75f, 0.8f));
+	}
+	else if (m_time % 15 == 0)
+	{
+		SetPlayerNumber(m_number);
+	}
 
-	if (sizeMag.x <= 0.0f)
+	if (sizeMag.y >= 1.25f)
 	{
 		Uninit();
 	}
@@ -70,16 +79,14 @@ void  CGoFutureBlock::Update()
 //=============================================================================
 // 生成
 //=============================================================================
-CGoFutureBlock* CGoFutureBlock::Create(D3DXVECTOR3 pos)
+CFutureSigns* CFutureSigns::Create(D3DXVECTOR3 pos)
 {
-	CGoFutureBlock* pBlock = new CGoFutureBlock(5);
+	CFutureSigns* pBlock = new CFutureSigns(5);
 
 	if (pBlock != nullptr)
 	{
 		pBlock->Init();
-		pBlock->BindModel(CObjectXOriginalList::GetInstance()->Load("BLOCK", "data/MODEL/box.x"));
 		pBlock->SetPos(pos);
-		pBlock->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 	return pBlock;
 }
@@ -87,12 +94,15 @@ CGoFutureBlock* CGoFutureBlock::Create(D3DXVECTOR3 pos)
 //=============================================================================
 // プレイヤー設定
 //=============================================================================
-void CGoFutureBlock::SetPlayerNumber(int number)
+void CFutureSigns::SetPlayerNumber(int number)
 {
 	m_number = number;
 
 	switch (m_number)
 	{
+	case -2:
+		SetCol(D3DXCOLOR(0.5f, 0.0f, 0.75f, 0.8f));
+		break;
 	case -1:
 		SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 		break;

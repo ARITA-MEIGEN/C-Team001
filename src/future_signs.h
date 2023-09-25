@@ -4,8 +4,8 @@
 // Author:arita meigen
 //
 //=============================================================================
-#ifndef _GO_FUTURE_BLOCK_H_			// このマクロ定義がされてなかったら
-#define _GO_FUTURE_BLOCK_H_			// 二重インクルード防止のマクロ定義
+#ifndef _FUTURE_SIGNS_H_			// このマクロ定義がされてなかったら
+#define _FUTURE_SIGNS_H_			// 二重インクルード防止のマクロ定義
 
 //-----------------------------------------------------------------------------
 // include
@@ -15,16 +15,16 @@
 //=============================================================================
 // 構造体定義
 //=============================================================================
-class CGoFutureBlock : public CObjectX
+class CFutureSigns : public CObjectX
 {
 private:
 public:
-	explicit CGoFutureBlock(int nPriority = 2);
-	~CGoFutureBlock() override;
+	explicit CFutureSigns(int nPriority = 2);
+	~CFutureSigns() override;
 	HRESULT Init() override;
 	void Uninit() override;
 	void Update() override;
-	static CGoFutureBlock *Create(D3DXVECTOR3 pos);
+	static CFutureSigns *Create(D3DXVECTOR3 pos);
 
 	// Setter
 	void SetPlayerNumber(int number);
@@ -35,5 +35,6 @@ public:
 private:
 	//メンバ変数
 	int m_number;	// プレイヤーの番号
+	int m_time;
 };
 #endif

@@ -22,12 +22,11 @@
 //-----------------------------------------------------------------------------
 //静的変数宣言
 //-----------------------------------------------------------------------------
-const float CResult::RANK_WIDTH = 270.0f;		// ランキングの設置間隔
+const float CResult::RANK_WIDTH = 200.0f;		// ランキングの設置間隔
 const float CResult::PLAYER_WIDTH = 120.0f;		// プレイヤーの設置間隔
 const float CResult::TOP_HEIGHT = 350.0f;			// 1位の高さ
-const float CResult::PLAYER_HEIGHT = 80.0f;	//  プレイヤー間の順位ごとの高さの間隔
-
-
+const float CResult::PLAYER_HEIGHT = 70.0f;	//  プレイヤー間の順位ごとの高さの間隔
+const float CResult::RANK_HEIGHT= 110.0f;		// ランキングのUIの設置間隔
 
 //====================================
 //コンストラクタ
@@ -164,10 +163,12 @@ void CResult::ResultCamera()
 			m_pCylinder[i]->SetPos(D3DXVECTOR3{ m_pCylinder[i]->GetPos().x, m_pCylinder[i]->GetPos().y + 1.0f , m_pCylinder[i]->GetPos().z });
 			m_pPlayer[i]->SetPos({ m_pPlayer[i]->GetPos().x,  m_pCylinder[i]->GetPos().y + m_pCylinder[i]->GetSize().y ,m_pPlayer[i]->GetPos().z });
 		}
+		
 		else
 		{//順位表示
-			/*m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH / 2 - (RANK_WIDTH * 1.5f) + RANK_WIDTH * i, 150.0f + CMap::GetRanking(i) * 80.0f, 0.0f));
-			m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));*/
+			m_apRank[i]->SetPos(D3DXVECTOR3((float)SCREEN_WIDTH / 2 - (RANK_WIDTH * 1.5f) + RANK_WIDTH * i, 110.0f + CMap::GetRanking(i) * RANK_HEIGHT, 0.0f));
+			m_apRank[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			
 			m_pPlayer[i]->SetResultMotion(CMap::GetRanking(i));
 		}
 	}
