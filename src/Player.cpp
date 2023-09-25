@@ -468,7 +468,6 @@ void CPlayer::Skill()
 
 	if (m_nSkillBuffTime > 0 || m_bMaxGauge)
 	{//スキルの効果時間があったら
-		//現在のスキルLvによって減少量
 		m_fSkillGauge -= m_fSubGauge;
 		m_bMaxGauge = false;
 	}
@@ -520,7 +519,7 @@ void CPlayer::Skill_Idel()
 			break;
 
 		case CPlayer::SKILL_BOM:
-			SubGauge();
+			SlowlySubGauge();
 			break;
 
 		case CPlayer::SKILL_WAVE:
@@ -606,6 +605,47 @@ void CPlayer::Skill_Bom()
 	{
 		SetSkill(SKILL_IDLE);
 		return;
+	}
+
+	if (m_controller->Throw())
+	{// キー入力すると投げる
+		m_nStockItem--;			//ストック数を減らす
+
+		//乗っているブロックの番号を取得
+		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+		D3DXVECTOR2 Idx(BlockIdx.x, BlockIdx.y);
+
+		D3DXVECTOR2 range;
+		range.x = m_direction.x;
+		range.y = m_direction.y;
+
+		if (m_rot.y == D3DX_PI * 0.0f)
+		{//下
+		 //2マス左に投げる
+			Idx.y += THROW_DISTANCE;
+		}
+		else if (m_rot.y == D3DX_PI * 1.0f)
+		{//上
+		 //2マス左に投げる
+			Idx.y -= THROW_DISTANCE;
+		}
+		else if (m_rot.y == D3DX_PI * 0.5f)
+		{//左
+		 //2マス左に投げる
+			Idx.x -= THROW_DISTANCE;
+		}
+		else if (m_rot.y == D3DX_PI * -0.5f)
+		{//右
+		 //2マス右に投げる
+			Idx.x += THROW_DISTANCE;
+		}
+
+		CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+		if (Block != nullptr)
+		{//ブロックを塗る
+			Block->SetPlayerNumber(m_nPlayerNumber);
+			CCreateBom::Create(Block, Block->GetPos(), m_nPlayerNumber, 120);
+		}
 	}
 }
 
@@ -830,16 +870,6 @@ void CPlayer::TakeItem()
 //-----------------------------------------------------------------------------
 void CPlayer::Item()
 {
-#ifdef _DEBUG
-	CInput* pInput = CInput::GetKey();
-
-	if (pInput->Trigger(DIK_Q))
-	{
-		m_nStockItem++;
-		m_StockItemState = STOCK_BOM;
-	}
-#endif // _DEBUG
-
 	if (m_controller == nullptr)
 	{
 		return;

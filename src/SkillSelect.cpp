@@ -340,11 +340,11 @@ void CSkillSelect::Texture()
 				break;
 			case CPlayer::SKILL_AREA:
 				break;
-			case CPlayer::SKILL_BOM:
-				break;
 			case CPlayer::SKILL_WAVE:
 				break;
 			case CPlayer::SKILL_RUSH:
+				break;
+			case CPlayer::SKILL_BOM:
 				break;
 			case CPlayer::SKILL_MAX:
 				break;

@@ -71,9 +71,9 @@ public:
 		SKILL_PAINT,		// 塗範囲拡大
 		SKILL_KNOCKBACK,	// ノックバック
 		SKILL_AREA,			// エリア生成
-		SKILL_BOM,			// ボム(遠距離攻撃)
 		SKILL_WAVE,			// 衝撃波
 		SKILL_RUSH,			// 突進
+		SKILL_BOM,			// ボム(遠距離攻撃)
 		SKILL_MAX
 	};
 
@@ -115,7 +115,7 @@ public:
 	void SetMove(D3DXVECTOR3 move) { m_move = move; };				// 移動の設定
 	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }		// スキルゲージの量の設定
 	void SetTeleport(bool bTeleport) { m_bTeleport = bTeleport; }
-	void SetResultMotion(int Rank);								// リザルト時のモーション再生
+	void SetResultMotion(int Rank);									// リザルト時のモーション再生
 
 	void Stun(int inTime);	// 硬直の発生
 
