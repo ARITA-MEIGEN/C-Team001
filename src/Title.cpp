@@ -39,6 +39,8 @@ CTitle::~CTitle()
 //====================================
 HRESULT CTitle::Init()
 {
+	CSound::GetInstance()->Play(CSound::ELabel::LABEL_BGM_TITLE);
+
 	m_camera = CCamera::Create();
 	m_camera->SetPosR(D3DXVECTOR3(0.0f,0.0f,0.0f));
 	m_camera->SetPosV(D3DXVECTOR3(0.0f,0.0f,-250.0f));

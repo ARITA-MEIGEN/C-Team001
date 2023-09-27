@@ -48,6 +48,8 @@ CResult::~CResult()
 //====================================
 HRESULT CResult::Init()
 {
+	CSound::GetInstance()->Play(CSound::ELabel::LABEL_BGM_TITLE);
+
 	LPDIRECT3DDEVICE9 pDevice;
 	pDevice = CApplication::getInstance()->GetRenderer()->GetDevice();
 	//テクスチャの読み込み

@@ -50,6 +50,8 @@ CSkillSelect::~CSkillSelect()
 //====================================
 HRESULT CSkillSelect::Init()
 {
+	CSound::GetInstance()->Play(CSound::ELabel::LABEL_BGM_TITLE);
+
 	// 背景
 	CSkyBg::Create();
 
@@ -188,6 +190,7 @@ void CSkillSelect::SetUpSelectUI(int inPlayerCnt)
 {
 	float x = 200.0f + (300.0f * inPlayerCnt);
 	m_pObj2D[inPlayerCnt] = CObject2D::Create(D3DXVECTOR3(x, 600.0f, 0.0f), D3DXVECTOR2(150.0f, 80.0f), 5);
+	m_pObj2D[inPlayerCnt]->SetTextureKey("ADD_PLAY");
 
 	// 選択し易いように矢印
 	{
@@ -363,15 +366,15 @@ void CSkillSelect::Texture()
 		}
 		else if (m_nSkill[nCnt] == 1)
 		{//プレイヤーの能力を表すテクスチャ2
-			m_pObj2D[nCnt]->SetTextureKey("RESULET_001");
+			m_pObj2D[nCnt]->SetTextureKey("SKILL_ICON_PEINT");
 		}
 		else if (m_nSkill[nCnt] == 2)
 		{//プレイヤーの能力を表すテクスチャ3
-			m_pObj2D[nCnt]->SetTextureKey("RESULET_002");
+			m_pObj2D[nCnt]->SetTextureKey("SKILL_ICON_BOMB");
 		}
 		else if (m_nSkill[nCnt] == 3)
 		{//プレイヤーの能力を表すテクスチャ4
-			m_pObj2D[nCnt]->SetTextureKey("RESULET_003");
+			m_pObj2D[nCnt]->SetTextureKey("SKILL_ICON_SKILL11");
 		}
 	}
 }

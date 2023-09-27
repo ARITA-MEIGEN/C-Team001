@@ -34,6 +34,8 @@
 // ToDo : ‚ ‚Æ‚ÅÁ‚¹
 #include "Object3D.h"
 
+#include "sound.h"
+
 //Ã“Iƒƒ“ƒo•Ï”
 CPlayer*CGame::m_pPlayer[MAX_PLAYER] = {};
 CGame::GAME CGame::m_gamestate;
@@ -89,6 +91,8 @@ CGame::~CGame()
 //====================================
 HRESULT CGame::Init()
 {
+	CSound::GetInstance()->Play(CSound::ELabel::LABEL_BGM_TITLE);
+
 	//ƒJƒƒ‰‚Ìİ’è
 	m_pCamera = CCameraGame::Create();
 
