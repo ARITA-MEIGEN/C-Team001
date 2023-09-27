@@ -1,10 +1,10 @@
 {
   "TEXTURE": [
-    [ "TITLE_LOGO", "data\/TEXTURE\/Title\/Title_logo_AvoidBox.png" ],
     [ "TITLE_BG", "data\/TEXTURE\/Title\/Title_Bg_tentative .png" ],
     [ "GIZAGIZA", "data\/TEXTURE\/Icon\/Icon_gizagiza.png" ],
     [ "NUMBER", "data\/TEXTURE\/Number\/Number_White_Shadow.png" ],
     [ "STOP_LOGO", "data\/TEXTURE\/Icon\/Icon_stop.png" ],
+    [ "TITLE_LOGO", "data\/TEXTURE\/Title\/Title_LinkRoid.png" ],
     [ "TEXT_START", "data\/TEXTURE\/Text\/Text_GameStart.png" ],
     [ "TEXT_TITLE", "data\/TEXTURE\/Game\/Pouse\/Pouse_Title.png" ],
     [ "TEXT_RETRY", "data\/TEXTURE\/Game\/Pouse\/Pouse_Restart.png" ],
