@@ -67,13 +67,10 @@ public:
 	enum SKILL_STATE
 	{
 		SKILL_IDLE = 0,
+		SKILL_RUSH,			// 突進
 		SKILL_SPEED,		// 加速
-		SKILL_PAINT,		// 塗範囲拡大
-		SKILL_KNOCKBACK,	// ノックバック
-		SKILL_AREA,			// エリア生成
 		SKILL_BOM,			// ボム(遠距離攻撃)
 		SKILL_WAVE,			// 衝撃波
-		SKILL_RUSH,			// 突進
 		SKILL_MAX
 	};
 
