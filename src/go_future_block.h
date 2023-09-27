@@ -18,8 +18,6 @@
 class CGoFutureBlock : public CObjectX
 {
 private:
-	static const float SINK_LIMIT;	// ’¾‚Ş§ŒÀ
-	static const float UP_POWER;	// ’¾‚Ş§ŒÀ
 public:
 	explicit CGoFutureBlock(int nPriority = 2);
 	~CGoFutureBlock() override;
@@ -30,7 +28,6 @@ public:
 
 	// Setter
 	void SetPlayerNumber(int number);
-	void SetSink(float power);
 
 	// Getter
 	int GetNumber() { return m_number; };

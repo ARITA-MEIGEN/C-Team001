@@ -39,7 +39,6 @@ public:
 private:
 	static int m_nMapNumber;						// 現在選択されているマップの番号
 	bool m_bMapChange;								// マップを変更したかどうか
-	CObject2D* m_pObj2D;							// マップ選択の枠
 	CObject2D* m_pObj2DPolygon[(CMap::STAGE_MAX)];	// マップ選択
 	CCamera* m_pCamera;								// カメラ
 	CLight* m_pLight;								// 光源

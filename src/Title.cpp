@@ -39,6 +39,11 @@ CTitle::~CTitle()
 //====================================
 HRESULT CTitle::Init()
 {
+	CSound::GetInstance()->Play(CSound::ELabel::LABEL_BGM_TITLE);
+
+	CObject2D* titleLogo = CObject2D::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.4f,0.0f), D3DXVECTOR2(512.0f, 128.0f),4);
+	titleLogo->SetTextureKey("TITLE_LOGO");
+
 	m_camera = CCamera::Create();
 	m_camera->SetPosR(D3DXVECTOR3(0.0f,0.0f,0.0f));
 	m_camera->SetPosV(D3DXVECTOR3(0.0f,0.0f,-250.0f));
