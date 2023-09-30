@@ -71,7 +71,6 @@ public:
 		SKILL_SPEED,		// ‰Á‘¬
 		SKILL_BOM,			// ƒ{ƒ€(‰“‹——£UŒ‚)
 		SKILL_WAVE,			// ÕŒ‚”g
-		SKILL_BOM,			// ƒ{ƒ€(‰“‹——£UŒ‚)
 		SKILL_MAX
 	};
 
