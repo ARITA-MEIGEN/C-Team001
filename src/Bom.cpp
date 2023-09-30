@@ -31,6 +31,8 @@ HRESULT CCreateBom::Init(void)
 	//‰Šú‰»
 	CObjectX::Init();
 	
+	SetSizeMag(D3DXVECTOR3(1.5f,1.5f,1.5f));
+
 	return S_OK;
 }
 
@@ -75,8 +77,9 @@ CCreateBom *CCreateBom::Create(CBlock *pOnBlock, D3DXVECTOR3 pos, int nPlayerNum
 	{
 		//î•ñ‚ÌÝ’è
 		pBom->Init();
-		pBom->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("ITEM_BOX"));
+		pBom->BindModel(CObjectXOriginalList::GetInstance()->GetModelData("BOM"));
 		pBom->SetPos(pos);
+		pBom->AddPos(D3DXVECTOR3(0.0f,20.0f,0.0f));
 		pBom->m_nLife = nLife;
 		pBom->m_nPlayerNumber = nPlayerNumber;
 		pBom->m_pOnBlock = pOnBlock;
