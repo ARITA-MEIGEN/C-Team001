@@ -136,7 +136,7 @@ void CResult::Update()
 
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
-		if ((pInput->Trigger(DIK_RETURN)) == true)		//ENTERキー
+		if ((pInput->Trigger(DIK_RETURN)) == true || (pInput->Trigger(JOYPAD_B)))		//ENTERキー
 		{//エンターでランキングに
 		 //モード設定
 			CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_TITLE);
