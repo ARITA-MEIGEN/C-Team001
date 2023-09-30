@@ -71,6 +71,7 @@ public:
 		SKILL_SPEED,		// 加速
 		SKILL_BOM,			// ボム(遠距離攻撃)
 		SKILL_WAVE,			// 衝撃波
+		SKILL_BOM,			// ボム(遠距離攻撃)
 		SKILL_MAX
 	};
 
@@ -112,7 +113,7 @@ public:
 	void SetMove(D3DXVECTOR3 move) { m_move = move; };				// 移動の設定
 	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }		// スキルゲージの量の設定
 	void SetTeleport(bool bTeleport) { m_bTeleport = bTeleport; }
-	void SetResultMotion(int Rank);								// リザルト時のモーション再生
+	void SetResultMotion(int Rank);									// リザルト時のモーション再生
 
 	void Stun(int inTime);	// 硬直の発生
 	void StunNoMotion(int inTime);	// 硬直の発生
@@ -172,6 +173,7 @@ private:	// ↓スキル処理一覧↓
 	float			m_fSkillGauge;		// スキルゲージの量
 	float			m_fSubGauge;		// スキルゲージを減算させる
 	int				m_nSkillTimer;		// モーション再生からスキル発生までの時間
+	int				m_nSkillCT;			// スキルのクールタイム
 
 private:	// メンバー変数
 	CController*	m_controller;			// 命令を出す人
