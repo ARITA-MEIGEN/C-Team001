@@ -503,11 +503,6 @@ void CPlayer::Skill_Idel()
 		case CPlayer::SKILL_SPEED:
 			SlowlySubGauge();
 			break;
-
-		case CPlayer::SKILL_PAINT:
-			SlowlySubGauge();
-			break;
-
 		case CPlayer::SKILL_BOM:
 			SlowlySubGauge();
 			break;
