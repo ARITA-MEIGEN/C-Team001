@@ -69,8 +69,6 @@ public:
 		SKILL_IDLE = 0,
 		SKILL_SPEED,		// 加速
 		SKILL_PAINT,		// 塗範囲拡大
-		SKILL_KNOCKBACK,	// ノックバック
-		SKILL_AREA,			// エリア生成
 		SKILL_WAVE,			// 衝撃波
 		SKILL_RUSH,			// 突進
 		SKILL_BOM,			// ボム(遠距離攻撃)
@@ -174,6 +172,7 @@ private:	// ↓スキル処理一覧↓
 	float			m_fSkillGauge;		// スキルゲージの量
 	float			m_fSubGauge;		// スキルゲージを減算させる
 	int				m_nSkillTimer;		// モーション再生からスキル発生までの時間
+	int				m_nSkillCT;			// スキルのクールタイム
 
 private:	// メンバー変数
 	CController*	m_controller;			// 命令を出す人

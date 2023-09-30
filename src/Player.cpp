@@ -125,6 +125,7 @@ HRESULT CPlayer::Init()
 	m_bTeleport = false;
 	m_bMaxGauge = false;
 	m_bOperate = true;
+	m_nSkillCT = 0;
 
 	m_funcSkill = m_SkillFunc;
 	SetSkill(SKILL_IDLE);
@@ -222,7 +223,7 @@ void CPlayer::Update(void)
 	CDebugProc::Print("Player：pos(%f,%f,%f)\n", m_pos.x, m_pos.y, m_pos.z);
 	CDebugProc::Print("Player：rot(%f,%f,%f)\n", m_rot.x, m_rot.y, m_rot.z);
 	CDebugProc::Print("Player：Motion : %d\n", (int)m_Motion);
-	CDebugProc::Print("Player：State :%d\n", (int)m_State);
+	CDebugProc::Print("Player：State :%d\n", (int)m_skillStateNow);
 	CDebugProc::Print("Player：Fream : %d\n", m_frame);
 	CDebugProc::Print("Player：ItemStock : %d\n", m_nStockItem);
 #endif // _DEBUG
@@ -510,14 +511,6 @@ void CPlayer::Skill_Idel()
 			SlowlySubGauge();
 			break;
 
-		case CPlayer::SKILL_KNOCKBACK:
-			SlowlySubGauge();
-			break;
-
-		case CPlayer::SKILL_AREA:
-			SlowlySubGauge();
-			break;
-
 		case CPlayer::SKILL_BOM:
 			SlowlySubGauge();
 			break;
@@ -607,45 +600,28 @@ void CPlayer::Skill_Bom()
 		return;
 	}
 
-	if (m_controller->Throw())
-	{// キー入力すると投げる
-		m_nStockItem--;			//ストック数を減らす
+	if (m_nSkillCT > 0)
+	{
+		m_nSkillCT--;
+	}
 
+	if (m_controller == nullptr)
+	{
+		return;
+	}
+
+	if (m_nSkillCT <= 0)
+	{// キー入力すると投げる
 		//乗っているブロックの番号を取得
 		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-		D3DXVECTOR2 Idx(BlockIdx.x, BlockIdx.y);
 
-		D3DXVECTOR2 range;
-		range.x = m_direction.x;
-		range.y = m_direction.y;
-
-		if (m_rot.y == D3DX_PI * 0.0f)
-		{//下
-		 //2マス左に投げる
-			Idx.y += THROW_DISTANCE;
-		}
-		else if (m_rot.y == D3DX_PI * 1.0f)
-		{//上
-		 //2マス左に投げる
-			Idx.y -= THROW_DISTANCE;
-		}
-		else if (m_rot.y == D3DX_PI * 0.5f)
-		{//左
-		 //2マス左に投げる
-			Idx.x -= THROW_DISTANCE;
-		}
-		else if (m_rot.y == D3DX_PI * -0.5f)
-		{//右
-		 //2マス右に投げる
-			Idx.x += THROW_DISTANCE;
-		}
-
-		CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+		CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);
 		if (Block != nullptr)
 		{//ブロックを塗る
 			Block->SetPlayerNumber(m_nPlayerNumber);
 			CCreateBom::Create(Block, Block->GetPos(), m_nPlayerNumber, 120);
 		}
+		m_nSkillCT = 60;
 	}
 }
 
@@ -783,7 +759,7 @@ void CPlayer::BlockCollision()
 
 		if (XMin && XMax && ZMin && ZMax)
 		{
-			if (pBlock->GetNumber() != m_nPlayerNumber && m_fSkillGauge < MAX_GAUGE && m_State == PST_STAND && m_skillStateNow != SKILL_RUSH)
+			if (pBlock->GetNumber() != m_nPlayerNumber && m_fSkillGauge < MAX_GAUGE && m_skillStateNow == PST_STAND && m_skillStateNow != SKILL_RUSH)
 			{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックスではなく、無強化の場合)
 				m_fSkillGauge++;
 			}
@@ -894,10 +870,6 @@ void CPlayer::Item()
 			//乗っているブロックの番号を取得
 			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
 			D3DXVECTOR2 Idx(BlockIdx.x, BlockIdx.y);
-
-			D3DXVECTOR2 range;
-			range.x = m_direction.x;
-			range.y = m_direction.y;
 
 			if (m_rot.y == D3DX_PI * 0.0f)
 			{//下

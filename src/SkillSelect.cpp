@@ -336,10 +336,6 @@ void CSkillSelect::Texture()
 				break;
 			case CPlayer::SKILL_PAINT:
 				break;
-			case CPlayer::SKILL_KNOCKBACK:
-				break;
-			case CPlayer::SKILL_AREA:
-				break;
 			case CPlayer::SKILL_WAVE:
 				break;
 			case CPlayer::SKILL_RUSH:
