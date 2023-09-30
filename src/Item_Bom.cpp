@@ -33,7 +33,7 @@ HRESULT CBom::Init(void)
 	CItem::Init();
 
 	//テクスチャ設定
-	SetTextureKey("SPEED_UP_ITEM_ICON");
+	SetTextureKey("SKILL_ICON_BOMB");
 
 	return S_OK;
 }

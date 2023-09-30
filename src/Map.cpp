@@ -295,7 +295,7 @@ void CMap::PopItem()
 	//ÉAÉCÉeÉÄÇÃê∂ê¨
 	CItem* popItem = nullptr;
 
-	int random = IntRandom(2, 0);
+	int random = IntRandom(3, 0);
 
 	switch (random)
 	{
@@ -304,6 +304,9 @@ void CMap::PopItem()
 		break;
 	case 1:
 		popItem = CSpeed::Create(pos);
+		break;
+	case 2:
+		popItem = CBom::Create(pos);
 		break;
 	default:
 		break;

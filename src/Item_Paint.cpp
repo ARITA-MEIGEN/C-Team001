@@ -30,7 +30,7 @@ HRESULT CPaint::Init(void)
 	CItem::Init();
 
 	//テクスチャ設定
-	SetTextureKey("PAINT_UP_ITEM_ICON");
+	SetTextureKey("SKILL_ICON_PEINT");
 
 	return S_OK;
 }
