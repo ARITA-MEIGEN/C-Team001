@@ -38,7 +38,7 @@ const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
 const int CPlayer::SKILL_WAVE_TIME = 30;		// スキルの発生時間
 const float CPlayer::THROW_DISTANCE = 4.0f;		// 投擲距離
-const float CPlayer::RUSH_SPEED = 2.5f;			// 突進速度
+const float CPlayer::RUSH_SPEED = 4.5f;			// 突進速度
 
 const CPlayer::SKILL_FUNC CPlayer::m_SkillFunc[] =
 {
@@ -83,9 +83,6 @@ CPlayer::~CPlayer()
 //-----------------------------------------------------------------------------
 HRESULT CPlayer::Init()
 {
-	// 影
-	//m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(80.0f, 0.0f, 80.0f));
-
 	// モーションの読込み
 	m_motion = new CMotion(MOTION_PATH.data());
 	m_Motion = PM_NEUTRAL;	//ニュートラルモーションに変更
@@ -117,7 +114,7 @@ HRESULT CPlayer::Init()
 	}
 
 	//初期化
-	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
+	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1));
 	m_bKnockBack = false;
 	m_bTeleport = false;
 	m_bMaxGauge = false;

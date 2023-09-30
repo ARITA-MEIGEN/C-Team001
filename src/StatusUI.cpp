@@ -20,8 +20,12 @@ const D3DXVECTOR2 CStatusUI::GAUGE_SIZE			(0.0f,0.0f);
 const D3DXVECTOR3 CStatusUI::CHARACTER_BG_LOCAL_POS	(-40.0f,-30.0f,0.0f);
 const D3DXVECTOR2 CStatusUI::CHARACTER_BG_SIZE		(80.0f, 80.0f);
 
-const D3DXVECTOR3 CStatusUI::SKILL_ICON_BG_LOCAL_POS	(0.0f,0.0f,0.0f);
-const D3DXVECTOR2 CStatusUI::SKILL_ICON_BG_SIZE			(45.0f, 45.0f);
+const D3DXVECTOR3 CStatusUI::SKILL_ICON_BG_LOCAL_POS(0.0f, 0.0f, 0.0f);
+const D3DXVECTOR2 CStatusUI::SKILL_ICON_BG_SIZE(45.0f, 45.0f);
+
+const D3DXVECTOR3 CStatusUI::ITEM_ICON_LEFT_LOCAL_POS(35.0f, -30.0f, 0.0f);
+const D3DXVECTOR3 CStatusUI::ITEM_ICON_ADD_POS(45.0f, 0.0f, 0.0f);
+const D3DXVECTOR2 CStatusUI::ITEM_ICON_SIZE(40.0f, 40.0f);
 
 //======================================================
 //生成
@@ -113,6 +117,16 @@ HRESULT CStatusUI::Init()
 		m_pSkillIconBg->SetTextureKey("SKILL_ICON_BG");					//テクスチャの設定
 	}
 
+	{// アイテム
+		D3DXVECTOR3 pos(0.0f, 0.0f, 0.0f);
+		for (int i = 0; i < 3; i++)
+		{
+			m_pItemIcon[i] = CObject2D::Create(pos, ITEM_ICON_SIZE, CObjectList::EPriority::LEVEL_2D_UI);
+			m_pItemIcon[i]->SetTextureKey("SKILL_ICON_BOMB");					// テクスチャの設定
+			m_pItemIcon[i]->SetCol(D3DXCOLOR(0.25f, 0.25f, 0.25f, 1.0f));
+		}
+	}
+
 	return S_OK;
 }
 
@@ -143,18 +157,29 @@ void CStatusUI::Uninit()
 	}
 }
 
+void CStatusUI::Update()
+{
+	CObject::Update();
+}
+
 //======================================================
 // 位置設定
 //======================================================
 void CStatusUI::SetPos(const D3DXVECTOR3 & inPos)
 {
 	m_pos = inPos;
-	m_pGauge->SetPos(m_pos + GAUGE_LOCAL_POS);					//スキルゲージ
+	m_pGauge->SetPos(m_pos + GAUGE_LOCAL_POS);					// スキルゲージ
 	D3DXVECTOR3 pos = GAUGE_LOCAL_POS;
 	pos.x += 250.0f * 0.5f;
 	m_pGaugeBg->SetPos(m_pos + pos);
-	m_pCharaBg->SetPos(m_pos + CHARACTER_BG_LOCAL_POS);			//キャラクター背景
-	m_pSkillIconBg->SetPos(m_pos + SKILL_ICON_BG_LOCAL_POS);	//スキルアイコン背景
+	m_pCharaBg->SetPos(m_pos + CHARACTER_BG_LOCAL_POS);			// キャラクター背景
+	m_pSkillIconBg->SetPos(m_pos + SKILL_ICON_BG_LOCAL_POS);	// スキルアイコン背景
+
+	for (int i = 0; i < 3; i++)
+	{
+		m_pItemIcon[i]->SetPos(m_pos + ITEM_ICON_LEFT_LOCAL_POS);
+		m_pItemIcon[i]->AddPos(ITEM_ICON_ADD_POS * i);
+	}
 }
 
 //======================================================
