@@ -102,11 +102,11 @@ void CTutorial::Update()
 	CInput* pInput = CInput::GetKey();
 	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
-		if (pInput->Trigger(JOYPAD_LEFT))	//¶
+		if (pInput->Trigger(JOYPAD_LEFT) || pInput->Trigger(JOYPAD_B))	//¶
 		{
 			m_count--;
 		}
-		else if (pInput->Trigger(JOYPAD_RIGHT))	//‰E
+		else if (pInput->Trigger(JOYPAD_RIGHT) || pInput->Trigger(JOYPAD_A))	//‰E
 		{
 			m_count++;
 		}
