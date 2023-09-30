@@ -101,35 +101,23 @@ void CCreateBom::Explosion(void)
 			continue;
 		}
 
-		//十字(横と縦)の範囲を塗る
-		//縦の範囲
+		//3×3の範囲を塗る
 		for (int nCntY = 0; nCntY < 3; nCntY++)
 		{
-			//乗っているブロックの番号を取得
-			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-			//範囲内のブロックを塗る
-			BlockIdx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y - 1.0f);			//中心に設定する
-			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x, BlockIdx.y + nCntY);
-			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
+			for (int nCntX = 0; nCntX < 3; nCntX++)
+			{
+				//乗っているブロックの番号を取得
+				D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+				//範囲内のブロックを塗る
+				BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y - 1.0f);			//左上に設定する
+				D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y + nCntY);
+				CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
 
-			if (Block != nullptr)
-			{//ブロックを塗る
-				Block->SetPlayerNumber(m_nPlayerNumber);
-			}
-		}
-		//横の範囲
-		for (int nCntX = 0; nCntX < 3; nCntX++)
-		{
-			//乗っているブロックの番号を取得
-			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
-			//範囲内のブロックを塗る
-			BlockIdx = D3DXVECTOR2(BlockIdx.x - 1.0f, BlockIdx.y);			//中央左に設定する
-			D3DXVECTOR2 Idx = D3DXVECTOR2(BlockIdx.x + nCntX, BlockIdx.y);
-			CBlock* Block = CGame::GetMap()->GetBlock((int)Idx.x, (int)Idx.y);
-
-			if (Block != nullptr)
-			{//ブロックを塗る
-				Block->SetPlayerNumber(m_nPlayerNumber);
+				if (Block != nullptr)
+				{//ブロックを塗る
+				 //Block->SetOnPlayer(this);	//プレイヤーの
+					Block->SetPlayerNumber(m_nPlayerNumber);
+				}
 			}
 		}
 	}
