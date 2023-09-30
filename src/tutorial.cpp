@@ -55,21 +55,21 @@ HRESULT CTutorial::Init()
 	{
 		CSkyBg::Create();
 
-		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), D3DXVECTOR3(4000.0f, 0.0f, 2000.0f), 2);
+		CObject3D* pori = CObject3D::Create(D3DXVECTOR3(0.0f, -250.0f, 0.0f), D3DXVECTOR3(4000.0f, 0.0f, 2000.0f), 2);
 		pori->SetUV(0.0f, 20.0f, 0.0f, 20.0f);
 		pori->SetTextureKey("TEST_FLOOR");
 	}
 
-	m_tutorialBg.push_back(CObject3D::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(200.0f,0.0f, 200.0f), 2));
-	m_tutorialBg.push_back(CObject3D::Create(D3DXVECTOR3(250.0f, 0.0f, 0.0f), D3DXVECTOR3(200.0f,0.0f, 200.0f), 2));
-	m_tutorialBg.push_back(CObject3D::Create(D3DXVECTOR3(500.0f, 0.0f, 0.0f), D3DXVECTOR3(200.0f,0.0f, 200.0f), 2));
+	m_tutorialBg.push_back(CObject3D::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1920.0f * 0.12f,0.0f, 1080.0f * 0.12f), 2));
+	m_tutorialBg.push_back(CObject3D::Create(D3DXVECTOR3(250.0f, 0.0f, 0.0f), D3DXVECTOR3(1920.0f * 0.12f,0.0f, 1080.0f * 0.12f), 2));
+	m_tutorialBg.push_back(CObject3D::Create(D3DXVECTOR3(500.0f, 0.0f, 0.0f), D3DXVECTOR3(1920.0f * 0.12f,0.0f, 1080.0f * 0.12f), 2));
 
 	m_tutorialBg[0]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f,0.0f,0.0f));
 	m_tutorialBg[1]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f,0.0f,0.0f));
 	m_tutorialBg[2]->SetRot(D3DXVECTOR3(-D3DX_PI * 0.5f,0.0f,0.0f));
-	m_tutorialBg[0]->SetTextureKey("TEST_FLOOR");
-	m_tutorialBg[1]->SetTextureKey("TEST_FLOOR");
-	m_tutorialBg[2]->SetTextureKey("TEST_FLOOR");
+	m_tutorialBg[0]->SetTextureKey("TUTORIAL0");
+	m_tutorialBg[1]->SetTextureKey("TUTORIAL1");
+	m_tutorialBg[2]->SetTextureKey("TUTORIAL2");
 
 	return S_OK;
 }
@@ -99,18 +99,6 @@ void CTutorial::Uninit()
 //====================================
 void CTutorial::Update()
 {
-	CInput* pInput = CInput::GetKey();
-	if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
-	{
-		if (pInput->Trigger(JOYPAD_LEFT) || pInput->Trigger(JOYPAD_B))	//左
-		{
-			m_count--;
-		}
-		else if (pInput->Trigger(JOYPAD_RIGHT) || pInput->Trigger(JOYPAD_A))	//右
-		{
-			m_count++;
-		}
-	}
 
 	if (m_count < 0)
 	{
@@ -132,6 +120,18 @@ void CTutorial::Update()
 		{
 			m_camera->SetPosR(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 			m_camera->SetPosV(D3DXVECTOR3(0.0f, 0.0f, -170.0f));
+			CInput* pInput = CInput::GetKey();
+			if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
+			{
+				if (pInput->Trigger(JOYPAD_LEFT) || pInput->Trigger(JOYPAD_B))	//左
+				{
+					m_count--;
+				}
+				else if (pInput->Trigger(JOYPAD_RIGHT) || pInput->Trigger(JOYPAD_A))	//右
+				{
+					m_count++;
+				}
+			}
 		}
 	}
 	if (m_count == 1)
@@ -149,6 +149,18 @@ void CTutorial::Update()
 		{
 			m_camera->SetPosR(D3DXVECTOR3(250.0f, 0.0f, 0.0f));
 			m_camera->SetPosV(D3DXVECTOR3(250.0f, 0.0f, -170.0f));
+			CInput* pInput = CInput::GetKey();
+			if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
+			{
+				if (pInput->Trigger(JOYPAD_LEFT) || pInput->Trigger(JOYPAD_B))	//左
+				{
+					m_count--;
+				}
+				else if (pInput->Trigger(JOYPAD_RIGHT) || pInput->Trigger(JOYPAD_A))	//右
+				{
+					m_count++;
+				}
+			}
 		}
 	}
 	if (m_count == 2)
@@ -166,11 +178,23 @@ void CTutorial::Update()
 		{
 			m_camera->SetPosR(D3DXVECTOR3(500.0f, 0.0f, 0.0f));
 			m_camera->SetPosV(D3DXVECTOR3(500.0f, 0.0f, -170.0f));
+			CInput* pInput = CInput::GetKey();
+			if (CApplication::getInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
+			{
+				if (pInput->Trigger(JOYPAD_LEFT) || pInput->Trigger(JOYPAD_B))	//左
+				{
+					m_count--;
+				}
+				else if (pInput->Trigger(JOYPAD_RIGHT) || pInput->Trigger(JOYPAD_A))	//右
+				{
+					m_count++;
+				}
+			}
 		}
 	}
 	if (m_count >= 3)
 	{
-		CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
+		CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_MAP);
 	}
 }
 
