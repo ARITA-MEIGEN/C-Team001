@@ -305,6 +305,9 @@ void CMap::PopItem()
 	case 1:
 		popItem = CSpeed::Create(pos);
 		break;
+	case 2:
+		popItem = CBom::Create(pos);
+		break;
 	default:
 		break;
 	}
