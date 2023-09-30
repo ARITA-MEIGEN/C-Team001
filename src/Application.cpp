@@ -21,6 +21,7 @@
 #include "Texture.h"
 #include "SkillSelect.h"
 #include "MapSelect.h"
+#include "tutorial.h"
 
 //====================================
 //静的メンバ変数
@@ -203,6 +204,11 @@ void CApplication::SetMode(MODE mode)
 	{
 	case MODE_TITLE:	//タイトル画面
 		m_pMode = new CTitle;
+		m_pMode->Init();
+		break;
+
+	case MODE_TUTORIAL:	//マップ選択画面
+		m_pMode = new CTutorial;
 		m_pMode->Init();
 		break;
 

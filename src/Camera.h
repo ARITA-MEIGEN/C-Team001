@@ -25,9 +25,12 @@ public:
 	static CCamera* Create();	// 生成
 
 	void SetPosV(D3DXVECTOR3 posV) { m_posV = posV; };	//視点
+	D3DXVECTOR3 GetPosV() { return m_posV; };	//視点
 	void SetPosR(D3DXVECTOR3 posR) { m_posR = posR; };	//注視点
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; };		//向き
 	void SetVecU(D3DXVECTOR3 vec) { m_vecU = vec; };
+
+	void AddPos(D3DXVECTOR3 move);
 
 	D3DXVECTOR3 CalculateRotFromPos(const D3DXVECTOR3& inPos);	// 位置からカメラに向くための角度を算出
 protected:

@@ -154,6 +154,12 @@ CCamera * CCamera::Create(void)
 	return pCamera;
 }
 
+void CCamera::AddPos(D3DXVECTOR3 move)
+{
+	m_posV += move;
+	m_posR += move;
+}
+
 D3DXVECTOR3 CCamera::CalculateRotFromPos(const D3DXVECTOR3 & inPos)
 {
 	D3DXVECTOR3 rot;

@@ -33,6 +33,7 @@ public:
 	enum MODE
 	{//ÉQÅ[ÉÄÉÇÅ[Éh
 		MODE_TITLE = 0,
+		MODE_TUTORIAL,
 		MODE_MAP,
 		MODE_SKILL,
 		MODE_GAME,

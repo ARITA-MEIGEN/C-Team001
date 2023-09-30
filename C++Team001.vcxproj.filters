@@ -246,6 +246,9 @@
     <ClCompile Include="src\Bom.cpp">
       <Filter>ソース ファイル\04_Item</Filter>
     </ClCompile>
+    <ClCompile Include="src\tutorial.cpp">
+      <Filter>ソース ファイル\01_Mode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Command.h">
@@ -258,9 +261,6 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\File.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mode.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Particle.h">
@@ -451,6 +451,12 @@
     </ClInclude>
     <ClInclude Include="src\Bom.h">
       <Filter>ソース ファイル\04_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mode.h">
+      <Filter>ソース ファイル\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tutorial.h">
+      <Filter>ソース ファイル\01_Mode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

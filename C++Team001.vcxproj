@@ -228,6 +228,7 @@
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\Title.cpp" />
+    <ClCompile Include="src\tutorial.cpp" />
     <ClCompile Include="src\UI.cpp" />
     <ClCompile Include="src\utility.cpp" />
   </ItemGroup>
@@ -298,6 +299,7 @@
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Time.h" />
     <ClInclude Include="src\Title.h" />
+    <ClInclude Include="src\tutorial.h" />
     <ClInclude Include="src\UI.h" />
     <ClInclude Include="src\utility.h" />
   </ItemGroup>
