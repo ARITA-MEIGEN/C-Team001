@@ -5,6 +5,7 @@
     [ "ITEM_BOX", "data\/MODEL\/ItemBox.x" ],
     [ "TELEPORT_BOX", "data\/MODEL\/GSP3_MDL_SUMPLE\/Tiles\/TeleportTile_col01.x" ],
     [ "KYUU2", "data\/MODEL\/kyuu2.x" ],
+    [ "BOM", "data\/MODEL\/Player\/SkillParts\/Bomb\/SphereBomb.x" ],
     [ "AIRSHIP", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/Airship_0.3.x" ],
     [ "ENVIRONMENT_FUTURE1", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building00_0.4.x" ],
     [ "ENVIRONMENT_FUTURE2", "data\/MODEL\/GSP3_MDL_SUMPLE\/Environment\/future\/Building01.x" ],
