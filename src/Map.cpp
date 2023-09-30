@@ -349,7 +349,7 @@ void CMap::PopFutureArea()
 	int range = 3;
 
 	//ÉGÉäÉAÇÃê∂ê¨
-	CArea* area = CArea::Create(popBlockIndex, range,60,180);
+	CArea* area = CArea::Create(popBlockIndex, range,120,180);
 
 	auto atBigenFutrue = [this, range, popBlockIndex]()
 	{
