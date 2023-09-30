@@ -31,7 +31,7 @@
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const std::string CPlayer::MOTION_PATH = "data/TXT/Player001_x1.5.txt";	// モーションデータパス
+const std::string CPlayer::MOTION_PATH = "data/TXT/Player001.txt";	// モーションデータパス
 const int	CPlayer::MAX_STOCK = 3; 			// 持てるアイテムの最大数
 const float CPlayer::PLAYER_SPEED = 1.5f; 		// 移動速度
 const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
@@ -984,6 +984,7 @@ void CPlayer::Stun(int inTime)
 {
 	m_nStunTime = inTime;
 	m_Motion = PM_STAN;
+	m_motion->SetNumMotion(m_Motion);
 	m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 

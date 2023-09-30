@@ -25,7 +25,7 @@
 //静的変数宣言
 //-----------------------------------------------------------------------------
 const float CCamera::CAMERA_NEAR = 1.0f;	// ニア
-const float CCamera::CAMERA_FAR = 3000.0f;	// ファー
+const float CCamera::CAMERA_FAR = 3500.0f;	// ファー
 const float CCamera::FIELD_OF_VIEW = D3DXToRadian(45.0f);	// 視野角
 
 //===========================

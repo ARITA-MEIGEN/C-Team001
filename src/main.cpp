@@ -82,7 +82,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpC
 		NULL);
 
 	//初期化処理
-	if (FAILED(pApplication->Init(hWnd, TRUE, hInstance)))
+	if (FAILED(pApplication->Init(hWnd, true, hInstance)))
 	{
 		return-1;
 	}

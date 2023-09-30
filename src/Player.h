@@ -67,10 +67,10 @@ public:
 	enum SKILL_STATE
 	{
 		SKILL_IDLE = 0,
-		SKILL_SPEED,		// ‰Á‘¬
-		SKILL_PAINT,		// “h”ÍˆÍŠg‘å
-		SKILL_WAVE,			// ÕŒ‚”g
 		SKILL_RUSH,			// “Ëi
+		SKILL_SPEED,		// ‰Á‘¬
+		SKILL_BOM,			// ƒ{ƒ€(‰“‹——£UŒ‚)
+		SKILL_WAVE,			// ÕŒ‚”g
 		SKILL_BOM,			// ƒ{ƒ€(‰“‹——£UŒ‚)
 		SKILL_MAX
 	};
