@@ -112,9 +112,10 @@ public:
 	void SetMove(D3DXVECTOR3 move) { m_move = move; };				// 移動の設定
 	void SetSkillGauge(float skill) { m_fSkillGauge = skill; }		// スキルゲージの量の設定
 	void SetTeleport(bool bTeleport) { m_bTeleport = bTeleport; }
-	void SetResultMotion(int Rank);								// リザルト時のモーション再生
+	void SetResultMotion(int Rank);									// リザルト時のモーション再生
 
 	void Stun(int inTime);	// 硬直の発生
+	void StunNoMotion(int inTime);	// 硬直の発生
 
 	// Getter
 	D3DXVECTOR3		GetPos() { return m_pos; };
@@ -122,6 +123,7 @@ public:
 	D3DXMATRIX		GetMtx() { return m_mtxWorld; };				// マトリックスの取得
 	float			GetSkillGauge() { return m_fSkillGauge; }		// スキルゲージの量の取得
 	int				GetPlayerNumber() { return m_nPlayerNumber; }	// プレイヤーの番号の取得
+	int				GetItemStock() { return m_nStockItem; }			// プレイヤーの持っているアイテムストック数
 	bool			GetTeleport() { return m_bTeleport; }
 
 private:
@@ -171,6 +173,7 @@ private:	// ↓スキル処理一覧↓
 	float			m_fSkillGauge;		// スキルゲージの量
 	float			m_fSubGauge;		// スキルゲージを減算させる
 	int				m_nSkillTimer;		// モーション再生からスキル発生までの時間
+	int				m_nSkillCT;			// スキルのクールタイム
 
 private:	// メンバー変数
 	CController*	m_controller;			// 命令を出す人

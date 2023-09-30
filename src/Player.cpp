@@ -38,18 +38,15 @@ const float CPlayer::ADD_SPEED = 1.5f;			// アイテムで加算するスピード
 const float CPlayer::SKILL_BUFF_TIME = 60.0f;	// バフの効果時間
 const int CPlayer::SKILL_WAVE_TIME = 30;		// スキルの発生時間
 const float CPlayer::THROW_DISTANCE = 4.0f;		// 投擲距離
-const float CPlayer::RUSH_SPEED = 2.0f;			// 突進速度
+const float CPlayer::RUSH_SPEED = 2.5f;			// 突進速度
 
 const CPlayer::SKILL_FUNC CPlayer::m_SkillFunc[] =
 {
 	UPDATE_FUNC_CAST(Skill_Idel),
+	UPDATE_FUNC_CAST(Skill_Rush),
 	UPDATE_FUNC_CAST(Skill_Speed),
-	UPDATE_FUNC_CAST(Skill_Paint),
-	UPDATE_FUNC_CAST(Skill_Knockback),
-	UPDATE_FUNC_CAST(Skill_Idel),
 	UPDATE_FUNC_CAST(Skill_Bom),
 	UPDATE_FUNC_CAST(Skill_Wave),
-	UPDATE_FUNC_CAST(Skill_Rush),
 };
 
 //-----------------------------------------------------------------------------
@@ -120,11 +117,12 @@ HRESULT CPlayer::Init()
 	}
 
 	//初期化
-	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
+	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1));
 	m_bKnockBack = false;
 	m_bTeleport = false;
 	m_bMaxGauge = false;
 	m_bOperate = true;
+	m_nSkillCT = 0;
 
 	m_funcSkill = m_SkillFunc;
 	SetSkill(SKILL_IDLE);
@@ -222,7 +220,7 @@ void CPlayer::Update(void)
 	CDebugProc::Print("Player：pos(%f,%f,%f)\n", m_pos.x, m_pos.y, m_pos.z);
 	CDebugProc::Print("Player：rot(%f,%f,%f)\n", m_rot.x, m_rot.y, m_rot.z);
 	CDebugProc::Print("Player：Motion : %d\n", (int)m_Motion);
-	CDebugProc::Print("Player：State :%d\n", (int)m_State);
+	CDebugProc::Print("Player：State :%d\n", (int)m_skillStateNow);
 	CDebugProc::Print("Player：Fream : %d\n", m_frame);
 	CDebugProc::Print("Player：ItemStock : %d\n", m_nStockItem);
 #endif // _DEBUG
@@ -468,7 +466,6 @@ void CPlayer::Skill()
 
 	if (m_nSkillBuffTime > 0 || m_bMaxGauge)
 	{//スキルの効果時間があったら
-		//現在のスキルLvによって減少量
 		m_fSkillGauge -= m_fSubGauge;
 		m_bMaxGauge = false;
 	}
@@ -508,7 +505,7 @@ void CPlayer::Skill_Idel()
 			break;
 
 		case CPlayer::SKILL_BOM:
-			SubGauge();
+			SlowlySubGauge();
 			break;
 
 		case CPlayer::SKILL_WAVE:
@@ -594,6 +591,30 @@ void CPlayer::Skill_Bom()
 	{
 		SetSkill(SKILL_IDLE);
 		return;
+	}
+
+	if (m_nSkillCT > 0)
+	{
+		m_nSkillCT--;
+	}
+
+	if (m_controller == nullptr)
+	{
+		return;
+	}
+
+	if (m_nSkillCT <= 0)
+	{// キー入力すると投げる
+		//乗っているブロックの番号を取得
+		D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
+
+		CBlock* Block = CGame::GetMap()->GetBlock((int)BlockIdx.x, (int)BlockIdx.y);
+		if (Block != nullptr)
+		{//ブロックを塗る
+			Block->SetPlayerNumber(m_nPlayerNumber);
+			CCreateBom::Create(Block, Block->GetPos(), m_nPlayerNumber, 120);
+		}
+		m_nSkillCT = 60;
 	}
 }
 
@@ -731,7 +752,7 @@ void CPlayer::BlockCollision()
 
 		if (XMin && XMax && ZMin && ZMax)
 		{
-			if (pBlock->GetNumber() != m_nPlayerNumber && m_fSkillGauge < MAX_GAUGE && m_State == PST_STAND && m_skillStateNow != SKILL_RUSH)
+			if (pBlock->GetNumber() != m_nPlayerNumber && m_fSkillGauge < MAX_GAUGE && m_skillStateNow == PST_STAND && m_skillStateNow != SKILL_RUSH)
 			{//自分以外の色を塗り替えていたらゲージの加算(ゲージがマックスではなく、無強化の場合)
 				m_fSkillGauge++;
 			}
@@ -818,16 +839,6 @@ void CPlayer::TakeItem()
 //-----------------------------------------------------------------------------
 void CPlayer::Item()
 {
-#ifdef _DEBUG
-	CInput* pInput = CInput::GetKey();
-
-	if (pInput->Trigger(DIK_Q))
-	{
-		m_nStockItem++;
-		m_StockItemState = STOCK_BOM;
-	}
-#endif // _DEBUG
-
 	if (m_controller == nullptr)
 	{
 		return;
@@ -852,10 +863,6 @@ void CPlayer::Item()
 			//乗っているブロックの番号を取得
 			D3DXVECTOR2 BlockIdx = CGame::GetMap()->GetBlockIdx(m_pOnBlock);
 			D3DXVECTOR2 Idx(BlockIdx.x, BlockIdx.y);
-
-			D3DXVECTOR2 range;
-			range.x = m_direction.x;
-			range.y = m_direction.y;
 
 			if (m_rot.y == D3DX_PI * 0.0f)
 			{//下

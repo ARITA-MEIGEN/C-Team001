@@ -295,7 +295,7 @@ void CMap::PopItem()
 	//アイテムの生成
 	CItem* popItem = nullptr;
 
-	int random = IntRandom(2, 0);
+	int random = IntRandom(3, 0);
 
 	switch (random)
 	{
@@ -304,6 +304,9 @@ void CMap::PopItem()
 		break;
 	case 1:
 		popItem = CSpeed::Create(pos);
+		break;
+	case 2:
+		popItem = CBom::Create(pos);
 		break;
 	default:
 		break;
@@ -349,7 +352,7 @@ void CMap::PopFutureArea()
 	int range = 3;
 
 	//エリアの生成
-	CArea* area = CArea::Create(popBlockIndex, range,60,180);
+	CArea* area = CArea::Create(popBlockIndex, range,120,180);
 
 	auto atBigenFutrue = [this, range, popBlockIndex]()
 	{

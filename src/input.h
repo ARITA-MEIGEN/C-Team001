@@ -54,6 +54,7 @@ public:
 	// 入力しているデバイスを返す
 	std::vector<int> PressDevice(STAN_DART_INPUT_KEY key);		// プレス
 	std::vector<int> TriggerDevice(STAN_DART_INPUT_KEY key);	// トリガー
+	std::vector<int> TriggerDevice(DirectJoypad key);	// トリガー
 	std::vector<int> ReleaseDevice(STAN_DART_INPUT_KEY key);	// リリース
 
 	/* Keyboard */
