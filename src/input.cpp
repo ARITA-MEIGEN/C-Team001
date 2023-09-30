@@ -206,6 +206,22 @@ std::vector<int> CInput::TriggerDevice(STAN_DART_INPUT_KEY key)
 	return inputedDeviceIndex;
 }
 
+std::vector<int> CInput::TriggerDevice(DirectJoypad key)
+{
+	std::vector<int> inputedDeviceIndex;
+
+	// JoyPad入力の調査
+	for (int i = 0; i < m_pJoyPad->GetJoyPadNumMax(); i++)
+	{
+		if (Trigger(key, i))
+		{
+			inputedDeviceIndex.push_back(i);
+		}
+	}
+
+	return inputedDeviceIndex;
+}
+
 //*************************************************************************************
 // 入力したデバイスの番号を取得 (Release)
 //*************************************************************************************

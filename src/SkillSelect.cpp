@@ -215,10 +215,6 @@ void CSkillSelect::SetUpSelectUI(int inPlayerCnt)
 		block->CancelPermitSink();
 		block->OnUpDownMove();
 		m_pPlayer[inPlayerCnt] = CPlayer::Create(block, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-		// カメラを向く
-		//m_pPlayer[inPlayerCnt]->SetRot(m_pCamera->CalculateRotFromPos(m_pPlayer[inPlayerCnt]->GetPos()));
-		//block->SetRot(m_pCamera->CalculateRotFromPos(block->GetPos()));
 	}
 
 	CObject3D* object = CObject3D::Create(D3DXVECTOR3(-(65.0f * 1.5f) + (65.0f * inPlayerCnt), 20.0f, 5.0f),D3DXVECTOR3(50.0f,0.0f,140.0),2);
@@ -239,9 +235,9 @@ void CSkillSelect::Input()
 	{
 		if (m_inputNumber[0] != 99)
 		{
-			if (pInput->Trigger(KEY_DECISION, m_inputNumber[0]))		//ENTERキー
+			if (pInput->Trigger(JOYPAD_B))		//ENTERキー
 			{//エンターでゲームに
-			 //モード設定
+				//モード設定
 				CApplication::getInstance()->GetFade()->SetFade(CApplication::MODE_GAME);
 			}
 		}
@@ -257,7 +253,7 @@ void CSkillSelect::Input()
 
 		if (!m_isPlayerCheck[nCnt])
 		{
-			if (m_nSkill[nCnt] >= 1)
+			if (m_nSkill[nCnt] > 1)
 			{//左端ではないなら左へ
 				if (pInput->Trigger(KEY_LEFT, m_inputNumber[nCnt]) && !m_isPlayerCheck[nCnt])
 				{
@@ -272,7 +268,7 @@ void CSkillSelect::Input()
 				m_pSelectArrow[nCnt][0][1]->SetColAlpha(0.25f);
 			}
 
-			if (m_nSkill[nCnt] < CPlayer::SKILL_MAX - 2)
+			if (m_nSkill[nCnt] < CPlayer::SKILL_MAX - 1)
 			{//右端ではないなら右へ
 				if (pInput->Trigger(KEY_RIGHT, m_inputNumber[nCnt]) && !m_isPlayerCheck[nCnt])
 				{
@@ -331,44 +327,27 @@ void CSkillSelect::Texture()
 		}
 		else
 		{
-			switch (m_state)
+			switch (m_nSkill[nCnt])
 			{
 			case CPlayer::SKILL_IDLE:
 				break;
+			case CPlayer::SKILL_RUSH:
+				m_pObj2D[nCnt]->SetTextureKey("SKILL_ICON_PAWER");
+				break;
 			case CPlayer::SKILL_SPEED:
+				m_pObj2D[nCnt]->SetTextureKey("SKILL_ICON_PEINT");
 				break;
 			case CPlayer::SKILL_BOM:
+				m_pObj2D[nCnt]->SetTextureKey("SKILL_ICON_BOMB");
 				break;
 			case CPlayer::SKILL_WAVE:
-				break;
-			case CPlayer::SKILL_RUSH:
+				m_pObj2D[nCnt]->SetTextureKey("SKILL_ICON_SKILL11");
 				break;
 			case CPlayer::SKILL_MAX:
 				break;
 			default:
 				break;
 			}
-		}
-
-		if (m_isPlayerCheck[nCnt])
-		{//プレイヤーの能力を表すテクスチャ1
-			m_pObj2D[nCnt]->SetTextureKey("CHECK_MARK");
-		}
-		else if (m_nSkill[nCnt] == 0)
-		{//プレイヤーの能力を表すテクスチャ1
-			m_pObj2D[nCnt]->SetTextureKey("SKILL_ICON_PAWER");
-		}
-		else if (m_nSkill[nCnt] == 1)
-		{//プレイヤーの能力を表すテクスチャ2
-			m_pObj2D[nCnt]->SetTextureKey("SKILL_ICON_PEINT");
-		}
-		else if (m_nSkill[nCnt] == 2)
-		{//プレイヤーの能力を表すテクスチャ3
-			m_pObj2D[nCnt]->SetTextureKey("SKILL_ICON_BOMB");
-		}
-		else if (m_nSkill[nCnt] == 3)
-		{//プレイヤーの能力を表すテクスチャ4
-			m_pObj2D[nCnt]->SetTextureKey("SKILL_ICON_SKILL11");
 		}
 	}
 }
@@ -379,7 +358,7 @@ void CSkillSelect::Texture()
 void CSkillSelect::Entry()
 {
 	CInput* pInput = CInput::GetKey();
-	std::vector<int> inputNumber = pInput->TriggerDevice(KEY_DECISION);
+	std::vector<int> inputNumber = pInput->TriggerDevice(JOYPAD_B);
 
 	for (size_t i = 0;i < inputNumber.size();i++)
 	{

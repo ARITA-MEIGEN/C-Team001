@@ -43,13 +43,10 @@ const float CPlayer::RUSH_SPEED = 2.0f;			// 突進速度
 const CPlayer::SKILL_FUNC CPlayer::m_SkillFunc[] =
 {
 	UPDATE_FUNC_CAST(Skill_Idel),
+	UPDATE_FUNC_CAST(Skill_Rush),
 	UPDATE_FUNC_CAST(Skill_Speed),
-	UPDATE_FUNC_CAST(Skill_Paint),
-	UPDATE_FUNC_CAST(Skill_Knockback),
-	UPDATE_FUNC_CAST(Skill_Idel),
 	UPDATE_FUNC_CAST(Skill_Bom),
 	UPDATE_FUNC_CAST(Skill_Wave),
-	UPDATE_FUNC_CAST(Skill_Rush),
 };
 
 //-----------------------------------------------------------------------------
@@ -120,7 +117,7 @@ HRESULT CPlayer::Init()
 	}
 
 	//初期化
-	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
+	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1));
 	m_bKnockBack = false;
 	m_bTeleport = false;
 	m_bMaxGauge = false;
@@ -608,7 +605,7 @@ void CPlayer::Skill_Wave()
 		m_nSkillTimer = SKILL_WAVE_TIME;
 		m_Motion = PM_WAVE;
 		m_motion->SetNumMotion(m_Motion);
-		Stun(SKILL_WAVE_TIME - 1);
+		StunNoMotion(SKILL_WAVE_TIME - 1);
 
 		//エフェクト生成
 		D3DXCOLOR col;
@@ -971,6 +968,12 @@ void CPlayer::Stun(int inTime)
 	m_nStunTime = inTime;
 	m_Motion = PM_STAN;
 	m_motion->SetNumMotion(m_Motion);
+	m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+}
+
+void CPlayer::StunNoMotion(int inTime)
+{
+	m_nStunTime = inTime;
 	m_movePlanVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 

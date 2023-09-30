@@ -115,6 +115,7 @@ public:
 	void SetResultMotion(int Rank);								// リザルト時のモーション再生
 
 	void Stun(int inTime);	// 硬直の発生
+	void StunNoMotion(int inTime);	// 硬直の発生
 
 	// Getter
 	D3DXVECTOR3		GetPos() { return m_pos; };

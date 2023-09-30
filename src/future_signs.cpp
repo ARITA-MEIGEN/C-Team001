@@ -58,7 +58,7 @@ void  CFutureSigns::Update()
 	CObjectX::Update();
 
 	D3DXVECTOR3 sizeMag = GetSizeMag();
-	sizeMag += D3DXVECTOR3(-0.000f, 0.005f, -0.000f);
+	sizeMag += D3DXVECTOR3(-0.000f, 0.0025f, -0.000f);
 	SetSizeMag(sizeMag);
 
 	if (m_time % 10 == 0)
