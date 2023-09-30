@@ -123,6 +123,7 @@ public:
 	D3DXMATRIX		GetMtx() { return m_mtxWorld; };				// マトリックスの取得
 	float			GetSkillGauge() { return m_fSkillGauge; }		// スキルゲージの量の取得
 	int				GetPlayerNumber() { return m_nPlayerNumber; }	// プレイヤーの番号の取得
+	int				GetItemStock() { return m_nStockItem; }			// プレイヤーの持っているアイテムストック数
 	bool			GetTeleport() { return m_bTeleport; }
 
 private:

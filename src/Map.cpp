@@ -295,7 +295,7 @@ void CMap::PopItem()
 	//ƒAƒCƒeƒ€‚Ì¶¬
 	CItem* popItem = nullptr;
 
-	int random = IntRandom(2, 0);
+	int random = IntRandom(3, 0);
 
 	switch (random)
 	{

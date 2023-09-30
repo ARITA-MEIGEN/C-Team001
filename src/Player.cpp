@@ -117,7 +117,7 @@ HRESULT CPlayer::Init()
 	}
 
 	//èâä˙âª
-	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1) + 1);
+	m_skill = (SKILL_STATE)(CSkillSelect::GetSelectSkill(m_nNumPlayer - 1));
 	m_bKnockBack = false;
 	m_bTeleport = false;
 	m_bMaxGauge = false;
