@@ -43,13 +43,10 @@ const float CPlayer::RUSH_SPEED = 2.5f;			// ìÀêië¨ìx
 const CPlayer::SKILL_FUNC CPlayer::m_SkillFunc[] =
 {
 	UPDATE_FUNC_CAST(Skill_Idel),
+	UPDATE_FUNC_CAST(Skill_Rush),
 	UPDATE_FUNC_CAST(Skill_Speed),
-	UPDATE_FUNC_CAST(Skill_Paint),
-	UPDATE_FUNC_CAST(Skill_Knockback),
-	UPDATE_FUNC_CAST(Skill_Idel),
 	UPDATE_FUNC_CAST(Skill_Bom),
 	UPDATE_FUNC_CAST(Skill_Wave),
-	UPDATE_FUNC_CAST(Skill_Rush),
 };
 
 //-----------------------------------------------------------------------------
