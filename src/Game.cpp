@@ -112,6 +112,7 @@ HRESULT CGame::Init()
 		//ステータス表示の生成
 		D3DXVECTOR3 pos((CGauge::SPACE_SIZE * (nCnt + 1 + 1)) + (CGauge::MAX_SIZE * nCnt + 1), SCREEN_HEIGHT - (CGauge::GAUGE_SIZE.y * 0.5f) - 10.0f, 0.0f);
 		m_apStatusUI[nCnt] = CStatusUI::Create(pos,nCnt);
+		m_apStatusUI[nCnt]->SetPlayer(m_pPlayer[nCnt]);
 	}
 	
 	//デバッグ用カメラ操作モード

@@ -452,7 +452,14 @@ void CMap::PopFutureArea()
 		int size = areaBlock.size();
 		for (int i = 0; i < size; i++)
 		{
-			areaBlock[i]->SetPlayerNumber(BlockIndex[areaBlock[i]]);
+			if (BlockIndex[areaBlock[i]] != -2)
+			{
+				areaBlock[i]->SetPlayerNumber(BlockIndex[areaBlock[i]]);
+			}
+			else
+			{
+				areaBlock[i]->SetPlayerNumber(-1);
+			}
 
 			//if (!(areaBlock[i]->GetNumber() < 0))
 			{

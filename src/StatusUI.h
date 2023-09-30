@@ -50,7 +50,7 @@ public: /* オーバーライド関数 */
 
 	void SetPos(const D3DXVECTOR3& inPos);
 
-	void SetPlayer(CPlayer* inPlayer) { inPlayer = m_myPlayer; }
+	void SetPlayer(CPlayer* inPlayer) { m_myPlayer = inPlayer; }
 
 private: /* メンバ関数 */
 	void SetPlayerNum(int nPlayerNum);

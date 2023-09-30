@@ -160,6 +160,20 @@ void CStatusUI::Uninit()
 void CStatusUI::Update()
 {
 	CObject::Update();
+
+	if (m_myPlayer != nullptr)
+	{
+		int stock = m_myPlayer->GetItemStock();
+
+		for (int i = 0; i < 3; i++)
+		{
+			m_pItemIcon[i]->SetCol(D3DXCOLOR(0.25f, 0.25f, 0.25f, 1.0f));
+		}
+		for (int i = 0; i < stock; i++)
+		{
+			m_pItemIcon[i]->SetCol(D3DXCOLOR(1.0f, 0.25f, 0.25f, 1.0f));
+		}
+	}
 }
 
 //======================================================
